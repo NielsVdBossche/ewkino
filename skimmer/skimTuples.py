@@ -7,6 +7,8 @@ import sys
 from jobSubmission import submitQsubJob, initializeJobScript
 from fileListing import *
 
+## Is this compatible with UL directory structure?
+# Might need to rework this a bit
 
 def is2017( sample_path ):
 	return ( ( 'MiniAOD2017' in sample_path )

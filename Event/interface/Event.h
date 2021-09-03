@@ -28,7 +28,7 @@ class Sample;
 
 
 
-class Event{
+class Event {
 
     public:
         Event( const TreeReader&, 
@@ -49,7 +49,7 @@ class Event{
         JetCollection& jetCollection() const{ return *_jetCollectionPtr; }
         Met& met() const{ return *_metPtr; }
         TriggerInfo& triggerInfo() const{ return *_triggerInfoPtr; }
-	JetInfo& jetInfo() const{ return *_jetInfoPtr; }
+	    JetInfo& jetInfo() const{ return *_jetInfoPtr; }
         EventTags& eventTags() const{ return *_eventTagsPtr; }
         GeneratorInfo& generatorInfo() const;
         SusyMassInfo& susyMassInfo() const;
@@ -221,7 +221,7 @@ class Event{
         JetCollection* _jetCollectionPtr = nullptr;
         Met* _metPtr = nullptr;
         TriggerInfo* _triggerInfoPtr = nullptr;
-	JetInfo* _jetInfoPtr = nullptr;
+	    JetInfo* _jetInfoPtr = nullptr;
         EventTags* _eventTagsPtr = nullptr;
         GeneratorInfo* _generatorInfoPtr = nullptr;
         SusyMassInfo* _susyMassInfoPtr = nullptr;
