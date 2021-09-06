@@ -1,3 +1,6 @@
+#ifndef objsel4T_h
+#define objsel4T_h
+
 #include "../../objects/interface/LorentzVector.h"
 
 namespace objFourTop {
@@ -8,3 +11,5 @@ namespace objFourTop {
     bool jetID(int i);
     bool bJetID(int i);
 }
+
+#endif
