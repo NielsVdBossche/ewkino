@@ -34,7 +34,7 @@ def submitQsubJob( script_name, wall_time = '24:00:00', num_threads = 1, high_me
             return first_line.split('.')[0]
 
 
-def initializeJobScript( script, cmssw_version = 'CMSSW_10_2_20' ):
+def initializeJobScript( script, cmssw_version = 'CMSSW_10_2_22' ):
 
    	#TO DO : make code to extract CMSSW directory in a general way
     #this is already available in DeepLearning repository, submodule would be a good solution 
@@ -46,7 +46,7 @@ def initializeJobScript( script, cmssw_version = 'CMSSW_10_2_20' ):
 
 
 
-def runCommandAsJob( command, script_name, wall_time = '24:00:00', num_threads = 1, high_memory = False, cmssw_version = 'CMSSW_10_2_20' ):
+def runCommandAsJob( command, script_name, wall_time = '24:00:00', num_threads = 1, high_memory = False, cmssw_version = 'CMSSW_10_2_22' ):
     with open( script_name, 'w' ) as script:
         initializeJobScript( script, cmssw_version )
         script.write( command + '\n' )
