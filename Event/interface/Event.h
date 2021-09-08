@@ -194,7 +194,7 @@ class Event {
         PhysicsObject leptonSystem() const{ return _leptonCollectionPtr->objectSum(); }
 
         //total jet system 
-        PhysicsObject jetSystem() const{ return _leptonCollectionPtr->objectSum(); }
+        PhysicsObject jetSystem() const{ return _jetCollectionPtr->objectSum(); }
 
         //total lepton + jet system 
         PhysicsObject leptonJetSystem() const{ return ( leptonSystem() + jetSystem() ); }
