@@ -3,8 +3,11 @@
 
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../TreeReader/interface/TreeReader.h"
+#include "../../../Event/interface/Event.h"
 
 #include "../histogramSetups/histogramSetup.h"
+
+#include "../../FourTopSelection/interface/EventSelection4T.h"
 
 class FourTop {
     private:
@@ -26,6 +29,8 @@ class FourTop {
 
         // Prepare 
         void createHistInfoVec();
+
+        // Event selection components
         
         // Main loop function
         void analyze();

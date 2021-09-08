@@ -1,6 +1,6 @@
 #include "../interface/objectSelection4T.h"
 
-bool objFourTop::isJetIsolatedFromEl(LorentzVector* currentJet) {
+bool ObjectSelection4T::isJetIsolatedFromEl(LorentzVector* currentJet) {
     //std::vector<int>::iterator it;
 //
     //for (it = sel_electrons->begin(); it != sel_electrons->end(); it++) {
@@ -11,7 +11,7 @@ bool objFourTop::isJetIsolatedFromEl(LorentzVector* currentJet) {
 }
 
 
-bool objFourTop::isJetIsolatedFromMu(LorentzVector* currentJet) {
+bool ObjectSelection4T::isJetIsolatedFromMu(LorentzVector* currentJet) {
     //std::vector<int>::iterator it;
     //for (it = sel_muons->begin(); it != sel_muons->end(); it++) {
     //    LorentzVector current_mu(_mu_pt->at(*it), _mu_eta->at(*it), _mu_phi->at(*it), _mu_E->at(*it));
@@ -21,9 +21,9 @@ bool objFourTop::isJetIsolatedFromMu(LorentzVector* currentJet) {
     return true;    
 }
 
-bool objFourTop::jetID(int i) {
-    //if (_jet_pt->at(i) < 25) return false;
-    //if (fabs(_jet_eta->at(i)) > 2.4) return false;
+bool ObjectSelection4T::jetID(Jet& jet) {
+    if (jet.pt() < 25) return false;
+    if (jet.absEta() > 2.4) return false;
     //
     //LorentzVector currentJet(_jet_pt->at(i), _jet_eta->at(i), _jet_phi->at(i), _jet_E->at(i));
     //if (! isJetIsolatedFromEl(&currentJet)) return false;

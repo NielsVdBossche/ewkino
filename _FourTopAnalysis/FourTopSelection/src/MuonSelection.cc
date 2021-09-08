@@ -1,9 +1,9 @@
 #include "../interface/objectSelection4T.h"
 
-bool objFourTop::muonID(int i) {
-    //if (_mu_pt->at(i) < 20) return false;
-    //if (fabs(_mu_eta->at(i)) > 2.4) return false;
-    //if (! _mu_isMediumTOP->at(i)) return false;
+bool ObjectSelection4T::muonID(Muon& muon) {
+    if (muon.pt() < 20) return false;
+    if (muon.absEta() > 2.4) return false;
+    if (muon.leptonMVAttH() < 0.8) return false; // PLACEHOLDER
     //if (! _mu_isTightCharge->at(i)) return false;
 
     return true;
