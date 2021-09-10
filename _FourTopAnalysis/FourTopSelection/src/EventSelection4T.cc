@@ -46,10 +46,18 @@ bool EventSelection4T::passFullEventSelection(Event* event) {
 }
 
 bool EventSelection4T::passLowMassVeto(Event* event) {
+    
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
+    // TODO
 }
 
 bool EventSelection4T::passZBosonVeto(Event* event) {
+    if (event->hasOSLeptonPair()) {
+        double mass = event->bestZBosonCandidateMass();
+        if (mass > 76 && mass < 106) return false;
+    }
+
+    return true;
     // Reject same flevor opposite charge lepton pairs with inv mass close to Z boson mass
 }
 
