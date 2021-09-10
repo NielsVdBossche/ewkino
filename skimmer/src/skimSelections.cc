@@ -25,7 +25,7 @@ bool passLightDLSameChargeSkim(Event& event) {
     return ((*(event.lightLeptonCollection().begin()))->charge() == (*(event.lightLeptonCollection().begin() + 1))->charge());
 }
 
-bool passLight_SCdilepton_or_trilep(Event& event) {
+bool passLight_SSdilepton_or_trilep(Event& event) {
     return (passLightDLSameChargeSkim(event) || passLightTrilepSkim(event));
 }
 
@@ -70,7 +70,7 @@ bool passSkim( Event& event, const std::string& skimCondition ){
         { "trilepton", passTrileptonSkim },
         { "fourlepton", passFourLeptonSkim },
         { "fakerate", passFakeRateSkim },
-        { "light_SCdilepton_or_trilep", passLightDLSameChargeSkim }
+        { "light_SSdilepton_or_trilep", passLight_SSdilepton_or_trilep }
     };
     auto it = skimFunctionMap.find( skimCondition );
     if( it == skimFunctionMap.cend() ){

@@ -20,6 +20,6 @@ bool passSkim( Event&, const std::string& skimCondition );
 bool passLightDileptonSkim(Event &);
 bool passLightTrilepSkim(Event&);
 bool passLightDLSameChargeSkim(Event&);
-bool passLight_SCdilepton_or_trilep(Event&);
+bool passLight_SSdilepton_or_trilep(Event&);
 
 #endif
