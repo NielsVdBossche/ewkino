@@ -21,7 +21,7 @@ bool ObjectSelection4T::isJetIsolatedFromMu(LorentzVector* currentJet) {
     return true;    
 }
 
-bool ObjectSelection4T::jetID(Jet& jet) {
+bool ObjectSelection4T::jetID(const Jet& jet) {
     if (jet.pt() < 25) return false;
     if (jet.absEta() > 2.4) return false;
     //

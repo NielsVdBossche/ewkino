@@ -16,7 +16,7 @@ void FourTop::analyze() {
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            Event* event = &(treeReader->buildEvent( entry ));
+            Event* event = new Event(treeReader->buildEvent( entry ));
 
             // apply baseline selection
             // Right now we build CRZ from looser objects.
@@ -57,7 +57,7 @@ void FourTop::analyze() {
 
             }
 
-
+            delete event;
 
             
         }

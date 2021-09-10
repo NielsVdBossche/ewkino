@@ -1,6 +1,6 @@
 #include "../interface/objectSelection4T.h"
 
-bool ObjectSelection4T::bJetID(Jet& jet) {
+bool ObjectSelection4T::bJetID(const Jet& jet) {
     // Subset of jet!
 
     //if (! _jet_isMediumBTag->at(i)) return false;
