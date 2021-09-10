@@ -1,5 +1,9 @@
 #include "../interface/EventSelection4T.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 void EventSelection4T::applyBaselineObjectSelection(Event* event) {
     event->removeTaus();
     event->selectLooseLeptons();

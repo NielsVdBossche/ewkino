@@ -1,6 +1,10 @@
 #include "histogramSetup.h"
 #include <math.h>
 
+#if MEMLEAK
+#include "../../memleak/debug_new.h" 
+#endif
+
 std::vector<HistInfo> fourTopHists::bdtInfoDL() {
     // Prob need if statements to split which histograms we want
     std::vector< HistInfo > histInfoVec;

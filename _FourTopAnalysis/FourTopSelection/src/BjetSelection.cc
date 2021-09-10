@@ -1,5 +1,9 @@
 #include "../interface/objectSelection4T.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 bool ObjectSelection4T::bJetID(const Jet& jet) {
     // Subset of jet!
 

@@ -1,6 +1,8 @@
 #ifndef histogramSetup_h
 #define histogramSetup_h
 
+#include "../globalSettings.h"
+
 #include "../../Tools/interface/HistInfo.h"
 #include "../../Tools/interface/histogramTools.h"
 

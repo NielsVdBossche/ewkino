@@ -1,6 +1,8 @@
 #ifndef fourtop_h
 #define fourtop_h
 
+#include "../../globalSettings.h"
+
 #include <TFile.h>
 
 #include "../../../Tools/interface/HistInfo.h"

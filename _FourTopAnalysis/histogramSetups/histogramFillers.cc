@@ -1,5 +1,9 @@
 #include "histogramSetup.h"
 
+#if MEMLEAK
+#include "../../memleak/debug_new.h" 
+#endif
+
 std::vector<double> fourTopHists::fillLepInfoDL(Event* event) {
 
     std::vector<double> fillVal = {

@@ -1,6 +1,8 @@
 #ifndef objsel4T_h
 #define objsel4T_h
 
+#include "../../globalSettings.h"
+
 #include "../../../objects/interface/LorentzVector.h"
 #include "../../../objects/interface/Electron.h"
 #include "../../../objects/interface/Muon.h"

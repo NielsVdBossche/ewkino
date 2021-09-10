@@ -1,5 +1,9 @@
 #include "../interface/FourTop.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 void FourTop::analyze() {
 
     // Loop samples
@@ -16,6 +20,8 @@ void FourTop::analyze() {
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
+            if (entry > 10000) break;
+            
             Event* event = new Event(treeReader->buildEvent( entry ));
 
             // apply baseline selection

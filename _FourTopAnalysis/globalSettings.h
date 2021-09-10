@@ -1,7 +1,7 @@
 #ifndef globalsettings_h
 #define globalsettings_h
 
-#define MEMLEAK false
+#define MEMLEAK true
 
 // WP's of MVAs,...
 

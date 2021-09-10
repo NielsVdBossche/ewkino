@@ -1,3 +1,5 @@
+#include "globalSettings.h"
+
 #include "../plotting/tdrStyle.h"
 #include "../Tools/interface/Sample.h"
 #include "../Tools/interface/HistInfo.h"
@@ -9,6 +11,10 @@
 
 // Sets up histograms
 // Split for different setups...
+
+#if MEMLEAK
+#include "../memleak/debug_new.h" 
+#endif
 
 int main(int argc, char* argv[]) {
     setTDRStyle();

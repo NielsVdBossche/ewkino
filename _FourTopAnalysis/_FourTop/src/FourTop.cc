@@ -1,5 +1,9 @@
 #include "../interface/FourTop.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 FourTop::FourTop(std::vector< std::string > argvString) {
     // Set settings according to input
     // prepare details of analysis in separate functions

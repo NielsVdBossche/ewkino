@@ -1,6 +1,8 @@
 #ifndef eventselection4T_h
 #define eventselection4T_h
 
+#include "../../globalSettings.h"
+
 #include "../../../Event/interface/Event.h"
 
 #include "../../../Event/interface/ElectronCollection.h"
