@@ -68,7 +68,7 @@ bool EventSelection4T::passLowMassVeto(Event* event) {
 
 bool EventSelection4T::passZBosonVeto(Event* event) {
     // Reject OSSF lepton pairs with inv mass close to Z boson mass
-    if (event->hasOSLeptonPair()) {
+    if (event->hasOSSFLeptonPair()) {
         double mass = event->bestZBosonCandidateMass();
         if (mass > 76 && mass < 106) return false;
     }
