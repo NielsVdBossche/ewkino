@@ -4,7 +4,7 @@
 //include other parts of code 
 #include "LightLepton.h"
 
-class Electron : public LightLepton{
+class Electron : public LightLepton {
 
     public:
         Electron( const TreeReader&, const unsigned );

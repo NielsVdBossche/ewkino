@@ -1,6 +1,7 @@
 #include "../interface/EventSelection4T.h"
 
 void EventSelection4T::applyBaselineObjectSelection(Event* event) {
+    event->removeTaus();
     event->selectLooseLeptons();
     event->cleanElectronsFromLooseMuons();
 
@@ -18,6 +19,8 @@ void EventSelection4T::applyFullObjectSelection(Event* event) {
 
 
 bool EventSelection4T::passBaselineEventSelection(Event* event) {
+    // Baseline event selection keeping most leptons in order to correctly veto resonances
+
     double n_lep = event->numberOfLightLeptons();
     if (n_lep < 2) return false;
     //if (n_lep == 2 && event->lightLeptonCollection()[0].charge() != event->lightLeptonCollection()[1].charge()) return false;
@@ -29,11 +32,11 @@ bool EventSelection4T::passBaselineEventSelection(Event* event) {
     // 2 bjets
     if (event->mediumBTagCollection().size() < 2) return false;
 
+    // Min MET of 25 (50?)
+    // Min HT of 300(?)
     if (event->met().pt() < 25) return false;
     if (event->HT() < 300) return false;
 
-    // Min MET of 25 (50?)
-    // Min HT of 300(?)
     return true;
 }
 
@@ -45,19 +48,31 @@ bool EventSelection4T::passFullEventSelection(Event* event) {
     return true;
 }
 
-bool EventSelection4T::passLowMassVeto(Event* event) {
-    
+bool EventSelection4T::passLowMassVeto(Event* event) {  
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
-    // TODO
+
+    for( const auto& leptonPtrPair : event->lightLeptonCollection().pairCollection() ){
+
+        //veto SF pairs of low mass
+        Lepton& lepton1 = *( leptonPtrPair.first );
+        Lepton& lepton2 = *( leptonPtrPair.second );
+        if(! sameFlavor( lepton1, lepton2 ) ){
+            continue;
+        }
+        if(( lepton1 + lepton2 ).mass() < 12){
+            return false;
+        }
+    }
+    return true;
 }
 
 bool EventSelection4T::passZBosonVeto(Event* event) {
+    // Reject OSSF lepton pairs with inv mass close to Z boson mass
     if (event->hasOSLeptonPair()) {
         double mass = event->bestZBosonCandidateMass();
         if (mass > 76 && mass < 106) return false;
     }
 
     return true;
-    // Reject same flevor opposite charge lepton pairs with inv mass close to Z boson mass
 }
 

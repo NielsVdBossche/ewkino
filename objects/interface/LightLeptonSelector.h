@@ -1,6 +1,9 @@
 #ifndef LightLeptonSelector_H
 #define LightLeptonSelector_H
 
+#include "LeptonSelector.h"
+#include "LightLepton.h"
+
 class LightLepton;
 
 class LightLeptonSelector : public LeptonSelector {

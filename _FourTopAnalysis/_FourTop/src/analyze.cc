@@ -13,21 +13,22 @@ void FourTop::analyze() {
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
-        if( treeReader->isSusy() ) continue;
-
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             Event* event = &(treeReader->buildEvent( entry ));
 
-            //apply baseline selection
+            // apply baseline selection
+            // Right now we build CRZ from looser objects.
+            // Necessary to account for looser leptons which are otherwise missed in the full lepton selection and could be part of a Z-boson resonance
             EventSelection4T::applyBaselineObjectSelection(event);
 
             if (! EventSelection4T::passBaselineEventSelection(event)) continue;
 
-            // TODO: Resonance cleaning
+            event->sortLeptonsByPt();
+
             if (! EventSelection4T::passZBosonVeto(event)) {
-                // CRZ handling
+                // TODO: CRZ handling
                 continue;
             } else if (! EventSelection4T::passLowMassVeto(event)) {
                 continue;
@@ -39,9 +40,37 @@ void FourTop::analyze() {
 
             if (! EventSelection4T::passFullEventSelection(event)) continue;
 
+            // Fill histograms
+            std::vector<double> fillVec;
+            size_t fillIndex = sampleIndex;
+            if (event->numberOfLightLeptons() == 2) {
+                fillVec = fourTopHists::fillLepInfoDL(event);
+                for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ){
+                    histogram::fillValue( (*hists_DL)[ dist ][ fillIndex ].get(), fillVec[ dist ], event->weight() );
+                }
+
+            } else {
+                fillVec = fourTopHists::fillLepInfoML(event);
+                for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ){
+                    histogram::fillValue( (*hists_ML)[ dist ][ fillIndex ].get(), fillVec[ dist ], event->weight() );
+                }
+
+            }
+
 
 
             
         }
+         
+        // works when handling only one sample
+        for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
+            hists_DL->at(dist)[sampleIndex]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
+            hists_DL->at(dist)[sampleIndex]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+        }
     }
+
+  
 }

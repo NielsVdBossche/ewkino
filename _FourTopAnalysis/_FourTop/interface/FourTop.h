@@ -1,6 +1,8 @@
 #ifndef fourtop_h
 #define fourtop_h
 
+#include <TFile.h>
+
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../TreeReader/interface/TreeReader.h"
 #include "../../../Event/interface/Event.h"
@@ -15,12 +17,17 @@ class FourTop {
         std::vector<HistInfo>* histInfoVec_DL; // Histogram for DL kinematics
         std::vector<HistInfo>* histInfoVec_ML; // Histogram for ML kinematics
 
+        std::vector< std::vector< std::shared_ptr< TH1D > > >* hists_DL;
+        std::vector< std::vector< std::shared_ptr< TH1D > > >* hists_ML;
 
         TreeReader* treeReader;
         std::vector<Sample>* sampleVec;
 
         // General settings for analysis run
 
+
+        // IO-management
+        TFile* outfile;
         
     public:
         // Loading settings for analysis, preparing trees, ...

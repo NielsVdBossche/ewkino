@@ -4,6 +4,8 @@
 #include "../../Tools/interface/HistInfo.h"
 #include "../../Tools/interface/histogramTools.h"
 
+#include "../../Event/interface/Event.h"
+
 // Might move this functionality back to FourTop class itself
 
 namespace fourTopHists {
@@ -20,6 +22,11 @@ namespace fourTopHists {
     std::vector<HistInfo> jetInfoML();
 
     // others
+
+    // create filling vector?
+    std::vector<double> fillLepInfoDL(Event* event);
+    std::vector<double> fillLepInfoML(Event* event);
+
 }
 
 #endif

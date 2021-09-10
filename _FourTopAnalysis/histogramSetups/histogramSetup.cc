@@ -67,7 +67,10 @@ std::vector<HistInfo> fourTopHists::lepInfoDL() {
         HistInfo( "leptonPhiLeading_DL", "#phi (l1)", 12, - M_PI, M_PI),
         HistInfo( "leptonPhiSecond_DL", "#phi (l2)", 12, - M_PI, M_PI),
         HistInfo( "leptonELeading_DL", "E(l1) [GeV]", 18, 25, 205),
-        HistInfo( "leptonESecond_DL", "E(l2) [GeV]", 18, 25, 205)
+        HistInfo( "leptonESecond_DL", "E(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonMvaTOPLeading_DL", "score", 40, -1, 1),
+        HistInfo( "leptonMvaTOPSecond_DL", "score", 40, -1, 1),
+        
     };
 
     return histInfoVec;
@@ -88,7 +91,11 @@ std::vector<HistInfo> fourTopHists::lepInfoML() {
         HistInfo( "leptonPhiThird_ML", "#phi (l2)", 12, - M_PI, M_PI),
         HistInfo( "leptonELeading_ML", "E(l1) [GeV]", 18, 25, 205),
         HistInfo( "leptonESecond_ML", "E(l2) [GeV]", 18, 25, 205),
-        HistInfo( "leptonEThird_ML", "E(l2) [GeV]", 18, 25, 205)
+        HistInfo( "leptonEThird_ML", "E(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonMvaTOPLeading_ML", "score", 40, -1, 1),
+        HistInfo( "leptonMvaTOPSecond_ML", "score", 40, -1, 1),
+        HistInfo( "leptonMvaTOPThird_ML", "score", 40, -1, 1)
+
     };
 
     return histInfoVec;
