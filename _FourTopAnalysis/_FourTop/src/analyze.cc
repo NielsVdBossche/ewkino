@@ -29,14 +29,19 @@ void FourTop::analyze() {
             // Necessary to account for looser leptons which are otherwise missed in the full lepton selection and could be part of a Z-boson resonance
             EventSelection4T::applyBaselineObjectSelection(event);
 
-            if (! EventSelection4T::passBaselineEventSelection(event)) continue;
+            if (! EventSelection4T::passBaselineEventSelection(event))  {
+                delete event;
+                continue;
+            }
 
             event->sortLeptonsByPt();
 
             if (! EventSelection4T::passZBosonVeto(event)) {
                 // TODO: CRZ handling
+                delete event;
                 continue;
             } else if (! EventSelection4T::passLowMassVeto(event)) {
+                delete event;
                 continue;
             }
             // Z-res: hasOSLeptonPair()
@@ -44,7 +49,10 @@ void FourTop::analyze() {
             // Full object selection (only keep the real useful stuff)
             EventSelection4T::applyFullObjectSelection(event);
 
-            if (! EventSelection4T::passFullEventSelection(event)) continue;
+            if (! EventSelection4T::passFullEventSelection(event)) {
+                delete event;
+                continue;
+            }
 
             // Fill histograms
             std::vector<double> fillVec;
@@ -64,8 +72,6 @@ void FourTop::analyze() {
             }
 
             delete event;
-
-            
         }
          
         // works when handling only one sample
