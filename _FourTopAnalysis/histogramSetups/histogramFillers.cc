@@ -9,10 +9,10 @@ std::vector<double> fourTopHists::fillLepInfoDL(Event* event) {
         event->lightLepton(1).eta(),
         event->lightLepton(0).phi(),
         event->lightLepton(1).phi(),
-        event->lightLepton(0).E(),
-        event->lightLepton(1).E(),
-        event->lightLepton(0)._leptonMVATOP(),
-        event->lightLepton(1)._leptonMVATOP()
+        event->lightLepton(0).energy(),
+        event->lightLepton(1).energy(),
+        event->lightLepton(0).leptonMVATOP(),
+        event->lightLepton(1).leptonMVATOP()
     };
 
     return fillVal;
@@ -29,12 +29,12 @@ std::vector<double> fourTopHists::fillLepInfoML(Event* event) {
         event->lightLepton(0).phi(),
         event->lightLepton(1).phi(),
         event->lightLepton(2).phi(),
-        event->lightLepton(0).E(),
-        event->lightLepton(1).E(),
-        event->lightLepton(2).E(),
-        event->lightLepton(0)._leptonMVATOP(),
-        event->lightLepton(1)._leptonMVATOP(),
-        event->lightLepton(2)._leptonMVATOP()
+        event->lightLepton(0).energy(),
+        event->lightLepton(1).energy(),
+        event->lightLepton(2).energy(),
+        event->lightLepton(0).leptonMVATOP(),
+        event->lightLepton(1).leptonMVATOP(),
+        event->lightLepton(2).leptonMVATOP()
     };
 
     return fillVal;
