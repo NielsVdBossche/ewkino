@@ -280,11 +280,25 @@ class TreeReader {
 			    const bool readIndividualMetFilters = false,
 			    const bool readAllJECVariations = false,
 			    const bool readGroupedJECVariations = false );
+
+        Event* buildEventPtr( const Sample&, long unsigned, 
+			    const bool readIndividualTriggers = false, 
+			    const bool readIndividualMetFilters = false,
+			    const bool readAllJECVariations = false,
+			    const bool readGroupedJECVariations = false );
+
         Event buildEvent( long unsigned, 
 			    const bool readIndividualTriggers = false, 
 			    const bool readIndividualMetFilters = false,
 			    const bool readAllJECVariations = false, 
                             const bool readGroupedJECVariations = false );
+
+        Event* buildEventPtr( long unsigned, 
+                            const bool readIndividualTriggers = false, 
+			    const bool readIndividualMetFilters = false,
+			    const bool readAllJECVariations = false, 
+                            const bool readGroupedJECVariations = false );
+        
 
         //check whether generator info is present in current tree
         bool containsGeneratorInfo() const;

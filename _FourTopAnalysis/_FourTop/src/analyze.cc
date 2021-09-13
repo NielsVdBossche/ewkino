@@ -22,7 +22,7 @@ void FourTop::analyze() {
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
             
-            Event* event = new Event(treeReader->buildEvent( entry ));
+            Event* event = treeReader->buildEventPtr( entry );
 
             // apply baseline selection
             // Right now we build CRZ from looser objects.

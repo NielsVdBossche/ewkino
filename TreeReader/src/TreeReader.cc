@@ -403,6 +403,13 @@ Event TreeReader::buildEvent( const Sample& samp, long unsigned entry,
 			readAllJECVariations, readGroupedJECVariations );
 }
 
+Event* TreeReader::buildEventPtr( const Sample& samp, long unsigned entry, 
+	const bool readIndividualTriggers, const bool readIndividualMetFilters,
+	const bool readAllJECVariations, const bool readGroupedJECVariations ){
+    GetEntry( samp, entry );
+    return new Event( *this, readIndividualTriggers, readIndividualMetFilters,
+			readAllJECVariations, readGroupedJECVariations );
+}
 
 Event TreeReader::buildEvent( long unsigned entry, 
 	const bool readIndividualTriggers, const bool readIndividualMetFilters,
@@ -412,6 +419,13 @@ Event TreeReader::buildEvent( long unsigned entry,
 			readAllJECVariations, readGroupedJECVariations );
 }
 
+Event* TreeReader::buildEventPtr( long unsigned entry, 
+	const bool readIndividualTriggers, const bool readIndividualMetFilters,
+	const bool readAllJECVariations, const bool readGroupedJECVariations ){
+    GetEntry( entry );
+    return new Event( *this, readIndividualTriggers, readIndividualMetFilters,
+			readAllJECVariations, readGroupedJECVariations );
+}
 
 template< typename T > void setMapBranchAddresses( TTree* treePtr, std::map< std::string, T >& variableMap, std::map< std::string, TBranch* > branchMap ){
     for( const auto& variable : variableMap ){
