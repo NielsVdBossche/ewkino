@@ -47,6 +47,12 @@ void FourTop::createHistInfoVec() {
     // Init histograms
     std::vector< Sample > sampleVec = treeReader->sampleVector();
 
+    hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
+    hists_ML = histHelper::initHistograms(histInfoVec_ML, sampleVec);
+    hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
+    hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
+
+    /*
     hists_DL = new std::vector< std::vector< std::shared_ptr< TH1D > > >( histInfoVec_DL->size(), std::vector< std::shared_ptr< TH1D > >( sampleVec.size() + 1 )  );
     for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ){
         for( size_t p = 0; p < sampleVec.size() + 1; ++p ){
@@ -68,4 +74,5 @@ void FourTop::createHistInfoVec() {
             }
         }
     }
+    */
 }

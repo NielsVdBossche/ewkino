@@ -10,8 +10,10 @@
 #include "../../../Event/interface/Event.h"
 
 #include "../../histogramSetups/histogramSetup.h"
+#include "../../additionalTools/interface/histHelper.h"
 
 #include "../../FourTopSelection/interface/EventSelection4T.h"
+
 
 class FourTop {
     private:
