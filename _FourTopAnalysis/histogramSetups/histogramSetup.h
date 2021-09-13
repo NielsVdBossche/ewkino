@@ -17,7 +17,7 @@ namespace fourTopHists {
     std::vector<HistInfo> bdtOutputDL();
     std::vector<HistInfo> bdtOutputML();
 
-    std::vector<HistInfo> lepInfoDL();
+    std::vector<HistInfo>* lepInfoDL();
     std::vector<HistInfo> lepInfoML();
 
     std::vector<HistInfo> jetInfoDL();

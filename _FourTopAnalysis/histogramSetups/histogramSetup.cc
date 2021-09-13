@@ -60,10 +60,10 @@ std::vector<HistInfo> fourTopHists::bdtInfoML() {
     return histInfoVec;
 }
 
-std::vector<HistInfo> fourTopHists::lepInfoDL() {
-    std::vector< HistInfo > histInfoVec;
+std::vector<HistInfo>* fourTopHists::lepInfoDL() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
-    histInfoVec = {
+    *histInfoVec = {
         HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 25, 205),
         HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 25, 205),
         HistInfo( "leptonEtaLeading_DL", "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation

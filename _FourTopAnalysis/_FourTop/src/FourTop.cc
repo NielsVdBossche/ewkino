@@ -32,8 +32,10 @@ FourTop::~FourTop() {
 void FourTop::createHistInfoVec() {
 
     // Temp solution
-    histInfoVec_DL = new std::vector<HistInfo> (fourTopHists::lepInfoDL());
+    histInfoVec_DL = fourTopHists::lepInfoDL();
     histInfoVec_ML = new std::vector<HistInfo> (fourTopHists::lepInfoML());
+    histInfoVec_CRZ = new std::vector<HistInfo>;
+    histInfoVec_CRW = new std::vector<HistInfo>;
 
     // Go over settings, voor elke setting, add de passende histosetup bij het totaal
     // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken
