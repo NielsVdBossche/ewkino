@@ -20,7 +20,7 @@ void FourTop::analyze() {
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            //if (entry > 10000) break;
+            if (entry > 10000) break;
             
             Event* event = treeReader->buildEventPtr( entry );
 

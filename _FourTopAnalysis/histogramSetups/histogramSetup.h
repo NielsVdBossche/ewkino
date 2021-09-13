@@ -11,19 +11,21 @@
 // Might move this functionality back to FourTop class itself
 
 namespace fourTopHists {
-    std::vector<HistInfo> bdtInfoDL();
-    std::vector<HistInfo> bdtInfoML();
+    std::vector<HistInfo>* bdtInfoDL();
+    std::vector<HistInfo>* bdtInfoML();
 
-    std::vector<HistInfo> bdtOutputDL();
-    std::vector<HistInfo> bdtOutputML();
+    std::vector<HistInfo>* bdtOutputDL();
+    std::vector<HistInfo>* bdtOutputML();
 
     std::vector<HistInfo>* lepInfoDL();
-    std::vector<HistInfo> lepInfoML();
+    std::vector<HistInfo>* lepInfoML();
 
-    std::vector<HistInfo> jetInfoDL();
-    std::vector<HistInfo> jetInfoML();
+    std::vector<HistInfo>* jetInfoDL();
+    std::vector<HistInfo>* jetInfoML();
 
     // others
+    std::vector<HistInfo>* crzInfo();
+    std::vector<HistInfo>* crwInfo();
 
     // create filling vector?
     std::vector<double> fillLepInfoDL(Event* event);

@@ -25,6 +25,8 @@ FourTop::~FourTop() {
     // Delete histogramInfo
     delete histInfoVec_DL;
     delete histInfoVec_ML;
+    delete histInfoVec_CRZ;    
+    delete histInfoVec_CRW;
     //delete histInfoVec_Global; // If even assigned?
 }
 
@@ -33,9 +35,9 @@ void FourTop::createHistInfoVec() {
 
     // Temp solution
     histInfoVec_DL = fourTopHists::lepInfoDL();
-    histInfoVec_ML = new std::vector<HistInfo> (fourTopHists::lepInfoML());
-    histInfoVec_CRZ = new std::vector<HistInfo>;
-    histInfoVec_CRW = new std::vector<HistInfo>;
+    histInfoVec_ML = fourTopHists::lepInfoML();
+    histInfoVec_CRZ = fourTopHists::crzInfo();
+    histInfoVec_CRW = fourTopHists::crwInfo();
 
     // Go over settings, voor elke setting, add de passende histosetup bij het totaal
     // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken

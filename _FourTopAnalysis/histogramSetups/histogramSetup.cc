@@ -5,11 +5,11 @@
 #include "../../memleak/debug_new.h" 
 #endif
 
-std::vector<HistInfo> fourTopHists::bdtInfoDL() {
+std::vector<HistInfo>* fourTopHists::bdtInfoDL() {
     // Prob need if statements to split which histograms we want
-    std::vector< HistInfo > histInfoVec;
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
-    histInfoVec = {
+    *histInfoVec = {
         HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 25, 205),
         HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 25, 205),
         HistInfo( "N_jets_DL", "N_{jets}", 20, -0.5, 19.5),
@@ -32,11 +32,11 @@ std::vector<HistInfo> fourTopHists::bdtInfoDL() {
     return histInfoVec;
 }
 
-std::vector<HistInfo> fourTopHists::bdtInfoML() {
+std::vector<HistInfo>* fourTopHists::bdtInfoML() {
     // Prob need if statements to split which histograms we want
-    std::vector< HistInfo > histInfoVec;
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
-    histInfoVec = {
+    *histInfoVec = {
         HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 25, 205),
         HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
         HistInfo( "leptonPtThird_ML", "p_{T}(l3) [GeV]", 18, 25, 205),
@@ -80,10 +80,10 @@ std::vector<HistInfo>* fourTopHists::lepInfoDL() {
     return histInfoVec;
 }
 
-std::vector<HistInfo> fourTopHists::lepInfoML() {
-    std::vector< HistInfo > histInfoVec;
+std::vector<HistInfo>* fourTopHists::lepInfoML() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
-    histInfoVec = {
+    *histInfoVec = {
         HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 25, 205),
         HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
         HistInfo( "leptonPtThird_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
@@ -105,10 +105,10 @@ std::vector<HistInfo> fourTopHists::lepInfoML() {
     return histInfoVec;
 }
 
-std::vector<HistInfo> fourTopHists::jetInfoDL() {
-    std::vector< HistInfo > histInfoVec;
+std::vector<HistInfo>* fourTopHists::jetInfoDL() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
-    histInfoVec = {
+    *histInfoVec = {
         HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
     };
 
@@ -116,10 +116,32 @@ std::vector<HistInfo> fourTopHists::jetInfoDL() {
 
 }
 
-std::vector<HistInfo> fourTopHists::jetInfoML() {
-    std::vector< HistInfo > histInfoVec;
+std::vector<HistInfo>* fourTopHists::jetInfoML() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
-    histInfoVec = {
+    *histInfoVec = {
+        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
+    };
+
+    return histInfoVec;
+
+}
+
+std::vector<HistInfo>* fourTopHists::crzInfo() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
+    
+    *histInfoVec = {
+        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
+    };
+
+    return histInfoVec;
+
+}
+
+std::vector<HistInfo>* fourTopHists::crwInfo() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
+    
+    *histInfoVec = {
         HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
     };
 
