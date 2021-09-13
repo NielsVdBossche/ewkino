@@ -20,7 +20,7 @@ void FourTop::analyze() {
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (entry > 10000) break;
+            //if (entry > 10000) break;
             
             Event* event = new Event(treeReader->buildEvent( entry ));
 
@@ -73,16 +73,17 @@ void FourTop::analyze() {
 
             delete event;
         }
-         
+        
+        outfile->cd();
         // works when handling only one sample
         for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
             hists_DL->at(dist)[sampleIndex]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
         }
 
-        for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-            hists_DL->at(dist)[sampleIndex]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+        for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ) {
+            hists_ML->at(dist)[sampleIndex]->Write(TString(histInfoVec_ML->at(dist).name()), TObject::kOverwrite);
         }
     }
 
-  
+    outfile->Close();
 }

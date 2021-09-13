@@ -18,7 +18,7 @@ FourTop::FourTop(std::vector< std::string > argvString) {
 
 FourTop::~FourTop() {
 
-    outfile->Close();
+    //outfile->Close();
 
     // Delete histograms
 
