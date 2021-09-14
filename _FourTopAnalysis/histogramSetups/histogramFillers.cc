@@ -77,6 +77,11 @@ std::vector<double> fourTopHists::fillJetInfoML(Event* event) {
 
 std::vector<double> fourTopHists::fillAllHistsDL(Event* event) {
     JetCollection jets = event->jetCollection();
+    JetCollection bJets = event->mediumBTagCollection();
+    LeptonCollection lightLeps = event->leptonCollection();
+    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(bJets, lightLeps);
+
 
     std::vector<double> fillVal = {
         event->lightLepton(0).pt(),
@@ -97,11 +102,18 @@ std::vector<double> fourTopHists::fillAllHistsDL(Event* event) {
         double(event->mediumBTagCollection().size()),
         double(event->looseBTagCollection().size()),
         double(event->tightBTagCollection().size()),
+        double(event->numberOfJets()),
 
         jets.scalarPtSum(),
         event->metPt(),
 
         // Calculate DR? What is best way...
+        mindR_Bjets[0],
+
+        mindR_Bjet_lep[0],
+        mindR_Bjet_lep[1],
+
+        event->LT()
 
         
     };
@@ -112,7 +124,49 @@ std::vector<double> fourTopHists::fillAllHistsDL(Event* event) {
 
 std::vector<double> fourTopHists::fillAllHistsML(Event* event) {
 
+    JetCollection jets = event->jetCollection();
+    JetCollection bJets = event->mediumBTagCollection();
+    LeptonCollection lightLeps = event->leptonCollection();
+    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(bJets, lightLeps);
+
+
     std::vector<double> fillVal = {
+        event->lightLepton(0).pt(),
+        event->lightLepton(1).pt(),
+        event->lightLepton(2).pt(),
+        event->lightLepton(0).eta(),
+        event->lightLepton(1).eta(),
+        event->lightLepton(2).eta(),
+        event->lightLepton(0).phi(),
+        event->lightLepton(1).phi(),
+        event->lightLepton(2).phi(),
+        event->lightLepton(0).energy(),
+        event->lightLepton(1).energy(),
+        event->lightLepton(2).energy(),
+        event->lightLepton(0).leptonMVATOP(),
+        event->lightLepton(1).leptonMVATOP(),
+        event->lightLepton(2).leptonMVATOP(),
+
+        jets[0].pt(),
+        jets[1].pt(),
+        jets[2].pt(),
+        jets[3].pt(),
+        double(event->mediumBTagCollection().size()),
+        double(event->looseBTagCollection().size()),
+        double(event->tightBTagCollection().size()),
+        double(event->numberOfJets()),
+
+        jets.scalarPtSum(),
+        event->metPt(),
+
+        mindR_Bjets[0],
+
+        mindR_Bjet_lep[0],
+        mindR_Bjet_lep[1],
+
+        event->LT()
+
 
     };
 

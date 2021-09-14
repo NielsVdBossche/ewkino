@@ -34,8 +34,8 @@ FourTop::~FourTop() {
 void FourTop::createHistInfoVec() {
 
     // Temp solution
-    histInfoVec_DL = fourTopHists::lepInfoDL();
-    histInfoVec_ML = fourTopHists::lepInfoML();
+    histInfoVec_DL = fourTopHists::allHistsDL();
+    histInfoVec_ML = fourTopHists::allHistsML();
     histInfoVec_CRZ = fourTopHists::crzInfo();
     histInfoVec_CRW = fourTopHists::crwInfo();
 

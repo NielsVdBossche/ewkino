@@ -11,6 +11,7 @@
 
 #include "../../histogramSetups/histogramSetup.h"
 #include "../../additionalTools/interface/histHelper.h"
+#include "../../additionalTools/interface/calculators.h"
 
 #include "../../FourTopSelection/interface/EventSelection4T.h"
 

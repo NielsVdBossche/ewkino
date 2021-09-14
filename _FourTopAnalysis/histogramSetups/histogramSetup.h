@@ -6,6 +6,8 @@
 #include "../../Tools/interface/HistInfo.h"
 #include "../../Tools/interface/histogramTools.h"
 
+#include "../additionalTools/interface/calculators.h"
+
 #include "../../Event/interface/Event.h"
 
 // Might move this functionality back to FourTop class itself

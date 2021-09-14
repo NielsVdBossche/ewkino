@@ -65,10 +65,10 @@ void FourTop::analyze() {
             std::vector<double> fillVec;
             size_t fillIndex = sampleIndex;
             if (currentEvent->numberOfLightLeptons() == 2) {
-                fillVec = fourTopHists::fillLepInfoDL(currentEvent);
+                fillVec = fourTopHists::fillAllHistsDL(currentEvent);
                 histHelper::histFiller(fillVec, &(hists_DL->at(sampleIndex)), currentEvent->weight());
             } else {
-                fillVec = fourTopHists::fillLepInfoML(currentEvent);
+                fillVec = fourTopHists::fillAllHistsML(currentEvent);
                 histHelper::histFiller(fillVec, &(hists_ML->at(sampleIndex)), currentEvent->weight());
             }
 

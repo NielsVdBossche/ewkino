@@ -158,8 +158,8 @@ std::vector<HistInfo>* fourTopHists::crwInfo() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "CRW_N_b", "N_{b}", 5, -0.5, 4.5),
         HistInfo( "CRW_N_jets", "N_{jets}", 10, -0.5, 9.5),
+        HistInfo( "CRW_N_b", "N_{b}", 5, -0.5, 4.5),
         HistInfo( "CRW_HT", "H_{T} [GeV]", 13, 300, 1600),
         HistInfo( "CRW_MET", "p_{T}^{miss} [GeV]", 19, 25, 500),
         HistInfo( "CRW_ptLeadingLep", "p_{T}(l1) [GeV]", 14, 20, 300),
@@ -192,15 +192,17 @@ std::vector<HistInfo>* fourTopHists::allHistsDL() {
         HistInfo( "N_B_jets_DL", "N_{b}", 10, -0.5, 9.5),
         HistInfo( "N_looseB_jets_DL", "N_{b}^{loose}", 10, -0.5, 9.5),
         HistInfo( "N_tightB_jets_DL", "N_{b}^{tight}", 10, -0.5, 9.5),
+        HistInfo( "N_jets_DL", "N_{jets}", 15, -0.5, 14.5),
 
         HistInfo( "HT_DL", "H_{T} [GeV]", 13, 300, 1600),
         HistInfo( "MET_DL", "p_{T}^{miss} [GeV]", 19, 25, 500),
 
         HistInfo( "Min_dR_Bs_DL", "Min. #Delta R(b,b)", 12, 0, 4.8),
-        HistInfo( "SecMin_dR_Bs_DL", "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
+        //HistInfo( "SecMin_dR_Bs_DL", "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
 
         HistInfo( "minDR_B_lep_DL", "Min. #Delta R(l,b)", 12, 0, 4.8),
-        HistInfo( "secMinDR_B_lep_DL", "Sec. min. #Delta R(l,b)", 12, 0, 4.8)
+        HistInfo( "secMinDR_B_lep_DL", "Sec. min. #Delta R(l,b)", 12, 0, 4.8),
+        HistInfo( "LT_DL", "L_{T} [GeV]", 20, 0, 1000)
 
     };
 
@@ -234,15 +236,18 @@ std::vector<HistInfo>* fourTopHists::allHistsML() {
         HistInfo( "N_B_jets_ML", "N_{b}", 10, -0.5, 9.5),
         HistInfo( "N_looseB_jets_ML", "N_{b}^{loose}", 10, -0.5, 9.5),
         HistInfo( "N_tightB_jets_ML", "N_{b}^{tight}", 10, -0.5, 9.5),
+        HistInfo( "N_jets_DL", "N_{jets}", 15, -0.5, 14.5),
+
 
         HistInfo( "HT_ML", "H_{T} [GeV]", 13, 300, 1600),
         HistInfo( "MET_ML", "p_{T}^{miss} [GeV]", 19, 25, 500),
 
         HistInfo( "Min_dR_Bs_ML", "Min. #Delta R(b,b)", 12, 0, 4.8),
-        HistInfo( "SecMin_dR_Bs_ML", "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
+        //HistInfo( "SecMin_dR_Bs_ML", "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
 
         HistInfo( "minDR_B_lep_ML", "Min. #Delta R(l,b)", 12, 0, 4.8),
-        HistInfo( "secMinDR_B_lep_ML", "Sec. min. #Delta R(l,b)", 12, 0, 4.8)
+        HistInfo( "secMinDR_B_lep_ML", "Sec. min. #Delta R(l,b)", 12, 0, 4.8),
+        HistInfo( "LT_ML", "L_{T} [GeV]", 20, 0, 1000)
     };
 
     return histInfoVec;
