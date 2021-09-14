@@ -5,7 +5,7 @@
 #endif
 
 bool ObjectSelection4T::looseElectron(const Electron& electron) {
-    //if (electron.leptonMVATOP()) return false;
+    if (electron.leptonMVATOP() < 0.5) return false;
 
     return true;
 }

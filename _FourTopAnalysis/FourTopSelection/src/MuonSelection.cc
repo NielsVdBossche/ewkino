@@ -5,7 +5,7 @@
 #endif
 
 bool ObjectSelection4T::looseMuon(const Muon& muon) {
-    //if (electron.leptonMVATOP()) return false;
+    if (muon.leptonMVATOP() < 0.5) return false;
 
     return true;
 }
