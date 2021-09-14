@@ -19,6 +19,8 @@ class LeptonCollection;
 class JetCollection : public PhysicsObjectCollection< Jet > {
 
     public:
+        JetCollection() = default;
+        
         JetCollection( const TreeReader&, 
 			const bool readAllJECVariations = false,
 			const bool readGroupedJECVariations = false );

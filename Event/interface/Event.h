@@ -54,6 +54,14 @@ class Event {
         GeneratorInfo& generatorInfo() const;
         SusyMassInfo& susyMassInfo() const;
 
+        LeptonCollection* getLeptonCollectionPtr() const{ return _leptonCollectionPtr; }
+        JetCollection* getJetCollectionPtr() const{ return _jetCollectionPtr; }
+        Met* getMetPtr() const{ return _metPtr; }
+        TriggerInfo* getTriggerInfoPtr() const{ return _triggerInfoPtr; }
+	    JetInfo* getJetInfoPtr() const{ return _jetInfoPtr; }
+        EventTags* getEventTagsPtr() const{ return _eventTagsPtr; }
+        GeneratorInfo* getGeneratorInfoPtr() const;
+
         Lepton& lepton( const LeptonCollection::size_type leptonIndex ) const{ 
 	    return (*_leptonCollectionPtr)[ leptonIndex ]; }
         Jet& jet( const JetCollection::size_type jetIndex ) const{ 
@@ -83,6 +91,7 @@ class Event {
         JetCollection looseBTagCollection() const{ return _jetCollectionPtr->looseBTagCollection(); }
         JetCollection mediumBTagCollection() const{ return _jetCollectionPtr->mediumBTagCollection(); }
         JetCollection tightBTagCollection() const{ return _jetCollectionPtr->tightBTagCollection(); }
+        void selectMediumBjets();
 
         //lepton selection and cleaning
         void selectLooseLeptons(){ _leptonCollectionPtr->selectLooseLeptons(); }
@@ -228,6 +237,7 @@ class Event {
         unsigned _numberOfVertices = 0;
         double _weight = 1;
         const Sample* _samplePtr = nullptr;
+        JetCollection* _bJetCollectionPtr = nullptr; // jets selected at the general b-tag WP
 
         //presence of Z boson
         bool ZIsInitialized = false;

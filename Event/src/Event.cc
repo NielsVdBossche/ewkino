@@ -171,6 +171,12 @@ GeneratorInfo& Event::generatorInfo() const{
     return *_generatorInfoPtr;
 }
 
+GeneratorInfo* Event::getGeneratorInfoPtr() const{
+    checkGeneratorInfo();
+    return _generatorInfoPtr;
+}
+
+
 
 void Event::checkSusyMassInfo() const{
     if( !hasSusyMassInfo() ){
@@ -182,6 +188,11 @@ void Event::checkSusyMassInfo() const{
 SusyMassInfo& Event::susyMassInfo() const{
     checkSusyMassInfo();
     return *_susyMassInfoPtr;
+}
+
+void Event::selectMediumBjets() {
+    _bJetCollectionPtr = new JetCollection();
+    *_bJetCollectionPtr = _jetCollectionPtr->mediumBTagCollection();
 }
 
 
