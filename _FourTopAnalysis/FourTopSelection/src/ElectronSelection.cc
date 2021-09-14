@@ -4,6 +4,12 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
+bool ObjectSelection4T::looseElectron(const Electron& electron) {
+    //if (electron.leptonMVATOP()) return false;
+
+    return true;
+}
+
 bool ObjectSelection4T::elID(const Electron& electron) {
     if (electron.pt() < 20) return false;
     if (electron.absEta() > 2.5) return false;

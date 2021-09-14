@@ -9,6 +9,8 @@
 #include "../../../objects/interface/Jet.h"
 
 namespace ObjectSelection4T {
+    bool looseElectron(const Electron& electron);
+    bool looseMuon(const Muon& muon);
     bool elID(const Electron& electron);
     bool muonID(const Muon& muon);
     bool isJetIsolatedFromEl(LorentzVector* currentJet);

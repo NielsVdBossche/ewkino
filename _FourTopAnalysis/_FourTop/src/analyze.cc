@@ -36,16 +36,28 @@ void FourTop::analyze() {
 
             currentEvent->sortLeptonsByPt();
 
+            // Basic non-prompt handling (using MC to estimate the contribution):
+            size_t fillIndex = sampleIndex;
+            // If nonprompt: fillIndex becomes index of nonprompt histograms
+            for (const auto& leptonPtr : currentEvent->leptonCollection()) {
+                if (! leptonPtr->isPrompt()) {
+                    fillIndex = treeReader->numberOfSamples();
+                    break;
+                }
+            }
+
+            // Remove mass resonances
+
             if (! EventSelection4T::passZBosonVeto(currentEvent)) {
-                // TODO: CRZ handling
-                crzHandling(sampleIndex);
+                // Build CRZ
+
+                crzHandling(fillIndex);
                 delete currentEvent;
                 continue;
             } else if (! EventSelection4T::passLowMassVeto(currentEvent)) {
                 delete currentEvent;
                 continue;
             }
-            // Z-res: hasOSLeptonPair()
 
             // Full object selection (only keep the real useful stuff)
             EventSelection4T::applyFullObjectSelection(currentEvent);
@@ -55,26 +67,29 @@ void FourTop::analyze() {
                 continue;
             }
 
-            if (currentEvent->numberOfJets() < 6 && currentEvent->numberOfMediumBTaggedJets() == 2) {
-                crwHandling(sampleIndex);
+            // Build CRW (might expand these)
+            if (currentEvent->numberOfLightLeptons() == 2 && currentEvent->numberOfJets() < 6 && currentEvent->numberOfMediumBTaggedJets() == 2) {
+                crwHandling(fillIndex);
                 delete currentEvent;
                 continue;
             }
 
             // Fill histograms
             std::vector<double> fillVec;
-            size_t fillIndex = sampleIndex;
             if (currentEvent->numberOfLightLeptons() == 2) {
                 fillVec = fourTopHists::fillAllHistsDL(currentEvent);
-                histHelper::histFiller(fillVec, &(hists_DL->at(sampleIndex)), currentEvent->weight());
+                histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
             } else {
                 fillVec = fourTopHists::fillAllHistsML(currentEvent);
-                histHelper::histFiller(fillVec, &(hists_ML->at(sampleIndex)), currentEvent->weight());
+                histHelper::histFiller(fillVec, &(hists_ML->at(fillIndex)), currentEvent->weight());
             }
+
+            // TODO: Systematics
 
             delete currentEvent;
         }
         
+        // Output management: save histograms to a ROOT file.
         outfile->cd();
         outfile->mkdir(treeReader->currentSample().fileName().c_str());
         outfile->cd(treeReader->currentSample().fileName().c_str());
@@ -99,6 +114,7 @@ void FourTop::analyze() {
         outfile->cd("..");
     }
 
+    // Don't forget non-prompt contributions
     outfile->mkdir("nonPrompt");
     outfile->cd("nonPrompt");
 

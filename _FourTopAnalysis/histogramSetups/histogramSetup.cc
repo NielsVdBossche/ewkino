@@ -10,8 +10,8 @@ std::vector<HistInfo>* fourTopHists::bdtInfoDL() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "N_jets_DL", "N_{jets}", 20, -0.5, 19.5),
         HistInfo( "N_B_jets_DL", "N_{b}", 10, -0.5, 9.5),
         HistInfo( "N_loose_B_DL", "N_{b}^{loose}", 10, -0.5, 9.5),
@@ -37,9 +37,9 @@ std::vector<HistInfo>* fourTopHists::bdtInfoML() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtThird_ML", "p_{T}(l3) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtThird_ML", "p_{T}(l3) [GeV]", 18, 20, 200),
         HistInfo( "N_jets_ML", "N_{jets}", 20, -0.5, 19.5),
         HistInfo( "N_B_jets_ML", "N_{b}", 10, -0.5, 9.5),
         HistInfo( "N_loose_B_ML", "N_{b}^{loose}", 10, -0.5, 9.5),
@@ -64,8 +64,8 @@ std::vector<HistInfo>* fourTopHists::lepInfoDL() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "leptonEtaLeading_DL", "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonEtaSecond_DL", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonPhiLeading_DL", "#phi (l1)", 12, - M_PI, M_PI),
@@ -84,9 +84,9 @@ std::vector<HistInfo>* fourTopHists::lepInfoML() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtThird_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtThird_ML", "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "leptonEtaLeading_ML", "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonEtaSecond_ML", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonEtaThird_ML", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
@@ -174,8 +174,8 @@ std::vector<HistInfo>* fourTopHists::allHistsDL() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "leptonEtaLeading_DL", "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonEtaSecond_DL", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonPhiLeading_DL", "#phi (l1)", 12, - M_PI, M_PI),
@@ -213,9 +213,9 @@ std::vector<HistInfo>* fourTopHists::allHistsML() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
-        HistInfo( "leptonPtThird_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtThird_ML", "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "leptonEtaLeading_ML", "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonEtaSecond_ML", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
         HistInfo( "leptonEtaThird_ML", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation

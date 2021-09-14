@@ -7,6 +7,8 @@
 void EventSelection4T::applyBaselineObjectSelection(Event* event) {
     event->removeTaus();
     event->selectLooseLeptons();
+    event->selectElectrons(ObjectSelection4T::looseElectron);
+    event->selectMuons(ObjectSelection4T::looseMuon);
     event->cleanElectronsFromLooseMuons();
 
     event->selectGoodJets();
