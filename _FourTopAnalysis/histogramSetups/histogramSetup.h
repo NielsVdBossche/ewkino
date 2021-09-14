@@ -23,6 +23,9 @@ namespace fourTopHists {
     std::vector<HistInfo>* jetInfoDL();
     std::vector<HistInfo>* jetInfoML();
 
+    std::vector<HistInfo>* allHistsDL();
+    std::vector<HistInfo>* allHistsML();
+
     // others
     std::vector<HistInfo>* crzInfo();
     std::vector<HistInfo>* crwInfo();
@@ -30,6 +33,12 @@ namespace fourTopHists {
     // create filling vector?
     std::vector<double> fillLepInfoDL(Event* event);
     std::vector<double> fillLepInfoML(Event* event);
+
+    std::vector<double> fillJetInfoDL(Event* event);
+    std::vector<double> fillJetInfoML(Event* event);
+
+    std::vector<double> fillAllHistsDL(Event* event);
+    std::vector<double> fillAllHistsML(Event* event);
 
 }
 

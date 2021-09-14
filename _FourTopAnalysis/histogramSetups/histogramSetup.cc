@@ -109,7 +109,12 @@ std::vector<HistInfo>* fourTopHists::jetInfoDL() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
+        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetTwo_DL", "p_{T}(j2) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetThree_DL", "p_{T}(j3) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetFour_DL", "p_{T}(j4) [GeV]", 19, 25, 500),
+        HistInfo( "N_B_jets_DL", "N_{b}", 10, -0.5, 9.5),
+        HistInfo( "HT_DL", "H_{T} [GeV]", 13, 300, 1600)
     };
 
     return histInfoVec;
@@ -120,7 +125,12 @@ std::vector<HistInfo>* fourTopHists::jetInfoML() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
+        HistInfo( "ptJetOne_ML", "p_{T}(j1) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetTwo_ML", "p_{T}(j2) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetThree_ML", "p_{T}(j3) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetFour_ML", "p_{T}(j4) [GeV]", 19, 25, 500),
+        HistInfo( "N_B_jets_ML", "N_{b}", 10, -0.5, 9.5),
+        HistInfo( "HT_ML", "H_{T} [GeV]", 13, 300, 1600)
     };
 
     return histInfoVec;
@@ -131,7 +141,13 @@ std::vector<HistInfo>* fourTopHists::crzInfo() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
+        HistInfo( "CRZ_N_jets", "N_{jets}", 10, -0.5, 9.5),
+        HistInfo( "CRZ_N_b", "N_{b}", 5, -0.5, 4.5),
+        HistInfo( "CRZ_HT", "H_{T} [GeV]", 13, 300, 1600),
+        HistInfo( "CRZ_MET", "p_{T}^{miss} [GeV]", 19, 25, 500),
+        HistInfo( "CRZ_ptLeadingLep", "p_{T}(l1) [GeV]", 14, 20, 300),
+        HistInfo( "CRZ_ptLepTwo", "p_{T}(l2) [GeV]", 7, 20, 160),
+        HistInfo( "CRZ_ptLepThree", "p_{T}(l3) [GeV]", 8, 20, 100)
     };
 
     return histInfoVec;
@@ -142,9 +158,92 @@ std::vector<HistInfo>* fourTopHists::crwInfo() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
-        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500)
+        HistInfo( "CRW_N_b", "N_{b}", 5, -0.5, 4.5),
+        HistInfo( "CRW_N_jets", "N_{jets}", 10, -0.5, 9.5),
+        HistInfo( "CRW_HT", "H_{T} [GeV]", 13, 300, 1600),
+        HistInfo( "CRW_MET", "p_{T}^{miss} [GeV]", 19, 25, 500),
+        HistInfo( "CRW_ptLeadingLep", "p_{T}(l1) [GeV]", 14, 20, 300),
+        HistInfo( "CRW_ptLepTwo", "p_{T}(l2) [GeV]", 7, 20, 160)
     };
 
     return histInfoVec;
 
+}
+
+std::vector<HistInfo>* fourTopHists::allHistsDL() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
+    
+    *histInfoVec = {
+        HistInfo( "leptonPtLeading_DL", "p_{T}(l1) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtSecond_DL", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonEtaLeading_DL", "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
+        HistInfo( "leptonEtaSecond_DL", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
+        HistInfo( "leptonPhiLeading_DL", "#phi (l1)", 12, - M_PI, M_PI),
+        HistInfo( "leptonPhiSecond_DL", "#phi (l2)", 12, - M_PI, M_PI),
+        HistInfo( "leptonELeading_DL", "E(l1) [GeV]", 18, 25, 205),
+        HistInfo( "leptonESecond_DL", "E(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonMvaTOPLeading_DL", "score", 40, -1, 1),
+        HistInfo( "leptonMvaTOPSecond_DL", "score", 40, -1, 1),
+
+        HistInfo( "ptJetOne_DL", "p_{T}(j1) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetTwo_DL", "p_{T}(j2) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetThree_DL", "p_{T}(j3) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetFour_DL", "p_{T}(j4) [GeV]", 19, 25, 500),
+        HistInfo( "N_B_jets_DL", "N_{b}", 10, -0.5, 9.5),
+        HistInfo( "N_looseB_jets_DL", "N_{b}^{loose}", 10, -0.5, 9.5),
+        HistInfo( "N_tightB_jets_DL", "N_{b}^{tight}", 10, -0.5, 9.5),
+
+        HistInfo( "HT_DL", "H_{T} [GeV]", 13, 300, 1600),
+        HistInfo( "MET_DL", "p_{T}^{miss} [GeV]", 19, 25, 500),
+
+        HistInfo( "Min_dR_Bs_DL", "Min. #Delta R(b,b)", 12, 0, 4.8),
+        HistInfo( "SecMin_dR_Bs_DL", "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
+
+        HistInfo( "minDR_B_lep_DL", "Min. #Delta R(l,b)", 12, 0, 4.8),
+        HistInfo( "secMinDR_B_lep_DL", "Sec. min. #Delta R(l,b)", 12, 0, 4.8)
+
+    };
+
+    return histInfoVec;
+}
+
+std::vector<HistInfo>* fourTopHists::allHistsML() {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
+    
+    *histInfoVec = {
+        HistInfo( "leptonPtLeading_ML", "p_{T}(l1) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtSecond_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonPtThird_ML", "p_{T}(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonEtaLeading_ML", "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
+        HistInfo( "leptonEtaSecond_ML", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
+        HistInfo( "leptonEtaThird_ML", "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
+        HistInfo( "leptonPhiLeading_ML", "#phi (l1)", 12, - M_PI, M_PI),
+        HistInfo( "leptonPhiSecond_ML", "#phi (l2)", 12, - M_PI, M_PI),
+        HistInfo( "leptonPhiThird_ML", "#phi (l2)", 12, - M_PI, M_PI),
+        HistInfo( "leptonELeading_ML", "E(l1) [GeV]", 18, 25, 205),
+        HistInfo( "leptonESecond_ML", "E(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonEThird_ML", "E(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonMvaTOPLeading_ML", "score", 40, -1, 1),
+        HistInfo( "leptonMvaTOPSecond_ML", "score", 40, -1, 1),
+        HistInfo( "leptonMvaTOPThird_ML", "score", 40, -1, 1),
+
+        HistInfo( "ptJetOne_ML", "p_{T}(j1) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetTwo_ML", "p_{T}(j2) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetThree_ML", "p_{T}(j3) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetFour_ML", "p_{T}(j4) [GeV]", 19, 25, 500),
+        HistInfo( "N_B_jets_ML", "N_{b}", 10, -0.5, 9.5),
+        HistInfo( "N_looseB_jets_ML", "N_{b}^{loose}", 10, -0.5, 9.5),
+        HistInfo( "N_tightB_jets_ML", "N_{b}^{tight}", 10, -0.5, 9.5),
+
+        HistInfo( "HT_ML", "H_{T} [GeV]", 13, 300, 1600),
+        HistInfo( "MET_ML", "p_{T}^{miss} [GeV]", 19, 25, 500),
+
+        HistInfo( "Min_dR_Bs_ML", "Min. #Delta R(b,b)", 12, 0, 4.8),
+        HistInfo( "SecMin_dR_Bs_ML", "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
+
+        HistInfo( "minDR_B_lep_ML", "Min. #Delta R(l,b)", 12, 0, 4.8),
+        HistInfo( "secMinDR_B_lep_ML", "Sec. min. #Delta R(l,b)", 12, 0, 4.8)
+    };
+
+    return histInfoVec;
 }

@@ -37,6 +37,7 @@ class FourTop {
         // IO-management
         TFile* outfile;
         
+        Event* currentEvent = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
         FourTop(std::vector< std::string > argvString);
@@ -49,6 +50,9 @@ class FourTop {
         
         // Main loop function
         void analyze();
+
+        void crzHandling(size_t sampleIndex);
+        void crwHandling(size_t sampleIndex);
 };
 
 

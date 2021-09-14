@@ -31,10 +31,10 @@ bool EventSelection4T::passBaselineEventSelection(Event* event) {
     if (n_lep == 2 && event->hasOSLeptonPair()) return false;
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
-    if (event->numberOfJets() < 4) return false;
+    if (event->numberOfJets() < 3) return false;
 
-    // 2 bjets
-    if (event->mediumBTagCollection().size() < 2) return false;
+    // 1 bjets
+    if (event->numberOfMediumBTaggedJets() < 1) return false;
 
     // Min MET of 25 (50?)
     // Min HT of 300(?)
@@ -48,6 +48,11 @@ bool EventSelection4T::passFullEventSelection(Event* event) {
     double n_lep = event->numberOfLightLeptons();
     if (n_lep < 2) return false;
     if (n_lep == 2 && event->hasOSLeptonPair()) return false;
+
+    if (event->numberOfJets() < 4) return false;
+
+    if (event->numberOfMediumBTaggedJets() < 2) return false;
+
 
     return true;
 }

@@ -22,68 +22,129 @@ void FourTop::analyze() {
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             if (entry > 10000) break;
             
-            Event* event = treeReader->buildEventPtr( entry );
+            currentEvent = treeReader->buildEventPtr( entry );
 
             // apply baseline selection
             // Right now we build CRZ from looser objects.
             // Necessary to account for looser leptons which are otherwise missed in the full lepton selection and could be part of a Z-boson resonance
-            EventSelection4T::applyBaselineObjectSelection(event);
+            EventSelection4T::applyBaselineObjectSelection(currentEvent);
 
-            if (! EventSelection4T::passBaselineEventSelection(event))  {
-                delete event;
+            if (! EventSelection4T::passBaselineEventSelection(currentEvent))  {
+                delete currentEvent;
                 continue;
             }
 
-            event->sortLeptonsByPt();
+            currentEvent->sortLeptonsByPt();
 
-            if (! EventSelection4T::passZBosonVeto(event)) {
+            if (! EventSelection4T::passZBosonVeto(currentEvent)) {
                 // TODO: CRZ handling
-                delete event;
+                crzHandling(sampleIndex);
+                delete currentEvent;
                 continue;
-            } else if (! EventSelection4T::passLowMassVeto(event)) {
-                delete event;
+            } else if (! EventSelection4T::passLowMassVeto(currentEvent)) {
+                delete currentEvent;
                 continue;
             }
             // Z-res: hasOSLeptonPair()
 
             // Full object selection (only keep the real useful stuff)
-            EventSelection4T::applyFullObjectSelection(event);
+            EventSelection4T::applyFullObjectSelection(currentEvent);
 
-            if (! EventSelection4T::passFullEventSelection(event)) {
-                delete event;
+            if (! EventSelection4T::passFullEventSelection(currentEvent)) {
+                delete currentEvent;
+                continue;
+            }
+
+            if (currentEvent->numberOfJets() < 6 && currentEvent->numberOfMediumBTaggedJets() == 2) {
+                crwHandling(sampleIndex);
+                delete currentEvent;
                 continue;
             }
 
             // Fill histograms
             std::vector<double> fillVec;
             size_t fillIndex = sampleIndex;
-            if (event->numberOfLightLeptons() == 2) {
-                fillVec = fourTopHists::fillLepInfoDL(event);
-                for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ){
-                    histogram::fillValue( (*hists_DL)[ dist ][ fillIndex ].get(), fillVec[ dist ], event->weight() );
-                }
-
+            if (currentEvent->numberOfLightLeptons() == 2) {
+                fillVec = fourTopHists::fillLepInfoDL(currentEvent);
+                histHelper::histFiller(fillVec, &(hists_DL->at(sampleIndex)), currentEvent->weight());
             } else {
-                fillVec = fourTopHists::fillLepInfoML(event);
-                for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ){
-                    histogram::fillValue( (*hists_ML)[ dist ][ fillIndex ].get(), fillVec[ dist ], event->weight() );
-                }
-
+                fillVec = fourTopHists::fillLepInfoML(currentEvent);
+                histHelper::histFiller(fillVec, &(hists_ML->at(sampleIndex)), currentEvent->weight());
             }
 
-            delete event;
+            delete currentEvent;
         }
         
         outfile->cd();
+        outfile->mkdir(treeReader->currentSample().fileName().c_str());
+        outfile->cd(treeReader->currentSample().fileName().c_str());
+
         // works when handling only one sample
         for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-            hists_DL->at(dist)[sampleIndex]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+            hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
         }
 
         for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ) {
-            hists_ML->at(dist)[sampleIndex]->Write(TString(histInfoVec_ML->at(dist).name()), TObject::kOverwrite);
+            hists_ML->at(sampleIndex)[dist]->Write(TString(histInfoVec_ML->at(dist).name()), TObject::kOverwrite);
         }
+
+        for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
+            hists_CRZ->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec_CRW->size(); ++dist ) {
+            hists_CRW->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
+        }
+
+        outfile->cd("..");
     }
 
+    outfile->mkdir("nonPrompt");
+    outfile->cd("nonPrompt");
+
+    for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
+        hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+    }
+
+    for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ) {
+        hists_ML->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_ML->at(dist).name()), TObject::kOverwrite);
+    }
+
+    for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
+        hists_CRZ->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
+    }
+
+    for( size_t dist = 0; dist < histInfoVec_CRW->size(); ++dist ) {
+        hists_CRW->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
+    }
+
+
     outfile->Close();
+}
+
+void FourTop::crzHandling(size_t sampleIndex) {
+    std::vector<double> fillVec = {
+        double(currentEvent->numberOfJets()),
+        double(currentEvent->numberOfMediumBTaggedJets()),
+        currentEvent->HT(),
+        currentEvent->metPt(),
+        currentEvent->lightLepton(0).pt(),
+        currentEvent->lightLepton(1).pt(),
+        currentEvent->lightLepton(2).pt()
+    };
+
+    histHelper::histFiller(fillVec, &(hists_CRZ->at(sampleIndex)), currentEvent->weight());
+}
+
+void FourTop::crwHandling(size_t sampleIndex) {
+    std::vector<double> fillVec = {
+        double(currentEvent->numberOfJets()),
+        double(currentEvent->numberOfMediumBTaggedJets()),
+        currentEvent->HT(),
+        currentEvent->metPt(),
+        currentEvent->lightLepton(0).pt(),
+        currentEvent->lightLepton(1).pt()
+    };
+
+    histHelper::histFiller(fillVec, &(hists_CRW->at(sampleIndex)), currentEvent->weight());
 }
