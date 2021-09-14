@@ -236,7 +236,7 @@ std::vector<HistInfo>* fourTopHists::allHistsML() {
         HistInfo( "N_B_jets_ML", "N_{b}", 10, -0.5, 9.5),
         HistInfo( "N_looseB_jets_ML", "N_{b}^{loose}", 10, -0.5, 9.5),
         HistInfo( "N_tightB_jets_ML", "N_{b}^{tight}", 10, -0.5, 9.5),
-        HistInfo( "N_jets_DL", "N_{jets}", 15, -0.5, 14.5),
+        HistInfo( "N_jets_ML", "N_{jets}", 15, -0.5, 14.5),
 
 
         HistInfo( "HT_ML", "H_{T} [GeV]", 13, 300, 1600),
