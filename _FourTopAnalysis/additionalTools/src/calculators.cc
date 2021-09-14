@@ -36,7 +36,7 @@ std::vector<double> calculators::mindRLepAndJet(JetCollection& jets, LeptonColle
 
     for (jet =  jets.begin(); jet != jets.end() - 1; jet++) {
         for (lep = leptons.begin(); lep != leptons.end(); lep++) {
-            if (*jet == *lep) continue;
+            //if (*jet == *lep) continue;
             double dr = deltaR(**jet, **lep);
 
             auto it = std::upper_bound(dRs.cbegin(), dRs.cend(), dr); //1

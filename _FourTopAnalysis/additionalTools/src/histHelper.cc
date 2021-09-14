@@ -20,7 +20,7 @@ std::vector< std::vector< std::shared_ptr<TH1D>>>* histHelper::initHistograms(st
             if( p < sampleVec.size() ){
                 ret->at(p)[dist] = histInfoVec->at(dist).makeHist( histInfoVec->at(dist).name() + "_" + sampleVec[p].uniqueName() );
             } else {
-                (*ret)[ dist ][ p ] = histInfoVec->at(dist).makeHist( histInfoVec->at(dist).name() + "_nonprompt" );
+                ret->at(p)[dist] = histInfoVec->at(dist).makeHist( histInfoVec->at(dist).name() + "_nonprompt" );
             }
         }
     }
