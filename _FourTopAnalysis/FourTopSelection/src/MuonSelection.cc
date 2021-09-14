@@ -4,7 +4,7 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-bool ObjectSelection4T::looseMuon(const Electron& electron) {
+bool ObjectSelection4T::looseMuon(const Muon& muon) {
     //if (electron.leptonMVATOP()) return false;
 
     return true;
