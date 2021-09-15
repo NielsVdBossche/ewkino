@@ -26,6 +26,9 @@ bool ElectronSelector::isLooseBase() const{
     if( electronPtr->numberOfMissingHits() >= 2 ) return false;
     if( electronPtr->miniIso() >= 0.4 ) return false;
     if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
+
+    if (electronPtr->leptonMVATOP() < 0.5) return false;
+
     return true;
 }
 
@@ -61,10 +64,13 @@ bool ElectronSelector::isFOBase() const{
     } else {
         if( electronPtr->sigmaIEtaEta() >= 0.030 ) return false;
     }
+    /*
+    Seems not relevant when leptonMVATOP is available
     if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
         if( !electronPtr->passElectronMVAFall17NoIsoWP80() ) return false;
         if( electronPtr->ptRatio() <= 0.7 ) return false;
     }
+    */
     if( !electronPtr->passConversionVeto() ) return false;
     return true;
 }
@@ -94,7 +100,10 @@ tight electron selection
 
 bool ElectronSelector::isTightBase() const{
     if( !isFO() ) return false;
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ) return false;
+    //if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ) return false;
+
+    if (electronPtr->pt() < 20) return false;
+
     return true;
 }
 

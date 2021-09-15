@@ -7,8 +7,6 @@
 void EventSelection4T::applyBaselineObjectSelection(Event* event) {
     event->removeTaus();
     event->selectLooseLeptons();
-    event->selectElectrons(ObjectSelection4T::looseElectron);
-    event->selectMuons(ObjectSelection4T::looseMuon);
     event->cleanElectronsFromLooseMuons();
 
     event->selectGoodJets();
@@ -16,10 +14,7 @@ void EventSelection4T::applyBaselineObjectSelection(Event* event) {
 }
 
 void EventSelection4T::applyFullObjectSelection(Event* event) {
-    event->selectElectrons(ObjectSelection4T::elID);
-    event->selectMuons(ObjectSelection4T::muonID);
-    event->selectJets(ObjectSelection4T::jetID); // Still necessary?
-    // Medium b-tagged jets
+    event->selectTightLeptons();
 
 }
 

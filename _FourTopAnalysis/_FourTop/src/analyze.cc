@@ -4,7 +4,7 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-void FourTop::analyze() {
+void FourTop:: analyze() {
 
     // Loop samples
 

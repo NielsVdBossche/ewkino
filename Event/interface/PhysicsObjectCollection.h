@@ -106,7 +106,6 @@ template< typename ObjectType > void PhysicsObjectCollection< ObjectType >::sele
     }
 }
 
-
 template< typename ObjectType > typename PhysicsObjectCollection< ObjectType >::size_type PhysicsObjectCollection< ObjectType >::count( bool (ObjectType::*passSelection)() const ) const{
     size_type counter = 0;
     for( auto& objectPtr : *this ){

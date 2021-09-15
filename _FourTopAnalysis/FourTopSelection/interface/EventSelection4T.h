@@ -9,8 +9,6 @@
 #include "../../../Event/interface/MuonCollection.h"
 #include "../../../Event/interface/JetCollection.h"
 
-#include "objectSelection4T.h"
-
 
 // Class eventSelection inheriting from Event? Does this make it handy to perform event selection?
 // Evt zonder inheritance maar grote call dan... Beter met? buildEvent op treeReader zou dan rechtstreeks hierop feeden...
