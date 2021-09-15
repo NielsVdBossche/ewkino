@@ -52,27 +52,4 @@ void FourTop::createHistInfoVec() {
     hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
     hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
 
-    /*
-    hists_DL = new std::vector< std::vector< std::shared_ptr< TH1D > > >( histInfoVec_DL->size(), std::vector< std::shared_ptr< TH1D > >( sampleVec.size() + 1 )  );
-    for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ){
-        for( size_t p = 0; p < sampleVec.size() + 1; ++p ){
-            if( p < sampleVec.size() ){
-                (*hists_DL)[ dist ][ p ] = histInfoVec_DL->at(dist).makeHist( histInfoVec_DL->at(dist).name() + "_" + sampleVec[p].uniqueName() );
-            } else {
-                //(*hists_DL)[ dist ][ p ] = histInfoVec_DL->at(dist).makeHist( histInfoVec_DL->at(dist).name() + "_nonprompt" );
-            }
-        }
-    }
-
-    hists_ML = new std::vector< std::vector< std::shared_ptr< TH1D > > >( histInfoVec_ML->size(), std::vector< std::shared_ptr< TH1D > >( sampleVec.size() + 1 )  );
-    for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ){
-        for( size_t p = 0; p < sampleVec.size() + 1; ++p ){
-            if( p < sampleVec.size() ){
-                (*hists_ML)[ dist ][ p ] = histInfoVec_ML->at(dist).makeHist( histInfoVec_ML->at(dist).name() + "_" + sampleVec[p].uniqueName() );
-            } else {
-                //(*hists_ML)[ dist ][ p ] = histInfoVec_ML->at(dist).makeHist( histInfoVec_ML->at(dist).name() + "_nonprompt" );
-            }
-        }
-    }
-    */
 }

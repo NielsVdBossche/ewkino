@@ -90,7 +90,14 @@ void FourTop:: analyze() {
         }
         
         // Output management: save histograms to a ROOT file.
+        // Processes were named in samplelist. Should use this to make directory for process and subdir for sample
+
         outfile->cd();
+        const char* processName = treeReader->currentSample().processName().c_str();
+        if (! outfile->GetDirectory(processName)) {
+            outfile->mkdir(processName);
+        }
+        outfile->cd(processName);
         outfile->mkdir(treeReader->currentSample().fileName().c_str());
         outfile->cd(treeReader->currentSample().fileName().c_str());
 
