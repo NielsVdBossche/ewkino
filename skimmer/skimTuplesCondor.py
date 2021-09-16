@@ -74,9 +74,9 @@ if __name__ == '__main__' :
     
     with open("skimjob.sub", 'w') as descr:
         descr.write("executable =  /user/nivanden/ewkino/skimmer/skimmer.sh\n")
-        descr.write("output =  /user/nivanden/condor/ouput/skimmer_$(ProcId).out\n")
-        descr.write("error =  /user/nivanden/condor/error/skimmer_$(ProcId).err\n")
-        descr.write("log = user/nivanden/condor/logs/skimmer_$(ProcId).log\n")
+        descr.write("output =  /user/nivanden/condor/ouput/skimmer$(Process).out\n")
+        descr.write("error =  /user/nivanden/condor/error/skimmer$(Process).err\n")
+        descr.write("log = user/nivanden/condor/logs/skimmer$(Process).log\n")
         descr.write("queue")
 
     for sample_directory, sub_directory, output_directory in zip( sample_directories, sample_sub_directories, sample_output_directories ):
@@ -93,7 +93,7 @@ if __name__ == '__main__' :
                 initializeJobScript( script, cmssw_version = 'CMSSW_10_6_20')
                 script.write('cd {}\n'.format( current_directory ) ) 
                 for f in chunk :
-                    skim_command = './skimmer $TMPDIR/{} {} {}\n'.format( f.split('/')[-1], output_directory, skim_condition )
+                    skim_command = './skimmer {} {} {}\n'.format( f.split('/')[-1], output_directory, skim_condition )
                     script.write( skim_command )
             
 
