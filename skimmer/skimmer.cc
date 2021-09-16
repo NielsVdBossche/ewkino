@@ -16,7 +16,7 @@
 #include "interface/skimSelections.h"
 
 
-void skimFile( const std::string& pathToFile, const std::string& outputDirectory, const std::string& skimCondition ){
+void skimFile( const std::string& pathToFile, const std::string& outputDirectory, const std::string& skimConditionString ){
 
     std::cout << "skimming " << pathToFile << std::endl;
 
@@ -48,6 +48,8 @@ void skimFile( const std::string& pathToFile, const std::string& outputDirectory
     std::shared_ptr< TTree > outputTreePtr( std::make_shared< TTree >( "blackJackAndHookersTree","blackJackAndHookersTree" ) );
     treeReader.setOutputTree( outputTreePtr.get() );
 
+    skimCondition currentSkimCondition = giveCondition(skimConditionString);
+
     long unsigned nentries = treeReader.numberOfEntries();
     for( long unsigned entry = 0; entry < nentries; ++entry ){
 
@@ -55,7 +57,7 @@ void skimFile( const std::string& pathToFile, const std::string& outputDirectory
         Event event = treeReader.buildEvent( entry, true, true, false, false );
 
         //apply event selection
-        if( !passSkim( event, skimCondition ) ) continue;
+        if( !passSkim( event, currentSkimCondition ) ) continue;
 
         //fill new tree
         outputTreePtr->Fill();

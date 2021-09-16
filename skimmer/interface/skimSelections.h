@@ -10,12 +10,24 @@ Make sure to always add new skim conditions to the std::map in the passSkim func
 //include other parts of framework
 #include "../../Event/interface/Event.h"
 
+enum skimCondition {
+    noskim,
+    singlelepton,
+    dilepton,
+    trilepton,
+    fourlepton,
+    fakerate,
+    light_SSdilepton_or_trilep
+};
+
+skimCondition giveCondition(const std::string& condstring);
+
 bool passSingleLeptonSkim( Event& );
 bool passDileptonSkim( Event& );
 bool passTrileptonSkim( Event& );
 bool passFourLeptonSkim( Event& );
 bool passFakeRateSkim( Event& );
-bool passSkim( Event&, const std::string& skimCondition );
+bool passSkim( Event&, skimCondition );
 
 bool passLightDileptonSkim(Event &);
 bool passLightTrilepSkim(Event&);

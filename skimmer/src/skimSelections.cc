@@ -61,21 +61,38 @@ bool passFakeRateSkim( Event& event ){
     return true;
 }
 
-
-bool passSkim( Event& event, const std::string& skimCondition ){
-    static std::map< std::string, std::function< bool(Event&) > > skimFunctionMap = {
-        { "noskim", [](Event&){ return true; } },
-        { "singlelepton", passSingleLeptonSkim },
-        { "dilepton", passDileptonSkim },
-        { "trilepton", passTrileptonSkim },
-        { "fourlepton", passFourLeptonSkim },
-        { "fakerate", passFakeRateSkim },
-        { "light_SSdilepton_or_trilep", passLight_SSdilepton_or_trilep }
+skimCondition giveCondition(const std::string& condstring) {
+    static std::map< std::string, skimCondition > skimFunctionMap = {
+        { "noskim", noskim },
+        { "singlelepton", singlelepton },
+        { "dilepton", dilepton },
+        { "trilepton", trilepton },
+        { "fourlepton", fourlepton },
+        { "fakerate", fakerate },
+        { "light_SSdilepton_or_trilep", light_SSdilepton_or_trilep }
     };
-    auto it = skimFunctionMap.find( skimCondition );
+
+    auto it = skimFunctionMap.find( condstring );
+
     if( it == skimFunctionMap.cend() ){
-        throw std::invalid_argument( "unknown skim condition " + skimCondition );
+        throw std::invalid_argument( "unknown skim condition " + condstring );
     } else {
-        return (it->second)(event);
+        return it->second;
     }
+}
+
+bool passSkim( Event& event, skimCondition cond){
+    static std::map< skimCondition, std::function< bool(Event&) > > skimFunctionMap = {
+        { noskim, [](Event&){ return true; } },
+        { singlelepton, passSingleLeptonSkim },
+        { dilepton, passDileptonSkim },
+        { trilepton, passTrileptonSkim },
+        { fourlepton, passFourLeptonSkim },
+        { fakerate, passFakeRateSkim },
+        { light_SSdilepton_or_trilep, passLight_SSdilepton_or_trilep }
+    };
+    //auto it = skimFunctionMap.find( cond );
+
+    return skimFunctionMap[cond](event);
+
 }
