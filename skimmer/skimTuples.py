@@ -82,7 +82,7 @@ if __name__ == '__main__' :
                 initializeJobScript( script )
                 script.write('cd {}\n'.format( current_directory ) ) 
                 for f in chunk :
-                    skim_command = './skimmer {} {} {}\n'.format( f.split('/')[-1], output_directory, skim_condition )
+                    skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
                     script.write( skim_command )
             
             #submit job and catch errors 
