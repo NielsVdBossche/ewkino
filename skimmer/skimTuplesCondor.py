@@ -99,19 +99,4 @@ if __name__ == '__main__' :
 
             submission_command = 'condor_submit skimjob.sub'
 
-            while True:
-                try:
-                    qsub_output = subprocess.check_output( submission_command, shell=True, stderr=subprocess.STDOUT )
-
-                #submission failed, try again after one second 
-                except subprocess.CalledProcessError as error:
-                    print('Caught error : "{}".\t Attempting resubmission.'.format( error.output.split('\n')[0] ) )
-                    time.sleep( 1 )
-
-                #submission succeeded 
-                else:
-                    first_line = qsub_output.split('\n')[0]
-                    print( first_line )
-
-                    #break loop by returning job id when submission was successful 
-                    #return first_line.split('.')[0] 
+            qsub_output = subprocess.check_output( submission_command, shell=True, stderr=subprocess.STDOUT )
