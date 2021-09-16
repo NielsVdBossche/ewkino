@@ -93,7 +93,7 @@ if __name__ == '__main__' :
                 initializeJobScript( script, cmssw_version = 'CMSSW_10_6_20')
                 script.write('cd {}\n'.format( current_directory ) ) 
                 for f in chunk :
-                    skim_command = './skimmer $TMPDIR/{} {} {}\n'.format( f.split('/')[-1], output_directory, skim_condition )
+                    skim_command = './skimmer {} {} {}\n'.format( f.split('/')[-1], output_directory, skim_condition )
                     script.write( skim_command )
             
 
