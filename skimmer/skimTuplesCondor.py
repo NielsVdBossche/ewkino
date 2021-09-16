@@ -73,10 +73,11 @@ if __name__ == '__main__' :
     
     
     with open("skimjob.sub", 'w') as descr:
-        descr.write("executable =  /user/nivanden/ewkino/skimmer/skimmer.sh")
-        descr.write("output =  /user/nivanden/condor/ouput/skimmer_$(ProcId).out")
-        descr.write("error =  /user/nivanden/condor/error/skimmer_$(ProcId).err")
-        descr.write("log = user/nivanden/condor/logs/skimmer_$(ProcId).log")
+        descr.write("executable =  /user/nivanden/ewkino/skimmer/skimmer.sh\n")
+        descr.write("output =  /user/nivanden/condor/ouput/skimmer_$(ProcId).out\n")
+        descr.write("error =  /user/nivanden/condor/error/skimmer_$(ProcId).err\n")
+        descr.write("log = user/nivanden/condor/logs/skimmer_$(ProcId).log\n")
+        descr.write("queue")
 
     for sample_directory, sub_directory, output_directory in zip( sample_directories, sample_sub_directories, sample_output_directories ):
     
