@@ -27,8 +27,10 @@ Event::Event( const TreeReader& treeReader,
 
     //WARNING : use treeReader::_scaledWeight instead of treeReader::_weight since the former already includes cross-section and lumiosity scaling
     _weight( treeReader._scaledWeight ),
-    _samplePtr( treeReader.currentSamplePtr() )
-    {}
+    _samplePtr( treeReader.currentSamplePtr() ) {
+        
+    //makeSubLeptonCollections();
+}
 
 
 Event::~Event(){
@@ -38,6 +40,19 @@ Event::~Event(){
     delete _triggerInfoPtr;
     delete _jetInfoPtr;
     delete _eventTagsPtr;
+
+    if (_lightLeptonCollPtr) {
+        delete _lightLeptonCollPtr;
+    }
+    if (_electronCollectionPtr) {
+        delete _electronCollectionPtr;
+    }
+    if (_muonCollectionPtr) {
+        delete _muonCollectionPtr;
+    }
+    if (_tauCollectionPtr) {
+        delete _tauCollectionPtr;
+    }
     if( hasGeneratorInfo() ){
         delete _generatorInfoPtr;
     }
@@ -258,4 +273,26 @@ LeptonCollection::size_type Event::WLeptonIndex(){
 double Event::mtW(){
     initializeZBosonCandidate();
     return mt( WLepton(), met() );
+}
+
+
+void Event::makeSubLeptonCollections() {
+    if (_lightLeptonCollPtr) {
+        delete _lightLeptonCollPtr;
+    }
+    if (_electronCollectionPtr) {
+        delete _electronCollectionPtr;
+    }
+    if (_muonCollectionPtr) {
+        delete _muonCollectionPtr;
+    }
+    if (_tauCollectionPtr) {
+        delete _tauCollectionPtr;
+    }
+
+    _lightLeptonCollPtr = _leptonCollectionPtr->lightLeptonCollectionPtr();
+    _electronCollectionPtr = _leptonCollectionPtr->electronCollectionPtr();
+    _muonCollectionPtr = _leptonCollectionPtr->muonCollectionPtr();
+    _tauCollectionPtr = _leptonCollectionPtr->tauCollectionPtr();
+
 }

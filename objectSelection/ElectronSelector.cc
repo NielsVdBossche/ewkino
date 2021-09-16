@@ -65,7 +65,7 @@ bool ElectronSelector::isFOBase() const{
         if( electronPtr->sigmaIEtaEta() >= 0.030 ) return false;
     }
     /*
-    Seems not relevant when leptonMVATOP is available
+    Seems not relevant when leptonMVATOP is available?
     if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
         if( !electronPtr->passElectronMVAFall17NoIsoWP80() ) return false;
         if( electronPtr->ptRatio() <= 0.7 ) return false;

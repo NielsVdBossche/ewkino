@@ -28,7 +28,7 @@ LeptonCollection::LeptonCollection( const TreeReader& treeReader ){
     }
 }
 
-
+/*
 MuonCollection LeptonCollection::muonCollection() const{
     std::vector< std::shared_ptr< Muon > > muonVector;
     for( const auto& leptonPtr : *this ){
@@ -70,8 +70,50 @@ LightLeptonCollection LeptonCollection::lightLeptonCollection() const{
         }
     }
     return LightLeptonCollection( lightLeptonVector );
+}*/
+
+MuonCollection* LeptonCollection::muonCollectionPtr() const{
+    std::vector< std::shared_ptr< Muon > > muonVector;
+    for( const auto& leptonPtr : *this ){
+        if( leptonPtr->isMuon() ){
+            muonVector.push_back( std::static_pointer_cast< Muon >( leptonPtr ) );
+        }
+    }
+    return new MuonCollection( muonVector );
 }
 
+
+ElectronCollection* LeptonCollection::electronCollectionPtr() const{
+    std::vector< std::shared_ptr< Electron > > electronVector;
+    for( const auto& leptonPtr : *this ){
+        if( leptonPtr->isElectron() ){
+            electronVector.push_back( std::static_pointer_cast< Electron >( leptonPtr ) );
+        }
+    }
+    return new ElectronCollection( electronVector );
+}
+
+
+TauCollection* LeptonCollection::tauCollectionPtr() const{
+    std::vector< std::shared_ptr< Tau > > tauVector;
+    for( const auto& leptonPtr : *this  ){
+        if( leptonPtr->isTau() ){
+            tauVector.push_back( std::static_pointer_cast< Tau >( leptonPtr ) );
+        }
+    }
+    return new TauCollection( tauVector );
+}
+
+
+LightLeptonCollection* LeptonCollection::lightLeptonCollectionPtr() const{
+    std::vector< std::shared_ptr< LightLepton > > lightLeptonVector;
+    for( const auto leptonPtr : *this ){
+        if( leptonPtr->isLightLepton() ){
+            lightLeptonVector.push_back( std::static_pointer_cast< LightLepton >( leptonPtr ) );
+        }
+    }
+    return new LightLeptonCollection( lightLeptonVector );
+}
 
 void LeptonCollection::selectLooseLeptons(){
     selectObjects( &Lepton::isLoose );

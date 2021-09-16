@@ -84,7 +84,6 @@ if __name__ == '__main__' :
                 for f in chunk :
                     skim_command = 'dccp dcap://maite.iihe.ac.be/{} $TMPDIR/\n'.format(f)
                     skim_command += './skimmer $TMPDIR/{} {} {}\n'.format( f.split('/')[-1], output_directory, skim_condition )
-                    print(skim_condition)
                     script.write( skim_command )
             
             #submit job and catch errors 

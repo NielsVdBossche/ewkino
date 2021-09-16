@@ -50,7 +50,7 @@ void FourTop:: analyze() {
 
             if (! EventSelection4T::passZBosonVeto(currentEvent)) {
                 // Build CRZ
-
+                currentEvent->makeSubLeptonCollections();
                 crzHandling(fillIndex);
                 delete currentEvent;
                 continue;
@@ -66,6 +66,8 @@ void FourTop:: analyze() {
                 delete currentEvent;
                 continue;
             }
+
+            currentEvent->makeSubLeptonCollections();
 
             // Build CRW (might expand these)
             if (currentEvent->numberOfLightLeptons() == 2 && currentEvent->numberOfJets() < 6 && currentEvent->numberOfMediumBTaggedJets() == 2) {

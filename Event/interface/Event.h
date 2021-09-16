@@ -103,23 +103,24 @@ class Event {
         void cleanTausFromFOLightLeptons( const double coneSize = 0.4 ){ _leptonCollectionPtr->cleanTausFromFOLightLeptons( coneSize ); }
 
         //separate lepton flavor collections
-        MuonCollection muonCollection() const{ return _leptonCollectionPtr->muonCollection(); }
-        ElectronCollection electronCollection() const{ return _leptonCollectionPtr->electronCollection(); }
-        TauCollection tauCollection() const{ return _leptonCollectionPtr->tauCollection(); }
-        LightLeptonCollection lightLeptonCollection() const{ return _leptonCollectionPtr->lightLeptonCollection(); }
+        MuonCollection muonCollection() const{ return *_muonCollectionPtr; }
+        ElectronCollection electronCollection() const{ return *_electronCollectionPtr; }
+        TauCollection tauCollection() const{ return *_tauCollectionPtr; }
+        LightLeptonCollection lightLeptonCollection() const{ return *_lightLeptonCollPtr; }
         LeptonCollection::size_type numberOfMuons() const{ return _leptonCollectionPtr->numberOfMuons(); }
         LeptonCollection::size_type numberOfElectrons() const{ return _leptonCollectionPtr->numberOfElectrons(); }
         LeptonCollection::size_type numberOfTaus() const{ return _leptonCollectionPtr->numberOfTaus(); }
         LeptonCollection::size_type numberOfLightLeptons() const{ return _leptonCollectionPtr->numberOfLightLeptons(); }
+        void makeSubLeptonCollections();
 
         //remove taus from the lepton collection
         void removeTaus(){ _leptonCollectionPtr->removeTaus(); }
 
         //consider making these functions more efficient at some point with caching of the collections that are now generated every time
-        LightLepton& lightLepton( const LightLeptonCollection::size_type leptonIndex ) const{ return lightLeptonCollection()[ leptonIndex ]; }
-        Muon& muon( const MuonCollection::size_type muonIndex ) const{ return muonCollection()[ muonIndex ]; }
-        Electron& electron( const ElectronCollection::size_type electronIndex ) const{ return electronCollection()[ electronIndex ]; }
-        Tau& tau( const TauCollection::size_type tauIndex ) const{ return tauCollection()[ tauIndex ]; }
+        LightLepton& lightLepton( const LightLeptonCollection::size_type leptonIndex ) const{ return (*_lightLeptonCollPtr)[ leptonIndex ]; }
+        Muon& muon( const MuonCollection::size_type muonIndex ) const{ return (*_muonCollectionPtr)[ muonIndex ]; }
+        Electron& electron( const ElectronCollection::size_type electronIndex ) const{ return (*_electronCollectionPtr)[ electronIndex ]; }
+        Tau& tau( const TauCollection::size_type tauIndex ) const{ return (*_tauCollectionPtr)[ tauIndex ]; }
 
         //lepton collections based on selection
         LeptonCollection looseLeptonCollection() const{ return _leptonCollectionPtr->looseLeptonCollection(); }
@@ -237,7 +238,13 @@ class Event {
         unsigned _numberOfVertices = 0;
         double _weight = 1;
         const Sample* _samplePtr = nullptr;
+
         JetCollection* _bJetCollectionPtr = nullptr; // jets selected at the general b-tag WP
+
+        LightLeptonCollection* _lightLeptonCollPtr = nullptr;
+        ElectronCollection* _electronCollectionPtr = nullptr;
+        MuonCollection* _muonCollectionPtr = nullptr;
+        TauCollection* _tauCollectionPtr = nullptr;
 
         //presence of Z boson
         bool ZIsInitialized = false;
