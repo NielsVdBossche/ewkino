@@ -2,12 +2,13 @@
 #import python library classes
 import os
 import sys
+import subprocess
+import time
+
 
 #import other code from framework
 from jobSubmission import submitQsubJob, initializeJobScript
 from fileListing import *
-
-import htcondor
 
 
 ## Is this compatible with UL directory structure?
@@ -71,6 +72,12 @@ if __name__ == '__main__' :
         sample_output_directories.append( output_directory )
     
     
+    with open("skimjob.sub", 'w') as descr:
+        descr.write("executable =  /user/nivanden/ewkino/skimmer/skimmer.sh")
+        descr.write("output =  /user/nivanden/condor/ouput/skimmer_$(ProcId).out")
+        descr.write("error =  /user/nivanden/condor/error/skimmer_$(ProcId).err")
+        descr.write("log = user/nivanden/condor/logs/skimmer_$(ProcId).log")
+
     for sample_directory, sub_directory, output_directory in zip( sample_directories, sample_sub_directories, sample_output_directories ):
     
         #identify locations of files to process for a given sample 
@@ -88,18 +95,22 @@ if __name__ == '__main__' :
                     skim_command = './skimmer $TMPDIR/{} {} {}\n'.format( f.split('/')[-1], output_directory, skim_condition )
                     script.write( skim_command )
             
-            #submit job and catch errors 
-            #submitQsubJob( script_name, wall_time )
-            currentJob = htconder.Submit({"executable": "/user/nivanden/ewkino/skimmer/skimmer.sh",  # the program to run on the execute node
-                                            "output": "/user/nivanden/condor/ouput/skimmer_$(ProcId).out",       # anything the job prints to standard output will end up in this file
-                                            "error": "/user/nivanden/condor/error/skimmer_$(ProcId).err",        # anything the job prints to standard error will end up in this file
-                                            "log": "/user/nivanden/condor/logs/skimmer_$(ProcId).log",          # this file will contain a record of what happened to the job
-                                            "request_cpus": "1",            # how many CPU cores we want
-                                        })
 
-            schedd = htcondor.Schedd()
-            with schedd.transaction() as txn:
-                submit_result = currentJob.queue(txn)  # submit one job for each item in the itemdata
+            submission_command = 'condor_submit skimjob.sub'
 
-            print(submit_result.cluster())
+            while True:
+                try:
+                    qsub_output = subprocess.check_output( submission_command, shell=True, stderr=subprocess.STDOUT )
 
+                #submission failed, try again after one second 
+                except subprocess.CalledProcessError as error:
+                    print('Caught error : "{}".\t Attempting resubmission.'.format( error.output.split('\n')[0] ) )
+                    time.sleep( 1 )
+
+                #submission succeeded 
+                else:
+                    first_line = qsub_output.split('\n')[0]
+                    print( first_line )
+
+                    #break loop by returning job id when submission was successful 
+                    #return first_line.split('.')[0] 
