@@ -47,10 +47,10 @@ void FourTop:: analyze() {
             }
 
             // Remove mass resonances
+            currentEvent->makeSubLeptonCollections();
 
             if (! EventSelection4T::passZBosonVeto(currentEvent)) {
                 // Build CRZ
-                currentEvent->makeSubLeptonCollections();
                 crzHandling(fillIndex);
                 delete currentEvent;
                 continue;
