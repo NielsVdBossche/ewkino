@@ -44,6 +44,8 @@ def initializeJobScript( script, cmssw_version = 'CMSSW_10_2_22' ):
     working_directory = os.path.abspath( os.getcwd() )
     script.write('cd {}\n'.format( working_directory ) )
 
+    script.write("export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER)\n")
+
 
 
 def runCommandAsJob( command, script_name, wall_time = '24:00:00', num_threads = 1, high_memory = False, cmssw_version = 'CMSSW_10_2_22' ):

@@ -2,6 +2,8 @@
 #import python library classes
 import os
 import sys
+import subprocess
+
 
 #import other code from framework
 from jobSubmission import submitQsubJob, initializeJobScript
@@ -46,9 +48,9 @@ if __name__ == '__main__' :
     files_per_job = int(sys.argv[5]) if len( sys.argv ) >= 6 else 50
     wall_time = sys.argv[6] if len( sys.argv ) >= 7 else '24:00:00' 
     if len( sys.argv ) <= 4:
-        print( 'Error: skimTuples.py requires additional command-line arguments.' )
-        print( 'Usage: python skimTuples.py < input_directory > < ntuple_version > < output_directory > < skim_condition > < files_per_job > < wall_time >' )
-        print( 'files_per_job and wall_time have default values of 50 and 24:00:00' )
+        print('Error: skimTuples.py requires additional command-line arguments.')
+        print('Usage: python skimTuples.py < input_directory > < ntuple_version > < output_directory > < skim_condition > < files_per_job > < wall_time >')
+        print('files_per_job and wall_time have default values of 50 and 24:00:00')
         sys.exit()
     
     #make a list of samples (the main directories) and the subdirectories with the latest version of the ntuples ( one for each main directory )
@@ -64,7 +66,8 @@ if __name__ == '__main__' :
     for sample in sample_names:
         output_directory = os.path.join( output_directory_base, 'ntuples_skimmed_{}_version_{}'.format( sample, version_name ) )
         if not os.path.exists( output_directory ):
-            os.makedirs( output_directory )
+            subprocess.check_output( "gfal-mkdir srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/nivanden/skims/ntuples_skimmed_{}_version_{}".format(sample, version_name), shell=True, stderr=subprocess.STDOUT )
+            #os.makedirs( output_directory )
         sample_output_directories.append( output_directory )
     
     
@@ -84,6 +87,6 @@ if __name__ == '__main__' :
                 for f in chunk :
                     skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
                     script.write( skim_command )
-            
+                script.write("gfal-copy file://$TMPDIR/*.root srm://maite.iihe.ac.be:8443{}".format(output_directory))
             #submit job and catch errors 
             submitQsubJob( script_name, wall_time )
