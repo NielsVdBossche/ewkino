@@ -74,9 +74,11 @@ if __name__ == '__main__' :
     
     with open("skimjob.sub", 'w') as descr:
         descr.write("executable =  /user/nivanden/ewkino/skimmer/skimmer.sh\n")
-        #descr.write("output =  /user/nivanden/condor/ouput/skimmer$(Process).out\n")
-        descr.write("error =  /user/nivanden/condor/error/skimmer$(Process).err\n")
-        descr.write("log = user/nivanden/condor/logs/skimmer$(Process).log\n")
+        #descr.write("output =  /user/nivanden/condor/ouput/skimmer_ID$(ClusterId).$(ProcId).out\n")
+        descr.write("error =  /user/nivanden/condor/error/skimmer_ID$(ClusterId).$(ProcId).err\n")
+        descr.write("log = /user/nivanden/condor/logs/skimmer_ID$(ClusterId).$(ProcId).log\n")
+        #descr.write("request_memory = 4096\n request_cpus   = 1\n")
+        #descr.write("should_transfer_files = YES\n")
         descr.write("queue")
 
     for sample_directory, sub_directory, output_directory in zip( sample_directories, sample_sub_directories, sample_output_directories ):
