@@ -93,6 +93,7 @@ bool passSkim( Event& event, skimCondition cond){
     };
     //auto it = skimFunctionMap.find( cond );
 
+    event.makeSubLeptonCollections();
     return skimFunctionMap[cond](event);
 
 }
