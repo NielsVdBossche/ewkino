@@ -70,7 +70,7 @@ void skimFile( const std::string& pathToFile, const std::string& outputDirectory
     outputFilePtr->Close();
 }
 
-
+/*
 int main( int argc, char* argv[] ){
     if( argc != 4 ){
         std::cerr << "skimmer requires exactly three arguments to run : input_file_path, output_directory, skim_condition" << std::endl;
@@ -84,5 +84,24 @@ int main( int argc, char* argv[] ){
     std::string& skimCondition = argvStr[3];
     skimFile( input_file_path, output_directory, skimCondition );
 
+    return 0;
+}*/
+
+int main(int argc, char* argv[]) {
+    if (argc < 4) {
+        std::cerr << "skimmer requires at least three arguments to run : input_file_path, output_directory, skim_condition" << std::endl;
+        return -1;
+    }
+
+    std::vector< std::string > argvStr( &argv[0], &argv[0] + argc );
+
+    //std::string& input_file_path = argvStr[1];
+    std::string& output_directory = argvStr[argc - 2];
+    std::string& skimCondition = argvStr[argc - 1];
+    
+    for (int i = 1; i < argc-2; i++) {
+        skimFile( argvStr[i], output_directory, skimCondition );
+    }
+    
     return 0;
 }
