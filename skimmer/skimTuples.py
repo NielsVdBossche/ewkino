@@ -66,7 +66,7 @@ if __name__ == '__main__' :
     for sample in sample_names:
         output_directory = os.path.join( output_directory_base, 'ntuples_skimmed_{}_version_{}'.format( sample, version_name ) )
         if not os.path.exists( output_directory ):
-            subprocess.check_output( "gfal-mkdir srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/nivanden/skims/ntuples_skimmed_{}_version_{}".format(sample, version_name), shell=True, stderr=subprocess.STDOUT )
+            subprocess.call( "gfal-mkdir srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/nivanden/skims/ntuples_skimmed_{}_version_{}".format(sample, version_name), shell=True, stderr=subprocess.STDOUT )
             #os.makedirs( output_directory )
         sample_output_directories.append( output_directory )
     
