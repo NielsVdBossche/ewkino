@@ -87,6 +87,15 @@ if __name__ == '__main__' :
                 for f in chunk :
                     skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
                     script.write( skim_command )
-                script.write("gfal-copy file://$TMPDIR/*.root srm://maite.iihe.ac.be:8443{}".format(output_directory))
+
+                script.write("\n\n")
+                script.write("array=($(ls -p | grep -v /))\n")
+                script.write('for i in "${{array[@]}}"\n')
+                script.write("do\n")
+                script.write("\t")
+                script.write('gfal-copy file://$TMPDIR/"$i" srm://maite.iihe.ac.be:8443{}\n'.format(output_directory))
+                script.write("done\n")
+                #script.write("")
+                #script.write("gfal-copy file://$TMPDIR/*.root srm://maite.iihe.ac.be:8443{}".format(output_directory))
             #submit job and catch errors 
             submitQsubJob( script_name, wall_time )
