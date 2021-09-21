@@ -33,7 +33,7 @@ for dir in os.listdir(inputBase):
     i = -1
     while not ".root" in inputFileName:
         i += 1
-        inputFileName = os.listdir(dir)[i]
+        inputFileName = os.listdir(os.path.join(inputBase, dir))[i]
 
     # Strip names
     #dir = dir[15:] # NOT NECESSARY -> all information in filename itself 
@@ -44,8 +44,8 @@ for dir in os.listdir(inputBase):
     
     print(outputPath)
     print(os.path.join(inputBase, dir))
-    break
+
     # call hadd output inputs (star?)
-    subprocess.call("hadd {} {}/*.root".format(outputPath, os.path.join(inputBase, dir)))
+    subprocess.call("hadd -f {} {}/*.root".format(outputPath, os.path.join(inputBase, dir)), shell=True)
 
     break # temporary for testing
