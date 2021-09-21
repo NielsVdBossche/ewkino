@@ -6,14 +6,24 @@
 #include "../interface/TreeReader.h"
 
 void TreeReader::checkSampleEraConsistency() const{
-    for(auto& sample : samples2016){
-        if( sample.is2017() ){
-            std::cerr << "Error: 2017 sample detected in list of 2016 samples, this will lead to inconsistent lumi-scaling and cuts being applied!" << std::endl;
+    for(auto& sample : samples2016PreVFP){
+        if( sample.is2017() || sample.is2016PostVFP()){
+            std::cerr << "Error: 2017 or 2016 postvfp sample detected in list of 2016 samples, this will lead to inconsistent lumi-scaling and cuts being applied!" << std::endl;
+        }
+    }
+    for(auto& sample : samples2016PostVFP){
+        if( sample.is2017() || sample.is2016PreVFP()){
+            std::cerr << "Error: 2017 or 2016 prevfp sample detected in list of 2016 samples, this will lead to inconsistent lumi-scaling and cuts being applied!" << std::endl;
         }
     }
     for(auto& sample : samples2017){
-        if( sample.is2016() ){
+        if( sample.is2016PostVFP() || sample.is2016PreVFP() ){
             std::cerr << "Error: 2016 sample detected in list of 2017 samples, this will lead to inconsistent lumi-scaling and cuts being applied!" << std::endl;
+        }
+    }
+    for(auto& sample : samples2018){
+        if( sample.is2016PostVFP() || sample.is2016PreVFP() || sample.is2017() ){
+            std::cerr << "Error: 2016 or 2017 sample detected in list of 2018 samples, this will lead to inconsistent lumi-scaling and cuts being applied!" << std::endl;
         }
     }
 }

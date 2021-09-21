@@ -259,14 +259,16 @@ class TreeReader {
         void initSample(const Sample&);  
 
         //read sample list from text file
-        void readSamples2016(const std::string&, const std::string&);
+        void readSamples2016PreVFP(const std::string&, const std::string&);
+        void readSamples2016PostVFP(const std::string&, const std::string&);
+        void readSamples2016(const std::string&, const std::string&); // TODO: make sure not necessary anymore
         void readSamples2017(const std::string&, const std::string&);
         void readSamples2018(const std::string&, const std::string&);
         void readSamples(const std::string& list, const std::string& directory);
 
         //initialize the current sample directly from a root file
         //always reset triggers instead of rare case of combining primary datasets to prevent invalidating addresses set by setOutputTree
-        void initSampleFromFile( const std::string& pathToFile, const bool is2017, const bool is2018, const bool resetTriggersAndFilters = true );
+        void initSampleFromFile( const std::string& pathToFile, const bool is2016PostVFP, const bool is2017, const bool is2018, const bool resetTriggersAndFilters = true );
         void initSampleFromFile( const std::string& pathToFile, const bool resetTriggersAndFilters = true );
 
         //Get entry from Tree, should not be used except for test purposes
@@ -311,6 +313,8 @@ class TreeReader {
 
         //check which year the current sample belongs to
         bool is2016() const;
+        bool is2016PreVFP() const;
+        bool is2016PostVFP() const;
         bool is2017() const;
         bool is2018() const;
 
@@ -420,6 +424,8 @@ class TreeReader {
 
         //list of samples to loop over 
         std::vector< Sample > samples;
+        std::vector<Sample> samples2016PreVFP;
+        std::vector<Sample> samples2016PostVFP;
         std::vector< Sample > samples2016;
         std::vector< Sample > samples2017;
         std::vector< Sample > samples2018;

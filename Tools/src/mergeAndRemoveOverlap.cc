@@ -11,13 +11,13 @@
 #include "../../Event/interface/Event.h"
 
 
-
+// TODO: where does this matter?
 bool yearsAreConsistent( const std::vector< std::string >& inputPathVector ){
 
     //index specifying the year of the previous file 
     int previousYearIndex = -1;
     for( const auto& inputFilePath : inputPathVector ){
-        
+        // important for merging
         std::pair< bool, bool > is2017Or2018 = analysisTools::fileIs2017Or2018( inputFilePath );
 
         //from the second file onwards, check that all files have the same year 

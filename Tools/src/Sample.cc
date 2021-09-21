@@ -29,9 +29,10 @@ Sample::Sample( const std::string& line, const std::string& sampleDirectory ) :
     _xSec = ( xSecString == "" ? 0 : std::stod( xSecString ) );
 
     setIsData();
-    auto is2017Or2018 = analysisTools::fileIs2017Or2018( _fileName );
-    _is2017 = is2017Or2018.first;
-    _is2018 = is2017Or2018.second;
+    //auto is2017Or2018 = analysisTools::fileIs2017Or2018( _fileName );
+    _is2016PostVFP = analysisTools::fileIs2016PostVFP(_fileName);
+    _is2017 = analysisTools::fileIs2017(_fileName);
+    _is2018 = analysisTools::fileIs2018(_fileName);
 
     //unique name is equal to fileName without file extension
     _uniqueName = stringTools::fileNameWithoutExtension( _fileName );
@@ -58,13 +59,14 @@ Sample::Sample( const std::string& line, const std::string& sampleDirectory ) :
 }
 
 
-Sample::Sample( const std::string& directory, const std::string& fileName, const bool is2017, const bool is2018, const bool isData, const std::string& processName, const double xSec, const bool isSMSignal, const bool isNewPhysicsSignal ) :
+Sample::Sample( const std::string& directory, const std::string& fileName, const bool is2016PostVFP, const bool is2017, const bool is2018, const bool isData, const std::string& processName, const double xSec, const bool isSMSignal, const bool isNewPhysicsSignal ) :
     _fileName( fileName ),
     _directory( directory ),
     _uniqueName( stringTools::formatDirectoryName( _directory ) + _fileName ),
     _processName( processName ),
     _xSec( xSec ),
     _isData( isData ),
+    _is2016PostVFP(is2016PostVFP),
     _is2017( is2017 ),
     _is2018( is2018 ),
     _isSMSignal( isSMSignal ),
@@ -72,10 +74,11 @@ Sample::Sample( const std::string& directory, const std::string& fileName, const
 {}
 
 
-Sample::Sample( const std::string& pathToFile, const bool is2017, const bool is2018, const bool isData, const std::string& processName, const double xSec, const bool isSMSignal, const bool isNewPhysicsSignal ) :
+Sample::Sample( const std::string& pathToFile, const bool is2016PostVFP, const bool is2017, const bool is2018, const bool isData, const std::string& processName, const double xSec, const bool isSMSignal, const bool isNewPhysicsSignal ) :
     _processName( processName ),
     _xSec( xSec ),
     _isData( isData ),
+    _is2016PostVFP(is2016PostVFP),
     _is2017( is2017 ),
     _is2018( is2018 ),
     _isSMSignal( isSMSignal ),
@@ -158,23 +161,32 @@ void Sample::setOptions( const std::string& optionString ){
     }
     
     //check if sample needs to be used in different era it was intended for (i.e. 2016 sample when comparing to 2017 or 2018 data, or vice-versa)
-    bool flag2016 = stringTools::stringContains( optionString, "forceIs2016" );
+    bool flag2016PreVFP = stringTools::stringContains( optionString, "forceIs2016PreVFP" );
+    bool flag2016PostVFP = stringTools::stringContains( optionString, "forceIs2016PostVFP" );
     bool flag2017 = stringTools::stringContains( optionString, "forceIs2017" );
     bool flag2018 = stringTools::stringContains( optionString, "forceIs2018" );
 
-    if( flag2016 && flag2017 ){
+    if( flag2016PreVFP && flag2017 ){
         throw std::invalid_argument( "Error in sample construction: both forceIs2016 and forceIs2017 flags were set, can not set both " );
     }
 
-    if( flag2016 ){
+    if( flag2016PreVFP ){
+        _is2016PostVFP = false;
         _is2017 = false;
         _is2018 = false;
-        _uniqueName += "_forcedIs2016";
+        _uniqueName += "_forcedIs2016PreVFP";
+    } else if (flag2016PostVFP) {
+        _is2016PostVFP = true;
+        _is2017 = false;
+        _is2018 = false;
+        _uniqueName += "_forcedIs2016PostVFP";
     } else if( flag2017 ){
+        _is2016PostVFP = false;
         _is2017 = true;
         _is2018 = false;
         _uniqueName += "_forcedIs2017";
     } else if( flag2018 ){
+        _is2016PostVFP = false;
         _is2017 = false;
         _is2018 = true;
         _uniqueName += "_forcedIs2018";
@@ -193,7 +205,7 @@ std::ostream& operator<<( std::ostream& os, const Sample& sam ){
         sam._fileName << "\t" << 
         sam._xSec << "\t" << 
         ( sam._isData ? "data" : "MC" ) << "\t" << 
-        ( sam.is2016() ? "Summer16" : ( sam._is2017 ? "Fall17" : "Autumn18" ) ) << 
+        ( sam.is2016PreVFP() ? "Summer20UL16PreVFP" : ( sam._is2016PostVFP ? "Summer20UL16PostVFP" : ( sam._is2017 ? "Summer20UL17" : "Summer20UL18" ) )) << 
         ( sam._isSMSignal ? "\tSM signal" : "" ) << 
         ( sam._isNewPhysicsSignal ? "\tBSM signal" : "" );
     return os;

@@ -27,7 +27,8 @@ namespace analysisTools{
     //check from sample name whether it is 2016, 2017 or 2018
     bool fileIs2017( const std::string& filePath );
     bool fileIs2018( const std::string& filePath );
-    bool fileIs2016( const std::string& filePath );
+    bool fileIs2016PostVFP(const std::string& filePath);
+    bool fileIs2016PreVFP(const std::string& filePath);
     
     //first bool checks whether file is 2017, second whether it is 2018
     std::pair< bool, bool > fileIs2017Or2018( const std::string& filePath );

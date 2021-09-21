@@ -118,6 +118,7 @@ bool analysisTools::fileIs2017( const std::string& filePath ){
         || stringTools::stringEndsWith( filePath, "combined_2018.root" )
         || stringTools::stringContains( filePath, "_2017_v" )
         || stringTools::stringStartsWith( stringTools::fileNameFromPath( filePath ), "2017" )
+        || stringTools::stringContains(filePath, "Summer20UL17")
     );
 }
 
@@ -130,14 +131,19 @@ bool analysisTools::fileIs2018( const std::string& filePath ){
         || stringTools::stringEndsWith( filePath, "combined_2018.root" )
         || stringTools::stringContains( filePath, "_2018_v" )
         || stringTools::stringStartsWith( stringTools::fileNameFromPath( filePath ), "2018" )
+        || stringTools::stringContains(filePath, "Summer20UL18")
     );
 }
 
 
-bool analysisTools::fileIs2016( const std::string& filePath ){
-    return !( analysisTools::fileIs2017( filePath ) || analysisTools::fileIs2018( filePath ) );
+bool analysisTools::fileIs2016PostVFP( const std::string& filePath ){
+    return !( analysisTools::fileIs2017( filePath ) || analysisTools::fileIs2018( filePath ) || analysisTools::fileIs2016PreVFP(filePath));
 }
 
+bool analysisTools::fileIs2016PreVFP(const std::string& filePath) {
+    return (stringTools::stringContains(filePath, "Summer20UL16MiniAODAPV")
+        || stringTools::stringContains(filePath, "preVFP")); // Check pre here as easier to check identifier
+}
 
 std::pair< bool, bool > analysisTools::fileIs2017Or2018( const std::string& filePath ){
     bool is2017 = fileIs2017( filePath );
@@ -152,8 +158,8 @@ std::pair< bool, bool > analysisTools::fileIs2017Or2018( const std::string& file
 
 
 void analysisTools::checkYearString( const std::string& yearString ){
-    if( !( yearString == "2016" || yearString == "2017" || yearString == "2018" ) ){
-        throw std::invalid_argument( "Year string is '" + yearString + "' while it must be either '2016', '2017' or '2018'" );
+    if( !( yearString == "2016PreVFP" || yearString == "2016PostVFP" || yearString == "2017" || yearString == "2018" ) ){
+        throw std::invalid_argument( "Year string is '" + yearString + "' while it must be either '2016PreVFP', '2016PostVFP', '2017' or '2018'" );
     }
 }
 

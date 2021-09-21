@@ -41,6 +41,33 @@ void TreeReader::readSamples( const std::string& list, const std::string& direct
     readSamples( list, directory, this->samples );
 }
 
+void TreeReader::readSamples2016PreVFP( const std::string& list, const std::string& directory ){
+    std::cout << "########################################" << std::endl;
+    std::cout << "         2016 PreVFP samples            " << std::endl;
+    std::cout << "########################################" << std::endl;
+
+    readSamples( list, directory, this->samples2016PreVFP );
+
+    //add the 2016 samples to the total sample list 
+    this->samples.insert( samples.end(), samples2016PreVFP.begin(), samples2016PreVFP.end() );
+
+    //check for errors
+    checkSampleEraConsistency();
+}
+
+void TreeReader::readSamples2016PostVFP( const std::string& list, const std::string& directory ){
+    std::cout << "########################################" << std::endl;
+    std::cout << "         2016 PostVFP samples           " << std::endl;
+    std::cout << "########################################" << std::endl;
+
+    readSamples( list, directory, this->samples2016PostVFP );
+
+    //add the 2016 samples to the total sample list 
+    this->samples.insert( samples.end(), samples2016PostVFP.begin(), samples2016PostVFP.end() );
+
+    //check for errors
+    checkSampleEraConsistency();
+}
 
 void TreeReader::readSamples2016( const std::string& list, const std::string& directory ){
     std::cout << "########################################" << std::endl;
@@ -255,10 +282,19 @@ void TreeReader::checkCurrentFile() const{
 	}
 }
 
+bool TreeReader::is2016PreVFP() const{
+    checkCurrentSample();
+    return _currentSamplePtr->is2016PreVFP();
+}
+
+bool TreeReader::is2016PostVFP() const{
+    checkCurrentSample();
+    return _currentSamplePtr->is2016PostVFP();
+}
 
 bool TreeReader::is2016() const{
     checkCurrentSample();
-    return _currentSamplePtr->is2016();
+    return _currentSamplePtr->is2016PreVFP() || _currentSamplePtr->is2016PostVFP();
 }
 
 
@@ -315,8 +351,11 @@ void TreeReader::initSample( const Sample& samp ){
 
         //event weights set with lumi depending on sample's era 
         double dataLumi;
-        if( is2016() ){
-            dataLumi = lumi::lumi2016;
+        // Completely removed is2016 as it should no longer be relevant
+        if( is2016PreVFP() ){
+            dataLumi = lumi::lumi2016PreVFP;
+        } else if (is2016PostVFP()) {
+            dataLumi = lumi::lumi2016PostVFP;
         } else if( is2017() ){
             dataLumi = lumi::lumi2017;
         } else {
@@ -337,7 +376,7 @@ void TreeReader::initSample(){
 
 
 //initialize the current Sample directly from a root file, this is used when skimming
-void TreeReader::initSampleFromFile( const std::string& pathToFile, const bool is2017, const bool is2018, const bool resetTriggersAndFilters ){
+void TreeReader::initSampleFromFile( const std::string& pathToFile, const bool is2016PostVFP, const bool is2017, const bool is2018, const bool resetTriggersAndFilters ){
 
     //check if file exists 
     if( !systemTools::fileExists( pathToFile ) ){
@@ -353,7 +392,7 @@ void TreeReader::initSampleFromFile( const std::string& pathToFile, const bool i
 
     //make a new sample, and make sure the pointer remains valid
     //new is no option here since this would also require a destructor for the class which does not work for the other initSample case
-    _currentSamplePtr = std::make_shared< Sample >( pathToFile, is2017, is2018, isData() );
+    _currentSamplePtr = std::make_shared< Sample >( pathToFile, is2016PostVFP, is2017, is2018, isData() );
 
     //initialize tree
     initTree( resetTriggersAndFilters );
@@ -370,8 +409,8 @@ void TreeReader::initSampleFromFile( const std::string& pathToFile, const bool i
 void TreeReader::initSampleFromFile( const std::string& pathToFile, const bool resetTriggersAndFilters ){
     
     std::pair< bool, bool > is2017Or2018 = analysisTools::fileIs2017Or2018( pathToFile );
-    
-    initSampleFromFile( pathToFile, is2017Or2018.first, is2017Or2018.second, resetTriggersAndFilters );
+    bool is2016PostVFP = analysisTools::fileIs2016PostVFP(pathToFile);
+    initSampleFromFile( pathToFile, is2016PostVFP, is2017Or2018.first, is2017Or2018.second, resetTriggersAndFilters );
 }
 
 

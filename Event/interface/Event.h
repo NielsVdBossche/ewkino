@@ -215,7 +215,8 @@ class Event {
         //check what year event corresponds to and whether it is a data or MC event
         bool isData() const{ return _samplePtr->isData(); }
         bool isMC() const{ return _samplePtr->isMC(); }
-        bool is2016() const{ return _samplePtr->is2016(); }
+        bool is2016PreVFP() const{ return _samplePtr->is2016PreVFP(); }
+        bool is2016PostVFP() const {return _samplePtr->is2016PostVFP();}
         bool is2017() const{ return _samplePtr->is2017(); }
         bool is2018() const{ return _samplePtr->is2018(); }
         const Sample& sample() const{ return *_samplePtr; }
