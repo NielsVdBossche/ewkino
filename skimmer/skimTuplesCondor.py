@@ -63,23 +63,13 @@ if __name__ == '__main__' :
         sample_sub_directories.append( subdirectory )
     
     #output directory for each sample
-    sample_names = [ directory.rstrip( os.path.sep ).split( os.path.sep )[-1] + '_' + yearIdentifierFromPath( subdirectory ) for directory, subdirectory in zip( sample_directories, sample_sub_directories ) ]
+    sample_names = [ directory.rstrip( os.path.sep ).split( os.path.sep )[-1] + '_' + subdirectory for directory, subdirectory in zip( sample_directories, sample_sub_directories ) ]
     sample_output_directories = []
     for sample in sample_names:
         output_directory = os.path.join( output_directory_base, 'ntuples_skimmed_{}_version_{}'.format( sample, version_name ) )
         if not os.path.exists( output_directory ):
             os.makedirs( output_directory )
         sample_output_directories.append( output_directory )
-    
-    
-    with open("skimjob.sub", 'w') as descr:
-        descr.write("executable =  /user/nivanden/ewkino/skimmer/skimmer.sh\n")
-        #descr.write("output =  /user/nivanden/condor/ouput/skimmer_ID$(ClusterId).$(ProcId).out\n")
-        descr.write("error =  /user/nivanden/condor/error/skimmer_ID$(ClusterId).$(ProcId).err\n")
-        descr.write("log = /user/nivanden/condor/logs/skimmer_ID$(ClusterId).$(ProcId).log\n")
-        #descr.write("request_memory = 4096\n request_cpus   = 1\n")
-        #descr.write("should_transfer_files = YES\n")
-        descr.write("queue")
 
     for sample_directory, sub_directory, output_directory in zip( sample_directories, sample_sub_directories, sample_output_directories ):
     
@@ -93,12 +83,15 @@ if __name__ == '__main__' :
             script_name = 'skimmer.sh'
             with open( script_name, 'w') as script:
                 initializeJobScript( script, cmssw_version = 'CMSSW_10_6_20')
-                script.write('cd {}\n'.format( current_directory ) ) 
+                script.write('cd {}\n'.format( current_directory ) )
+                script.write("echo 'working on {}\n".format(chunk[0]))
                 for f in chunk :
                     skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
                     script.write( skim_command )
             
 
-            submission_command = 'condor_submit skimjob.sub'
+            submission_command = 'condor_submit skimJob.sub'
 
             qsub_output = subprocess.check_output( submission_command, shell=True, stderr=subprocess.STDOUT )
+
+

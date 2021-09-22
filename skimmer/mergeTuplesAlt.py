@@ -7,24 +7,43 @@ import subprocess
 inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/rawSkims/"
 outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/"
 
+skimVersion = ""
+outSubdir = ""
+
+if (sys.argv[1] == 0):
+    skimVersion = "2016_ULpreVFPv3"
+    outSubdir = "2016PreVFP"
+elif (sys.argv[1] == 1):
+    skimVersion = "2016_ULpostVFPv3"
+    outSubdir = "2016PostVFP"
+elif (sys.argv[1] == 2):
+    skimVersion = "2017_ULv3"
+    outSubdir = "2017"
+elif (sys.argv[1] == 3):
+    skimVersion = "2018_ULv3"
+    outSubdir = "2018"
+
 for dir in os.listdir(inputBase):
     print(dir)
     # catch version, decide outputfolder
     version = dir.split("_version_")[-1]
 
-    outSubdir = ""
-    if (version == "2016_ULpreVFPv3"):
-        outSubdir = "2016PreVFP"
-    elif (version == "2016_ULpostVFPv3"):
-        outSubdir = "2016PostVFP"
-    elif (version == "2017_ULv3"):
-        outSubdir = "2017"
-    elif (version == "2018_ULv3"):
-        outSubdir = "2018"
+    #outSubdir = ""
+    #if (version == "2016_ULpreVFPv3"):
+    #    outSubdir = "2016PreVFP"
+    #elif (version == "2016_ULpostVFPv3"):
+    #    outSubdir = "2016PostVFP"
+    #elif (version == "2017_ULv3"):
+    #    outSubdir = "2017"
+    #elif (version == "2018_ULv3"):
+    #    outSubdir = "2018"
 
-    if (outSubdir == ""):
-        print('ERROR: Version not found\n')
-        exit()
+    if (version != skimVersion):
+        continue
+
+    #if (outSubdir == ""):
+    #    print('ERROR: Version not found\n')
+    #    exit()
 
     # join path outputbase + folder
     outputDir  = os.path.join(outputBase, outSubdir)

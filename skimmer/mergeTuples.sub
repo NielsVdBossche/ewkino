@@ -1,7 +1,8 @@
 executable = mergeTuplesAlt.py
+arguments  = $(Process)
 
-output	= /user/nivanden/condor/output/mergetuples.out
-error	= /user/nivanden/condor/error/mergetuples.err
-log	= /user/nivanden/condor/logs/mergetuples.log
+output	= /user/nivanden/condor/output/mergetuples_$(Process).out
+error	= /user/nivanden/condor/error/mergetuples_$(Process).err
+log	= /user/nivanden/condor/logs/mergetuples_$(Process).log
 
-queue
+queue 4

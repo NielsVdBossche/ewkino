@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   skimmer.sh
+
+log         =   /user/nivanden/condor/logs/Skimmer_$(ClusterId).log
+error       =   /user/nivanden/condor/error/Skimmer_$(ClusterId).err
+output      =   /user/nivanden/condor/output/Skimmer_$(ClusterId).out
+
+queue
