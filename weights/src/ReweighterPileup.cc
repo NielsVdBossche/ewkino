@@ -89,7 +89,7 @@ ReweighterPileup::ReweighterPileup( const std::vector< Sample >& sampleList, con
 
         //extract the pileupweights from the file
         std::string yearSuffix;
-        if( sample.is2016() ){
+        if( sample.is2016PostVFP() || sample.is2016PreVFP() ){
             yearSuffix = "2016";
         } else if( sample.is2017() ){
             yearSuffix = "2017";
