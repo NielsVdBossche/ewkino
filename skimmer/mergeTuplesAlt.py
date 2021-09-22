@@ -10,18 +10,21 @@ outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/"
 skimVersion = ""
 outSubdir = ""
 
-if (sys.argv[1] == 0):
+if (sys.argv[1] == '0'):
     skimVersion = "2016_ULpreVFPv3"
     outSubdir = "2016PreVFP"
-elif (sys.argv[1] == 1):
+elif (sys.argv[1] == '1'):
     skimVersion = "2016_ULpostVFPv3"
     outSubdir = "2016PostVFP"
-elif (sys.argv[1] == 2):
+elif (sys.argv[1] == '2'):
     skimVersion = "2017_ULv3"
     outSubdir = "2017"
-elif (sys.argv[1] == 3):
+elif (sys.argv[1] == '3'):
     skimVersion = "2018_ULv3"
     outSubdir = "2018"
+
+print(skimVersion)
+print(sys.argv)
 
 for dir in os.listdir(inputBase):
     print(dir)

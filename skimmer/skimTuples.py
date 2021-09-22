@@ -61,7 +61,7 @@ if __name__ == '__main__' :
         sample_sub_directories.append( subdirectory )
     
     #output directory for each sample
-    sample_names = [ directory.rstrip( os.path.sep ).split( os.path.sep )[-1] + '_' + yearIdentifierFromPath( subdirectory ) for directory, subdirectory in zip( sample_directories, sample_sub_directories ) ]
+    sample_names = [ directory.rstrip( os.path.sep ).split( os.path.sep )[-1] + '_' + subdirectory for directory, subdirectory in zip( sample_directories, sample_sub_directories ) ]
     sample_output_directories = []
     for sample in sample_names:
         output_directory = os.path.join( output_directory_base, 'ntuples_skimmed_{}_version_{}'.format( sample, version_name ) )
@@ -93,8 +93,8 @@ if __name__ == '__main__' :
                 script.write('for i in "${array[@]}"\n')
                 script.write("do\n")
                 script.write("\t")
-		script.write('echo "$i"\n')
-		script.write("\t")
+                script.write('echo "$i"\n')
+                script.write("\t")
                 script.write('gfal-copy file:///$TMPDIR/"$i" srm://maite.iihe.ac.be:8443{}/\n'.format(output_directory))
                 script.write("done\n")
                 #script.write("")
