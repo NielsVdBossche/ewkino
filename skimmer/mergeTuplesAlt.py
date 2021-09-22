@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import subprocess
@@ -47,5 +49,4 @@ for dir in os.listdir(inputBase):
 
     # call hadd output inputs (star?)
     subprocess.call("hadd -f {} {}/*.root".format(outputPath, os.path.join(inputBase, dir)), shell=True)
-
     break # temporary for testing

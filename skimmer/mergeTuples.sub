@@ -1,0 +1,7 @@
+executable = mergeTuplesAlt.py
+
+output	= /user/nivanden/condor/output/mergetuples.out
+error	= /user/nivanden/condor/error/mergetuples.err
+log	= /user/nivanden/condor/logs/mergetuples.log
+
+queue
