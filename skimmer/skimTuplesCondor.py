@@ -84,7 +84,7 @@ if __name__ == '__main__' :
             with open( script_name, 'w') as script:
                 initializeJobScript( script, cmssw_version = 'CMSSW_10_6_20')
                 script.write('cd {}\n'.format( current_directory ) )
-                script.write("echo 'working on {}\n".format(chunk[0]))
+                script.write("echo 'working on {}'\n".format(chunk[0]))
                 for f in chunk :
                     skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
                     script.write( skim_command )
