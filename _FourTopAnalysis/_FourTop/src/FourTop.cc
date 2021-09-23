@@ -9,7 +9,7 @@ FourTop::FourTop(std::vector< std::string > argvString) {
     // prepare details of analysis in separate functions
     
     // First setting are samples to work through
-    treeReader = new TreeReader("samples.txt", "/pnfs/iihe/cms/store/user/nivanden/skims/");
+    treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
 
     outfile = new TFile("testOutput.root", "recreate");
 

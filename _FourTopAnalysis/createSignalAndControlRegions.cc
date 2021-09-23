@@ -19,6 +19,9 @@
 int main(int argc, char* argv[]) {
     setTDRStyle();
 
+    if (argc != 2) {
+        std::cout << "One argument is required: <sampleList.txt>" << std::endl;
+    }
     // Set sample directory... Dunno, see hoe te skimmen...
 
     // zet makkelijk te verwerken string op
