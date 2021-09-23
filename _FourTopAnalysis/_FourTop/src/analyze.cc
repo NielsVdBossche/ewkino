@@ -20,7 +20,7 @@ void FourTop:: analyze() {
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (entry > 10000) break;
+            //if (entry > 10000) break;
             
             currentEvent = treeReader->buildEventPtr( entry );
 
@@ -101,8 +101,10 @@ void FourTop:: analyze() {
             outfile->mkdir(processName);
         }
         outfile->cd(processName);
-        gDirectory->mkdir(treeReader->currentSample().fileName().c_str()); // got to switch to gDirectory. Otherwise keeps working as if we're on level of file
-        gDirectory->cd(treeReader->currentSample().fileName().c_str());
+
+        std::string outdir = stringTools::fileNameFromPath(treeReader->currentSample().fileName());
+        gDirectory->mkdir(outdir.c_str()); // got to switch to gDirectory. Otherwise keeps working as if we're on level of file
+        gDirectory->cd(outdir.c_str());
 
         // works when handling only one sample
         for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
