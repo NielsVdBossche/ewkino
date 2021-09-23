@@ -14,7 +14,7 @@ void EventSelection4T::applyBaselineObjectSelection(Event* event) {
 }
 
 void EventSelection4T::applyFullObjectSelection(Event* event) {
-    event->selectTightLeptons();
+    event->selectFOLeptons();
 
 }
 

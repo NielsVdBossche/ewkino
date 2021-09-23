@@ -14,6 +14,8 @@ loose muon selection
 */
 
 bool MuonSelector::isLooseBase() const{
+    /*
+    // Old selection
     if( muonPtr->uncorrectedPt() <= 5 ) return false;
     if( muonPtr->absEta() >= 2.4 ) return false; 
     if( fabs( muonPtr->dxy() ) >= 0.05 ) return false;
@@ -23,6 +25,18 @@ bool MuonSelector::isLooseBase() const{
     if( !muonPtr->isLoosePOGMuon() ) return false;
 
     if (muonPtr->leptonMVATOP() < 0.5) return false;
+    */
+
+    if (muonPtr->pt() <= 10) return false;
+    if (muonPtr->absEta() >= 2.4) return false;
+    if (! muonPtr->isMediumPOGMuon()) return false;
+    //if (! muonPtr->isPFMuon())
+    if (muonPtr->dxy() >= 0.05) return false;
+    if (muonPtr->dz() >= 0.1) return false;
+    if (muonPtr->sip3d() >= 8) return false;
+    if (muonPtr->miniIso() >= 0.4) return false;
+
+    if (muonPtr->leptonMVATOP() < 0.05) return false;
 
     return true;
 }
@@ -63,12 +77,16 @@ double slidingDeepFlavorThreshold( const double looseWP, const double mediumWP, 
 
 bool MuonSelector::isFOBase() const{
     if( !isLoose() ) return false;
-    if( muonPtr->uncorrectedPt() <= 10 ) return false;
+    //if( muonPtr->uncorrectedPt() <= 10 ) return false;
     /*
     if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
         if( muonPtr->ptRatio() <= 0.65 ) return false;
     }
     */
+
+    if (muonPtr->pt() < 20) return false;
+    if (muonPtr->leptonMVATOP() < 0.65) return false;
+
     return true;
 }
 
@@ -118,9 +136,11 @@ tight muon selection
 
 bool MuonSelector::isTightBase() const{
     if( !isFO() ) return false;
-    if( !muonPtr->isMediumPOGMuon() ) return false;
-    if (muonPtr->pt() < 20) return false;
+    //if( !muonPtr->isMediumPOGMuon() ) return false;
+    //if (muonPtr->pt() < 20) return false;
     //if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ) return false;
+
+    
     return true;
 }
 

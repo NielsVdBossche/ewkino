@@ -94,14 +94,15 @@ void FourTop:: analyze() {
         // Output management: save histograms to a ROOT file.
         // Processes were named in samplelist. Should use this to make directory for process and subdir for sample
 
+        // Might interface with Stacker to create desired output plots as well... Or at least already have the stacked process ready instead of individual components. Then a "getDirectory" in stacker could be handy to see if it exists.
         outfile->cd();
         const char* processName = treeReader->currentSample().processName().c_str();
         if (! outfile->GetDirectory(processName)) {
             outfile->mkdir(processName);
         }
         outfile->cd(processName);
-        outfile->mkdir(treeReader->currentSample().fileName().c_str());
-        outfile->cd(treeReader->currentSample().fileName().c_str());
+        gDirectory->mkdir(treeReader->currentSample().fileName().c_str()); // got to switch to gDirectory. Otherwise keeps working as if we're on level of file
+        gDirectory->cd(treeReader->currentSample().fileName().c_str());
 
         // works when handling only one sample
         for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {

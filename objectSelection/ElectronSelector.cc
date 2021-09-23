@@ -18,6 +18,9 @@ double leptonMVACutElectron(){
 
 
 bool ElectronSelector::isLooseBase() const{
+
+    /*
+    // Willem's cuts
     if( electronPtr->uncorrectedPt() < 7 ) return false;
     if( electronPtr->absEta() >= 2.5 ) return false;
     if( fabs( electronPtr->dxy() ) >= 0.05 ) return false;
@@ -28,7 +31,18 @@ bool ElectronSelector::isLooseBase() const{
     if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
 
     if (electronPtr->leptonMVATOP() < 0.5) return false;
+    */
 
+    if (electronPtr->pt() < 10) return false;
+    if (electronPtr->absEta() >= 2.5) return false;
+    // IsGSF
+    if (electronPtr->numberOfMissingHits() >= 2) return false;
+    if (electronPtr->dxy() >= 0.05) return false;
+    if (electronPtr->dz() >= 0.1) return false;
+    if (electronPtr->sip3d() >= 8) return false;
+    if (electronPtr->miniIso() >= 0.4) return false;
+
+    if (electronPtr->leptonMVATOP() < 0.) return false;
     return true;
 }
 
@@ -55,6 +69,8 @@ FO electron selection
 
 bool ElectronSelector::isFOBase() const{
     if( !isLoose() ) return false;
+    /*
+    // Old selection
     if( electronPtr->uncorrectedPt() <= 10 ) return false;
     if( electronPtr->numberOfMissingHits() > 0 ) return false;
     if( electronPtr->hOverE() >= 0.1 ) return false;
@@ -64,32 +80,37 @@ bool ElectronSelector::isFOBase() const{
     } else {
         if( electronPtr->sigmaIEtaEta() >= 0.030 ) return false;
     }
-    /*
+    
     Seems not relevant when leptonMVATOP is available?
     if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
         if( !electronPtr->passElectronMVAFall17NoIsoWP80() ) return false;
         if( electronPtr->ptRatio() <= 0.7 ) return false;
     }
-    */
+    
     if( !electronPtr->passConversionVeto() ) return false;
+    */
+
+    if (electronPtr->pt() < 20) return false;
+
+    if (electronPtr->leptonMVATOP() < 0.6) return false;
     return true;
 }
 
 
 bool ElectronSelector::isFO2016() const{
-    if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016() ) return false;
+    //if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016() ) return false;
     return true;
 }
 
 
 bool ElectronSelector::isFO2017() const{
-    if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2017() ) return false;
+    //if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2017() ) return false;
     return true;
 }
 
 
 bool ElectronSelector::isFO2018() const{
-    if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2018() ) return false;
+    //if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2018() ) return false;
     return true;
 }
 
