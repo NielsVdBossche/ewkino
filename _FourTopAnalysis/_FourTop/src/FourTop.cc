@@ -13,6 +13,14 @@ FourTop::FourTop(std::vector< std::string > argvString) {
 
     outfile = new TFile("testOutput.root", "recreate");
 
+    outfile->mkdir("Nominal");
+    outfile->mkdir("Uncertainties");
+
+    intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
+
+    intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
+    intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
+    
     createHistInfoVec();
 }
 

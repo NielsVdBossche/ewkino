@@ -343,6 +343,8 @@ class TreeReader {
         //Get list of histograms stored in current file
         std::vector< std::shared_ptr< TH1 > > getHistogramsFromCurrentFile() const;
 
+        double getIntLumi() const;
+
         //functions for event selection
         /*
         void orderByPt(std::vector<unsigned>&, const double*, const unsigned) const;

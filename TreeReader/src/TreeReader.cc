@@ -1011,3 +1011,26 @@ void TreeReader::keepOnlySignalsWithName( const std::string& signalName ){
         }
     }
 }
+
+double TreeReader::getIntLumi() const {
+    bool y2016Pre = false;
+    bool y2016Post = false;
+    bool y2017 = false;
+    bool y2018 = false;
+    for (auto& samp : samples) {
+        if (! samp.isMC()) continue;
+
+        if (samp.is2016PostVFP()) {
+            y2016Post = true;
+        } else if (samp.is2017()) {
+            y2017 = true;
+        } else if (samp.is2018()) {
+            y2018 = true;
+        } else {
+            y2016Pre = true;
+        }
+
+    }
+
+    return y2016Pre * lumi::lumi2016PreVFP + y2016Post * lumi::lumi2016PostVFP + y2017 * lumi::lumi2017 + y2018 * lumi::lumi2018;
+}

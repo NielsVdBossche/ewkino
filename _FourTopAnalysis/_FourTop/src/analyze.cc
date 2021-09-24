@@ -20,7 +20,7 @@ void FourTop:: analyze() {
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            //if (entry > 10000) break;
+            if (entry > 10000) break;
             
             currentEvent = treeReader->buildEventPtr( entry );
 
@@ -96,11 +96,12 @@ void FourTop:: analyze() {
 
         // Might interface with Stacker to create desired output plots as well... Or at least already have the stacked process ready instead of individual components. Then a "getDirectory" in stacker could be handy to see if it exists.
         outfile->cd();
+        outfile->cd("Nominal");
         const char* processName = treeReader->currentSample().processName().c_str();
-        if (! outfile->GetDirectory(processName)) {
-            outfile->mkdir(processName);
+        if (! gDirectory->GetDirectory(processName)) {
+            gDirectory->mkdir(processName);
         }
-        outfile->cd(processName);
+        gDirectory->cd(processName);
 
         std::string outdir = stringTools::fileNameFromPath(treeReader->currentSample().fileName());
         gDirectory->mkdir(outdir.c_str()); // got to switch to gDirectory. Otherwise keeps working as if we're on level of file
@@ -123,12 +124,13 @@ void FourTop:: analyze() {
             hists_CRW->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
         }
 
-        outfile->cd("..");
+        //outfile->cd("..");
     }
 
     // Don't forget non-prompt contributions
-    outfile->mkdir("nonPrompt");
-    outfile->cd("nonPrompt");
+    outfile->cd("Nominal");
+    gDirectory->mkdir("nonPrompt");
+    gDirectory->cd("nonPrompt");
 
     for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
         hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);

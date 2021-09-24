@@ -33,7 +33,7 @@ class FourTop {
         std::vector<Sample>* sampleVec;
 
         // General settings for analysis run
-
+        TH1F* intLuminosityMC;
 
         // IO-management
         TFile* outfile;
