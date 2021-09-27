@@ -4,24 +4,26 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-FourTop::FourTop(std::vector< std::string > argvString) {
+FourTop::FourTop(std::vector< std::string > argvString, int mode) {
     // Set settings according to input
     // prepare details of analysis in separate functions
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
 
-    outfile = new TFile("testOutput.root", "recreate");
+    if (mode == 0) {
+        outfile = new TFile("testOutput.root", "recreate");
+        
+        outfile->mkdir("Nominal");
+        outfile->mkdir("Uncertainties");
+        
+        TH1F* intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
 
-    outfile->mkdir("Nominal");
-    outfile->mkdir("Uncertainties");
-
-    TH1F* intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
-
-    intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
-    intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
-    
-    createHistInfoVec();
+        intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
+        intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
+        
+        createHistInfoVec();
+    }
 }
 
 FourTop::~FourTop() {

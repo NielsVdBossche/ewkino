@@ -26,6 +26,10 @@ bool EventSelection4T::passBaselineEventSelection(Event* event) {
     if (n_lep < 2) return false;
     //if (n_lep == 2 && event->lightLeptonCollection()[0].charge() != event->lightLeptonCollection()[1].charge()) return false;
     if (n_lep == 2 && event->hasOSLeptonPair()) return false;
+
+    event->sortLeptonsByPt();
+
+    if (event->lepton(0).pt() < 25 || event->lepton(1).pt() < 20) return false;
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
     if (event->numberOfJets() < 3) return false;

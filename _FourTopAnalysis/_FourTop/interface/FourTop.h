@@ -46,19 +46,19 @@ class FourTop {
 
         // BDT Variables
         Double_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose;
-        Double_t n_b_tight, dRleps, highestTops, secHighestTop, aziAngle, ht;
+        Double_t n_b_tight, dRleps, aziAngle, ht;
         Double_t massToPt;
         Double_t min_dr_lep_b, sec_min_dr_lep_b;
-        Double_t nrTightLeps;
         Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Double_t ptLepOne, ptLepTwo, ptLepThree;
 
         TMVA::Reader* bdt_DL, bdt_ML;
 
-        TTree* outputTree;
+        TTree* trainingTree_DL = nullptr;
+        TTree* trainingTree_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
-        FourTop(std::vector< std::string > argvString);
+        FourTop(std::vector< std::string > argvString, int mode = 0);
         ~FourTop();
 
         // Prepare 
@@ -66,11 +66,16 @@ class FourTop {
 
         // Event selection components
         
-        // Main loop function
+        // Main loop functions
         void analyze();
+        void createMVATrainingSamples();
 
         void crzHandling(size_t sampleIndex);
         void crwHandling(size_t sampleIndex);
+
+        void prepareTrainingTrees();
+        void linkMVAVariables(TTree* tree, bool isML);
+        void fillMVAVariables(bool isML);
 };
 
 
