@@ -4,6 +4,7 @@
 #include "../../globalSettings.h"
 
 #include <TFile.h>
+#include <TMVA/Reader.h>
 
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../TreeReader/interface/TreeReader.h"
@@ -30,15 +31,31 @@ class FourTop {
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRW;
 
         TreeReader* treeReader;
+
+        // Is this used?
         std::vector<Sample>* sampleVec;
+        int ttgOverlapCheck; // 0: neither, 1: ttbar, 2: ttgamma
 
         // General settings for analysis run
-        TH1F* intLuminosityMC;
+
 
         // IO-management
         TFile* outfile;
         
         Event* currentEvent = nullptr;
+
+        // BDT Variables
+        Double_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose;
+        Double_t n_b_tight, dRleps, highestTops, secHighestTop, aziAngle, ht;
+        Double_t massToPt;
+        Double_t min_dr_lep_b, sec_min_dr_lep_b;
+        Double_t nrTightLeps;
+        Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
+        Double_t ptLepOne, ptLepTwo, ptLepThree;
+
+        TMVA::Reader* bdt_DL, bdt_ML;
+
+        TTree* outputTree;
     public:
         // Loading settings for analysis, preparing trees, ...
         FourTop(std::vector< std::string > argvString);

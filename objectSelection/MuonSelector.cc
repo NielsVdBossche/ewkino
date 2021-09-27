@@ -38,6 +38,9 @@ bool MuonSelector::isLooseBase() const{
 
     if (muonPtr->leptonMVATOP() < 0.05) return false;
 
+    // Tight charge requirements:
+    if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
+
     return true;
 }
 

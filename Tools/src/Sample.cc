@@ -235,3 +235,13 @@ std::vector< Sample > readSampleList( const std::string& listFile, const std::st
 
     return sampleList;
 }
+
+int Sample::ttgOverlap() const {
+    if (stringTools::stringContains(_fileName, "TTTo")) {
+        return 1;
+    } else if (stringTools::stringContains(_fileName, "TTGamma")) {
+        return 2;
+    } else {
+        return 0;
+    }
+}

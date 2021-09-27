@@ -43,6 +43,10 @@ bool ElectronSelector::isLooseBase() const{
     if (electronPtr->miniIso() >= 0.4) return false;
 
     if (electronPtr->leptonMVATOP() < 0.) return false;
+
+    // Tight charge requirements:
+    if (! electronPtr->passChargeConsistency()) return false;
+
     return true;
 }
 

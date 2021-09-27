@@ -157,6 +157,7 @@ class Event {
         bool passMetFilters() const{ return _triggerInfoPtr->passMetFilters(); }
         bool passTrigger( const std::string& triggerName ) const{ return _triggerInfoPtr->passTrigger( triggerName ); }
         bool passMetFilter( const std::string& filterName ) const{ return _triggerInfoPtr->passMetFilter( filterName ); }
+        bool passTTGOverlap(int sampleType) const;
 
         //number of leptons 
         LeptonCollection::size_type numberOfLeptons() const{ return _leptonCollectionPtr->size(); }

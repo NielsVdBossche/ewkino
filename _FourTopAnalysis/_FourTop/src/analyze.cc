@@ -19,10 +19,16 @@ void FourTop:: analyze() {
 
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
+        // check if TTbar or TTGamma sample
+        ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             if (entry > 10000) break;
-            
+
             currentEvent = treeReader->buildEventPtr( entry );
+
+            if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            
 
             // apply baseline selection
             // Right now we build CRZ from looser objects.
