@@ -130,7 +130,8 @@ void FourTop:: analyze() {
             hists_CRW->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
         }
 
-        //outfile->cd("..");
+        // Systematics
+        if (currentEvent->isData()) continue;
     }
 
     // Don't forget non-prompt contributions

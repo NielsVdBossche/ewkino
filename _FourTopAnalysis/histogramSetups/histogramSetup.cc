@@ -202,7 +202,11 @@ std::vector<HistInfo>* fourTopHists::allHistsDL() {
 
         HistInfo( "minDR_B_lep_DL", "Min. #Delta R(l,b)", 12, 0, 4.8),
         HistInfo( "secMinDR_B_lep_DL", "Sec. min. #Delta R(l,b)", 12, 0, 4.8),
-        HistInfo( "LT_DL", "L_{T} [GeV]", 20, 0, 500)
+        HistInfo( "LT_DL", "L_{T} [GeV]", 20, 0, 500),
+
+        HistInfo("MissingHitsElsLead", "N_{miss}(l1)", 4, -1.5, 2.5),
+        HistInfo("MissingHitsElsSec", "N_{miss}(l2)", 4, -1.5, 2.5)
+
 
     };
 

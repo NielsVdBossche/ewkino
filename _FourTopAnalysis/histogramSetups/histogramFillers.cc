@@ -113,8 +113,10 @@ std::vector<double> fourTopHists::fillAllHistsDL(Event* event) {
         mindR_Bjet_lep[0],
         mindR_Bjet_lep[1],
 
-        event->LT()
+        event->LT(),
 
+        (event->lepton(0).isElectron() ? event->electron(0).numberOfMissingHits() : -1.),
+        (event->lepton(1).isElectron() ? (*(event->electronCollection().end() - 1))->numberOfMissingHits() : -1.) // This is why  the approach in Event.h is stupid
         
     };
 
