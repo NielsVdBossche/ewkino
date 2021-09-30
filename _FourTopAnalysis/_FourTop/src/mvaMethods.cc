@@ -112,9 +112,8 @@ void FourTop::createMVATrainingSamples() {
             // apply baseline selection
             // Right now we build CRZ from looser objects.
             // Necessary to account for looser leptons which are otherwise missed in the full lepton selection and could be part of a Z-boson resonance
-            EventSelection4T::applyBaselineObjectSelection(currentEvent);
 
-            if (! EventSelection4T::passBaselineEventSelection(currentEvent))  {
+            if (! selection->passBaselineEventSelection())  {
                 delete currentEvent;
                 continue;
             }
@@ -124,18 +123,15 @@ void FourTop::createMVATrainingSamples() {
             // Remove mass resonances
             currentEvent->makeSubLeptonCollections();
 
-            if (! EventSelection4T::passZBosonVeto(currentEvent)) {
+            if (! selection->passZBosonVeto()) {
                 delete currentEvent;
                 continue;
-            } else if (! EventSelection4T::passLowMassVeto(currentEvent)) {
+            } else if (! selection->passLowMassVeto()) {
                 delete currentEvent;
                 continue;
             }
 
-            // Full object selection (only keep the real useful stuff)
-            EventSelection4T::applyFullObjectSelection(currentEvent);
-
-            if (! EventSelection4T::passFullEventSelection(currentEvent)) {
+            if (! selection->passFullEventSelection()) {
                 delete currentEvent;
                 continue;
             }
