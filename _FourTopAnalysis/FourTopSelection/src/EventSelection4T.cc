@@ -50,8 +50,6 @@ bool EventSelection4T::passBaselineEventSelection() {
     if (n_lep < 2) return false;
     if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
-    event->sortLeptonsByPt();
-
     if ((*mediumLeps)[0].pt() < 25) return false;
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
@@ -67,9 +65,10 @@ bool EventSelection4T::passBaselineEventSelection() {
 }
 
 bool EventSelection4T::passFullEventSelection() {
-    double n_lep = mediumLeps->size();
-    if (n_lep < 2) return false;
-    if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
+    // already included in baseline selection
+    //double n_lep = mediumLeps->size();
+    //if (n_lep < 2) return false;
+    //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
     if (jets->size() < 4) return false;
 

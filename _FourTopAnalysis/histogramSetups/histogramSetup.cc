@@ -256,3 +256,49 @@ std::vector<HistInfo>* fourTopHists::allHistsML() {
 
     return histInfoVec;
 }
+
+std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep) {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
+    
+    *histInfoVec = {
+        HistInfo( "leptonPtLeading_" + flag, "p_{T}(l1) [GeV]", 18, 20, 200),
+        HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 18, 20, 200),
+        HistInfo( "leptonEtaLeading_" + flag, "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
+        HistInfo( "leptonEtaSecond_" + flag, "#eta (l2)", 12, -2.4, 2.4), // Might switch to det segmentation
+        HistInfo( "leptonPhiLeading_" + flag, "#phi (l1)", 12, - M_PI, M_PI),
+        HistInfo( "leptonPhiSecond_" + flag, "#phi (l2)", 12, - M_PI, M_PI),
+        HistInfo( "leptonELeading_" + flag, "E(l1) [GeV]", 18, 25, 205),
+        HistInfo( "leptonESecond_" + flag, "E(l2) [GeV]", 18, 25, 205),
+        HistInfo( "leptonMvaTOPLeading_" + flag, "score (l1)", 40, -1, 1),
+        HistInfo( "leptonMvaTOPSecond_" + flag, "score (l2)", 40, -1, 1),
+
+        HistInfo( "ptJetOne_" + flag, "p_{T}(j1) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetTwo_" + flag, "p_{T}(j2) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetThree_" + flag, "p_{T}(j3) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetFour_" + flag, "p_{T}(j4) [GeV]", 19, 25, 500),
+        HistInfo( "N_B_jets_" + flag, "N_{b}", 10, -0.5, 9.5),
+        HistInfo( "N_looseB_jets_" + flag, "N_{b}^{loose}", 10, -0.5, 9.5),
+        HistInfo( "N_tightB_jets_" + flag, "N_{b}^{tight}", 10, -0.5, 9.5),
+        HistInfo( "N_jets_" + flag, "N_{jets}", 15, -0.5, 14.5),
+
+        HistInfo( "HT_" + flag, "H_{T} [GeV]", 13, 300, 1600),
+        HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 19, 25, 500),
+
+        HistInfo( "Min_dR_Bs_" + flag, "Min. #Delta R(b,b)", 12, 0, 4.8),
+        //HistInfo( "SecMin_dR_Bs_" + flag, "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
+
+        HistInfo( "minDR_B_lep_" + flag, "Min. #Delta R(l,b)", 12, 0, 4.8),
+        HistInfo( "secMinDR_B_lep_" + flag, "Sec. min. #Delta R(l,b)", 12, 0, 4.8),
+        HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500)
+    };
+
+    if (multilep) {
+        histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 18, 20, 200) );
+        histInfoVec->push_back( HistInfo( "leptonEtaThird_" + flag, "#eta (l3)", 12, -2.4, 2.4) );
+        histInfoVec->push_back( HistInfo( "leptonPhiThird_" + flag, "#phi (l3)", 12, - M_PI, M_PI) );
+        histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 18, 25, 205) );
+        histInfoVec->push_back( HistInfo( "leptonMvaTOPThird_" + flag, "score (l3)", 40, -1, 1) );
+    }
+
+    return histInfoVec;
+    }

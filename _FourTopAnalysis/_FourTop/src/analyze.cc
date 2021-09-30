@@ -38,14 +38,13 @@ void FourTop:: analyze() {
                 delete currentEvent;
                 continue;
             }
-
-            //currentEvent->sortLeptonsByPt();
             
             // Basic non-prompt handling (using MC to estimate the contribution):
             size_t fillIndex = sampleIndex;
+            std::vector<double> fillVec;
             /*
             // If nonprompt: fillIndex becomes index of nonprompt histograms
-            for (const auto& leptonPtr : currentEvent->leptonCollection()) {
+            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
                 if (! leptonPtr->isPrompt()) {
                     fillIndex = treeReader->numberOfSamples();
                     break;
@@ -57,7 +56,8 @@ void FourTop:: analyze() {
 
             if (! selection->passZBosonVeto()) {
                 // Build CRZ
-                crzHandling(fillIndex);
+                fillVec = fourTopHists::fillAllHists(false, selection);
+                histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
                 continue;
             } else if (! selection->passLowMassVeto()) {
@@ -75,18 +75,18 @@ void FourTop:: analyze() {
 
             // Build CRW (might expand these)
             if (currentEvent->numberOfLightLeptons() == 2 && currentEvent->numberOfJets() < 6 && currentEvent->numberOfMediumBTaggedJets() == 2) {
-                crwHandling(fillIndex);
+                fillVec = fourTopHists::fillAllHists(false, selection);
+                histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
                 continue;
             }
 
             // Fill histograms
-            std::vector<double> fillVec;
             if (currentEvent->numberOfLightLeptons() == 2) {
-                fillVec = fourTopHists::fillAllHistsDL(currentEvent);
+                fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
             } else {
-                fillVec = fourTopHists::fillAllHistsML(currentEvent);
+                fillVec = fourTopHists::fillAllHists(true, selection);
                 histHelper::histFiller(fillVec, &(hists_ML->at(fillIndex)), currentEvent->weight());
             }
 

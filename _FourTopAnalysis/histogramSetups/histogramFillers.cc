@@ -176,3 +176,55 @@ std::vector<double> fourTopHists::fillAllHistsML(Event* event) {
 
 }
 
+std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* selec) {
+    JetCollection* jets = selec->getJetCol();
+    JetCollection* bJets = selec->getBtagJetCol();
+    LightLeptonCollection* lightLeps = (LightLeptonCollection*) selec->getMediumLepCol();
+    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
+
+
+    std::vector<double> fillVal = {
+        (*lightLeps)[0].pt(),
+        (*lightLeps)[1].pt(),
+        (*lightLeps)[0].eta(),
+        (*lightLeps)[1].eta(),
+        (*lightLeps)[0].phi(),
+        (*lightLeps)[1].phi(),
+        (*lightLeps)[0].energy(),
+        (*lightLeps)[1].energy(),
+        (*lightLeps)[0].leptonMVATOP(),
+        (*lightLeps)[1].leptonMVATOP(),
+
+        (*jets)[0].pt(),
+        (*jets)[1].pt(),
+        (*jets)[2].pt(),
+        (*jets)[3].pt(),
+        double(bJets->size()),
+        double(selec->getEvent()->looseBTagCollection().size()),
+        double(selec->getEvent()->tightBTagCollection().size()),
+        double(jets->size()),
+
+        jets->scalarPtSum(),
+        selec->getEvent()->metPt(),
+
+        // Calculate DR? What is best way...
+        mindR_Bjets[0],
+
+        mindR_Bjet_lep[0],
+        mindR_Bjet_lep[1],
+
+        lightLeps->scalarPtSum(), // LT
+        
+    };
+
+    if (multilep) {
+        fillVal.push_back((*lightLeps)[2].pt());
+        fillVal.push_back((*lightLeps)[2].eta());
+        fillVal.push_back((*lightLeps)[2].phi());
+        fillVal.push_back((*lightLeps)[2].energy());
+        fillVal.push_back((*lightLeps)[2].leptonMVATOP());
+    }
+
+    return fillVal;
+}

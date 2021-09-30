@@ -35,6 +35,16 @@ class EventSelection4T {
         void cleanSelection();
         void addNewEvent(Event* newEvent);
 
+        Event* getEvent() {return event;};
+        Lepton* getLepton(size_t index) {return mediumLeps->at(index);}
+        Jet* getJet(size_t index) {return jets->at(index);}
+        Jet* getBtagJet(size_t index) {return bTagJets->at(index);}
+
+        LeptonCollection* getLooseLepCol() {return looseLeps;}
+        LeptonCollection* getMediumLepCol() {return mediumLeps;}
+        JetCollection* getJetCol() {return jets;}
+        JetCollection* getBtagJetCol() {return bTagJets;}
+
         void objectSelection();
         bool passBaselineEventSelection();
         bool passFullEventSelection();

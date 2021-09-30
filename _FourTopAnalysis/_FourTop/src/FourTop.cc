@@ -46,10 +46,10 @@ FourTop::~FourTop() {
 void FourTop::createHistInfoVec() {
 
     // Temp solution
-    histInfoVec_DL = fourTopHists::allHistsDL();
-    histInfoVec_ML = fourTopHists::allHistsML();
-    histInfoVec_CRZ = fourTopHists::crzInfo();
-    histInfoVec_CRW = fourTopHists::crwInfo();
+    histInfoVec_DL = fourTopHists::allHists("DL", false);
+    histInfoVec_ML = fourTopHists::allHists("ML", true);
+    histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
+    histInfoVec_CRW = fourTopHists::allHists("CRW", false);
 
     // Go over settings, voor elke setting, add de passende histosetup bij het totaal
     // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken

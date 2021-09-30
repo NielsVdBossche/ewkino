@@ -9,6 +9,7 @@
 #include "../additionalTools/interface/calculators.h"
 
 #include "../../Event/interface/Event.h"
+#include "../FourTopSelection/interface/EventSelection4T.h"
 
 // Might move this functionality back to FourTop class itself
 
@@ -41,6 +42,11 @@ namespace fourTopHists {
 
     std::vector<double> fillAllHistsDL(Event* event);
     std::vector<double> fillAllHistsML(Event* event);
+
+
+    std::vector<HistInfo>* allHists(std::string flag, bool multilep);
+
+    std::vector<double> fillAllHists(bool multilep, EventSelection4T* selec);
 
 }
 
