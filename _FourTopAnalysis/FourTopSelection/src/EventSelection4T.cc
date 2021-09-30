@@ -81,7 +81,7 @@ bool EventSelection4T::passFullEventSelection() {
 bool EventSelection4T::passLowMassVeto() {  
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
 
-    for( const auto& leptonPtrPair : event->lightLeptonCollection().pairCollection() ){
+    for( const auto& leptonPtrPair : looseLeps->pairCollection() ){
 
         //veto SF pairs of low mass
         Lepton& lepton1 = *( leptonPtrPair.first );

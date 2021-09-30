@@ -42,7 +42,7 @@ void FourTop:: analyze() {
             // Basic non-prompt handling (using MC to estimate the contribution):
             size_t fillIndex = sampleIndex;
             std::vector<double> fillVec;
-            /*
+            
             // If nonprompt: fillIndex becomes index of nonprompt histograms
             for (const auto& leptonPtr : *selection->getMediumLepCol()) {
                 if (! leptonPtr->isPrompt()) {
@@ -50,7 +50,7 @@ void FourTop:: analyze() {
                     break;
                 }
             }
-            */
+            
             // Remove mass resonances
             currentEvent->makeSubLeptonCollections();
 
@@ -74,7 +74,7 @@ void FourTop:: analyze() {
             currentEvent->makeSubLeptonCollections();
 
             // Build CRW (might expand these)
-            if (currentEvent->numberOfLightLeptons() == 2 && currentEvent->numberOfJets() < 6 && currentEvent->numberOfMediumBTaggedJets() == 2) {
+            if (selection->getMediumLepCol()->size() == 2 && selection->getJetCol()->size() < 6 && selection->getBtagJetCol()->size() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
@@ -82,7 +82,7 @@ void FourTop:: analyze() {
             }
 
             // Fill histograms
-            if (currentEvent->numberOfLightLeptons() == 2) {
+            if (selection->getMediumLepCol()->size() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
             } else {
