@@ -35,7 +35,7 @@ template< typename ObjectType > class PhysicsObjectCollection {
         ObjectType& operator[]( const size_type index ){ return *collection[index]; }
         const ObjectType& operator[]( const size_type index ) const{ return *collection[index]; }
         
-        ObjectType* at (const size_type index) {return collection.at(index);}
+        ObjectType* at (const size_type index) {return collection.at(index).get();}
 
         template< typename func > void sortByAttribute( const func& f );
         void sortByPt(){ return sortByAttribute( [](const std::shared_ptr< ObjectType >& lhs, const std::shared_ptr< ObjectType >& rhs){ return lhs->pt() > rhs->pt(); } ); }
