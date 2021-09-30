@@ -4,61 +4,82 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-void EventSelection4T::applyBaselineObjectSelection(Event* event) {
+EventSelection4T::EventSelection4T() {
+    looseLeps = new LeptonCollection();
+    mediumLeps = new LeptonCollection();
+    jets = new JetCollection();
+    bTagJets = new JetCollection();
+}
+
+void EventSelection4T::cleanSelection() {
+    delete looseLeps;
+    delete mediumLeps;
+    delete jets;
+    delete bTagJets;
+}
+
+void EventSelection4T::addNewEvent(Event* newEvent) {
+    cleanSelection();
+    event = newEvent;
+    objectSelection();
+}
+
+void EventSelection4T::objectSelection() {
     event->removeTaus();
     event->selectLooseLeptons();
-    event->cleanElectronsFromLooseMuons();
+    event->cleanElectronsFromLooseMuons(); // consider making loose lep sel the original one
+    // FO would be the loose one now and tight the medium mva WP + higher pt
 
     event->selectGoodJets();
-    event->cleanJetsFromLooseLeptons(); // Might change this to tight leps?
-}
-
-void EventSelection4T::applyFullObjectSelection(Event* event) {
-    event->selectFOLeptons();
-
-}
-
-
-bool EventSelection4T::passBaselineEventSelection(Event* event) {
-    // Baseline event selection keeping most leptons in order to correctly veto resonances
-
-    double n_lep = event->numberOfLightLeptons();
-    if (n_lep < 2) return false;
-    //if (n_lep == 2 && event->lightLeptonCollection()[0].charge() != event->lightLeptonCollection()[1].charge()) return false;
-    if (n_lep == 2 && event->hasOSLeptonPair()) return false;
+    event->cleanJetsFromLooseLeptons(); // Clean jets from leps: is loose leps good or again like earlier
 
     event->sortLeptonsByPt();
 
-    if (event->lepton(0).pt() < 25 || event->lepton(1).pt() < 20) return false;
+    looseLeps = new LeptonCollection(event->looseLeptonCollection());
+    mediumLeps = new LeptonCollection(event->FOLeptonCollection());
+
+    jets = new JetCollection(event->jetCollection());
+    bTagJets = new JetCollection(event->mediumBTagCollection());
+}
+
+bool EventSelection4T::passBaselineEventSelection() {
+    // Baseline event selection keeping most leptons in order to correctly veto resonances
+
+    double n_lep = mediumLeps->size();
+
+    if (n_lep < 2) return false;
+    if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
+
+    event->sortLeptonsByPt();
+
+    if ((*mediumLeps)[0].pt() < 25) return false;
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
-    if (event->numberOfJets() < 3) return false;
+    if (jets->size() < 3) return false;
 
     // 1 bjets
-    if (event->numberOfMediumBTaggedJets() < 1) return false;
+    if (bTagJets->size() < 1) return false;
 
-    // Min MET of 25 (50?)
-    // Min HT of 300(?)
     if (event->met().pt() < 25) return false;
-    if (event->HT() < 300) return false;
+    if (jets->scalarPtSum() < 300) return false;
 
     return true;
 }
 
-bool EventSelection4T::passFullEventSelection(Event* event) {
-    double n_lep = event->numberOfLightLeptons();
+bool EventSelection4T::passFullEventSelection() {
+    double n_lep = mediumLeps->size();
     if (n_lep < 2) return false;
-    if (n_lep == 2 && event->hasOSLeptonPair()) return false;
+    if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
-    if (event->numberOfJets() < 4) return false;
+    if (jets->size() < 4) return false;
 
-    if (event->numberOfMediumBTaggedJets() < 2) return false;
+    if (bTagJets->size() < 2) return false;
 
 
     return true;
 }
 
-bool EventSelection4T::passLowMassVeto(Event* event) {  
+bool EventSelection4T::passLowMassVeto() {  
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
 
     for( const auto& leptonPtrPair : event->lightLeptonCollection().pairCollection() ){
@@ -76,7 +97,7 @@ bool EventSelection4T::passLowMassVeto(Event* event) {
     return true;
 }
 
-bool EventSelection4T::passZBosonVeto(Event* event) {
+bool EventSelection4T::passZBosonVeto() {
     // Reject OSSF lepton pairs with inv mass close to Z boson mass
     if (event->hasOSSFLeptonPair()) {
         double mass = event->bestZBosonCandidateMass();

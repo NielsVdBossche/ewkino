@@ -24,6 +24,8 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
         
         createHistInfoVec();
     }
+
+    selection = new EventSelection4T();
 }
 
 FourTop::~FourTop() {

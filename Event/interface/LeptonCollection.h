@@ -18,6 +18,7 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
     
     public:
         LeptonCollection( const TreeReader& );
+        LeptonCollection() = default;
         /*
         MuonCollection muonCollection() const;
         ElectronCollection electronCollection() const;

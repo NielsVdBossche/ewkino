@@ -43,6 +43,7 @@ class FourTop {
         TFile* outfile;
         
         Event* currentEvent = nullptr;
+        EventSelection4T* selection;
 
         // BDT Variables
         Double_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose;
