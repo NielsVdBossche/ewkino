@@ -34,7 +34,7 @@ std::vector<double> calculators::mindRLepAndJet(JetCollection& jets, LeptonColle
 
     std::vector<double> dRs;
 
-    for (jet =  jets.begin(); jet != jets.end() - 1; jet++) {
+    for (jet =  jets.begin(); jet != jets.end(); jet++) {
         for (lep = leptons.begin(); lep != leptons.end(); lep++) {
             double dr = deltaR(**jet, **lep);
 

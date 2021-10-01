@@ -275,7 +275,7 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep) {
         HistInfo( "ptJetOne_" + flag, "p_{T}(j1) [GeV]", 19, 25, 500),
         HistInfo( "ptJetTwo_" + flag, "p_{T}(j2) [GeV]", 19, 25, 500),
         HistInfo( "ptJetThree_" + flag, "p_{T}(j3) [GeV]", 19, 25, 500),
-        HistInfo( "ptJetFour_" + flag, "p_{T}(j4) [GeV]", 19, 25, 500),
+        HistInfo( "ptJetFour_" + flag, "p_{T}(j4) [GeV]", 20, 0, 500),
         HistInfo( "N_B_jets_" + flag, "N_{b}", 10, -0.5, 9.5),
         HistInfo( "N_looseB_jets_" + flag, "N_{b}^{loose}", 10, -0.5, 9.5),
         HistInfo( "N_tightB_jets_" + flag, "N_{b}^{tight}", 10, -0.5, 9.5),

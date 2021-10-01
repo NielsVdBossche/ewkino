@@ -182,7 +182,8 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* 
     LightLeptonCollection* lightLeps = (LightLeptonCollection*) selec->getMediumLepCol();
     std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
     std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
-
+    
+    int nb = bJets->size();
 
     std::vector<double> fillVal = {
         (*lightLeps)[0].pt(),
@@ -199,7 +200,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* 
         (*jets)[0].pt(),
         (*jets)[1].pt(),
         (*jets)[2].pt(),
-        (*jets)[3].pt(),
+        (jets->size() > 3 ? (*jets)[3].pt() : 0.),
         double(bJets->size()),
         double(selec->getEvent()->looseBTagCollection().size()),
         double(selec->getEvent()->tightBTagCollection().size()),
@@ -209,10 +210,10 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* 
         selec->getEvent()->metPt(),
 
         // Calculate DR? What is best way...
-        mindR_Bjets[0],
+        (nb >= 2 ? mindR_Bjets[0] : 5.),
 
-        mindR_Bjet_lep[0],
-        mindR_Bjet_lep[1],
+        (nb > 0 ? mindR_Bjet_lep[0] : 5.),
+        (nb > 0 ? mindR_Bjet_lep[1] : 5.),
 
         lightLeps->scalarPtSum(), // LT
         
