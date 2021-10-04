@@ -67,6 +67,8 @@ void FourTop:: analyze() {
 
             // Full object selection (only keep the real useful stuff)
             if (! selection->passFullEventSelection()) {
+                fillVec = fourTopHists::fillAllHists(false, selection);
+                histHelper::histFiller(fillVec, &(hists_Other->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
                 continue;
             }

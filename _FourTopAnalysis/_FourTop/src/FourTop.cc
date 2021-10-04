@@ -39,6 +39,7 @@ FourTop::~FourTop() {
     delete histInfoVec_ML;
     delete histInfoVec_CRZ;    
     delete histInfoVec_CRW;
+    delete histInfoVec_Other;
     //delete histInfoVec_Global; // If even assigned?
 }
 
@@ -50,6 +51,7 @@ void FourTop::createHistInfoVec() {
     histInfoVec_ML = fourTopHists::allHists("ML", true);
     histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
     histInfoVec_CRW = fourTopHists::allHists("CRW", false);
+    histInfoVec_Other = fourTopHists::allHists("Other", false);
 
     // Go over settings, voor elke setting, add de passende histosetup bij het totaal
     // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken
@@ -63,5 +65,5 @@ void FourTop::createHistInfoVec() {
     hists_ML = histHelper::initHistograms(histInfoVec_ML, sampleVec);
     hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
     hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
-
+    hists_Other = histHelper::initHistograms(histInfoVec_Other, sampleVec);
 }
