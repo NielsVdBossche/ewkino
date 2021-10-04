@@ -1,5 +1,10 @@
 #include "../interface/FourTop.h"
 
+#include <iomanip>
+#include <string>
+#include <sstream>
+#include <ctime>
+
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
 #endif
@@ -12,7 +17,18 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
 
     if (mode == 0) {
-        outfile = new TFile("testOutput.root", "recreate");
+        std::string outputFileName = "Output/testOutput_";
+        std::ostringstream oss;
+
+        auto t = std::time(nullptr);
+        auto tm = *std::localtime(&t);
+        
+        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << ".root";
+
+        outputFileName += oss.str();
+
+        std::cout << outputFileName.c_str() << std::endl;
+        outfile = new TFile(outputFileName.c_str(), "recreate");
         
         outfile->mkdir("Nominal");
         outfile->mkdir("Uncertainties");
