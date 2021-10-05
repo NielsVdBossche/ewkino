@@ -159,6 +159,9 @@ void FourTop:: analyze() {
         hists_CRW->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
     }
 
+    for( size_t dist = 0; dist < histInfoVec_Other->size(); ++dist ) {
+        hists_Other->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
+    }
 
     outfile->Close();
 }
