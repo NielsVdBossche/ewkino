@@ -37,6 +37,11 @@ def mergeTuples(mergableDir):
     outputDir  = os.path.join(finalOutputBase, outSubdir, outSubSubdir)
     print(outputDir)
 
+    try:
+        os.mkdir(outputDir) 
+    except OSError as error: 
+        print(outputDir + " already exists")
+
     inputFileName = ""
     i = -1
     while not ".root" in inputFileName:
