@@ -65,18 +65,25 @@ folders = [element for process in processes for element in glob.glob(base_direct
 
 for folder in folders:
     # make output dirs (direct copy of dir)
+    print("Currently working on " + folder.split('/')[-1])
     
     outputAnalysis = os.path.join(base_directory, analysisSubDir, folder.split('/')[-1])
     try:
         os.mkdir(outputAnalysis) 
     except OSError as error: 
-        print("Analysis sub folder already exists for " + folder)
+        print("Analysis sub folder already exists for " + folder + "... Cleaning folder")
+        files = glob.glob(outputAnalysis)
+        for f in files:
+            os.remove(f)
 
     outputMVA = os.path.join(base_directory, mvaSubDir, folder.split('/')[-1])
     try:
         os.mkdir(outputMVA) 
     except OSError as error: 
-        print("MVA sub folder already exists for " + folder)
+        print("MVA sub folder already exists for " + folder + "... Cleaning folder")
+        files = glob.glob(outputMVA)
+        for f in files:
+            os.remove(f)
 
     # list files in folder, copy (by random choice to right subdir)
     for file in os.listdir(folder):
