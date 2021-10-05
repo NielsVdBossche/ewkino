@@ -44,7 +44,7 @@ void FourTop::createMVATrainingSamples() {
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap(); // Moet dit?
 
-        std::string outputFileName = "trainingsamples/" + treeReader->currentSample().fileName();
+        std::string outputFileName = "../MVATraining/trainingsamples/" + treeReader->currentSample().fileName();
 
         TFile* currentOutputFile = new TFile(outputFileName.c_str(), "RECREATE");
         currentOutputFile->cd();
