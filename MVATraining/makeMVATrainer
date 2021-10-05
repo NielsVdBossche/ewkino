@@ -1,0 +1,13 @@
+CC=g++ -Wall -Wextra -O3 -g 
+CFLAGS= -Wl,--no-as-needed,-lpthread
+CXXFLAGS = -std=gnu++17
+LDFLAGS=`root-config --glibs --cflags` -lTMVA
+SOURCES=main.cc ../codeLibrary.o src/*.cc
+OBJECTS=$(SOURCES:.cc=.o)
+EXECUTABLE=testExec
+
+all: 
+	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
+	
+clean:
+	rm -rf *o $(EXECUTABLE)

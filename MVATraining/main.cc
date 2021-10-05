@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
     // Pass files to a class using a samplelist to order these in categories
     std::string sampleList = argv[1];
     std::string tree = argv[2]; // tree should be dynamical, but don't know if it will be used as input. Maybe in some other way... 
-    TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree);
+    TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, mvaConfiguration::DL);
 
     TMVA::Factory* factory = new TMVA::Factory("Factory"); // get type of classificationjob from argv, pass this to function deciding some extra arguments.
 
