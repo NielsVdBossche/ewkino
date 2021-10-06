@@ -1,5 +1,5 @@
 universe    =   vanilla
-executable  =   trainMVAMethods.sh
+executable  =   generateTrainingSamples.sh
 
 log         =   /user/nivanden/condor/logs/trainSampleProd_$(ClusterId).log
 error       =   /user/nivanden/condor/error/trainSampleProd_$(ClusterId).err

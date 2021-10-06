@@ -39,6 +39,7 @@ root/*
 analyzer_exec
 plotter_stack_exec
 *_exec
+*Exec
 
 *.class.C
 *.weights.xml
