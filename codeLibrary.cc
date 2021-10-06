@@ -29,6 +29,7 @@
 
 //include Tools code 
 #include "Tools/src/stringTools.cc"
+#include "Tools/src/parseTools.cc"
 #include "Tools/src/systemTools.cc"
 #include "Tools/src/analysisTools.cc"
 #include "Tools/src/IndexFlattener.cc"
