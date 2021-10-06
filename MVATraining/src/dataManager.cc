@@ -134,5 +134,7 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
         readChainToLoader(newClass, classNameAlt, dataloader, vars);
     }
     
+    dataloader->PrepareTrainingAndTestTree("","","SplitMode=Random:NormMode=NumEvents:!V");
+
     return dataloader;
 }

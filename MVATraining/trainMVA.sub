@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   trainMVAMethods.sh
+
+log         =   /user/nivanden/condor/logs/testExec_$(ClusterId).log
+error       =   /user/nivanden/condor/error/testExec_$(ClusterId).err
+output      =   /user/nivanden/condor/output/testExec_$(ClusterId).out
+
+queue
