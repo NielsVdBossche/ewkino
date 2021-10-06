@@ -3,24 +3,24 @@
 // other methods: load and build methods from files
 
 void FourTop::fillMVAVariables(bool isML) {
-    JetCollection bJets = currentEvent->mediumBTagCollection();
-    LeptonCollection lightLeps = currentEvent->leptonCollection();
+    JetCollection* bJets = selection->getBtagJetCol();
+    LeptonCollection* lightLeps = selection->getMediumLepCol();
 
-    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
-    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(bJets, lightLeps);
+    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *lightLeps);
 
-    n_jets_f         =  currentEvent->numberOfJets();
-    n_bjets_f        =  currentEvent->numberOfMediumBTaggedJets();
+    n_jets_f         =  selection->getJetCol()->size();
+    n_bjets_f        =  bJets->size();
     deltaRBjets      =  mindR_Bjets[0];
     n_b_loose        =  currentEvent->numberOfLooseBTaggedJets();
     n_b_tight        =  currentEvent->numberOfTightBTaggedJets();
-    dRleps           =  deltaR(currentEvent->lepton(0), currentEvent->lepton(1));
-    aziAngle         =  deltaPhi(currentEvent->lepton(0), currentEvent->lepton(1));
-    ht               =  currentEvent->HT();
+    dRleps           =  deltaR(*lightLeps->at(0), *lightLeps->at(1));
+    aziAngle         =  deltaPhi(*lightLeps->at(0), *lightLeps->at(1));
+    ht               =  selection->getJetCol()->scalarPtSum();
 
-    JetCollection jetCol = currentEvent->jetCollection();
+    JetCollection* jetCol = selection->getJetCol();
     massToPt = 0.;
-    for (JetCollection::iterator jetIt = jetCol.begin(); jetIt != jetCol.end(); jetIt++) {
+    for (JetCollection::iterator jetIt = jetCol->begin(); jetIt != jetCol->end(); jetIt++) {
         double mass = (*jetIt)->mass();
 
         if ((*jetIt)->pt() == 0) {
@@ -37,17 +37,17 @@ void FourTop::fillMVAVariables(bool isML) {
     min_dr_lep_b     =  mindR_Bjet_lep[0];
     sec_min_dr_lep_b =  mindR_Bjet_lep[1];
 
-    currentEvent->sortJetsByPt();
-    ptJetOne         =  currentEvent->jet(0).pt();
-    ptJetFour        =  currentEvent->jet(3).pt();
-    ptJetFive        =  currentEvent->jet(4).pt();
-    ptJetSix         =  currentEvent->jet(5).pt();
+    jetCol->sortByPt();
+    ptJetOne         =  jetCol->at(0)->pt();
+    ptJetFour        =  jetCol->at(3)->pt();
+    ptJetFive        =  (n_jets_f >= 5 ? jetCol->at(4)->pt() : 0.);
+    ptJetSix         =  (n_jets_f >= 6 ? jetCol->at(5)->pt() : 0.);
 
-    currentEvent->sortLeptonsByPt();
-    ptLepOne         =  currentEvent->lepton(0).pt();
-    ptLepTwo         =  currentEvent->lepton(1).pt();
+    lightLeps->sortByPt();
+    ptLepOne         =  lightLeps->at(0)->pt();
+    ptLepTwo         =  lightLeps->at(1)->pt();
 
     if (isML) {
-        ptLepThree   =  currentEvent->lepton(2).pt();
+        ptLepThree   =  lightLeps->at(2)->pt();
     }
 }

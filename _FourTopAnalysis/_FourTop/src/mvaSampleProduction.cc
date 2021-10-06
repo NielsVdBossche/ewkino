@@ -1,12 +1,5 @@
 #include "../interface/FourTop.h"
 
-void FourTop::prepareTrainingTrees() {
-    trainingTree_DL = new TTree("DL_tree", "DL_tree");
-    linkMVAVariables(trainingTree_DL, false);
-    trainingTree_ML = new TTree("ML_tree", "ML_tree");
-    linkMVAVariables(trainingTree_ML, true);
-}
-
 void FourTop::linkMVAVariables(TTree* tree, bool isML) {
 
     tree->Branch("N_jets",          &n_jets_f,      "N_jets/D");
@@ -34,34 +27,33 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
 }
 
 void FourTop::createMVATrainingSamples() {
-    std::cout << "event loop" << std::endl;
+    std::cout << "Sample loop" << std::endl;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
-        // check if TTbar or TTGamma sample
-        ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap(); // Moet dit?
-
-        std::string outputFileName = "../MVATraining/trainingsamples/" + treeReader->currentSample().fileName();
+        std::string outputFileName = "../MVATraining/trainingsamples/" + stringTools::fileNameFromPath(treeReader->currentSample().fileName());
 
         TFile* currentOutputFile = new TFile(outputFileName.c_str(), "RECREATE");
         currentOutputFile->cd();
 
-        prepareTrainingTrees();
+        TTree* trainingTree_DL = new TTree("DL_tree", "DL_tree");
+        linkMVAVariables(trainingTree_DL, false);
+        TTree* trainingTree_ML = new TTree("ML_tree", "ML_tree");
+        linkMVAVariables(trainingTree_ML, true);
 
-        for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
+        std::cout << "Event loop" << std::endl;
+
+        for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ) {
             if (entry > 10000) break;
 
             currentEvent = treeReader->buildEventPtr( entry );
+            selection->addNewEvent(currentEvent);
 
-            if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
-            
 
-            // apply baseline selection
-            // Right now we build CRZ from looser objects.
-            // Necessary to account for looser leptons which are otherwise missed in the full lepton selection and could be part of a Z-boson resonance
+            //if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
             if (! selection->passBaselineEventSelection())  {
                 delete currentEvent;
@@ -89,14 +81,14 @@ void FourTop::createMVATrainingSamples() {
             currentEvent->makeSubLeptonCollections();
 
             // Build CRW (might expand these)
-            if (currentEvent->numberOfLightLeptons() == 2 && currentEvent->numberOfJets() < 6 && currentEvent->numberOfMediumBTaggedJets() == 2) {
+            if (selection->getMediumLepCol()->size() == 2 && selection->getJetCol()->size() < 6 && selection->getBtagJetCol()->size() == 2) {
                 delete currentEvent;
                 continue;
             }
 
             // Fill histograms
             std::vector<double> fillVec;
-            if (currentEvent->numberOfLightLeptons() == 2) {
+            if (selection->getMediumLepCol()->size() == 2) {
                 fillMVAVariables(false);
                 trainingTree_DL->Fill();
             } else {
@@ -107,13 +99,15 @@ void FourTop::createMVATrainingSamples() {
             delete currentEvent;
         }
         
+        std::cout << trainingTree_ML->GetEntries() << std::endl;
+        std::cout << trainingTree_DL->GetEntries() << std::endl;
 
         trainingTree_DL->Write(trainingTree_DL->GetName(), TObject::kOverwrite);
         trainingTree_ML->Write(trainingTree_ML->GetName(), TObject::kOverwrite);
-        
+
+
         currentOutputFile->Close();
 
-        delete trainingTree_ML;
-        delete trainingTree_DL;
+
     }
 }

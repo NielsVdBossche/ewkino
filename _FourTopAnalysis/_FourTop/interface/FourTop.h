@@ -57,9 +57,6 @@ class FourTop {
         Double_t ptLepOne, ptLepTwo, ptLepThree;
 
         TMVA::Reader* bdt_DL, bdt_ML;
-
-        TTree* trainingTree_DL = nullptr;
-        TTree* trainingTree_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
         FourTop(std::vector< std::string > argvString, int mode = 0);
@@ -77,7 +74,6 @@ class FourTop {
         void crzHandling(size_t sampleIndex);
         void crwHandling(size_t sampleIndex);
 
-        void prepareTrainingTrees();
         void linkMVAVariables(TTree* tree, bool isML);
         void fillMVAVariables(bool isML);
 };
