@@ -4,7 +4,7 @@ CXXFLAGS = -std=gnu++17
 LDFLAGS=`root-config --glibs --cflags` -lTMVA
 SOURCES=main.cc ../codeLibrary.o src/*.cc
 OBJECTS=$(SOURCES:.cc=.o)
-EXECUTABLE=trainMVAMethods
+EXECUTABLE=trainMVAMethodsExec
 
 all: 
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
