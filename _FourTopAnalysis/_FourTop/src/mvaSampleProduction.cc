@@ -2,6 +2,7 @@
 
 void FourTop::linkMVAVariables(TTree* tree, bool isML) {
 
+    //std::vector<double>* variableVector = selection->;
     tree->Branch("N_jets",          &n_jets_f,      "N_jets/D");
     tree->Branch("N_b",             &n_bjets_f,     "N_b/D");
     tree->Branch("N_b_tight",       &n_b_tight,     "N_b_tight/D");
@@ -60,10 +61,6 @@ void FourTop::createMVATrainingSamples() {
                 continue;
             }
 
-            currentEvent->sortLeptonsByPt();
-
-            // Remove mass resonances
-            currentEvent->makeSubLeptonCollections();
 
             if (! selection->passZBosonVeto()) {
                 delete currentEvent;
@@ -77,8 +74,6 @@ void FourTop::createMVATrainingSamples() {
                 delete currentEvent;
                 continue;
             }
-
-            currentEvent->makeSubLeptonCollections();
 
             // Build CRW (might expand these)
             if (selection->getMediumLepCol()->size() == 2 && selection->getJetCol()->size() < 6 && selection->getBtagJetCol()->size() == 2) {

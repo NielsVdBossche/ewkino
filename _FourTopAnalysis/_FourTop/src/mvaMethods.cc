@@ -12,8 +12,8 @@ void FourTop::fillMVAVariables(bool isML) {
     n_jets_f         =  selection->getJetCol()->size();
     n_bjets_f        =  bJets->size();
     deltaRBjets      =  mindR_Bjets[0];
-    n_b_loose        =  currentEvent->numberOfLooseBTaggedJets();
-    n_b_tight        =  currentEvent->numberOfTightBTaggedJets();
+    n_b_loose        =  selection->numberOfLooseBJets();
+    n_b_tight        =  selection->numberOfTightBJets();
     dRleps           =  deltaR(*lightLeps->at(0), *lightLeps->at(1));
     aziAngle         =  deltaPhi(*lightLeps->at(0), *lightLeps->at(1));
     ht               =  selection->getJetCol()->scalarPtSum();

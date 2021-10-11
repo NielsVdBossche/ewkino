@@ -51,11 +51,13 @@ FourTop::~FourTop() {
     // Delete histograms
 
     // Delete histogramInfo
-    delete histInfoVec_DL;
-    delete histInfoVec_ML;
-    delete histInfoVec_CRZ;    
-    delete histInfoVec_CRW;
-    delete histInfoVec_Other;
+    if (histInfoVec_DL) {
+        delete histInfoVec_DL;
+        delete histInfoVec_ML;
+        delete histInfoVec_CRZ;    
+        delete histInfoVec_CRW;
+        delete histInfoVec_Other;
+    }
     //delete histInfoVec_Global; // If even assigned?
 }
 

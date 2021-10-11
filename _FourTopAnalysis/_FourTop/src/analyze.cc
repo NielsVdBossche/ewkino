@@ -52,7 +52,6 @@ void FourTop:: analyze() {
             }
             
             // Remove mass resonances
-            currentEvent->makeSubLeptonCollections();
 
             if (! selection->passZBosonVeto()) {
                 // Build CRZ
@@ -73,10 +72,9 @@ void FourTop:: analyze() {
                 continue;
             }
 
-            currentEvent->makeSubLeptonCollections();
 
             // Build CRW (might expand these)
-            if (selection->getMediumLepCol()->size() == 2 && selection->getJetCol()->size() < 6 && selection->getBtagJetCol()->size() == 2) {
+            if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
@@ -84,7 +82,7 @@ void FourTop:: analyze() {
             }
 
             // Fill histograms
-            if (selection->getMediumLepCol()->size() == 2) {
+            if (selection->numberOfLeps() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
             } else {

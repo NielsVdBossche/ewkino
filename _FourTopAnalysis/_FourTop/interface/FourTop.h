@@ -14,17 +14,18 @@
 #include "../../additionalTools/interface/histHelper.h"
 #include "../../additionalTools/interface/calculators.h"
 
-#include "../../FourTopSelection/interface/EventSelection4T.h"
+#include "../../FourTopEventHandling/interface/EventSelection4T.h"
+#include "../../FourTopEventHandling/interface/MVAHandler.h"
 
 
 class FourTop {
     private:
-        std::vector<HistInfo>* histInfoVec_Global; // Histograms shared between DL and ML (if any?)
-        std::vector<HistInfo>* histInfoVec_DL; // Histogram for DL kinematics
-        std::vector<HistInfo>* histInfoVec_ML; // Histogram for ML kinematics
-        std::vector<HistInfo>* histInfoVec_CRZ;
-        std::vector<HistInfo>* histInfoVec_CRW;
-        std::vector<HistInfo>* histInfoVec_Other;
+        std::vector<HistInfo>* histInfoVec_Global = nullptr; // Histograms shared between DL and ML (if any?)
+        std::vector<HistInfo>* histInfoVec_DL = nullptr; // Histogram for DL kinematics
+        std::vector<HistInfo>* histInfoVec_ML = nullptr; // Histogram for ML kinematics
+        std::vector<HistInfo>* histInfoVec_CRZ = nullptr;
+        std::vector<HistInfo>* histInfoVec_CRW = nullptr;
+        std::vector<HistInfo>* histInfoVec_Other = nullptr;
 
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_DL;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_ML;
