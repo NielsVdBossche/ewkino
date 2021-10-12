@@ -5,14 +5,14 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventSelection4T* selec) : currentConfig(config), selection(selection) {
+MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventSelection4T* selec) : currentConfig(config), selection(selec) {
     initReader();
 }
 
 void MVAHandler_4T::initReader() {
     reader = new TMVA::Reader("!Color:!Silent");
 
-    std::string weightFilePath = "../MVATraining/Classifiers/VeryEpicLoader/weights/";
+    std::string weightFilePath = "../MVATraining/VeryEpicLoader/weights/";
     if (currentConfig == Binary_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == Binary_ML) {
@@ -52,15 +52,15 @@ void MVAHandler_4T::initReader() {
         reader->AddVariable("pt_lep_three", &ptLepThree);
     }
 
-    reader->BookMVA("NAME", weightFilePath);
+    reader->BookMVA("BDTCurr", weightFilePath);
 
     createHistograms();
 }
 
-std::vector<HistInfo> MVAHandler_4T::createHistograms() {
+std::vector<HistInfo>* MVAHandler_4T::createHistograms() {
     std::string identifier = "";
 
-    std::vector<HistInfo> histInfoVec;
+    std::vector<HistInfo>* histInfoVec = new std::vector<HistInfo>;
 
     if (currentConfig < 2) {
         identifier += "_Binary";
@@ -88,13 +88,13 @@ std::vector<HistInfo> MVAHandler_4T::createHistograms() {
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier;
 
-        histInfoVec.push_back(HistInfo(name, "BDT score", 20, -1., 1.));
+        histInfoVec->push_back(HistInfo(name, "BDT score", 20, -1., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier;
 
-        histInfoVec.push_back(HistInfo(name, "BDT score", 20, -1., 1.));
+        histInfoVec->push_back(HistInfo(name, "BDT score", 20, -1., 1.));
     }
 
     return histInfoVec;
@@ -120,9 +120,9 @@ std::vector<Float_t> MVAHandler_4T::scoreEvent() {
     std::vector<Float_t> returnVec;
 
     if (currentConfig <= Binary_ML) {
-        returnVec.push_back(reader->EvaluateMVA("NAME"));
+        returnVec.push_back(reader->EvaluateMVA("BDTCurr"));
     } else {
-        returnVec = reader->EvaluateMulticlass("NAME");
+        returnVec = reader->EvaluateMulticlass("BDTCurr");
     }
 
     return returnVec;

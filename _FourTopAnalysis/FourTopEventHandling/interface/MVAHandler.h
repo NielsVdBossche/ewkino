@@ -2,7 +2,7 @@
 #define MVAHANDLER_4T_H
 
 #include "EventSelection4T.h"
-#include "../additionalTools/interface/calculators.h"
+#include "../../additionalTools/interface/calculators.h"
 
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/histogramTools.h"
@@ -51,7 +51,7 @@ class MVAHandler_4T {
         ~MVAHandler_4T();
         
         void initReader();
-        std::vector<HistInfo> createHistograms();
+        std::vector<HistInfo>* createHistograms();
         //std::string histogramIdentifier();
 
         std::vector<Float_t> scoreEvent();
