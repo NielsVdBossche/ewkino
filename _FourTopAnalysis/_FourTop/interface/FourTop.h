@@ -7,6 +7,7 @@
 #include <TMVA/Reader.h>
 
 #include "../../../Tools/interface/HistInfo.h"
+#include "../../../Tools/interface/HistInfo2D.h"
 #include "../../../TreeReader/interface/TreeReader.h"
 #include "../../../Event/interface/Event.h"
 
@@ -29,6 +30,9 @@ class FourTop {
         std::vector<HistInfo>* histInfoVec_mva_DL = nullptr;
         std::vector<HistInfo>* histInfoVec_mva_ML = nullptr;
 
+        std::vector<HistInfo_2D>* histInfoVec2D_mva_DL = nullptr;
+        std::vector<HistInfo_2D>* histInfoVec2D_mva_ML = nullptr;
+
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_DL;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_ML;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRZ;
@@ -36,6 +40,9 @@ class FourTop {
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_Other;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_DL;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_ML;
+
+        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_DL;
+        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_ML;
 
 
         TreeReader* treeReader;

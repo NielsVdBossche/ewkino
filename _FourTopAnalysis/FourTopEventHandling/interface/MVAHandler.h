@@ -5,6 +5,7 @@
 #include "../../additionalTools/interface/calculators.h"
 
 #include "../../../Tools/interface/HistInfo.h"
+#include "../../../Tools/interface/HistInfo2D.h"
 #include "../../../Tools/interface/histogramTools.h"
 
 #include <utility>
@@ -23,8 +24,8 @@ enum MVAConfigs {
 };
 
 enum MVAClasses {
-    TTTT,
     TTBar,
+    TTTT,
     TTW,
     TTZH
 };
@@ -52,13 +53,16 @@ class MVAHandler_4T {
         
         void initReader();
         std::vector<HistInfo>* createHistograms();
+        std::vector<HistInfo_2D>* create2DHistograms();
+
         //std::string histogramIdentifier();
 
         std::vector<Float_t> scoreEvent();
         void fillVariables();
-        void fillHistograms(std::vector<std::shared_ptr<TH1D>>& histograms, double weight);
+        void fillHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH1D>>& histograms, double weight);
+        void fill2DHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH2D>>& histograms, double weight);
 
-        std::pair<MVAClasses, Float_t> getClassAndScore();
+        std::pair<MVAClasses, Float_t> getClassAndScore(std::vector<Float_t>& scores);
 };  
 
 #endif

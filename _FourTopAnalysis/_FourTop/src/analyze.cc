@@ -86,14 +86,18 @@ void FourTop:: analyze() {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
                 if (histInfoVec_mva_DL) {
-                    mva_DL->fillHistograms(hists_mva_DL->at(fillIndex), currentEvent->weight());
+                    std::vector<Float_t> scores = mva_DL->scoreEvent();
+                    mva_DL->fillHistograms(scores, hists_mva_DL->at(fillIndex), currentEvent->weight());
+                    mva_DL->fill2DHistograms(scores, hists2D_mva_DL->at(fillIndex), currentEvent->weight());
                 }
             } else {
                 fillVec = fourTopHists::fillAllHists(true, selection);
                 histHelper::histFiller(fillVec, &(hists_ML->at(fillIndex)), currentEvent->weight());
 
                 if (histInfoVec_mva_ML) {
-                    mva_ML->fillHistograms(hists_mva_ML->at(fillIndex), currentEvent->weight());
+                    std::vector<Float_t> scores = mva_ML->scoreEvent();
+                    mva_ML->fillHistograms(scores, hists_mva_ML->at(fillIndex), currentEvent->weight());
+                    mva_ML->fill2DHistograms(scores, hists2D_mva_ML->at(fillIndex), currentEvent->weight());
                 }
             }
 
@@ -147,6 +151,14 @@ void FourTop:: analyze() {
             for( size_t dist = 0; dist < histInfoVec_mva_ML->size(); ++dist ) {
                 hists_mva_ML->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_ML->at(dist).name()), TObject::kOverwrite);
             }
+
+            for( size_t dist = 0; dist < histInfoVec2D_mva_DL->size(); ++dist ) {
+                hists2D_mva_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_DL->at(dist).name()), TObject::kOverwrite);
+            }
+
+            for( size_t dist = 0; dist < histInfoVec2D_mva_ML->size(); ++dist ) {
+                hists2D_mva_ML->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_ML->at(dist).name()), TObject::kOverwrite);
+            }
         }
 
         // Systematics
@@ -185,6 +197,14 @@ void FourTop:: analyze() {
 
         for( size_t dist = 0; dist < histInfoVec_mva_ML->size(); ++dist ) {
             hists_mva_ML->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_ML->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec2D_mva_DL->size(); ++dist ) {
+            hists2D_mva_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_DL->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec2D_mva_ML->size(); ++dist ) {
+            hists2D_mva_ML->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_ML->at(dist).name()), TObject::kOverwrite);
         }
     }
 

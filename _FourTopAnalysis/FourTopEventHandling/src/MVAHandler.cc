@@ -88,30 +88,68 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms() {
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier;
 
-        histInfoVec->push_back(HistInfo(name, "BDT score", 20, -1., 1.));
+        histInfoVec->push_back(HistInfo(name, "BDT score", 15, 0., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier;
 
-        histInfoVec->push_back(HistInfo(name, "BDT score", 20, -1., 1.));
+        histInfoVec->push_back(HistInfo(name, "BDT score", 15, 0., 1.));
     }
 
     return histInfoVec;
 }
 
-void MVAHandler_4T::fillHistograms(std::vector<std::shared_ptr<TH1D>>& histograms, double weight) {
-    std::vector<Float_t> scores = scoreEvent();
+std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms() {
+    std::string identifier = "";
 
+    std::vector<HistInfo_2D>* histInfoVec = new std::vector<HistInfo_2D>;
+
+    if (currentConfig < 2) {
+        identifier += "_Binary";
+    } else if (currentConfig < 4) {
+        identifier += "_TriClass";
+    } else if (currentConfig < 6) {
+        identifier += "_FourClass";
+    }
+
+    if (isML) {
+        identifier += "_ML";
+    } else {
+        identifier += "_DL";
+    }
+
+    std::map<MVAClasses, std::string> translator = {
+        {TTTT, "Signal"},
+        {TTBar, "TTBar"},
+        {TTW, "TTW"},
+        {TTZH, "TTZH"}
+    }; // Review names when appropriate
+
+    for (int el = 0; el < maxClass; el++) {
+        std::string name = "2D_BDTScore_" + translator[(MVAClasses) el] + "_" + translator[(MVAClasses) ((el + 1) % maxClass)] + identifier;
+
+        histInfoVec->push_back(HistInfo_2D(name, "BDT score " + translator[(MVAClasses) el], 15, 0., 1., "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)], 15, 0., 1.));
+    }
+
+    return histInfoVec;
+}
+
+void MVAHandler_4T::fillHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH1D>>& histograms, double weight) {
     for (int i=0; i < maxClass; i++) {
         histogram::fillValue(histograms[i].get(), scores[i], weight);
     }
 
-    std::pair<MVAClasses, Float_t> classific = getClassAndScore();
+    std::pair<MVAClasses, Float_t> classific = getClassAndScore(scores);
 
     histogram::fillValue(histograms[classific.first + maxClass].get(), classific.second, weight);
 }
 
+void MVAHandler_4T::fill2DHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH2D>>& histograms, double weight) {
+    for (int i=0; i < maxClass; i++) {
+        histogram::fillValues(histograms[i].get(), scores[i], scores[(i + 1) % 3], weight);
+    }
+}
 
 
 std::vector<Float_t> MVAHandler_4T::scoreEvent() {
@@ -179,11 +217,9 @@ void MVAHandler_4T::fillVariables() {
     }
 }
 
-std::pair<MVAClasses, Float_t> MVAHandler_4T::getClassAndScore() {
-    std::vector<Float_t> scores = scoreEvent();
-
-    if (scores.size() == 1) {
-        return {TTTT, scores[0]};
+std::pair<MVAClasses, Float_t> MVAHandler_4T::getClassAndScore(std::vector<Float_t>& scores) {
+    if (maxClass == 1) {
+        return {(MVAClasses) 0, scores[0]};
     }
 
     int indexMaxScore = std::max_element(scores.begin(),scores.end()) - scores.begin();

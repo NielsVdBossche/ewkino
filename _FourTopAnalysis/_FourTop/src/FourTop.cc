@@ -61,6 +61,13 @@ FourTop::~FourTop() {
         delete histInfoVec_CRW;
         delete histInfoVec_Other;
     }
+
+    if (histInfoVec_mva_DL) {
+        delete histInfoVec_mva_DL;
+        delete histInfoVec_mva_ML;
+        delete histInfoVec2D_mva_DL;
+        delete histInfoVec2D_mva_ML;
+    }
     //delete histInfoVec_Global; // If even assigned?
 }
 
@@ -102,5 +109,9 @@ void FourTop::createMVAHandlers() {
     hists_mva_DL = histHelper::initHistograms(histInfoVec_mva_DL, sampleVec);
     hists_mva_ML = histHelper::initHistograms(histInfoVec_mva_ML, sampleVec);
 
+    histInfoVec2D_mva_DL = mva_DL->create2DHistograms();
+    histInfoVec2D_mva_ML = mva_ML->create2DHistograms();
 
+    hists2D_mva_DL = histHelper::init2DHistograms(histInfoVec2D_mva_DL, sampleVec);
+    hists2D_mva_ML = histHelper::init2DHistograms(histInfoVec2D_mva_ML, sampleVec);
 }

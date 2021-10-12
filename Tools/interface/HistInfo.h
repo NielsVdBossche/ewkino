@@ -53,11 +53,12 @@ class HistInfo{
             return hist;
         }
 
+        virtual bool is2D() {return false;}
 
         std::string name() const { return fileName; }
         double maxBinCenter() const { return maxBinC; }
 
-    private:
+    protected:
         std::string fileName;
         std::string xLabel;
         unsigned nBins;
