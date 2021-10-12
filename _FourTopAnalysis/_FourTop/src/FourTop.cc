@@ -16,7 +16,7 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
 
-    if (mode == 0) {
+    if (mode < 2) {
         std::string outputFileName = "Output/testOutput_";
         std::ostringstream oss;
 
@@ -39,6 +39,10 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
         intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
         
         createHistInfoVec();
+
+        if (mode == 1) {
+            createMVAHandlers();
+        }
     }
 
     selection = new EventSelection4T();
@@ -84,4 +88,17 @@ void FourTop::createHistInfoVec() {
     hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
     hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
     hists_Other = histHelper::initHistograms(histInfoVec_Other, sampleVec);
+}
+
+void FourTop::createMVAHandlers() {
+    // TODO 
+    mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection);
+    mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection);
+
+    std::vector< Sample > sampleVec = treeReader->sampleVector();
+
+    hists_mva_DL = histHelper::initHistograms(histInfoVec_mva_DL, sampleVec);
+    hists_mva_ML = histHelper::initHistograms(histInfoVec_mva_ML, sampleVec);
+
+
 }

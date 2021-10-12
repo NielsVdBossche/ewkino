@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     // Settings splitsen if necessary
 
     // main func call
-    FourTop analysisObject(argvStr, 1);
+    FourTop analysisObject(argvStr, 2);
 
     analysisObject.createMVATrainingSamples();
 }

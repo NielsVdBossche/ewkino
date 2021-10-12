@@ -19,10 +19,10 @@ void MVAHandler_4T::initReader() {
         isML = true;
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_BDTG_DL.weights.xml";
     } else if (currentConfig == TriClass_ML) {
         isML = true;
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_BDTG_ML.weights.xml";
     } else if (currentConfig == FourClass_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == FourClass_ML) {
@@ -53,7 +53,66 @@ void MVAHandler_4T::initReader() {
     }
 
     reader->BookMVA("NAME", weightFilePath);
+
+    createHistograms();
 }
+
+std::vector<HistInfo> MVAHandler_4T::createHistograms() {
+    std::string identifier = "";
+
+    std::vector<HistInfo> histInfoVec;
+
+    if (currentConfig < 2) {
+        identifier += "_Binary";
+    } else if (currentConfig < 4) {
+        identifier += "_TriClass";
+        maxClass = 3;
+    } else if (currentConfig < 6) {
+        identifier += "_FourClass";
+        maxClass = 4;
+    }
+
+    if (isML) {
+        identifier += "_ML";
+    } else {
+        identifier += "_DL";
+    }
+
+    std::map<MVAClasses, std::string> translator = {
+        {TTTT, "Signal"},
+        {TTBar, "TTBar"},
+        {TTW, "TTW"},
+        {TTZH, "TTZH"}
+    }; // Review names when appropriate
+
+    for (int el = 0; el < maxClass; el++) {
+        std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier;
+
+        histInfoVec.push_back(HistInfo(name, "BDT score", 20, -1., 1.));
+    }
+
+    for (int el = 0; el < maxClass; el++) {
+        std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier;
+
+        histInfoVec.push_back(HistInfo(name, "BDT score", 20, -1., 1.));
+    }
+
+    return histInfoVec;
+}
+
+void MVAHandler_4T::fillHistograms(std::vector<std::shared_ptr<TH1D>>& histograms, double weight) {
+    std::vector<Float_t> scores = scoreEvent();
+
+    for (int i=0; i < maxClass; i++) {
+        histogram::fillValue(histograms[i].get(), scores[i], weight);
+    }
+
+    std::pair<MVAClasses, Float_t> classific = getClassAndScore();
+
+    histogram::fillValue(histograms[classific.first + maxClass].get(), classific.second, weight);
+}
+
+
 
 std::vector<Float_t> MVAHandler_4T::scoreEvent() {
     fillVariables();
@@ -118,4 +177,16 @@ void MVAHandler_4T::fillVariables() {
     if (isML) {
         ptLepThree   =  lightLeps->at(2)->pt();
     }
+}
+
+std::pair<MVAClasses, Float_t> MVAHandler_4T::getClassAndScore() {
+    std::vector<Float_t> scores = scoreEvent();
+
+    if (scores.size() == 1) {
+        return {TTTT, scores[0]};
+    }
+
+    int indexMaxScore = std::max_element(scores.begin(),scores.end()) - scores.begin();
+
+    return {(MVAClasses) indexMaxScore, scores[indexMaxScore]};
 }
