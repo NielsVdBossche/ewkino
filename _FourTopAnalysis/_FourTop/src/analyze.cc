@@ -85,7 +85,6 @@ void FourTop:: analyze() {
             if (selection->numberOfLeps() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
-
                 if (histInfoVec_mva_DL) {
                     mva_DL->fillHistograms(hists_mva_DL->at(fillIndex), currentEvent->weight());
                 }

@@ -1,3 +1,6 @@
+#ifndef CALCULATORS_H
+#define CALCULATORS_H
+
 #include "../../../Event/interface/JetCollection.h"
 #include "../../../Event/interface/LeptonCollection.h"
 
@@ -9,3 +12,5 @@ namespace calculators {
 
     std::vector<double> mindRLepAndJet(JetCollection& jets, LeptonCollection& leptons);
 }
+
+#endif
