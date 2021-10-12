@@ -40,6 +40,13 @@ void EventSelection4T::objectSelection() {
 
     jets = new JetCollection(event->jetCollection());
     bTagJets = new JetCollection(event->mediumBTagCollection());
+
+    nJets = jets->size();
+    nMediumB = bTagJets->size();
+    nTightB = event->numberOfTightBTaggedJets();
+    nLooseB = event->numberOfLooseBTaggedJets();
+    nLooseLep = looseLeps->size();
+    nLep = mediumLeps->size();
 }
 
 bool EventSelection4T::passBaselineEventSelection() {

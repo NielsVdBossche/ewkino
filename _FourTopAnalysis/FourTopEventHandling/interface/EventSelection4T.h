@@ -16,6 +16,12 @@
 // This structure will not work as it requires plugging this in TreeReader (instead of event as return). This makes it quite difficult
 // Event provides plug for user specified object selections
 
+enum eventClass {
+    SSDL=2,
+    TriLep=3,
+    FourLep=4
+};
+
 class EventSelection4T {
     private:
         Event* event = nullptr;
@@ -26,7 +32,10 @@ class EventSelection4T {
         JetCollection* jets;
         JetCollection* bTagJets;
 
-        // Other doubles like number of leps etc
+        int nJets, nMediumB, nTightB, nLooseB, nLooseLep, nLep;
+
+        // MVA variable vector
+        
     public:
 
         EventSelection4T();
@@ -44,6 +53,13 @@ class EventSelection4T {
         LeptonCollection* getMediumLepCol() {return mediumLeps;}
         JetCollection* getJetCol() {return jets;}
         JetCollection* getBtagJetCol() {return bTagJets;}
+
+        int numberOfJets() const {return nJets;}
+        int numberOfMediumBJets() const {return nMediumB;}
+        int numberOfTightBJets() const {return nTightB;}
+        int numberOfLooseBJets() const {return nLooseB;}
+        int numberOfLooseLeps() const {return nLooseLep;}
+        int numberOfLeps() const {return nLep;}
 
         void objectSelection();
         bool passBaselineEventSelection();

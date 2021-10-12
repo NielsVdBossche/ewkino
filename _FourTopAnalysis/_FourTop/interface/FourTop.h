@@ -14,29 +14,34 @@
 #include "../../additionalTools/interface/histHelper.h"
 #include "../../additionalTools/interface/calculators.h"
 
-#include "../../FourTopSelection/interface/EventSelection4T.h"
+#include "../../FourTopEventHandling/interface/EventSelection4T.h"
+#include "../../FourTopEventHandling/interface/MVAHandler.h"
 
 
 class FourTop {
     private:
-        std::vector<HistInfo>* histInfoVec_Global; // Histograms shared between DL and ML (if any?)
-        std::vector<HistInfo>* histInfoVec_DL; // Histogram for DL kinematics
-        std::vector<HistInfo>* histInfoVec_ML; // Histogram for ML kinematics
-        std::vector<HistInfo>* histInfoVec_CRZ;
-        std::vector<HistInfo>* histInfoVec_CRW;
-        std::vector<HistInfo>* histInfoVec_Other;
+        std::vector<HistInfo>* histInfoVec_Global = nullptr; // Histograms shared between DL and ML (if any?)
+        std::vector<HistInfo>* histInfoVec_DL = nullptr; // Histogram for DL kinematics
+        std::vector<HistInfo>* histInfoVec_ML = nullptr; // Histogram for ML kinematics
+        std::vector<HistInfo>* histInfoVec_CRZ = nullptr;
+        std::vector<HistInfo>* histInfoVec_CRW = nullptr;
+        std::vector<HistInfo>* histInfoVec_Other = nullptr;
+        std::vector<HistInfo>* histInfoVec_mva_DL = nullptr;
+        std::vector<HistInfo>* histInfoVec_mva_ML = nullptr;
 
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_DL;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_ML;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRZ;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRW;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_Other;
+        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_DL;
+        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_ML;
 
 
         TreeReader* treeReader;
 
         // Is this used?
-        std::vector<Sample>* sampleVec;
+        //std::vector<Sample>* sampleVec;
         int ttgOverlapCheck; // 0: neither, 1: ttbar, 2: ttgamma
 
         // General settings for analysis run
@@ -56,7 +61,7 @@ class FourTop {
         Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Double_t ptLepOne, ptLepTwo, ptLepThree;
 
-        TMVA::Reader* bdt_DL, bdt_ML;
+        MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
         FourTop(std::vector< std::string > argvString, int mode = 0);
@@ -64,15 +69,13 @@ class FourTop {
 
         // Prepare 
         void createHistInfoVec();
+        void createMVAHandlers();
 
         // Event selection components
         
         // Main loop functions
         void analyze();
         void createMVATrainingSamples();
-
-        void crzHandling(size_t sampleIndex);
-        void crwHandling(size_t sampleIndex);
 
         void linkMVAVariables(TTree* tree, bool isML);
         void fillMVAVariables(bool isML);

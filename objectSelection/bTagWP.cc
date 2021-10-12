@@ -16,9 +16,9 @@ double bTagWP::looseDeepCSV2018(){ return 0.1208; }
 double bTagWP::mediumDeepCSV2018(){ return 0.4168; }
 double bTagWP::tightDeepCSV2018(){ return 0.7665; }
 
-double bTagWP::looseDeepFlavor2016(){ return 0.0614; }
-double bTagWP::mediumDeepFlavor2016(){ return 0.3093; }
-double bTagWP::tightDeepFlavor2016(){ return 0.7221; }
+double bTagWP::looseDeepFlavor2016(){ return 0.0480; }
+double bTagWP::mediumDeepFlavor2016(){ return 0.2489; }
+double bTagWP::tightDeepFlavor2016(){ return 0.6377; }
 
 double bTagWP::looseDeepFlavor2017(){ return 0.0532; }
 double bTagWP::mediumDeepFlavor2017(){ return 0.3040; }

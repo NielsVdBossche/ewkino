@@ -13,8 +13,8 @@
 
 int main(int argc, char const *argv[]) {
 
-    if (argc < 2) {
-        std::cerr << "Mvatrainer requires at least one argument: <samplelist.txt>" << std::endl;
+    if (argc < 3) {
+        std::cerr << "Mvatrainer requires at least one argument: <samplelist.txt> treename" << std::endl;
         exit(1);
     }
     // manage input
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[]) {
     std::string tree = argv[2]; // tree should be dynamical, but don't know if it will be used as input. Maybe in some other way... 
     TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, mvaConfiguration::ML);
 
-    TFile* outfile = new TFile("FourTopClassification.root" ,"RECREATE");
+    TFile* outfile = new TFile("Classifiers/FourTopClassification.root" ,"RECREATE");
     TMVA::Factory* factory = new TMVA::Factory("FourTopClassification", outfile, "!V:!Silent:Color:DrawProgressBar:Transformations=I;D:AnalysisType=multiclass" ); // get type of classificationjob from argv, pass this to function deciding some extra arguments.
 
     // class manages a dataloader and a factory, as well as settings for the mva's

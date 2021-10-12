@@ -52,7 +52,6 @@ void FourTop:: analyze() {
             }
             
             // Remove mass resonances
-            currentEvent->makeSubLeptonCollections();
 
             if (! selection->passZBosonVeto()) {
                 // Build CRZ
@@ -73,10 +72,9 @@ void FourTop:: analyze() {
                 continue;
             }
 
-            currentEvent->makeSubLeptonCollections();
 
             // Build CRW (might expand these)
-            if (selection->getMediumLepCol()->size() == 2 && selection->getJetCol()->size() < 6 && selection->getBtagJetCol()->size() == 2) {
+            if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
@@ -84,12 +82,20 @@ void FourTop:: analyze() {
             }
 
             // Fill histograms
-            if (selection->getMediumLepCol()->size() == 2) {
+            if (selection->numberOfLeps() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
+
+                if (histInfoVec_mva_DL) {
+                    mva_DL->fillHistograms(hists_mva_DL->at(fillIndex), currentEvent->weight());
+                }
             } else {
                 fillVec = fourTopHists::fillAllHists(true, selection);
                 histHelper::histFiller(fillVec, &(hists_ML->at(fillIndex)), currentEvent->weight());
+
+                if (histInfoVec_mva_ML) {
+                    mva_ML->fillHistograms(hists_mva_DL->at(fillIndex), currentEvent->weight());
+                }
             }
 
             // TODO: Systematics
@@ -133,6 +139,16 @@ void FourTop:: analyze() {
         for( size_t dist = 0; dist < histInfoVec_Other->size(); ++dist ) {
             hists_Other->at(sampleIndex)[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
         }
+        
+        if (histInfoVec_mva_DL) {
+            for( size_t dist = 0; dist < histInfoVec_mva_DL->size(); ++dist ) {
+                hists_mva_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_DL->at(dist).name()), TObject::kOverwrite);
+            }
+
+            for( size_t dist = 0; dist < histInfoVec_mva_ML->size(); ++dist ) {
+                hists_mva_ML->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_ML->at(dist).name()), TObject::kOverwrite);
+            }
+        }
 
         // Systematics
         if (currentEvent->isData()) continue;
@@ -163,32 +179,15 @@ void FourTop:: analyze() {
         hists_Other->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
     }
 
+    if (histInfoVec_mva_DL) {
+        for( size_t dist = 0; dist < histInfoVec_mva_DL->size(); ++dist ) {
+            hists_mva_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_DL->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec_mva_ML->size(); ++dist ) {
+            hists_mva_ML->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_ML->at(dist).name()), TObject::kOverwrite);
+        }
+    }
+
     outfile->Close();
-}
-
-void FourTop::crzHandling(size_t sampleIndex) {
-    std::vector<double> fillVec = {
-        double(currentEvent->numberOfJets()),
-        double(currentEvent->numberOfMediumBTaggedJets()),
-        currentEvent->HT(),
-        currentEvent->metPt(),
-        currentEvent->lightLepton(0).pt(),
-        currentEvent->lightLepton(1).pt(),
-        currentEvent->lightLepton(2).pt()
-    };
-
-    histHelper::histFiller(fillVec, &(hists_CRZ->at(sampleIndex)), currentEvent->weight());
-}
-
-void FourTop::crwHandling(size_t sampleIndex) {
-    std::vector<double> fillVec = {
-        double(currentEvent->numberOfJets()),
-        double(currentEvent->numberOfMediumBTaggedJets()),
-        currentEvent->HT(),
-        currentEvent->metPt(),
-        currentEvent->lightLepton(0).pt(),
-        currentEvent->lightLepton(1).pt()
-    };
-
-    histHelper::histFiller(fillVec, &(hists_CRW->at(sampleIndex)), currentEvent->weight());
 }

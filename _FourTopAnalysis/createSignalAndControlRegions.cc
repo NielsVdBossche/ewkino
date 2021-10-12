@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     // Settings splitsen if necessary
 
     // main func call
-    FourTop analysisObject(argvStr);
+    FourTop analysisObject(argvStr, 1);
 
     analysisObject.analyze();
     

@@ -2,7 +2,7 @@ CC=g++ -Wall -Wextra -O3 -g
 CFLAGS= -Wl,--no-as-needed,-lpthread
 CXXFLAGS = -std=gnu++17
 LDFLAGS=`root-config --glibs --cflags` -lTMVA
-SOURCES= createTrainingTrees.cc ../codeLibrary.o _FourTop/src/*.cc FourTopSelection/src/*.cc histogramSetups/*.cc additionalTools/src/*.cc
+SOURCES= createTrainingTrees.cc ../codeLibrary.o _FourTop/src/*.cc FourTopEventHandling/src/*.cc histogramSetups/*.cc additionalTools/src/*.cc
 OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=trainTreeBuilderExec
 

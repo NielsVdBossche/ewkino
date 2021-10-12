@@ -202,8 +202,8 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* 
         (*jets)[2].pt(),
         (jets->size() > 3 ? (*jets)[3].pt() : 0.),
         double(bJets->size()),
-        double(selec->getEvent()->looseBTagCollection().size()),
-        double(selec->getEvent()->tightBTagCollection().size()),
+        double(selec->numberOfLooseBJets()),
+        double(selec->numberOfTightBJets()),
         double(jets->size()),
 
         jets->scalarPtSum(),

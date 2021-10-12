@@ -9,7 +9,7 @@
 #include "../additionalTools/interface/calculators.h"
 
 #include "../../Event/interface/Event.h"
-#include "../FourTopSelection/interface/EventSelection4T.h"
+#include "../FourTopEventHandling/interface/EventSelection4T.h"
 
 // Might move this functionality back to FourTop class itself
 
