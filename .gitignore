@@ -41,9 +41,6 @@ plotter_stack_exec
 *_exec
 *Exec
 
-*.class.C
-*.weights.xml
-
 venv/*
 
 *.pdf
