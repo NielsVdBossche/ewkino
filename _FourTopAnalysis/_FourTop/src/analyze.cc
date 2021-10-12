@@ -93,7 +93,7 @@ void FourTop:: analyze() {
                 histHelper::histFiller(fillVec, &(hists_ML->at(fillIndex)), currentEvent->weight());
 
                 if (histInfoVec_mva_ML) {
-                    mva_ML->fillHistograms(hists_mva_DL->at(fillIndex), currentEvent->weight());
+                    mva_ML->fillHistograms(hists_mva_ML->at(fillIndex), currentEvent->weight());
                 }
             }
 
