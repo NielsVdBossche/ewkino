@@ -18,7 +18,7 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
     selection = new EventSelection4T();
 
     if (mode < 2) {
-        std::string outputFileName = "Output/testOutput_";
+        std::string outputFileName = "Output/AnalysisOutput_";
         std::ostringstream oss;
 
         auto t = std::time(nullptr);

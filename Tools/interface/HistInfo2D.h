@@ -20,7 +20,7 @@ class HistInfo_2D : public HistInfo {
         HistInfo_2D() {HistInfo();};
 
         HistInfo_2D(const std::string& name, const std::string& x, unsigned xbins, double xmin, double xmax, const std::string& y, unsigned ybins, double ymin, double ymax) :
-            yLabel(y), nYBins(ybins), yMin(ymin), yMax(ymax), HistInfo(name, x, xbins, xmin, xmax) 
+            HistInfo(name, x, xbins, xmin, xmax), yLabel(y), nYBins(ybins), yMin(ymin), yMax(ymax)
         {
             setMaxYBinCenter();
             setYBinWidth();
