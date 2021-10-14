@@ -14,8 +14,12 @@
 #include <string>
 
 enum mvaConfiguration {
-    DL,
-    ML
+    BIN_DL,
+    BIN_ML,
+    BDT_DL,
+    BDT_ML,
+    NN_DL,
+    NN_ML
 };
 
 namespace mvaDataManager {
