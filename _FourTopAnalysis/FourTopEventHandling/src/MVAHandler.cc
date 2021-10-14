@@ -87,14 +87,16 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms() {
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier;
+        std::string xaxis = "BDT score" + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, "BDT score", 15, 0., 1.));
+        histInfoVec->push_back(HistInfo(name, xaxis, 15, 0., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier;
+        std::string xaxis = "BDT score" + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, "BDT score", 15, 0., 1.));
+        histInfoVec->push_back(HistInfo(name, xaxis , 15, 0., 1.));
     }
 
     return histInfoVec;
@@ -129,7 +131,10 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms() {
     for (int el = 0; el < maxClass; el++) {
         std::string name = "2D_BDTScore_" + translator[(MVAClasses) el] + "_" + translator[(MVAClasses) ((el + 1) % maxClass)] + identifier;
 
-        histInfoVec->push_back(HistInfo_2D(name, "BDT score " + translator[(MVAClasses) el], 15, 0., 1., "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)], 15, 0., 1.));
+        std::string xaxis = "BDT score" + translator[(MVAClasses) el];
+        std::string yaxis = "BDT score" + translator[(MVAClasses) ((el + 1) % maxClass)];
+
+        histInfoVec->push_back(HistInfo_2D(name, xaxis, 15, 0., 1., yaxis, 15, 0., 1.));
     }
 
     return histInfoVec;

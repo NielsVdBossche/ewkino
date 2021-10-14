@@ -79,7 +79,7 @@ void FourTop::createHistInfoVec() {
     histInfoVec_ML = fourTopHists::allHists("ML", true);
     histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
     histInfoVec_CRW = fourTopHists::allHists("CRW", false);
-    histInfoVec_Other = fourTopHists::allHists("Other", false);
+    histInfoVec_Other = fourTopHists::allHists("CRO", false);
 
     // Go over settings, voor elke setting, add de passende histosetup bij het totaal
     // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken
@@ -97,7 +97,6 @@ void FourTop::createHistInfoVec() {
 }
 
 void FourTop::createMVAHandlers() {
-    // TODO 
     mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection);
     mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection);
 
