@@ -1,6 +1,6 @@
 import sys
 #sys.path.append("../jobSubmission/")
-sys.path.insert(1, '/$HOME/ewkino/jobSubmission')
+sys.path.insert(1, '/user/nivanden/ewkino/jobSubmission')
 
 import condorTools as ct
 

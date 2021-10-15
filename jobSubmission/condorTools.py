@@ -42,7 +42,7 @@ def initJobScript(name, cmssw_version='CMSSW_10_6_20'):
     with open(fname,'w') as script:
         script.write('#!/bin/bash\n')
         script.write('source /cvmfs/cms.cern.ch/cmsset_default.sh\n')
-        script.write('cd {}/src\n'.format( cmssw_version ) )
+        script.write('cd /user/nivanden/{}/src\n'.format( cmssw_version ) )
         script.write('eval `scram runtime -sh`\n')
         script.write('cd {}\n'.format( cwd ) )
     # make executable (seems to be needed from 19/02/2021 onwards)
@@ -58,9 +58,9 @@ def makeJobDescription(name, exe, argstring=None, stdout=None, stderr=None, log=
     name = os.path.splitext(name)[0]
     fname = name+'.sub'
     if os.path.exists(fname): os.system('rm {}'.format(fname))
-    if stdout is None: stdout = name+'_out_$(ClusterId)_$(ProcId)'
-    if stderr is None: stderr = name+'_err_$(ClusterId)_$(ProcId)'
-    if log is None: log = name+'_log_$(ClusterId)_$(ProcId)'
+    if stdout is None: stdout = '/user/nivanden/condor/output/' + name+'_out_$(ClusterId)_$(ProcId)'
+    if stderr is None: stderr = '/user/nivanden/condor/error/' + name+'_err_$(ClusterId)_$(ProcId)'
+    if log is None: log = '/user/nivanden/condor/logs/' + name+'_log_$(ClusterId)_$(ProcId)'
     # write file
     with open(fname,'w') as f:
         f.write('executable = {}\n'.format(exe))
