@@ -11,7 +11,7 @@ skimVersion = ""
 outSubdir = ""
 
 if (sys.argv[1] == '0'):
-    skimVersion = "2016_ULpreVFPv3"
+    skimVersion = "2016_ULpreVFP"
     outSubdir = "2016PreVFP"
 elif (sys.argv[1] == '1'):
     skimVersion = "2016_ULpostVFPv3"

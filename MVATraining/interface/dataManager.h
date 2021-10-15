@@ -14,8 +14,6 @@
 #include <string>
 
 enum mvaConfiguration {
-    BIN_DL,
-    BIN_ML,
     BDT_DL,
     BDT_ML,
     NN_DL,

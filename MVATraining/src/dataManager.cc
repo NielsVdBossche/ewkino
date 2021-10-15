@@ -8,13 +8,13 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTChain(TChai
     *weight = 1.; // unless changed elsewhere
 
     std::vector<Double_t>* dataVector = nullptr;
-    if (config == DL) {
+    if (config == BDT_DL || config == NN_DL) {
         dataVector = new std::vector<Double_t>(17);
-    } else if (config == ML) {
+    } else if (config == BDT_ML || config == NN_ML) {
         dataVector = new std::vector<Double_t>(18);
     }
 
-    if (config == DL || config == ML) {
+    if ( config == BDT_DL || config == NN_DL || config == BDT_ML || config == NN_ML) {
         chain->SetBranchAddress("N_jets",    &dataVector->at(0));
         chain->SetBranchAddress("N_b",       &dataVector->at(1));
         chain->SetBranchAddress("N_b_tight", &dataVector->at(2));
@@ -34,7 +34,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTChain(TChai
         chain->SetBranchAddress("pt_lep_two",  &dataVector->at(16));
     }
 
-    if (config == ML) {
+    if (config == BDT_ML || config == NN_ML) {
         chain->SetBranchAddress("pt_lep_three", &dataVector->at(17));
     }
 
@@ -60,7 +60,7 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
     dataloader->AddVariable("pt_lep_one", 'F');
     dataloader->AddVariable("pt_lep_two", 'F');
 
-    if (config == ML) {
+    if (config == BDT_ML || config == NN_ML) {
         dataloader->AddVariable("pt_lep_three", 'F');
     }
 }
