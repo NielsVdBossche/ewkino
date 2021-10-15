@@ -18,13 +18,13 @@ def mergeTuples(mergableDir):
     version = mergableDir.split("_version_")[-1]
 
     outSubdir = ""
-    if (version == "2016_ULpreVFPv3"):
+    if (version == "2016_ULpreVFPv3" or version == "2016_ULpreVFP"):
         outSubdir = "2016PreVFP"
-    elif (version == "2016_ULpostVFPv3"):
+    elif (version == "2016_ULpostVFPv3" or version == "2016_ULpostVFP"):
         outSubdir = "2016PostVFP"
-    elif (version == "2017_ULv3"):
+    elif (version == "2017_ULv3" or version == "2017_UL"):
         outSubdir = "2017"
-    elif (version == "2018_ULv3"):
+    elif (version == "2018_ULv3" or version == "2018_UL"):
         outSubdir = "2018"
 
     # join path outputbase + folder
@@ -48,7 +48,10 @@ def mergeTuples(mergableDir):
         i += 1
         inputFileName = os.listdir(mergableDir)[i]
 
-    outputFileName = inputFileName.split("singlelep_")[0][:-17] + ".root" # should cut away date
+    if ("singlelep_" in inputFileName):
+        outputFileName = inputFileName.split("singlelep_")[0][:-17] + ".root" # should cut away date
+    elif ("dilep_" in inputFileName):
+        outputFileName = inputFileName.split("dilep_")[0][:-17] + ".root" # should cut away date
 
     # join outputname with outputfolder
     outputPath = os.path.join(outputDir, outputFileName)
@@ -59,11 +62,12 @@ def mergeTuples(mergableDir):
     return
 
 
-processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic", "TTTo2L2Nu", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
+processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_", "TTTo2L2Nu_TuneCP5_", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
+fractions = [0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2]
 
-folders = [element for process in processes for element in glob.glob(base_directory + "*" + process + "*")]
+folders = [(element, frac) for process, frac in zip(processes, fractions) for element in glob.glob(base_directory + "*" + process + "*")]
 
-for folder in folders:
+for folder, currFrac in folders:
     # make output dirs (direct copy of dir)
     print("Currently working on " + folder.split('/')[-1])
     
@@ -89,7 +93,7 @@ for folder in folders:
     for file in os.listdir(folder):
         r = random.random()
 
-        if (r < 0.9):
+        if (r < 1 - currFrac):
             shutil.copy2(os.path.join(folder, file), outputAnalysis)
         else:
             shutil.copy2(os.path.join(folder, file), outputMVA)
