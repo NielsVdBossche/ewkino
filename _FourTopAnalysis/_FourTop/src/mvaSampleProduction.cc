@@ -48,7 +48,7 @@ void FourTop::createMVATrainingSamples() {
         std::cout << "Event loop" << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ) {
-            if (entry > 10000) break;
+            //if (entry > 10000) break;
 
             currentEvent = treeReader->buildEventPtr( entry );
             selection->addNewEvent(currentEvent);

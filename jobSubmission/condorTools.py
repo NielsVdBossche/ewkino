@@ -44,6 +44,7 @@ def initJobScript(name, cmssw_version='CMSSW_10_6_20'):
         script.write('source /cvmfs/cms.cern.ch/cmsset_default.sh\n')
         script.write('cd /user/nivanden/{}/src\n'.format( cmssw_version ) )
         script.write('eval `scram runtime -sh`\n')
+        script.write('export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER)\n')
         script.write('cd {}\n'.format( cwd ) )
     # make executable (seems to be needed from 19/02/2021 onwards)
     os.system('chmod +x '+fname)

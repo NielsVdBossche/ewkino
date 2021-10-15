@@ -7,4 +7,4 @@ export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER)
 
 cd /user/nivanden/ewkino/MVATraining/
 
-./trainMVAMethodsExec sampleLists/DLTest.txt DL_tree
+./trainMVAMethodsExec sampleLists/DLTest.txt DL_tree BIN_DL no

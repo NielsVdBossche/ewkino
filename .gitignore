@@ -51,4 +51,6 @@ ugent2016-master/*
 *.code-workspace
 
 *.weights.xml
-*.class.c 
+*.class.C
+
+

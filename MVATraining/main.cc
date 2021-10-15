@@ -27,8 +27,6 @@ int main(int argc, char const *argv[]) {
     // extra variable for training true or false?
 
     std::map<std::string, mvaConfiguration> translator = {
-        {"BIN_DL", mvaConfiguration::BIN_DL},
-        {"BIN_ML", mvaConfiguration::BIN_ML},
         {"DL_BDT", mvaConfiguration::BDT_DL},
         {"ML_BDT", mvaConfiguration::BDT_ML},
         {"DL_NN", mvaConfiguration::NN_DL},
@@ -44,12 +42,19 @@ int main(int argc, char const *argv[]) {
     // class manages a dataloader and a factory, as well as settings for the mva's
 
     // Main part of calling training etc
+
+    std::cout << "READY FOR ADDING METHODS" << std::endl;
     if (conf < mvaConfiguration::NN_DL) {
-        if (searchSetup == "search") mvaSetupManager::searchBDT(factory, data, setup, true);
+        std::cout << "DOING ADDITION OF BDTS" << std::endl;
+
+        if (searchSetup == "search") mvaSetupManager::searchBDT(factory, data, setup);
         else mvaSetupManager::addBDT(factory, data, setup, 1000, 3, true, true);
     } else {
         mvaSetupManager::addNN(factory, data, setup);
     }
+
+    std::cout << "Methods booked!!" << std::endl;
+
     
     factory->TrainAllMethods();
 	

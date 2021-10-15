@@ -6,11 +6,13 @@ import condorTools as ct
 
 commandList = []
 
-setups = ["BIN_DL", "DL_BDT", "DL_NN", "BIN_ML", "ML_BDT", "ML_NN"]
+#setups = [["DL_BDT", "DL_NN"], ["ML_BDT", "ML_NN"]]
+setups = [["DL_BDT"], ["ML_BDT"]]
+
 trees = ["DL_tree", "ML_tree"]
 
-for tree in trees:
-    for setup in setups:
-        commandList.append("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + setup + " search")
+for setup, tree in zip(setups, trees):
+    for subsetup in setup:
+        commandList.append("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search")
 
 ct.submitCommandsAsCondorCluster("trainAllMVAs", commandList)
