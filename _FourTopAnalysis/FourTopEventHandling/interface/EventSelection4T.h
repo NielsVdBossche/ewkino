@@ -29,6 +29,10 @@ class EventSelection4T {
         LeptonCollection* looseLeps;
         LeptonCollection* mediumLeps;
 
+        // These should only be used to increase nonprompt yield. Should be triggered by other functions and only done when ttbar sample used
+        // Additionally, the event selection based on these should take into account the full event selection but allow one of the leptons to be loose
+        LeptonCollection* altLeps; 
+
         JetCollection* jets;
         JetCollection* bTagJets;
 
@@ -66,6 +70,13 @@ class EventSelection4T {
         bool passFullEventSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
+
+        // altLep event selection and activation functions
+        bool passBaselineEventSelectionWithAltLeptons();
+        bool passFullEventSelectonWithAltLeptons();
+        void altObjectSelection();
+        LeptonCollection* getAltLeptonCol() {return altLeps;}
 };
 
+bool leptonPtReq(const Lepton& lep);
 #endif

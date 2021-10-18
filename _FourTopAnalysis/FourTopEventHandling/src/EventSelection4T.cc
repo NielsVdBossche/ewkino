@@ -72,11 +72,6 @@ bool EventSelection4T::passBaselineEventSelection() {
 }
 
 bool EventSelection4T::passFullEventSelection() {
-    // already included in baseline selection
-    //double n_lep = mediumLeps->size();
-    //if (n_lep < 2) return false;
-    //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
-
     if (jets->size() < 4) return false;
 
     if (bTagJets->size() < 2) return false;

@@ -47,6 +47,8 @@ void FourTop::createMVATrainingSamples() {
 
         std::cout << "Event loop" << std::endl;
 
+        ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ) {
             //if (entry > 10000) break;
 
@@ -56,7 +58,10 @@ void FourTop::createMVATrainingSamples() {
 
             //if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
-            if (! selection->passBaselineEventSelection())  {
+            if (ttgOverlapCheck == 0 && ! selection->passBaselineEventSelection())  {
+                delete currentEvent;
+                continue;
+            } else if (! selection->passBaselineEventSelectionWithAltLeptons()) {
                 delete currentEvent;
                 continue;
             }
@@ -71,6 +76,7 @@ void FourTop::createMVATrainingSamples() {
             }
 
             if (! selection->passFullEventSelection()) {
+                // Full event selection should be the same as normal event selection.
                 delete currentEvent;
                 continue;
             }
