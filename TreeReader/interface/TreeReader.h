@@ -251,6 +251,8 @@ class TreeReader {
         //always reset triggers instead of rare case of combining primary datasets!
         void initTree( const bool resetTriggersAndFilters = true);
         void setOutputTree( TTree* );
+        void setLeanOutputTree( TTree* );
+
 
         //void combinePD(std::vector<std::string>& datasets, const bool is2017, std::string outputDirectory = "");
 
