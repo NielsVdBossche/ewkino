@@ -4,7 +4,7 @@ CXXFLAGS = -std=gnu++17
 LDFLAGS=`root-config --glibs --cflags` -lTMVA
 SOURCES= createSignalAndControlRegions.cc ../codeLibrary.o _FourTop/src/*.cc FourTopEventHandling/src/*.cc histogramSetups/*.cc additionalTools/src/*.cc
 OBJECTS=$(SOURCES:.cc=.o)
-EXECUTABLE=testExec
+EXECUTABLE=analysisExec
 
 all: 
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
