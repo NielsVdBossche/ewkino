@@ -38,6 +38,8 @@ class EventSelection4T {
 
         int nJets, nMediumB, nTightB, nLooseB, nLooseLep, nLep;
 
+        bool isNormalSelected;
+
         // MVA variable vector
         
     public:
@@ -64,6 +66,7 @@ class EventSelection4T {
         int numberOfLooseBJets() const {return nLooseB;}
         int numberOfLooseLeps() const {return nLooseLep;}
         int numberOfLeps() const {return nLep;}
+        bool isEventNormalSelected() const {return isNormalSelected;}
 
         void objectSelection();
         bool passBaselineEventSelection();

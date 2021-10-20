@@ -13,7 +13,9 @@ bool EventSelection4T::passBaselineEventSelectionWithAltLeptons() {
     int sizeDiff = altLeps->size() - nLep;
 
     if (n_lep_Loose < 2) return false; // only see if one of the leptons is loose
-    if (sizeDiff > 1) return false;
+    if (sizeDiff > 1) {
+        return passBaselineEventSelection();
+    }
     if (n_lep_Loose == 2 && altLeps->hasOSPair()) return false;
 
     if (altLeps->at(0)->pt() < 25) return false; // not necessary for MVA samples
@@ -26,6 +28,9 @@ bool EventSelection4T::passBaselineEventSelectionWithAltLeptons() {
 
     if (event->met().pt() < 25) return false;
     if (jets->scalarPtSum() < 300) return false;
+
+    nLep = n_lep_Loose;
+    isNormalSelected = false;
 
     return true;
 }

@@ -21,7 +21,6 @@ void FourTop:: analyze() {
 
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
-        bool additionalNonPrompt = infuseNonPrompt && (ttgOverlapCheck > 0);
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -50,10 +49,19 @@ void FourTop:: analyze() {
             std::vector<double> fillVec;
             
             // If nonprompt: fillIndex becomes index of nonprompt histograms
-            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (! leptonPtr->isPrompt()) {
-                    fillIndex = treeReader->numberOfSamples();
-                    break;
+            if (selection->isEventNormalSelected()) {
+                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
+                    if (! leptonPtr->isPrompt()) {
+                        fillIndex = treeReader->numberOfSamples();
+                        break;
+                    }
+                }
+            } else {
+                for (const auto& leptonPtr : *selection->getAltLeptonCol()) {
+                    if (! leptonPtr->isPrompt()) {
+                        fillIndex = treeReader->numberOfSamples();
+                        break;
+                    }
                 }
             }
             
@@ -61,7 +69,7 @@ void FourTop:: analyze() {
 
             if (! selection->passZBosonVeto()) {
                 // Build CRZ
-                fillVec = fourTopHists::fillAllHists(false, selection, additionalNonPrompt);
+                fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
                 continue;
@@ -72,7 +80,7 @@ void FourTop:: analyze() {
 
             // Full object selection (only keep the real useful stuff)
             if (! selection->passFullEventSelection()) {
-                fillVec = fourTopHists::fillAllHists(false, selection, additionalNonPrompt);
+                fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_Other->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
                 continue;
@@ -81,7 +89,7 @@ void FourTop:: analyze() {
 
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
-                fillVec = fourTopHists::fillAllHists(false, selection, additionalNonPrompt);
+                fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
                 delete currentEvent;
                 continue;
@@ -89,7 +97,7 @@ void FourTop:: analyze() {
 
             // Fill histograms
             if (selection->numberOfLeps() == 2) {
-                fillVec = fourTopHists::fillAllHists(false, selection, additionalNonPrompt);
+                fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
                 if (histInfoVec_mva_DL) {
                     std::vector<Float_t> scores = mva_DL->scoreEvent();
@@ -97,7 +105,7 @@ void FourTop:: analyze() {
                     mva_DL->fill2DHistograms(scores, hists2D_mva_DL->at(fillIndex), currentEvent->weight());
                 }
             } else {
-                fillVec = fourTopHists::fillAllHists(true, selection, additionalNonPrompt);
+                fillVec = fourTopHists::fillAllHists(true, selection);
                 histHelper::histFiller(fillVec, &(hists_ML->at(fillIndex)), currentEvent->weight());
 
                 if (histInfoVec_mva_ML) {
