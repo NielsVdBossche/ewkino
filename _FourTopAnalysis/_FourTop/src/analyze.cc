@@ -37,8 +37,8 @@ void FourTop:: analyze() {
                 delete currentEvent;
                 continue;
             }
-            if (infuseNonPrompt) {
-                if (ttgOverlapCheck > 0 && ! selection->passBaselineEventSelectionWithAltLeptons()) {
+            if (infuseNonPrompt && ttgOverlapCheck > 0) {
+                if (! selection->passBaselineEventSelectionWithAltLeptons()) {
                     delete currentEvent;
                     continue;
                 }
