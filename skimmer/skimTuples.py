@@ -88,6 +88,9 @@ if __name__ == '__main__' :
                     skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
                     script.write( skim_command )
 
+                    ### REMOVE LINE FOR NON-DESTRUCTIVE SKIMMING
+                    script.write('gfal-rm srm://maite.iihe.ac.be:8443{}\n'.format(f))
+
                 script.write("\n\n")
                 script.write("array=($(ls -p $TMPDIR | grep -v /))\n")
                 script.write('for i in "${array[@]}"\n')
