@@ -21,6 +21,7 @@ void EventSelection4T::cleanSelection() {
 void EventSelection4T::addNewEvent(Event* newEvent) {
     cleanSelection();
     event = newEvent;
+    isNormalSelected = true;
     objectSelection();
 }
 

@@ -176,14 +176,14 @@ std::vector<double> fourTopHists::fillAllHistsML(Event* event) {
 
 }
 
-std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* selec, bool allowLooseLep) {
+std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* selec) {
     JetCollection* jets = selec->getJetCol();
     JetCollection* bJets = selec->getBtagJetCol();
     LightLeptonCollection* lightLeps;
-    if (allowLooseLep) {
-        lightLeps = (LightLeptonCollection*) selec->getAltLeptonCol();
-    } else {
+    if (selec->isEventNormalSelected()) {
         lightLeps = (LightLeptonCollection*) selec->getMediumLepCol();
+    } else {
+        lightLeps = (LightLeptonCollection*) selec->getAltLeptonCol();
     }
     std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
     std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));

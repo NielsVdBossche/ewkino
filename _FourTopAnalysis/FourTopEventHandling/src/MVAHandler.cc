@@ -174,7 +174,12 @@ std::vector<Float_t> MVAHandler_4T::scoreEvent() {
 void MVAHandler_4T::fillVariables() {
 
     JetCollection* bJets = selection->getBtagJetCol();
-    LeptonCollection* lightLeps = selection->getMediumLepCol();
+    LeptonCollection* lightLeps;
+    if (selection->isEventNormalSelected()) {
+        lightLeps = selection->getMediumLepCol();
+    } else {
+        lightLeps = selection->getAltLeptonCol();
+    }
 
     std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
     std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *lightLeps);
