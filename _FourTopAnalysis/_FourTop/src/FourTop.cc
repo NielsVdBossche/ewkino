@@ -44,6 +44,8 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
         if (mode == 1) {
             createMVAHandlers();
         }
+
+        if (argvString.size() >= 2) infuseNonPrompt = true;
     }
 }
 

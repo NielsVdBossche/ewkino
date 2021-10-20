@@ -34,9 +34,15 @@ void FourTop:: analyze() {
             // Right now we build CRZ from looser objects.
             // Necessary to account for looser leptons which are otherwise missed in the full lepton selection and could be part of a Z-boson resonance
 
-            if (! selection->passBaselineEventSelection())  {
+            if (! infuseNonPrompt && ! selection->passBaselineEventSelection())  {
                 delete currentEvent;
                 continue;
+            }
+            if (infuseNonPrompt) {
+                if (ttgOverlapCheck > 0 && ! selection->passBaselineEventSelectionWithAltLeptons()) {
+                    delete currentEvent;
+                    continue;
+                }
             }
             
             // Basic non-prompt handling (using MC to estimate the contribution):

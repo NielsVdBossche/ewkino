@@ -50,6 +50,7 @@ class FourTop {
         // Is this used?
         //std::vector<Sample>* sampleVec;
         int ttgOverlapCheck; // 0: neither, 1: ttbar, 2: ttgamma
+        bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar 
 
         // General settings for analysis run
 
