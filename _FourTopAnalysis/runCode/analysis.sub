@@ -1,5 +1,5 @@
 universe    =   vanilla
-executable  =   executeCode.sh
+executable  =   analysis.sh
 
 log         =   /user/nivanden/condor/logs/testExec_$(ClusterId).log
 error       =   /user/nivanden/condor/error/testExec_$(ClusterId).err
