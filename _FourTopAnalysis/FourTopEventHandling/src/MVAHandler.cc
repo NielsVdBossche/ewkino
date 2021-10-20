@@ -2,7 +2,7 @@
 #include "../interface/EventSelection4T.h"
 
 #if MEMLEAK
-#include "../../../memleak/debug_new.h" 
+#include "../../../memleak/debug_new.h"
 #endif
 
 MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventSelection4T* selec) : currentConfig(config), selection(selec) {
@@ -19,10 +19,10 @@ void MVAHandler_4T::initReader() {
         isML = true;
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
-        weightFilePath += "FourTopClassification_BDTG_DL.weights.xml";
+        weightFilePath += "FourTopClassification_DL_BDTG_B_1000_2.weights.xml";
     } else if (currentConfig == TriClass_ML) {
         isML = true;
-        weightFilePath += "FourTopClassification_BDTG_ML.weights.xml";
+        weightFilePath += "FourTopClassification_ML_BDTG_B_1000_2.weights.xml";
     } else if (currentConfig == FourClass_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == FourClass_ML) {
