@@ -84,12 +84,14 @@ if __name__ == '__main__' :
             with open( script_name, 'w') as script:
                 initializeJobScript( script )
                 script.write('cd {}\n'.format( current_directory ) ) 
+
+                rmCommands = []
                 for f in chunk :
                     skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
                     script.write( skim_command )
 
                     ### REMOVE LINE FOR NON-DESTRUCTIVE SKIMMING
-                    script.write('gfal-rm srm://maite.iihe.ac.be:8443{}\n'.format(f))
+                    rmCommands.append('gfal-rm srm://maite.iihe.ac.be:8443{}\n'.format(f))
 
                 script.write("\n\n")
                 script.write("array=($(ls -p $TMPDIR | grep -v /))\n")
@@ -100,6 +102,10 @@ if __name__ == '__main__' :
                 script.write("\t")
                 script.write('gfal-copy file:///$TMPDIR/"$i" srm://maite.iihe.ac.be:8443{}/\n'.format(output_directory))
                 script.write("done\n")
+
+                ### REMOVE LINE FOR NON-DESTRUCTIVE SKIMMING
+                for command in rmCommands:
+                    script.write(command)
                 #script.write("")
                 #script.write("gfal-copy file://$TMPDIR/*.root srm://maite.iihe.ac.be:8443{}".format(output_directory))
             #submit job and catch errors 
