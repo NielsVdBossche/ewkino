@@ -289,7 +289,8 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep) {
 
         HistInfo( "minDR_B_lep_" + flag, "Min. #Delta R(l,b)", 12, 0, 4.8),
         HistInfo( "secMinDR_B_lep_" + flag, "Sec. min. #Delta R(l,b)", 12, 0, 4.8),
-        HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500)
+        HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
+        HistInfo( "Nr_of_leps_" + flag, "N_{l}", 5, 0, 5)
     };
 
     if (multilep) {

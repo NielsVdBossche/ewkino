@@ -44,7 +44,6 @@ class FourTop {
         std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_DL;
         std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_ML;
 
-
         TreeReader* treeReader;
 
         // Is this used?
@@ -72,7 +71,7 @@ class FourTop {
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
-        FourTop(std::vector< std::string > argvString, int mode = 0);
+        FourTop(std::vector<std::string>& argvString, int mode = 0);
         ~FourTop();
 
         // Prepare 

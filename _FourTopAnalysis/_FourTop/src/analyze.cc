@@ -13,6 +13,7 @@ void FourTop:: analyze() {
     // Similar to ewkino example but using more of an object-oriented way of working... + more pointers!
 
     std::cout << "event loop" << std::endl;
+    currentEvent = new Event();
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -24,72 +25,74 @@ void FourTop:: analyze() {
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
+            delete currentEvent;
 
+            // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
             selection->addNewEvent(currentEvent);
 
+            // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+
             // apply baseline selection
-            // Right now we build CRZ from looser objects.
-            // Necessary to account for looser leptons which are otherwise missed in the full lepton selection and could be part of a Z-boson resonance
+            // Adapted to work with increased nonprompt yields
             if (infuseNonPrompt && ttgOverlapCheck > 0) {
                 if (! selection->passBaselineEventSelectionWithAltLeptons()) {
-                    delete currentEvent;
+                    //delete currentEvent;
                     continue;
                 }
             } else if (! selection->passBaselineEventSelection())  {
-                delete currentEvent;
+                //delete currentEvent;
                 continue;
             }
+
+            // Apply scale factors
+            // TODO
             
             // Basic non-prompt handling (using MC to estimate the contribution):
             size_t fillIndex = sampleIndex;
             std::vector<double> fillVec;
             
             // If nonprompt: fillIndex becomes index of nonprompt histograms
+            LeptonCollection* lepCol;
             if (selection->isEventNormalSelected()) {
-                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                    if (! leptonPtr->isPrompt()) {
-                        fillIndex = treeReader->numberOfSamples();
-                        break;
-                    }
-                }
+                lepCol = selection->getMediumLepCol();
             } else {
-                for (const auto& leptonPtr : *selection->getAltLeptonCol()) {
-                    if (! leptonPtr->isPrompt()) {
-                        fillIndex = treeReader->numberOfSamples();
-                        break;
-                    }
+                lepCol = selection->getAltLeptonCol();
+            }
+
+            for (const auto& leptonPtr : *lepCol) {
+                if (! leptonPtr->isPrompt()) {
+                    fillIndex = treeReader->numberOfSamples();
+                    break;
                 }
             }
             
             // Remove mass resonances
-
-            if (! selection->passZBosonVeto()) {
+            if (! selection->passLowMassVeto()) {
+                //delete currentEvent;
+                continue;
+            } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
-                delete currentEvent;
-                continue;
-            } else if (! selection->passLowMassVeto()) {
-                delete currentEvent;
+                //delete currentEvent;
                 continue;
             }
 
-            // Full object selection (only keep the real useful stuff)
+            // Full object selection (only keep the real useful stuff and rest is control)
             if (! selection->passFullEventSelection()) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_Other->at(fillIndex)), currentEvent->weight());
-                delete currentEvent;
+                //delete currentEvent;
                 continue;
             }
-
 
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
-                delete currentEvent;
+                //delete currentEvent;
                 continue;
             }
 
@@ -114,8 +117,14 @@ void FourTop:: analyze() {
             }
 
             // TODO: Systematics
+            if (currentEvent->isData()) {
+                //delete currentEvent;
+                continue;
+            }
 
-            delete currentEvent;
+            //// Start filling histograms
+
+            //delete currentEvent;
         }
         
         // Output management: save histograms to a ROOT file.
@@ -173,8 +182,6 @@ void FourTop:: analyze() {
             }
         }
 
-        // Systematics
-        if (currentEvent->isData()) continue;
     }
 
     // Don't forget non-prompt contributions

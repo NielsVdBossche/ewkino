@@ -31,6 +31,7 @@ class Sample;
 class Event {
 
     public:
+        Event() = default;
         Event( const TreeReader&, 
 		const bool readIndividualTriggers = false, 
 		const bool readIndividualMetFilters = false,

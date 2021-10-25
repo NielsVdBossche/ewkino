@@ -221,7 +221,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* 
         (nb > 0 ? mindR_Bjet_lep[1] : 5.),
 
         lightLeps->scalarPtSum(), // LT
-        
+        double(lightLeps->size())
     };
 
     if (multilep) {

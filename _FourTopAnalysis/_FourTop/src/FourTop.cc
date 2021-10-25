@@ -9,7 +9,7 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-FourTop::FourTop(std::vector< std::string > argvString, int mode) {
+FourTop::FourTop(std::vector<std::string>& argvString, int mode) {
     // Set settings according to input
     // prepare details of analysis in separate functions
     
@@ -23,6 +23,13 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
 
         auto t = std::time(nullptr);
         auto tm = *std::localtime(&t);
+
+        if (argvString.size() >= 2) {
+            if (argvString[2] == "additionalNonPrompt") {
+                infuseNonPrompt = true;
+                outputFileName += "EnlargedNonprompt_";
+            }
+        }
         
         oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << ".root";
 
@@ -44,8 +51,6 @@ FourTop::FourTop(std::vector< std::string > argvString, int mode) {
         if (mode == 1) {
             createMVAHandlers();
         }
-
-        if (argvString.size() >= 2) infuseNonPrompt = true;
     }
 }
 

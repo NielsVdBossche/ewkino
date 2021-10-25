@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cout << "One argument is required: <sampleList.txt>" << std::endl;
     }
-    // Set sample directory... Dunno, see hoe te skimmen...
+    // Set sample directory
 
     // zet makkelijk te verwerken string op
     std::vector< std::string > argvStr( &argv[0], &argv[0] + argc );
@@ -33,5 +33,4 @@ int main(int argc, char* argv[]) {
     FourTop analysisObject(argvStr, 1);
 
     analysisObject.analyze();
-    
 }
