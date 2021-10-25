@@ -61,8 +61,8 @@ class UncertaintyWrapper {
 
         std::vector<HistInfo>* histogramsUnc_info_CRO;
 
-        TreeReader* treeReader;
         EventSelection4T* selection;
+        TreeReader* treeReader;
     public:
         UncertaintyWrapper(EventSelection4T* selection, TreeReader* reader);
 

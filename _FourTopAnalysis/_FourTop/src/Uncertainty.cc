@@ -12,7 +12,7 @@ std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH
 
     std::vector< Sample > sampleVec = treeReader->sampleVector();
 
-    for (; up < shapeUncertaintyIdentifier::end; up += 2) {
+    for (; uncertainty < shapeUncertaintyIdentifier::end; uncertainty += 2) {
         (*output)[(shapeUncertaintyIdentifier)up] = *histHelper::initHistograms(info, sampleVec);
     }
 
