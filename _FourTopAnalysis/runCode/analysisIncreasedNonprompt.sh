@@ -6,5 +6,5 @@ eval `scram runtime -sh`
 export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER) 
 
 cd /user/nivanden/ewkino/_FourTopAnalysis/
-./testExec ../sampleLists/allSamples.txt additionalNonPrompt
+./analysisExec ../sampleLists/allSamples.txt additionalNonPrompt
 
