@@ -24,7 +24,7 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode) {
         auto t = std::time(nullptr);
         auto tm = *std::localtime(&t);
 
-        if (argvString.size() >= 2) {
+        if (argvString.size() >= 3) {
             if (argvString[2] == "additionalNonPrompt") {
                 infuseNonPrompt = true;
                 outputFileName += "EnlargedNonprompt_";
