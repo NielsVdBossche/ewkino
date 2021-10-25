@@ -12,6 +12,7 @@
 
 #include "../../FourTopEventHandling/interface/EventSelection4T.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
+#include "../../additionalTools/interface/histHelper.h"
 
 #include "../../../TreeReader/interface/TreeReader.h"
 
@@ -21,7 +22,8 @@ enum shapeUncertaintyIdentifier {
     jecDown,
     jecUp,
     jerDown,
-    jerUp
+    jerUp,
+    end  /// always at the end for easier loops
 };
 
 // potential things to add: btag, met, leptons, scale, pileup, prefire, 
@@ -59,7 +61,7 @@ class UncertaintyWrapper {
 
         std::vector<HistInfo>* histogramsUnc_info_CRO;
 
-        TreeReader* treereader;
+        TreeReader* treeReader;
         EventSelection4T* selection;
     public:
         UncertaintyWrapper(EventSelection4T* selection, TreeReader* reader);
@@ -70,7 +72,7 @@ class UncertaintyWrapper {
         void initCRW(std::vector<HistInfo>* crwInfo);
         void initCRO(std::vector<HistInfo>* croInfo);
 
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* uncertaintyHistogramInit(std::vector<HistInfo>* info);
+        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* uncertaintyHistogramInit(std::vector<HistInfo>* info, bool up);
 
         // all other required functions
 };
