@@ -10,7 +10,7 @@
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
 
-#include "../../FourTopEventHandling/interface/EventSelection4T.h"
+#include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 #include "../../additionalTools/interface/histHelper.h"
 
@@ -36,6 +36,21 @@ enum shapeUncertaintyIdentifier {
 
 class UncertaintyWrapper {
     private:
+        // how do we improve this one? 
+        // map makes sense tho, other way around? But that just requires more maps
+        // other possibilities: 
+        // per channel an object keeping track -> this just splits up the variables
+        // per uncertainty an object in a linked list, so going through uncertainties just lets these call the required changes
+        // this requires a good implementation but might be the best option to do it.
+        // per channel then one LL? This can then be put in a vector of LL headers per channel...
+        // Yeah try something like that.
+        // keep histinfo then somewhere centralized i guess...
+
+        // Main question is then what to do to apply uncertainty
+        // think about that... maybe a function in a case switch for each uncertainty... each requires their own implementation so
+        // this function is then applied by the uncertainty object i guess.
+        // OR a base object for the LL with a dedicated subclass which is actually used in the linking, but this might get complicated fast
+        
         std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_DL;
         std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_DL;
 
@@ -61,10 +76,10 @@ class UncertaintyWrapper {
 
         std::vector<HistInfo>* histogramsUnc_info_CRO;
 
-        EventSelection4T* selection;
+        EventFourT* selection;
         TreeReader* treeReader;
     public:
-        UncertaintyWrapper(EventSelection4T* selection, TreeReader* reader);
+        UncertaintyWrapper(EventFourT* selection, TreeReader* reader);
 
         void initDL(std::vector<HistInfo>* dlInfo);
         void initML(std::vector<HistInfo>* mlInfo);

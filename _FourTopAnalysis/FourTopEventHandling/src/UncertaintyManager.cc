@@ -1,6 +1,6 @@
 #include "../interface/Uncertainty.h"
 
-UncertaintyWrapper::UncertaintyWrapper(EventSelection4T* selection, TreeReader* reader) : selection(selection), treeReader(reader) {
+UncertaintyWrapper::UncertaintyWrapper(EventFourT* selection, TreeReader* reader) : selection(selection), treeReader(reader) {
 
 }
 

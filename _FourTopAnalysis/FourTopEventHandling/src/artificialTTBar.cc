@@ -1,4 +1,4 @@
-#include "../interface/EventSelection4T.h"
+#include "../interface/EventFourT.h"
 
 bool leptonPtReq(const Lepton& lep) {
     if (lep.pt() < 20) return false;
@@ -6,7 +6,7 @@ bool leptonPtReq(const Lepton& lep) {
     return true;
 }
 
-bool EventSelection4T::passBaselineEventSelectionWithAltLeptons() {
+bool EventFourT::passBaselineEventSelectionWithAltLeptons() {
     altObjectSelection();
     // Allow one loose lepton in selected leptons
     double n_lep_Loose = altLeps->size();
@@ -35,7 +35,7 @@ bool EventSelection4T::passBaselineEventSelectionWithAltLeptons() {
     return true;
 }
 
-bool EventSelection4T::passFullEventSelectonWithAltLeptons() {
+bool EventFourT::passFullEventSelectonWithAltLeptons() {
     // Completely the same as before. Difference in baseline.
 
     if (jets->size() < 4) return false;
@@ -45,7 +45,7 @@ bool EventSelection4T::passFullEventSelectonWithAltLeptons() {
     return true;
 }
 
-void EventSelection4T::altObjectSelection() {
+void EventFourT::altObjectSelection() {
     altLeps = new LeptonCollection(*looseLeps);
     altLeps->selectObjects(leptonPtReq);
 }

@@ -1,5 +1,5 @@
-#ifndef eventselection4T_h
-#define eventselection4T_h
+#ifndef EVENTFOURT_H
+#define EVENTFOURT_H
 
 #include "../../globalSettings.h"
 
@@ -9,20 +9,13 @@
 #include "../../../Event/interface/MuonCollection.h"
 #include "../../../Event/interface/JetCollection.h"
 
-
-// Class eventSelection inheriting from Event? Does this make it handy to perform event selection?
-// Evt zonder inheritance maar grote call dan... Beter met? buildEvent op treeReader zou dan rechtstreeks hierop feeden...
-// Anders 2 klassen voor event sel en event -> evt vervangen door event selection in FourTop klasse rechtstreeks te steken. <- this
-// This structure will not work as it requires plugging this in TreeReader (instead of event as return). This makes it quite difficult
-// Event provides plug for user specified object selections
-
 enum eventClass {
     SSDL=2,
     TriLep=3,
     FourLep=4
 };
 
-class EventSelection4T {
+class EventFourT {
     private:
         Event* event = nullptr;
 
@@ -39,13 +32,11 @@ class EventSelection4T {
         int nJets, nMediumB, nTightB, nLooseB, nLooseLep, nLep;
 
         bool isNormalSelected;
-
-        // MVA variable vector
         
     public:
 
-        EventSelection4T();
-        ~EventSelection4T() {cleanSelection();};
+        EventFourT();
+        ~EventFourT() {cleanSelection();};
 
         void cleanSelection();
         void addNewEvent(Event* newEvent);
@@ -79,6 +70,9 @@ class EventSelection4T {
         bool passFullEventSelectonWithAltLeptons();
         void altObjectSelection();
         LeptonCollection* getAltLeptonCol() {return altLeps;}
+
+        // HistogramFillers
+        //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
 };
 
 bool leptonPtReq(const Lepton& lep);

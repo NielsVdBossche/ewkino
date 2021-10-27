@@ -15,13 +15,12 @@
 #include "../../additionalTools/interface/histHelper.h"
 #include "../../additionalTools/interface/calculators.h"
 
-#include "../../FourTopEventHandling/interface/EventSelection4T.h"
+#include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 
 
 class FourTop {
     private:
-        std::vector<HistInfo>* histInfoVec_Global = nullptr; // Histograms shared between DL and ML (if any?)
         std::vector<HistInfo>* histInfoVec_DL = nullptr; // Histogram for DL kinematics
         std::vector<HistInfo>* histInfoVec_ML = nullptr; // Histogram for ML kinematics
         std::vector<HistInfo>* histInfoVec_CRZ = nullptr;
@@ -58,7 +57,7 @@ class FourTop {
         TFile* outfile;
         
         Event* currentEvent = nullptr;
-        EventSelection4T* selection;
+        EventFourT* selection;
 
         // BDT Variables
         Double_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose;

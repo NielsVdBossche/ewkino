@@ -176,7 +176,7 @@ std::vector<double> fourTopHists::fillAllHistsML(Event* event) {
 
 }
 
-std::vector<double> fourTopHists::fillAllHists(bool multilep, EventSelection4T* selec) {
+std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec) {
     JetCollection* jets = selec->getJetCol();
     JetCollection* bJets = selec->getBtagJetCol();
     LightLeptonCollection* lightLeps;

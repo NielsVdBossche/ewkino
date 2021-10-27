@@ -1,11 +1,11 @@
 #include "../interface/MVAHandler.h"
-#include "../interface/EventSelection4T.h"
+#include "../interface/EventFourT.h"
 
 #if MEMLEAK
 #include "../../../memleak/debug_new.h"
 #endif
 
-MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventSelection4T* selec) : currentConfig(config), selection(selec) {
+MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventFourT* selec) : currentConfig(config), selection(selec) {
     initReader();
 }
 
@@ -87,14 +87,14 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms() {
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier;
-        std::string xaxis = "BDT score" + translator[(MVAClasses) el];
+        std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
         histInfoVec->push_back(HistInfo(name, xaxis, 15, 0., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier;
-        std::string xaxis = "BDT score" + translator[(MVAClasses) el];
+        std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
         histInfoVec->push_back(HistInfo(name, xaxis , 15, 0., 1.));
     }
@@ -131,8 +131,8 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms() {
     for (int el = 0; el < maxClass; el++) {
         std::string name = "2D_BDTScore_" + translator[(MVAClasses) el] + "_" + translator[(MVAClasses) ((el + 1) % maxClass)] + identifier;
 
-        std::string xaxis = "BDT score" + translator[(MVAClasses) el];
-        std::string yaxis = "BDT score" + translator[(MVAClasses) ((el + 1) % maxClass)];
+        std::string xaxis = "BDT score " + translator[(MVAClasses) el];
+        std::string yaxis = "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)];
 
         histInfoVec->push_back(HistInfo_2D(name, xaxis, 15, 0., 1., yaxis, 15, 0., 1.));
     }

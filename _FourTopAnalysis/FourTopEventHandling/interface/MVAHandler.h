@@ -1,7 +1,7 @@
 #ifndef MVAHANDLER_4T_H
 #define MVAHANDLER_4T_H
 
-#include "EventSelection4T.h"
+#include "EventFourT.h"
 #include "../../additionalTools/interface/calculators.h"
 
 #include "../../../Tools/interface/HistInfo.h"
@@ -38,7 +38,7 @@ class MVAHandler_4T {
         double isML = false;
         int maxClass = 1;
 
-        EventSelection4T* selection;
+        EventFourT* selection;
 
         Float_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose;
         Float_t n_b_tight, dRleps, aziAngle, ht;
@@ -48,7 +48,7 @@ class MVAHandler_4T {
         Float_t ptLepOne, ptLepTwo, ptLepThree;
 
     public:
-        MVAHandler_4T(MVAConfigs config, EventSelection4T* selec);
+        MVAHandler_4T(MVAConfigs config, EventFourT* selec);
         ~MVAHandler_4T();
         
         void initReader();

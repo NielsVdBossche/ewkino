@@ -1,31 +1,31 @@
-#include "../interface/EventSelection4T.h"
+#include "../interface/EventFourT.h"
 
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
 #endif
 
-EventSelection4T::EventSelection4T() {
+EventFourT::EventFourT() {
     looseLeps = new LeptonCollection();
     mediumLeps = new LeptonCollection();
     jets = new JetCollection();
     bTagJets = new JetCollection();
 }
 
-void EventSelection4T::cleanSelection() {
+void EventFourT::cleanSelection() {
     delete looseLeps;
     delete mediumLeps;
     delete jets;
     delete bTagJets;
 }
 
-void EventSelection4T::addNewEvent(Event* newEvent) {
+void EventFourT::addNewEvent(Event* newEvent) {
     cleanSelection();
     event = newEvent;
     isNormalSelected = true;
     objectSelection();
 }
 
-void EventSelection4T::objectSelection() {
+void EventFourT::objectSelection() {
     event->removeTaus();
     event->selectLooseLeptons();
     event->cleanElectronsFromLooseMuons(); // consider making loose lep sel the original one
@@ -50,7 +50,7 @@ void EventSelection4T::objectSelection() {
     nLep = mediumLeps->size();
 }
 
-bool EventSelection4T::passBaselineEventSelection() {
+bool EventFourT::passBaselineEventSelection() {
     // Baseline event selection keeping most leptons in order to correctly veto resonances
 
     double n_lep = mediumLeps->size();
@@ -72,7 +72,7 @@ bool EventSelection4T::passBaselineEventSelection() {
     return true;
 }
 
-bool EventSelection4T::passFullEventSelection() {
+bool EventFourT::passFullEventSelection() {
     if (jets->size() < 4) return false;
 
     if (bTagJets->size() < 2) return false;
@@ -81,7 +81,7 @@ bool EventSelection4T::passFullEventSelection() {
     return true;
 }
 
-bool EventSelection4T::passLowMassVeto() {  
+bool EventFourT::passLowMassVeto() {  
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
 
     for( const auto& leptonPtrPair : looseLeps->pairCollection() ){
@@ -99,7 +99,7 @@ bool EventSelection4T::passLowMassVeto() {
     return true;
 }
 
-bool EventSelection4T::passZBosonVeto() {
+bool EventFourT::passZBosonVeto() {
     // Reject OSSF lepton pairs with inv mass close to Z boson mass
     if (event->hasOSSFLeptonPair()) {
         double mass = event->bestZBosonCandidateMass();

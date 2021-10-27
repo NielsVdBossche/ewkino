@@ -15,7 +15,7 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode) {
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    selection = new EventSelection4T();
+    selection = new EventFourT();
 
     if (mode < 2) {
         std::string outputFileName = "Output/AnalysisOutput_";
@@ -75,7 +75,6 @@ FourTop::~FourTop() {
         delete histInfoVec2D_mva_DL;
         delete histInfoVec2D_mva_ML;
     }
-    //delete histInfoVec_Global; // If even assigned?
 }
 
 // Prepare 

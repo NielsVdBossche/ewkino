@@ -66,6 +66,17 @@ void FourTop:: analyze() {
                     fillIndex = treeReader->numberOfSamples();
                     break;
                 }
+                // TODO:
+                // alternative implementation: use pointers to vectors of histograms to fill:
+                // one set is for the current samp, one for nonprompt and one for the ones to be filled
+                // this does require 5 operations at least for rerouten adresses, but is this more efficient than a lookup
+                // but is this more efficient than a lookup in the full vectors every loop
+                // OR 
+                // in this way a pair is maybe the most efficient option
+                // for each sample, it gets re-initialized per sample, but lookup is a lot easier.
+                // and still more compatible with current method employed
+                // But cant easily do [0] and [1], so then we are back to vector i guess
+                // but it does not make sense to init for all samples at once
             }
             
             // Remove mass resonances
@@ -143,7 +154,7 @@ void FourTop:: analyze() {
         gDirectory->mkdir(outdir.c_str()); // got to switch to gDirectory. Otherwise keeps working as if we're on level of file
         gDirectory->cd(outdir.c_str());
 
-        // works when handling only one sample
+        // Rewrite this to a dedicated function maybe, or something where we don't have to call sampleIndex each time?
         for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
             hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
         }
