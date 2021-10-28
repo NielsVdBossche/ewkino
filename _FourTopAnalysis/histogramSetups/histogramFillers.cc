@@ -230,6 +230,14 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         fillVal.push_back((*lightLeps)[2].phi());
         fillVal.push_back((*lightLeps)[2].energy());
         fillVal.push_back((*lightLeps)[2].leptonMVATOP());
+
+        if (fourLep) {
+            fillVal.push_back((*lightLeps)[3].pt());
+            fillVal.push_back((*lightLeps)[3].eta());
+            fillVal.push_back((*lightLeps)[3].phi());
+            fillVal.push_back((*lightLeps)[3].energy());
+            fillVal.push_back((*lightLeps)[3].leptonMVATOP());
+        }
     }
 
     return fillVal;
