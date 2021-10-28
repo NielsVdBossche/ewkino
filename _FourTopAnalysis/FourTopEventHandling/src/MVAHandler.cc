@@ -57,7 +57,7 @@ void MVAHandler_4T::initReader() {
     createHistograms();
 }
 
-std::vector<HistInfo>* MVAHandler_4T::createHistograms() {
+std::vector<HistInfo>* MVAHandler_4T::createHistograms(bool fourLep) {
     std::string identifier = "";
 
     std::vector<HistInfo>* histInfoVec = new std::vector<HistInfo>;
@@ -72,8 +72,10 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms() {
         maxClass = 4;
     }
 
-    if (isML) {
-        identifier += "_ML";
+    if (fourLep) {
+        identifier += "_4L";
+    } else if (isML) {
+        identifier += "_3L";
     } else {
         identifier += "_DL";
     }
@@ -102,7 +104,7 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms() {
     return histInfoVec;
 }
 
-std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms() {
+std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(bool fourLep) {
     std::string identifier = "";
 
     std::vector<HistInfo_2D>* histInfoVec = new std::vector<HistInfo_2D>;
@@ -115,8 +117,10 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms() {
         identifier += "_FourClass";
     }
 
-    if (isML) {
-        identifier += "_ML";
+    if (fourLep) {
+        identifier += "_4L";
+    } else if (isML) {
+        identifier += "_3L";
     } else {
         identifier += "_DL";
     }

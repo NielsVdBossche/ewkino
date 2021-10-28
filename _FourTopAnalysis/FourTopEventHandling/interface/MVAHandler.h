@@ -52,8 +52,8 @@ class MVAHandler_4T {
         ~MVAHandler_4T();
         
         void initReader();
-        std::vector<HistInfo>* createHistograms();
-        std::vector<HistInfo_2D>* create2DHistograms();
+        std::vector<HistInfo>* createHistograms(bool fourLep = false);
+        std::vector<HistInfo_2D>* create2DHistograms(bool fourLep = false);
 
         //std::string histogramIdentifier();
 

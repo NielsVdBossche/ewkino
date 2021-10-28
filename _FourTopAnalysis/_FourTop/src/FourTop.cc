@@ -115,7 +115,7 @@ void FourTop::createMVAHandlers() {
 
     histInfoVec_mva_DL = mva_DL->createHistograms();
     histInfoVec_mva_3L = mva_ML->createHistograms();
-    histInfoVec_mva_4L = mva_ML->createHistograms();
+    histInfoVec_mva_4L = mva_ML->createHistograms(true);
 
     hists_mva_DL = histHelper::initHistograms(histInfoVec_mva_DL, sampleVec);
     hists_mva_3L = histHelper::initHistograms(histInfoVec_mva_3L, sampleVec);
@@ -124,7 +124,7 @@ void FourTop::createMVAHandlers() {
 
     histInfoVec2D_mva_DL = mva_DL->create2DHistograms();
     histInfoVec2D_mva_3L = mva_ML->create2DHistograms();
-    histInfoVec2D_mva_4L = mva_ML->create2DHistograms();
+    histInfoVec2D_mva_4L = mva_ML->create2DHistograms(true);
 
     hists2D_mva_DL = histHelper::init2DHistograms(histInfoVec2D_mva_DL, sampleVec);
     hists2D_mva_3L = histHelper::init2DHistograms(histInfoVec2D_mva_3L, sampleVec);
