@@ -10,18 +10,24 @@ make -f makeCodeLibrary
 in the base directory.
 
 To build the analysiscode:
+
+```console
 cd _FourTopAnalysis
 make -f makeBaseAnalysis
+```
 
 Make sure a directory called Output is present in _FourTopAnalysis.
 
 To run the code from a m-machine, while still in _FourTopAnalysis directory, run:
 
+```console
 ./analysisExec ../sampleLists/allSamples.txt 
 
+```
 To run the code on HTCondor:
 
+```console
 cd runCode
 condor_submit analysis.sub
-
+```
 As long as my skims are available on T2B, it should run fine.
