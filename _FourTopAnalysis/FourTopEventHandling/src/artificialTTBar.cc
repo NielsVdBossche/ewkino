@@ -18,7 +18,7 @@ bool EventFourT::passBaselineEventSelectionWithAltLeptons() {
     }
     if (n_lep_Loose == 2 && altLeps->hasOSPair()) return false;
 
-    if ((*altLeps)[0].pt() < 25 && (*altLeps)[1].pt() < 20) return false;
+    if ((*altLeps)[0].pt() < 25 || (*altLeps)[1].pt() < 20) return false;
 
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
