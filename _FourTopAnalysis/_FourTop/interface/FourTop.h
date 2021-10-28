@@ -22,26 +22,32 @@
 class FourTop {
     private:
         std::vector<HistInfo>* histInfoVec_DL = nullptr; // Histogram for DL kinematics
-        std::vector<HistInfo>* histInfoVec_ML = nullptr; // Histogram for ML kinematics
+        std::vector<HistInfo>* histInfoVec_3L = nullptr; // Histogram for ML kinematics
+        std::vector<HistInfo>* histInfoVec_4L = nullptr; 
         std::vector<HistInfo>* histInfoVec_CRZ = nullptr;
         std::vector<HistInfo>* histInfoVec_CRW = nullptr;
         std::vector<HistInfo>* histInfoVec_Other = nullptr;
         std::vector<HistInfo>* histInfoVec_mva_DL = nullptr;
-        std::vector<HistInfo>* histInfoVec_mva_ML = nullptr;
+        std::vector<HistInfo>* histInfoVec_mva_3L = nullptr;
+        std::vector<HistInfo>* histInfoVec_mva_4L = nullptr;
 
         std::vector<HistInfo_2D>* histInfoVec2D_mva_DL = nullptr;
-        std::vector<HistInfo_2D>* histInfoVec2D_mva_ML = nullptr;
+        std::vector<HistInfo_2D>* histInfoVec2D_mva_3L = nullptr;
+        std::vector<HistInfo_2D>* histInfoVec2D_mva_4L = nullptr;
 
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_DL;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_ML;
+        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_3L;
+        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_4L;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRZ;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRW;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_Other;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_DL;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_ML;
+        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_3L;
+        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_4L;
 
         std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_DL;
-        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_ML;
+        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_3L;
+        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_4L;
 
         TreeReader* treeReader;
 

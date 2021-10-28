@@ -68,7 +68,6 @@ class Event {
         Jet& jet( const JetCollection::size_type jetIndex ) const{ 
 	    return (*_jetCollectionPtr)[ jetIndex ]; }
 
-
         void sortLeptonsByPt() const{ _leptonCollectionPtr->sortByPt(); }
         void sortJetsByPt() const{ _jetCollectionPtr->sortByPt(); }
 

@@ -18,7 +18,8 @@ bool EventFourT::passBaselineEventSelectionWithAltLeptons() {
     }
     if (n_lep_Loose == 2 && altLeps->hasOSPair()) return false;
 
-    if (altLeps->at(0)->pt() < 25) return false; // not necessary for MVA samples
+    if ((*altLeps)[0].pt() < 25 && (*altLeps)[1].pt() < 20) return false;
+
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
     if (jets->size() < 3) return false;

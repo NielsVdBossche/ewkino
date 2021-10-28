@@ -63,7 +63,8 @@ FourTop::~FourTop() {
     // Delete histogramInfo
     if (histInfoVec_DL) {
         delete histInfoVec_DL;
-        delete histInfoVec_ML;
+        delete histInfoVec_3L;
+        delete histInfoVec_4L;
         delete histInfoVec_CRZ;    
         delete histInfoVec_CRW;
         delete histInfoVec_Other;
@@ -71,9 +72,11 @@ FourTop::~FourTop() {
 
     if (histInfoVec_mva_DL) {
         delete histInfoVec_mva_DL;
-        delete histInfoVec_mva_ML;
+        delete histInfoVec_mva_3L;
+        delete histInfoVec_mva_4L;
         delete histInfoVec2D_mva_DL;
-        delete histInfoVec2D_mva_ML;
+        delete histInfoVec2D_mva_3L;
+        delete histInfoVec2D_mva_4L;
     }
 }
 
@@ -82,7 +85,8 @@ void FourTop::createHistInfoVec() {
 
     // Temp solution
     histInfoVec_DL = fourTopHists::allHists("DL", false);
-    histInfoVec_ML = fourTopHists::allHists("ML", true);
+    histInfoVec_3L = fourTopHists::allHists("3L", true);
+    histInfoVec_4L = fourTopHists::allHists("4L", true, true);
     histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
     histInfoVec_CRW = fourTopHists::allHists("CRW", false);
     histInfoVec_Other = fourTopHists::allHists("CRO", false);
@@ -96,7 +100,8 @@ void FourTop::createHistInfoVec() {
     std::vector< Sample > sampleVec = treeReader->sampleVector();
 
     hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
-    hists_ML = histHelper::initHistograms(histInfoVec_ML, sampleVec);
+    hists_3L = histHelper::initHistograms(histInfoVec_3L, sampleVec);
+    hists_4L = histHelper::initHistograms(histInfoVec_4L, sampleVec);
     hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
     hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
     hists_Other = histHelper::initHistograms(histInfoVec_Other, sampleVec);
@@ -109,14 +114,19 @@ void FourTop::createMVAHandlers() {
     std::vector< Sample > sampleVec = treeReader->sampleVector();
 
     histInfoVec_mva_DL = mva_DL->createHistograms();
-    histInfoVec_mva_ML = mva_ML->createHistograms();
+    histInfoVec_mva_3L = mva_ML->createHistograms();
+    histInfoVec_mva_4L = mva_ML->createHistograms();
 
     hists_mva_DL = histHelper::initHistograms(histInfoVec_mva_DL, sampleVec);
-    hists_mva_ML = histHelper::initHistograms(histInfoVec_mva_ML, sampleVec);
+    hists_mva_3L = histHelper::initHistograms(histInfoVec_mva_3L, sampleVec);
+    hists_mva_4L = histHelper::initHistograms(histInfoVec_mva_4L, sampleVec);
+
 
     histInfoVec2D_mva_DL = mva_DL->create2DHistograms();
-    histInfoVec2D_mva_ML = mva_ML->create2DHistograms();
+    histInfoVec2D_mva_3L = mva_ML->create2DHistograms();
+    histInfoVec2D_mva_4L = mva_ML->create2DHistograms();
 
     hists2D_mva_DL = histHelper::init2DHistograms(histInfoVec2D_mva_DL, sampleVec);
-    hists2D_mva_ML = histHelper::init2DHistograms(histInfoVec2D_mva_ML, sampleVec);
+    hists2D_mva_3L = histHelper::init2DHistograms(histInfoVec2D_mva_3L, sampleVec);
+    hists2D_mva_4L = histHelper::init2DHistograms(histInfoVec2D_mva_4L, sampleVec);
 }

@@ -44,9 +44,9 @@ namespace fourTopHists {
     std::vector<double> fillAllHistsML(Event* event);
 
 
-    std::vector<HistInfo>* allHists(std::string flag, bool multilep);
+    std::vector<HistInfo>* allHists(std::string flag, bool multilep, bool fourLep=false);
 
-    std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
+    std::vector<double> fillAllHists(bool multilep, EventFourT* selec, bool fourLep=false);
 
 }
 

@@ -87,7 +87,7 @@ bool MuonSelector::isFOBase() const{
     }
     */
 
-    if (muonPtr->pt() < 20) return false;
+    //if (muonPtr->pt() < 20) return false;
     if (muonPtr->leptonMVATOP() < 0.65) return false;
 
     return true;

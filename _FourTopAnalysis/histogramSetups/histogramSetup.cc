@@ -257,7 +257,7 @@ std::vector<HistInfo>* fourTopHists::allHistsML() {
     return histInfoVec;
 }
 
-std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep) {
+std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, bool fourLep) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
@@ -294,12 +294,20 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep) {
     };
 
     if (multilep) {
-        histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 18, 20, 200) );
+        histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 20, 0, 200) );
         histInfoVec->push_back( HistInfo( "leptonEtaThird_" + flag, "#eta (l3)", 12, -2.4, 2.4) );
         histInfoVec->push_back( HistInfo( "leptonPhiThird_" + flag, "#phi (l3)", 12, - M_PI, M_PI) );
         histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 18, 25, 205) );
         histInfoVec->push_back( HistInfo( "leptonMvaTOPThird_" + flag, "score (l3)", 40, -1, 1) );
+
+        if (fourLep) {
+            histInfoVec->push_back( HistInfo( "leptonPtFour_" + flag, "p_{T}(l4) [GeV]", 20, 0, 200) );
+            histInfoVec->push_back( HistInfo( "leptonEtaFour_" + flag, "#eta (l4)", 12, -2.4, 2.4) );
+            histInfoVec->push_back( HistInfo( "leptonPhiFour_" + flag, "#phi (l4)", 12, - M_PI, M_PI) );
+            histInfoVec->push_back( HistInfo( "leptonEFour_" + flag, "E(l4) [GeV]", 18, 25, 205) );
+            histInfoVec->push_back( HistInfo( "leptonMvaTOPFour_" + flag, "score (l4)", 40, -1, 1) );
+        }
     }
 
     return histInfoVec;
-    }
+}

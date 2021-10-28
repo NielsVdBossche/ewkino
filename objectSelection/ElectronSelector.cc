@@ -94,7 +94,7 @@ bool ElectronSelector::isFOBase() const{
     if( !electronPtr->passConversionVeto() ) return false;
     */
 
-    if (electronPtr->pt() < 20) return false;
+    //if (electronPtr->pt() < 20) return false;
 
     if (electronPtr->leptonMVATOP() < 0.6) return false;
     return true;

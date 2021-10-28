@@ -116,14 +116,23 @@ void FourTop:: analyze() {
                     mva_DL->fillHistograms(scores, hists_mva_DL->at(fillIndex), currentEvent->weight());
                     mva_DL->fill2DHistograms(scores, hists2D_mva_DL->at(fillIndex), currentEvent->weight());
                 }
-            } else {
+            } else if (selection->numberOfLeps() == 3) {
                 fillVec = fourTopHists::fillAllHists(true, selection);
-                histHelper::histFiller(fillVec, &(hists_ML->at(fillIndex)), currentEvent->weight());
+                histHelper::histFiller(fillVec, &(hists_3L->at(fillIndex)), currentEvent->weight());
 
-                if (histInfoVec_mva_ML) {
+                if (histInfoVec_mva_3L) {
                     std::vector<Float_t> scores = mva_ML->scoreEvent();
-                    mva_ML->fillHistograms(scores, hists_mva_ML->at(fillIndex), currentEvent->weight());
-                    mva_ML->fill2DHistograms(scores, hists2D_mva_ML->at(fillIndex), currentEvent->weight());
+                    mva_ML->fillHistograms(scores, hists_mva_3L->at(fillIndex), currentEvent->weight());
+                    mva_ML->fill2DHistograms(scores, hists2D_mva_3L->at(fillIndex), currentEvent->weight());
+                }
+            } else {
+                fillVec = fourTopHists::fillAllHists(true, selection, true);
+                histHelper::histFiller(fillVec, &(hists_4L->at(fillIndex)), currentEvent->weight());
+
+                if (histInfoVec_mva_3L) {
+                    std::vector<Float_t> scores = mva_ML->scoreEvent();
+                    mva_ML->fillHistograms(scores, hists_mva_4L->at(fillIndex), currentEvent->weight());
+                    mva_ML->fill2DHistograms(scores, hists2D_mva_4L->at(fillIndex), currentEvent->weight());
                 }
             }
 
@@ -159,8 +168,12 @@ void FourTop:: analyze() {
             hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
         }
 
-        for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ) {
-            hists_ML->at(sampleIndex)[dist]->Write(TString(histInfoVec_ML->at(dist).name()), TObject::kOverwrite);
+        for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
+            hists_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
+            hists_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
         }
 
         for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
@@ -180,16 +193,24 @@ void FourTop:: analyze() {
                 hists_mva_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_DL->at(dist).name()), TObject::kOverwrite);
             }
 
-            for( size_t dist = 0; dist < histInfoVec_mva_ML->size(); ++dist ) {
-                hists_mva_ML->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_ML->at(dist).name()), TObject::kOverwrite);
+            for( size_t dist = 0; dist < histInfoVec_mva_3L->size(); ++dist ) {
+                hists_mva_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_3L->at(dist).name()), TObject::kOverwrite);
+            }
+
+            for( size_t dist = 0; dist < histInfoVec_mva_4L->size(); ++dist ) {
+                hists_mva_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_4L->at(dist).name()), TObject::kOverwrite);
             }
 
             for( size_t dist = 0; dist < histInfoVec2D_mva_DL->size(); ++dist ) {
                 hists2D_mva_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_DL->at(dist).name()), TObject::kOverwrite);
             }
 
-            for( size_t dist = 0; dist < histInfoVec2D_mva_ML->size(); ++dist ) {
-                hists2D_mva_ML->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_ML->at(dist).name()), TObject::kOverwrite);
+            for( size_t dist = 0; dist < histInfoVec2D_mva_3L->size(); ++dist ) {
+                hists2D_mva_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_3L->at(dist).name()), TObject::kOverwrite);
+            }
+
+            for( size_t dist = 0; dist < histInfoVec2D_mva_4L->size(); ++dist ) {
+                hists2D_mva_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_4L->at(dist).name()), TObject::kOverwrite);
             }
         }
 
@@ -204,8 +225,12 @@ void FourTop:: analyze() {
         hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
     }
 
-    for( size_t dist = 0; dist < histInfoVec_ML->size(); ++dist ) {
-        hists_ML->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_ML->at(dist).name()), TObject::kOverwrite);
+    for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
+        hists_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
+    }
+
+    for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
+        hists_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
     }
 
     for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
@@ -225,16 +250,24 @@ void FourTop:: analyze() {
             hists_mva_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_DL->at(dist).name()), TObject::kOverwrite);
         }
 
-        for( size_t dist = 0; dist < histInfoVec_mva_ML->size(); ++dist ) {
-            hists_mva_ML->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_ML->at(dist).name()), TObject::kOverwrite);
+        for( size_t dist = 0; dist < histInfoVec_mva_3L->size(); ++dist ) {
+            hists_mva_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_3L->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec_mva_4L->size(); ++dist ) {
+            hists_mva_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_4L->at(dist).name()), TObject::kOverwrite);
         }
 
         for( size_t dist = 0; dist < histInfoVec2D_mva_DL->size(); ++dist ) {
             hists2D_mva_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_DL->at(dist).name()), TObject::kOverwrite);
         }
 
-        for( size_t dist = 0; dist < histInfoVec2D_mva_ML->size(); ++dist ) {
-            hists2D_mva_ML->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_ML->at(dist).name()), TObject::kOverwrite);
+        for( size_t dist = 0; dist < histInfoVec2D_mva_3L->size(); ++dist ) {
+            hists2D_mva_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_3L->at(dist).name()), TObject::kOverwrite);
+        }
+
+        for( size_t dist = 0; dist < histInfoVec2D_mva_4L->size(); ++dist ) {
+            hists2D_mva_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_4L->at(dist).name()), TObject::kOverwrite);
         }
     }
 
