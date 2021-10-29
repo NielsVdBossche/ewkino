@@ -1,0 +1,13 @@
+CC=g++ -Wall -Wextra -O3 -g 
+CFLAGS= -Wl,--no-as-needed,-lpthread
+CXXFLAGS = -std=gnu++17
+LDFLAGS=`root-config --glibs --cflags` -lTMVA
+SOURCES= main.cc ../codeLibrary.o src/*.cc ../_FourTopAnalysis/additionalTools/src/*.cc
+OBJECTS=$(SOURCES:.cc=.o)
+EXECUTABLE=genLevelExec
+
+all: 
+	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
+	
+clean:
+	rm -rf *o $(EXECUTABLE)
