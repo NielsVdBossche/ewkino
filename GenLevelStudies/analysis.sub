@@ -1,8 +1,8 @@
 universe    =   vanilla
 executable  =   analysis.sh
 
-log         =   /user/nivanden/condor/logs/testExec_$(ClusterId).log
-error       =   /user/nivanden/condor/error/testExec_$(ClusterId).err
-output      =   /user/nivanden/condor/output/testExec_$(ClusterId).out
+log         =   /user/nivanden/condor/logs/GenStudies_$(ClusterId).log
+error       =   /user/nivanden/condor/error/GenStudies_$(ClusterId).err
+output      =   /user/nivanden/condor/output/GenStudies_$(ClusterId).out
 
 queue

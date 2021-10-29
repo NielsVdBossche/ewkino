@@ -5,6 +5,6 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scram runtime -sh`
 export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER) 
 
-cd /user/nivanden/ewkino/_FourTopAnalysis/
+cd /user/nivanden/ewkino/GenLevelStudies/
 ./genLevelExec ../sampleLists/FourTopsOnly.txt 
 
