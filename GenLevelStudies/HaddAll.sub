@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   HaddAll.sh
+
+log         =   /user/nivanden/condor/logs/HaddAll_$(ClusterId).log
+error       =   /user/nivanden/condor/error/HaddAll_$(ClusterId).err
+output      =   /user/nivanden/condor/output/HaddAll_$(ClusterId).out
+
+queue
