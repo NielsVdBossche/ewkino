@@ -52,7 +52,11 @@ bool ElectronSelector::isLooseBase() const{
 
 
 
-bool ElectronSelector::isLoose2016() const{ 
+bool ElectronSelector::isLoose2016PreVFP() const{ 
+    return true;
+}
+
+bool ElectronSelector::isLoose2016PostVFP() const{ 
     return true;
 }
 
@@ -101,7 +105,12 @@ bool ElectronSelector::isFOBase() const{
 }
 
 
-bool ElectronSelector::isFO2016() const{
+bool ElectronSelector::isFO2016PreVFP() const{
+    //if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016() ) return false;
+    return true;
+}
+
+bool ElectronSelector::isFO2016PostVFP() const{
     //if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016() ) return false;
     return true;
 }
@@ -133,7 +142,11 @@ bool ElectronSelector::isTightBase() const{
 }
 
 
-bool ElectronSelector::isTight2016() const{
+bool ElectronSelector::isTight2016PreVFP() const{
+    return true;
+}
+
+bool ElectronSelector::isTight2016PostVFP() const{
     return true;
 }
 

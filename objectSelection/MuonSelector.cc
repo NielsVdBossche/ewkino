@@ -45,7 +45,12 @@ bool MuonSelector::isLooseBase() const{
 }
 
 
-bool MuonSelector::isLoose2016() const{
+bool MuonSelector::isLoose2016PreVFP() const{
+    return true;
+}
+
+
+bool MuonSelector::isLoose2016PostVFP() const{
     return true;
 }
 
@@ -94,7 +99,19 @@ bool MuonSelector::isFOBase() const{
 }
 
 
-bool MuonSelector::isFO2016() const{
+bool MuonSelector::isFO2016PreVFP() const{
+    /*
+    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016(), bTagWP::mediumDeepFlavor2016(), muonPtr->uncorrectedPt() );
+        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+    } else {
+        if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016() ) return false;
+    }
+    */
+    return true;
+}
+
+bool MuonSelector::isFO2016PostVFP() const{
     /*
     if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
         double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016(), bTagWP::mediumDeepFlavor2016(), muonPtr->uncorrectedPt() );
@@ -148,9 +165,14 @@ bool MuonSelector::isTightBase() const{
 }
 
 
-bool MuonSelector::isTight2016() const{
+bool MuonSelector::isTight2016PreVFP() const{
     return true;
 }
+
+bool MuonSelector::isTight2016PostVFP() const{
+    return true;
+}
+
 
 
 bool MuonSelector::isTight2017() const{

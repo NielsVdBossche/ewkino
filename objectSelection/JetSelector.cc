@@ -15,7 +15,12 @@ bool JetSelector::isGoodBase() const{
 }
 
 
-bool JetSelector::isGood2016() const{
+bool JetSelector::isGood2016PreVFP() const{
+    return true;
+}
+
+
+bool JetSelector::isGood2016PostVFP() const{
     return true;
 }
 
@@ -42,8 +47,13 @@ bool JetSelector::inBTagAcceptance() const{
 }
 
 
-bool JetSelector::isBTaggedLoose2016() const{
-    return ( jetPtr->deepFlavor() > bTagWP::looseDeepFlavor2016()  );
+bool JetSelector::isBTaggedLoose2016PreVFP() const{
+    return ( jetPtr->deepFlavor() > bTagWP::looseDeepFlavor2016PreVFP()  );
+}
+
+
+bool JetSelector::isBTaggedLoose2016PostVFP() const{
+    return ( jetPtr->deepFlavor() > bTagWP::looseDeepFlavor2016PostVFP()  );
 }
 
 
@@ -57,8 +67,13 @@ bool JetSelector::isBTaggedLoose2018() const{
 }
         
 
-bool JetSelector::isBTaggedMedium2016() const{
-    return ( jetPtr->deepFlavor() > bTagWP::mediumDeepFlavor2016() );
+bool JetSelector::isBTaggedMedium2016PreVFP() const{
+    return ( jetPtr->deepFlavor() > bTagWP::mediumDeepFlavor2016PreVFP() );
+}
+
+
+bool JetSelector::isBTaggedMedium2016PostVFP() const{
+    return ( jetPtr->deepFlavor() > bTagWP::mediumDeepFlavor2016PostVFP() );
 }
 
 
@@ -72,8 +87,13 @@ bool JetSelector::isBTaggedMedium2018() const{
 }
 
 
-bool JetSelector::isBTaggedTight2016() const{
-    return ( jetPtr->deepFlavor() > bTagWP::tightDeepFlavor2016() );
+bool JetSelector::isBTaggedTight2016PreVFP() const{
+    return ( jetPtr->deepFlavor() > bTagWP::tightDeepFlavor2016PreVFP() );
+}
+
+
+bool JetSelector::isBTaggedTight2016PostVFP() const{
+    return ( jetPtr->deepFlavor() > bTagWP::tightDeepFlavor2016PostVFP() );
 }
 
 
