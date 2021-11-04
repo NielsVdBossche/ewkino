@@ -14,40 +14,32 @@ if (sys.argv[1] == '0'):
     skimVersion = "2016_ULpreVFP"
     outSubdir = "2016PreVFP"
 elif (sys.argv[1] == '1'):
-    skimVersion = "2016_ULpostVFPv3"
+    skimVersion = "2016_ULpostVFP"
     outSubdir = "2016PostVFP"
 elif (sys.argv[1] == '2'):
-    skimVersion = "2017_ULv3"
+    skimVersion = "2017_UL"
     outSubdir = "2017"
 elif (sys.argv[1] == '3'):
-    skimVersion = "2018_ULv3"
+    skimVersion = "2018_UL"
     outSubdir = "2018"
 
 print(skimVersion)
 print(sys.argv)
+
+if (len(sys.argv) >= 3):
+    if (sys.argv[2] == "TTTrainingSamples"):
+        outSubdir += "/mvaSamples"
+
+
 
 for dir in os.listdir(inputBase):
     print(dir)
     # catch version, decide outputfolder
     version = dir.split("_version_")[-1]
 
-    #outSubdir = ""
-    #if (version == "2016_ULpreVFPv3"):
-    #    outSubdir = "2016PreVFP"
-    #elif (version == "2016_ULpostVFPv3"):
-    #    outSubdir = "2016PostVFP"
-    #elif (version == "2017_ULv3"):
-    #    outSubdir = "2017"
-    #elif (version == "2018_ULv3"):
-    #    outSubdir = "2018"
-
     if (version != skimVersion):
         continue
-
-    #if (outSubdir == ""):
-    #    print('ERROR: Version not found\n')
-    #    exit()
-
+    
     # join path outputbase + folder
     outputDir  = os.path.join(outputBase, outSubdir)
     print(outputDir)
