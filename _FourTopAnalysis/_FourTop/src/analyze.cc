@@ -285,6 +285,8 @@ bool FourTop::eventPassesTriggers() {
                 currentEvent->passTriggers_eee() || currentEvent->passTriggers_eem() || currentEvent->passTriggers_emm() || currentEvent->passTriggers_mmm());
     } else {
         // TODO: event is data, apply triggers!!
+        return true;
     }
 
+    return true;
 }
