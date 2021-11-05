@@ -4,10 +4,14 @@
 
 void FourTop::fillMVAVariables(bool isML) {
     JetCollection* bJets = selection->getBtagJetCol();
-    LeptonCollection* lightLeps = selection->getMediumLepCol();
-
+    LightLeptonCollection* lightLeps; // = selection->getMediumLepCol();
+    if (selection->isEventNormalSelected()) {
+        lightLeps = (LightLeptonCollection*) selection->getMediumLepCol();
+    } else {
+        lightLeps = (LightLeptonCollection*) selection->getAltLeptonCol();
+    }
     std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
-    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *lightLeps);
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
 
     n_jets_f         =  selection->getJetCol()->size();
     n_bjets_f        =  bJets->size();
