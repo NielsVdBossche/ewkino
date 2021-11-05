@@ -1,7 +1,7 @@
 #include "../interface/EventFourT.h"
 
 bool leptonPtReq(const Lepton& lep) {
-    if (lep.pt() < 20) return false;
+    if (lep.pt() < 10) return false;
 
     return true;
 }

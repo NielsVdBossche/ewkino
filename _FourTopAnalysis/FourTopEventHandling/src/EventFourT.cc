@@ -29,7 +29,6 @@ void EventFourT::objectSelection() {
     event->removeTaus();
     event->selectLooseLeptons();
     event->cleanElectronsFromLooseMuons(); // consider making loose lep sel the original one
-    // FO would be the loose one now and tight the medium mva WP + higher pt
 
     event->selectGoodJets();
     event->cleanJetsFromLooseLeptons(); // Clean jets from leps: is loose leps good or again like earlier
@@ -37,7 +36,7 @@ void EventFourT::objectSelection() {
     event->sortLeptonsByPt();
 
     looseLeps = new LeptonCollection(event->looseLeptonCollection());
-    mediumLeps = new LeptonCollection(event->FOLeptonCollection());
+    mediumLeps = new LeptonCollection(event->TightLeptonCollection());
 
     jets = new JetCollection(event->jetCollection());
     bTagJets = new JetCollection(event->mediumBTagCollection());
@@ -73,6 +72,8 @@ bool EventFourT::passBaselineEventSelection() {
 }
 
 bool EventFourT::passFullEventSelection() {
+
+    if (nLep >= 4) return true;
     if (jets->size() < 4) return false;
 
     if (bTagJets->size() < 2) return false;

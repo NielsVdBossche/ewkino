@@ -29,6 +29,10 @@ void FourTop:: analyze() {
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
+
+            // Check triggers here
+            if (! eventPassesTriggers()) continue;
+
             selection->addNewEvent(currentEvent);
 
             // Apply overlap removal & apply triggers
@@ -272,4 +276,15 @@ void FourTop:: analyze() {
     }
 
     outfile->Close();
+}
+
+bool FourTop::eventPassesTriggers() {
+    if (currentEvent->isMC()) {
+        return (currentEvent->passTriggers_e()   || currentEvent->passTriggers_m()   || 
+                currentEvent->passTriggers_em()  || currentEvent->passTriggers_mm()  || currentEvent->passTriggers_ee()  || 
+                currentEvent->passTriggers_eee() || currentEvent->passTriggers_eem() || currentEvent->passTriggers_emm() || currentEvent->passTriggers_mmm());
+    } else {
+        // TODO: event is data, apply triggers!!
+    }
+
 }

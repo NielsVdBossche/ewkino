@@ -42,10 +42,10 @@ bool ElectronSelector::isLooseBase() const{
     if (electronPtr->sip3d() >= 8) return false;
     if (electronPtr->miniIso() >= 0.4) return false;
 
-    if (electronPtr->leptonMVATOP() < 0.) return false;
-
     // Tight charge requirements:
     if (! electronPtr->passChargeConsistency()) return false;
+    // already necessary here?
+    if (electronPtr->leptonMVATOP() < 0.) return false;
 
     return true;
 }
@@ -100,6 +100,8 @@ bool ElectronSelector::isFOBase() const{
 
     //if (electronPtr->pt() < 20) return false;
 
+    // Fakeable object
+
     if (electronPtr->leptonMVATOP() < 0.6) return false;
     return true;
 }
@@ -136,7 +138,9 @@ bool ElectronSelector::isTightBase() const{
     if( !isFO() ) return false;
     //if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ) return false;
 
-    if (electronPtr->pt() < 20) return false;
+    //if (electronPtr->pt() < 20) return false;
+    if (electronPtr->leptonMVATOP() < 0.6) return false;
+
 
     return true;
 }

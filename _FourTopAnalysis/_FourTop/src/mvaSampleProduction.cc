@@ -30,6 +30,8 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
 void FourTop::createMVATrainingSamples() {
     std::cout << "Sample loop" << std::endl;
 
+    infuseNonPrompt = true;
+
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
@@ -49,47 +51,43 @@ void FourTop::createMVATrainingSamples() {
 
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
+        currentEvent = new Event();
+
+
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ) {
             //if (entry > 10000) break;
+            delete currentEvent;
 
             currentEvent = treeReader->buildEventPtr( entry );
             selection->addNewEvent(currentEvent);
 
-
-            //if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
-
-            if (ttgOverlapCheck == 0 && ! selection->passBaselineEventSelection())  {
-                delete currentEvent;
-                continue;
-            } else if (! selection->passBaselineEventSelectionWithAltLeptons()) {
-                delete currentEvent;
+            if (infuseNonPrompt && ttgOverlapCheck > 0) {
+                if (! selection->passBaselineEventSelectionWithAltLeptons()) {
+                    continue;
+                }
+            } else if (! selection->passBaselineEventSelection())  {
                 continue;
             }
 
-
             if (! selection->passZBosonVeto()) {
-                delete currentEvent;
                 continue;
             } else if (! selection->passLowMassVeto()) {
-                delete currentEvent;
                 continue;
             }
 
             if (! selection->passFullEventSelection()) {
                 // Full event selection should be the same as normal event selection.
-                delete currentEvent;
                 continue;
             }
 
             // Build CRW (might expand these)
-            if (selection->getMediumLepCol()->size() == 2 && selection->getJetCol()->size() < 6 && selection->getBtagJetCol()->size() == 2) {
-                delete currentEvent;
+            if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 continue;
             }
 
             // Fill histograms
             std::vector<double> fillVec;
-            if (selection->getMediumLepCol()->size() == 2) {
+            if (selection->numberOfLeps() == 2) {
                 fillMVAVariables(false);
                 trainingTree_DL->Fill();
             } else {
@@ -108,7 +106,5 @@ void FourTop::createMVATrainingSamples() {
 
 
         currentOutputFile->Close();
-
-
     }
 }

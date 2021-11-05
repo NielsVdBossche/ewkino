@@ -36,10 +36,10 @@ bool MuonSelector::isLooseBase() const{
     if (muonPtr->sip3d() >= 8) return false;
     if (muonPtr->miniIso() >= 0.4) return false;
 
-    if (muonPtr->leptonMVATOP() < 0.05) return false;
 
     // Tight charge requirements:
     if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
+    if (muonPtr->leptonMVATOP() < 0.05) return false;
 
     return true;
 }
@@ -84,6 +84,8 @@ double slidingDeepFlavorThreshold( const double looseWP, const double mediumWP, 
 
 
 bool MuonSelector::isFOBase() const{
+    // Fakeable object
+
     if( !isLoose() ) return false;
     //if( muonPtr->uncorrectedPt() <= 10 ) return false;
     /*
@@ -159,6 +161,8 @@ bool MuonSelector::isTightBase() const{
     //if( !muonPtr->isMediumPOGMuon() ) return false;
     //if (muonPtr->pt() < 20) return false;
     //if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ) return false;
+
+    if (muonPtr->leptonMVATOP() < 0.65) return false;
 
     
     return true;
