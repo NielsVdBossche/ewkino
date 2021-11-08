@@ -43,7 +43,7 @@ void FourTop::fillMVAVariables(bool isML) {
 
     jetCol->sortByPt();
     ptJetOne         =  jetCol->at(0)->pt();
-    ptJetFour        =  jetCol->at(3)->pt();
+    ptJetFour        =  (n_jets_f >= 4 ? jetCol->at(3)->pt() : 0.);
     ptJetFive        =  (n_jets_f >= 5 ? jetCol->at(4)->pt() : 0.);
     ptJetSix         =  (n_jets_f >= 6 ? jetCol->at(5)->pt() : 0.);
 
