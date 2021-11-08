@@ -52,8 +52,6 @@ void FourTop::createMVATrainingSamples() {
 
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
-
-
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ) {
             //if (entry > 10000) break;
             delete currentEvent;
@@ -69,12 +67,12 @@ void FourTop::createMVATrainingSamples() {
                 continue;
             }
 
-            if (! selection->passZBosonVeto()) {
+            if (! selection->passLowMassVeto()) {
                 continue;
-            } else if (! selection->passLowMassVeto()) {
+            } else if (! selection->passZBosonVeto()) {
                 continue;
             }
-
+            
             if (! selection->passFullEventSelection()) {
                 // Full event selection should be the same as normal event selection.
                 continue;
@@ -86,7 +84,6 @@ void FourTop::createMVATrainingSamples() {
             }
 
             // Fill histograms
-            std::vector<double> fillVec;
             if (selection->numberOfLeps() == 2) {
                 fillMVAVariables(false);
                 trainingTree_DL->Fill();

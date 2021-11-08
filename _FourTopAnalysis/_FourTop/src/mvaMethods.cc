@@ -15,7 +15,7 @@ void FourTop::fillMVAVariables(bool isML) {
 
     n_jets_f         =  selection->getJetCol()->size();
     n_bjets_f        =  bJets->size();
-    deltaRBjets      =  mindR_Bjets[0];
+    deltaRBjets      =  (n_bjets_f >= 2. ? mindR_Bjets[0] : 5.);
     n_b_loose        =  selection->numberOfLooseBJets();
     n_b_tight        =  selection->numberOfTightBJets();
     dRleps           =  deltaR(*lightLeps->at(0), *lightLeps->at(1));

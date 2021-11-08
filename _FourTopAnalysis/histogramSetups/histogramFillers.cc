@@ -221,8 +221,22 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         (nb > 0 ? mindR_Bjet_lep[1] : 5.),
 
         lightLeps->scalarPtSum(), // LT
-        double(lightLeps->size())
+        double(lightLeps->size()),
+
+        jets->at(0)->deepFlavor(),
+        jets->at(1)->deepFlavor(),
+        jets->at(2)->deepFlavor(),
+        jets->at(3)->deepFlavor(),
+
     };
+
+    jets->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
+
+    fillVal.push_back(jets->at(0)->deepFlavor());
+    fillVal.push_back(jets->at(1)->deepFlavor());
+    fillVal.push_back(jets->at(2)->deepFlavor());
+    fillVal.push_back(jets->at(3)->deepFlavor());
+
 
     if (multilep) {
         fillVal.push_back((*lightLeps)[2].pt());

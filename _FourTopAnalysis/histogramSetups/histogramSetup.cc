@@ -290,7 +290,17 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
         HistInfo( "minDR_B_lep_" + flag, "Min. #Delta R(l,b)", 12, 0, 4.8),
         HistInfo( "secMinDR_B_lep_" + flag, "Sec. min. #Delta R(l,b)", 12, 0, 4.8),
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
-        HistInfo( "Nr_of_leps_" + flag, "N_{l}", 5, 0, 5)
+        HistInfo( "Nr_of_leps_" + flag, "N_{l}", 5, 0, 5),
+
+        HistInfo( "B-score_PtLeadJet_" + flag, "DeepFlavor score (j1)", 20 , -1., 1.),
+        HistInfo( "B-score_PtSubLeadJet_" + flag, "DeepFlavor score (j2)", 20 , -1., 1.),
+        HistInfo( "B-score_PtThirdJet_" + flag, "DeepFlavor score (j3)", 20 , -1., 1.),
+        HistInfo( "B-score_PtFourthJet_" + flag, "DeepFlavor score (j4)", 20 , -1., 1.),
+        
+        HistInfo( "B-score_BTagLeadJet_" + flag, "DeepFlavor score (j1)", 20 , -1., 1.),
+        HistInfo( "B-score_BTagSubLeadJet_" + flag, "DeepFlavor score (j2)", 20 , -1., 1.),
+        HistInfo( "B-score_BTagThirdJet_" + flag, "DeepFlavor score (j3)", 20 , -1., 1.),
+        HistInfo( "B-score_BTagFourthJet_" + flag, "DeepFlavor score (j4)", 20 , -1., 1.),
     };
 
     if (multilep) {
