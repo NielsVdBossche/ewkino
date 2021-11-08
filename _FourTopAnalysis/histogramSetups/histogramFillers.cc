@@ -235,7 +235,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     fillVal.push_back(jets->at(0)->deepFlavor());
     fillVal.push_back(jets->at(1)->deepFlavor());
     fillVal.push_back(jets->at(2)->deepFlavor());
-    (jets->size() > 3 ? fillVal.push_back(jets->at(3)->deepFlavor()) : -1.);
+    fillVal.push_back(jets->size() > 3 ? jets->at(3)->deepFlavor() : -1.);
 
 
     if (multilep) {
