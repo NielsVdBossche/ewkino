@@ -31,6 +31,7 @@ void FourTop::createMVATrainingSamples() {
     std::cout << "Sample loop" << std::endl;
 
     infuseNonPrompt = true;
+    currentEvent = new Event();
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -51,7 +52,6 @@ void FourTop::createMVATrainingSamples() {
 
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
-        currentEvent = new Event();
 
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ) {
@@ -94,8 +94,6 @@ void FourTop::createMVATrainingSamples() {
                 fillMVAVariables(true);
                 trainingTree_ML->Fill();
             }
-
-            delete currentEvent;
         }
         
         std::cout << trainingTree_ML->GetEntries() << std::endl;
