@@ -15,7 +15,7 @@
 int main(int argc, char const *argv[]) {
 
     if (argc < 5) {
-        std::cerr << "Mvatrainer requires at least one argument: <samplelist.txt> treename setup" << std::endl;
+        std::cerr << "Mvatrainer requires at least four arguments: <samplelist.txt> treename setup searchOrNot" << std::endl;
         exit(1);
     }
     // manage input
