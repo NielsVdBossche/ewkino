@@ -60,8 +60,8 @@ void determineMagicFactor( const std::string& leptonFlavor, const std::string& y
     if((year=="2016" && !treeReader.is2016()) ||
 	(year=="2017" && !treeReader.is2017()) ||
 	(year=="2018" && !treeReader.is2018())){
-	std::cerr<<"### ERROR ###: given year and sample index do not agree..."<<std::endl;
-	return;
+        std::cerr<<"### ERROR ###: given year and sample index do not agree..."<<std::endl;
+        return;
     }
 
     // loop over events in sample

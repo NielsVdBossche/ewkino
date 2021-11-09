@@ -1,4 +1,4 @@
-CC=g++ -Wall -Wextra -O3
+CC=g++ -g -Wall -Wextra -O3
 CFLAGS= -Wl,--no-as-needed
 LDFLAGS=`root-config --glibs --cflags`
 SOURCES= fillMagicFactor.cc src/*.cc ../codeLibrary.o
