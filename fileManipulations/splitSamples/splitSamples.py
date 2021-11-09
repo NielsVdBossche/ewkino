@@ -52,6 +52,8 @@ def mergeTuples(mergableDir):
         outputFileName = inputFileName.split("singlelep_")[0][:-17] + ".root" # should cut away date
     elif ("dilep_" in inputFileName):
         outputFileName = inputFileName.split("dilep_")[0][:-17] + ".root" # should cut away date
+    elif ("ssdilep_" in inputFileName):
+        outputFileName = inputFileName.split("ssdilep_")[0][:-17] + ".root" # should cut away date
 
     # join outputname with outputfolder
     outputPath = os.path.join(outputDir, outputFileName)
@@ -62,7 +64,7 @@ def mergeTuples(mergableDir):
     return
 
 
-processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_", "TTTo2L2Nu_TuneCP5_", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
+processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_13TeV", "TTTo2L2Nu_TuneCP5_13TeV", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
 fractions = [0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2]
 
 folders = [(element, frac) for process, frac in zip(processes, fractions) for element in glob.glob(base_directory + "*" + process + "*")]
@@ -73,7 +75,7 @@ for folder, currFrac in folders:
     
     outputAnalysis = os.path.join(base_directory, analysisSubDir, folder.split('/')[-1])
     try:
-        os.mkdir(outputAnalysis) 
+        os.mkdir(outputAnalysis)
     except OSError as error: 
         print("Analysis sub folder already exists for " + folder + "... Cleaning folder")
         files = glob.glob(outputAnalysis)
