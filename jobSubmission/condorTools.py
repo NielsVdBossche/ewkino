@@ -156,3 +156,10 @@ def submitCommandsAsCondorJobs(name, commands, stdout=None, stderr=None, log=Non
                             cpus=cpus,mem=mem,disk=disk)
         # finally submit the job
         submitCondorJob(jdname)
+
+
+def submitScriptAsCondorJob(scriptName):
+    jdName = os.path.splitext(scriptName)[0]
+
+    makeJobDescription(scriptName, scriptName)
+    submitCondorJob(scriptName)

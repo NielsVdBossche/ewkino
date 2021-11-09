@@ -64,12 +64,13 @@ std::shared_ptr< TH2D > readFRMap( const std::string& flavor, const std::string&
 }
 
 bool passClosureTestEventSelection( Event& event, const bool requireMuon = false, 
-				    const bool requireElectron = false ){
+				                    const bool requireElectron = false ){
     event.removeTaus();
-    event.applyLeptonConeCorrection();
+    event.applyLeptonConeCorrection(); // move cone corrected pt toward a lepton lvl function instead of just applying it to all and then calling the uncorrectedPt afterwards? Seems kinda wasteful in calculations
     event.cleanElectronsFromLooseMuons();
     event.selectFOLeptons();
-    if( event.numberOfLightLeptons() != 3 ) return false;
+    if( event.numberOfLightLeptons() < 2 ) return false;
+    if (event.numberOfLightLeptons() == 2 && event.lightLeptonCollection()[0].charge() != event.lightLeptonCollection()[1].charge()) return false;
     event.selectGoodJets();
     event.cleanJetsFromFOLeptons();
     event.sortLeptonsByPt();
@@ -78,26 +79,28 @@ bool passClosureTestEventSelection( Event& event, const bool requireMuon = false
     size_t numberOfPromptLeptons = 0;
     for( auto& leptonPtr : event.lightLeptonCollection() ){
         if( !leptonPtr->isPrompt() ){
-	    if( requireMuon && !leptonPtr->isMuon() ) continue;
-            if( requireElectron && !leptonPtr->isElectron() ) continue;
+            if ( requireMuon && !leptonPtr->isMuon() ) continue;
+            if ( requireElectron && !leptonPtr->isElectron() ) continue;
             ++numberOfNonPromptLeptons;
         }
-	else if( leptonPtr->isPrompt() ) ++numberOfPromptLeptons;
+	    else if( leptonPtr->isPrompt() ) ++numberOfPromptLeptons;
     }
-    if( numberOfNonPromptLeptons < 1 ) return false;
-    if( ( numberOfNonPromptLeptons + numberOfPromptLeptons ) != 3 ) return false;
+
+    if  ( numberOfNonPromptLeptons < 1 ) return false;
+    if  ( ( numberOfNonPromptLeptons + numberOfPromptLeptons ) < 2 ) return false;
     return true;
 }
 
 double fakeRateWeight( const Event& event, const std::shared_ptr< TH2D >& frMap_muon,  
 			const std::shared_ptr< TH2D >& frMap_electron ){
+
     double weight = -1.;
     for( const auto& leptonPtr : event.lightLeptonCollection() ){
         if( leptonPtr->isFO() && !leptonPtr->isTight() ){
 
             double croppedPt = std::min( leptonPtr->pt(), 99. );
-	    //double croppedPt = std::min( leptonPtr->pt(), 44.9 );
-	    // (test, to be more consistent with fake rate application in data)
+            //double croppedPt = std::min( leptonPtr->pt(), 44.9 );
+            // (test, to be more consistent with fake rate application in data)
             double croppedAbsEta = std::min( leptonPtr->absEta(), (leptonPtr->isMuon() ? 2.4 : 2.5) );
 
             double fr;
@@ -107,8 +110,8 @@ double fakeRateWeight( const Event& event, const std::shared_ptr< TH2D >& frMap_
                 fr = frMap_electron->GetBinContent( frMap_electron->FindBin( croppedPt, croppedAbsEta ) );
             }
 
-	    //std::cout<<"isMuon: "<<leptonPtr->isMuon()<<", pt: "<<leptonPtr->pt()<<std::endl;
-	    //std::cout<<fr<<std::endl;
+            //std::cout<<"isMuon: "<<leptonPtr->isMuon()<<", pt: "<<leptonPtr->pt()<<std::endl;
+            //std::cout<<fr<<std::endl;
 
             weight *= ( - fr / ( 1. - fr ) );
         }
@@ -169,32 +172,36 @@ int main( int argc, char* argv[] ){
     TreeReader treeReader( sampleListFile, sampleDirectory );
 
     unsigned numberOfSamples = treeReader.numberOfSamples();
-    for( unsigned i = 0; i < numberOfSamples; ++i ){
-	std::cout<<"start processing sample n. "<<i+1<<" of "<<numberOfSamples<<std::endl;
+    for (unsigned i = 0; i < numberOfSamples; ++i) {
+        std::cout << "start processing sample n. " << i + 1 << " of " << numberOfSamples << std::endl;
         treeReader.initSample();
 
-	long unsigned numberOfEntries = treeReader.numberOfEntries();
-	//long unsigned numberOfEntries = 1000; // temp for testing
-        std::cout<<"starting event loop for "<<numberOfEntries<<" events"<<std::endl;
-	for( long unsigned entry = 0; entry < numberOfEntries; ++entry ){
-            Event event = treeReader.buildEvent( entry );
+        long unsigned numberOfEntries = treeReader.numberOfEntries();
+        //long unsigned numberOfEntries = 1000; // temp for testing
+        std::cout << "starting event loop for " << numberOfEntries << " events" << std::endl;
+        for (long unsigned entry = 0; entry < numberOfEntries; ++entry) {
+            Event event = treeReader.buildEvent(entry);
 
             // apply event selection
-            if( !passClosureTestEventSelection( event, onlyMuonFakes, onlyElectronFakes ) ) continue;
-	    LightLeptonCollection lightLeptons = event.lightLeptonCollection();
+            if (!passClosureTestEventSelection(event, onlyMuonFakes, onlyElectronFakes)) continue;
 
-	    // fill variables
+            LightLeptonCollection lightLeptons = event.lightLeptonCollection();
+
+            // fill variables
             double mll = 0, mtW = 0;
-            if( event.hasOSSFLightLeptonPair() ){
+            if (event.hasOSSFLightLeptonPair())
+            {
                 mll = event.bestZBosonCandidateMass();
                 mtW = event.mtW();
-            } else{
-                mll = ( lightLeptons[0] + lightLeptons[1] ).mass();
-                mtW = mt( lightLeptons[2], event.met() );
             }
-            //compute plotting variables 
-            std::vector< double > variables = { 
-		lightLeptons[0].pt(), lightLeptons[1].pt(), lightLeptons[2].pt(),
+            else
+            {
+                mll = (lightLeptons[0] + lightLeptons[1]).mass();
+                mtW = mt(lightLeptons[2], event.met());
+            }
+            //compute plotting variables
+            std::vector<double> variables = {
+                lightLeptons[0].pt(), lightLeptons[1].pt(), lightLeptons[2].pt(),
                 lightLeptons[0].absEta(), lightLeptons[1].absEta(), lightLeptons[2].absEta(),
                 event.metPt(),
                 mtW,
@@ -202,36 +209,42 @@ int main( int argc, char* argv[] ){
                 lightLeptons.scalarPtSum() + event.metPt(),
                 event.HT(),
                 lightLeptons.mass(),
-                mt( lightLeptons.objectSum(), event.met() ),
-                static_cast< double >( event.numberOfJets() ),
-                static_cast< double >( event.numberOfMediumBTaggedJets() ),
-                static_cast< double >( event.numberOfVertices() )
-            };
+                mt(lightLeptons.objectSum(), event.met()),
+                static_cast<double>(event.numberOfJets()),
+                static_cast<double>(event.numberOfMediumBTaggedJets()),
+                static_cast<double>(event.numberOfVertices())};
 
-            // event is 'observed' if all leptons are tight 
+            // event is 'observed' if all leptons are tight
             bool isObserved = true;
-	    double weight = event.weight();
-            for( const auto& leptonPtr : lightLeptons ){
-                if( !leptonPtr->isTight() ){
+            double weight = event.weight();
+            for (const auto &leptonPtr : lightLeptons)
+            {
+                if (!leptonPtr->isTight())
+                {
                     isObserved = false;
                 }
             }
 
-            if( isObserved ){
-                for( std::vector< double >::size_type v = 0; v < variables.size(); ++v ){
-                    observedHists[v]->Fill( std::min( variables[v],  histInfoVec[v].maxBinCenter() ), 
-					    weight );
-                }
-            } else {
-
-		//compute event weight with fake-rate
-		weight = weight*fakeRateWeight( event, fakeRateMap_muon, fakeRateMap_electron );
-		for( std::vector< double >::size_type v = 0; v < variables.size(); ++v ){
-                    predictedHists[v]->Fill( std::min( variables[v],  histInfoVec[v].maxBinCenter() ), 
-						weight );
+            if (isObserved)
+            {
+                for (std::vector<double>::size_type v = 0; v < variables.size(); ++v)
+                {
+                    observedHists[v]->Fill(std::min(variables[v], histInfoVec[v].maxBinCenter()),
+                                           weight);
                 }
             }
-	    /*std::cout<<"----- event ------"<<std::endl;
+            else
+            {
+
+                //compute event weight with fake-rate
+                weight = weight * fakeRateWeight(event, fakeRateMap_muon, fakeRateMap_electron);
+                for (std::vector<double>::size_type v = 0; v < variables.size(); ++v)
+                {
+                    predictedHists[v]->Fill(std::min(variables[v], histInfoVec[v].maxBinCenter()),
+                                            weight);
+                }
+            }
+            /*std::cout<<"----- event ------"<<std::endl;
 	    for(const auto& leptonPtr : lightLeptons ){
 		std::cout<<*leptonPtr<<std::endl;
 		std::cout<<"is prompt"<<leptonPtr->isPrompt()<<std::endl;

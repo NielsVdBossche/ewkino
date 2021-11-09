@@ -4,8 +4,11 @@
 import sys
 import os
 # in order to import local functions: append location to sys.path
-sys.path.append(os.path.abspath('../skimmer'))
-from jobSubmission import submitQsubJob, initializeJobScript
+#sys.path.append(os.path.abspath('../skimmer'))
+#from jobSubmission import submitQsubJob, initializeJobScript
+
+sys.path.append(os.path.abspath('../'))
+from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript
 
 # set global properties
 flavours = ['muon','electron']
@@ -47,12 +50,13 @@ for flavour,mvathreshold in zip(flavours,mvathresholds):
 
 		for i in thisyearindices:
 			with open(script_name,'w') as script:
-				initializeJobScript(script)
+				initJobScript(script)
 				script.write('cd {}\n'.format(cwd))
 				command = './fillMagicFactor {} {} {} {} {} {} {}'.format(flavour,year,
 											leptonMVA,mvathreshold,
 											sampledirectory,samplelist,i)
 				script.write(command+'\n')
-			submitQsubJob(script_name)
+			#submitQsubJob(script_name)
+			submitScriptAsCondorJob(script_name)
 			# alternative: run locally
 			#os.system('bash '+script_name)

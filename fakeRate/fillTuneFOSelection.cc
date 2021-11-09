@@ -86,7 +86,7 @@ void fillTuneFOSelection( const std::string& leptonFlavor, const std::string& ye
 	Event event = treeReader.buildEvent( entry ); //no need to read triggers 
     
         // select- and clean leptons and require exactly 1 loose lepton
-	// note: at least one loose lepton instead of exactly?
+	    // note: at least one loose lepton instead of exactly?
         event.removeTaus();
         event.selectLooseLeptons();
         event.cleanElectronsFromLooseMuons();	
@@ -97,58 +97,74 @@ void fillTuneFOSelection( const std::string& leptonFlavor, const std::string& ye
 
         for( const auto& leptonPtr : event.lightLeptonCollection() ){
 
-            LightLepton& lepton = *leptonPtr;
+            LightLepton &lepton = *leptonPtr;
 
-	    // select correct lepton flavor
-            if( isMuon && !lepton.isMuon() ) continue;
-            if( !isMuon && !lepton.isElectron() ) continue;
+            // select correct lepton flavor
+            if (isMuon && !lepton.isMuon())
+                continue;
+            if (!isMuon && !lepton.isElectron())
+                continue;
 
-            // veto prompt leptons and leptons originating from photons 
-            if( lepton.isPrompt() ) continue; 
+            // veto prompt leptons and leptons originating from photons
+            if (lepton.isPrompt())
+                continue;
 
             // make sure lepton passes the minimum pt requirement (set when defining the pT histograms)
-            if( lepton.pt() < minPt ) continue;
+            if (lepton.pt() < minPt)
+                continue;
 
             // select only leptons that pass the baseline FO selection
             // notice: check if FO ID is defined correctly at this stage, only baseline cuts applied!
-	    // (i.e. the cuts for which we try to find the value here should not already be applied in the FO ID)
-            if( !lepton.isFO() ) continue;
+            // (i.e. the cuts for which we try to find the value here should not already be applied in the FO ID)
+            if (!lepton.isFO())
+                continue;
 
-	    // check whether lepton comes from a b-quark 
-	    // ( provenanceCompressed = 1 ) or c-quark decay ( provenanceCompressed = 2 )
-            bool isHeavyFlavor = ( lepton.provenanceCompressed() == 1 || 
-	    			lepton.provenanceCompressed() == 2 );
+            // check whether lepton comes from a b-quark
+            // ( provenanceCompressed = 1 ) or c-quark decay ( provenanceCompressed = 2 )
+            bool isHeavyFlavor = (lepton.provenanceCompressed() == 1 ||
+                                  lepton.provenanceCompressed() == 2);
 
-	    // loop over additional cuts
-	    for( unsigned ptRatioI = 0; ptRatioI < ptRatioCuts.size(); ++ptRatioI ){
-		for( unsigned deepFlavorI = 0; deepFlavorI < deepFlavorCutCollection.size(); 
-		++deepFlavorI ){
-		    // compute histogram vector index
-	            auto histIndex = categories.index( {ptRatioI, deepFlavorI } );
-		    // compute value that will be filled in the histograms
-		    double pt = std::min( lepton.pt(), ptHistInfo.maxBinCenter() );
-		    // if the lepton is tight (hence also FO), fill it in num and denom
-		    if( lepton.isTight() ){
-			if( isHeavyFlavor ){
-			    heavyFlavorNumerator[ histIndex ]->Fill( pt , event.weight() );
-			    heavyFlavorDenominator[ histIndex ]->Fill( pt , event.weight() );
-			}
-			else{
-			    lightFlavorNumerator[ histIndex ]->Fill( pt , event.weight() );
-			    lightFlavorDenominator[ histIndex ]->Fill( pt , event.weight() );
-			}
-		    }
-		    // else (non-tight): apply additional cuts and fill it in denom
-		    else{
-			if( lepton.ptRatio() < ptRatioCuts[ ptRatioI ] ) continue;
-			if( lepton.closestJetDeepFlavor() >= 
-			deepFlavorCutCollection[ deepFlavorI ].cut( lepton.uncorrectedPt() ) ) continue;
-			if( isHeavyFlavor ){
-			    heavyFlavorDenominator[ histIndex ]->Fill( pt , event.weight() );
-			} else {
-			    lightFlavorDenominator[ histIndex ]->Fill( pt , event.weight() );
-			}
-		    }
+            // loop over additional cuts
+            for (unsigned ptRatioI = 0; ptRatioI < ptRatioCuts.size(); ++ptRatioI)
+            {
+                for (unsigned deepFlavorI = 0; deepFlavorI < deepFlavorCutCollection.size();
+                     ++deepFlavorI)
+                {
+                    // compute histogram vector index
+                    auto histIndex = categories.index({ptRatioI, deepFlavorI});
+                    // compute value that will be filled in the histograms
+                    double pt = std::min(lepton.pt(), ptHistInfo.maxBinCenter());
+                    // if the lepton is tight (hence also FO), fill it in num and denom
+                    if (lepton.isTight())
+                    {
+                        if (isHeavyFlavor)
+                        {
+                            heavyFlavorNumerator[histIndex]->Fill(pt, event.weight());
+                            heavyFlavorDenominator[histIndex]->Fill(pt, event.weight());
+                        }
+                        else
+                        {
+                            lightFlavorNumerator[histIndex]->Fill(pt, event.weight());
+                            lightFlavorDenominator[histIndex]->Fill(pt, event.weight());
+                        }
+                    }
+                    // else (non-tight): apply additional cuts and fill it in denom
+                    else
+                    {
+                        if (lepton.ptRatio() < ptRatioCuts[ptRatioI])
+                            continue;
+                        if (lepton.closestJetDeepFlavor() >=
+                            deepFlavorCutCollection[deepFlavorI].cut(lepton.uncorrectedPt()))
+                            continue;
+                        if (isHeavyFlavor)
+                        {
+                            heavyFlavorDenominator[histIndex]->Fill(pt, event.weight());
+                        }
+                        else
+                        {
+                            lightFlavorDenominator[histIndex]->Fill(pt, event.weight());
+                        }
+                    }
                 }
             }
         }
@@ -161,10 +177,10 @@ void fillTuneFOSelection( const std::string& leptonFlavor, const std::string& ye
     TFile* histogram_file = TFile::Open( file_name.c_str(), "RECREATE" );
 
     for(unsigned i=0; i < heavyFlavorNumerator.size(); ++i){
-	heavyFlavorNumerator[i]->Write();
-	heavyFlavorDenominator[i]->Write();
-	lightFlavorNumerator[i]->Write();
-	lightFlavorDenominator[i]->Write();
+        heavyFlavorNumerator[i]->Write();
+        heavyFlavorDenominator[i]->Write();
+        lightFlavorNumerator[i]->Write();
+        lightFlavorDenominator[i]->Write();
     }   
 
     histogram_file->Close();

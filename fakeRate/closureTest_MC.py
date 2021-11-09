@@ -27,18 +27,18 @@ if not os.path.exists('./closureTest_MC'):
 # loop and sumbit jobs
 cwd = os.getcwd()
 for year in years:
-    for flavour in flavours:
-	for process in processes:
-	    script_name = 'closureTest_MC.sh'
-	    samplelist = os.path.join(samplelistdirectory,
-			    'samples_closureTest_'+process+'_'+year+'.txt')
-	    with open(script_name,'w') as script:
-		initializeJobScript(script)
-		script.write('cd {}\n'.format(cwd))
-		command = './closureTest_MC {} {} {} {} {} {} {}'.format(
-			    isMCFR,use_mt,process,year,flavour,
-			    sampledirectory,samplelist)
-		script.write(command+'\n')
-	    submitQsubJob(script_name)
-	    # alternative: run locally
-	    #os.system('bash '+script_name)
+	for flavour in flavours:
+		for process in processes:
+			script_name = 'closureTest_MC.sh'
+			samplelist = os.path.join(samplelistdirectory,
+					'samples_closureTest_'+process+'_'+year+'.txt')
+			with open(script_name,'w') as script:
+				initializeJobScript(script)
+				script.write('cd {}\n'.format(cwd))
+				command = './closureTest_MC {} {} {} {} {} {} {}'.format(
+						isMCFR,use_mt,process,year,flavour,
+						sampledirectory,samplelist)
+				script.write(command+'\n')
+			submitQsubJob(script_name)
+			# alternative: run locally
+			#os.system('bash '+script_name)
