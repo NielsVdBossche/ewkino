@@ -202,9 +202,9 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         (*lightLeps)[0].leptonMVATOP(),
         (*lightLeps)[1].leptonMVATOP(),
 
-        (*jets)[0].pt(),
-        (*jets)[1].pt(),
-        (*jets)[2].pt(),
+        (jets->size() > 0 ? (*jets)[0].pt() : 0.),
+        (jets->size() > 1 ? (*jets)[1].pt() : 0.),
+        (jets->size() > 2 ? (*jets)[2].pt() : 0.),
         (jets->size() > 3 ? (*jets)[3].pt() : 0.),
         double(bJets->size()),
         double(selec->numberOfLooseBJets()),
@@ -223,18 +223,18 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         lightLeps->scalarPtSum(), // LT
         double(lightLeps->size()),
 
-        jets->at(0)->deepFlavor(),
-        jets->at(1)->deepFlavor(),
-        jets->at(2)->deepFlavor(),
+        (jets->size() > 0 ? jets->at(0)->deepFlavor() : -1.),
+        (jets->size() > 1 ? jets->at(1)->deepFlavor() : -1.),
+        (jets->size() > 2 ? jets->at(2)->deepFlavor() : -1.),
         (jets->size() > 3 ? jets->at(3)->deepFlavor() : -1.)
 
     };
 
     jets->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
 
-    fillVal.push_back(jets->at(0)->deepFlavor());
-    fillVal.push_back(jets->at(1)->deepFlavor());
-    fillVal.push_back(jets->at(2)->deepFlavor());
+    fillVal.push_back(jets->size() > 0 ? jets->at(0)->deepFlavor() : -1.);
+    fillVal.push_back(jets->size() > 1 ? jets->at(1)->deepFlavor() : -1.);
+    fillVal.push_back(jets->size() > 2 ? jets->at(2)->deepFlavor() : -1.);
     fillVal.push_back(jets->size() > 3 ? jets->at(3)->deepFlavor() : -1.);
 
 
