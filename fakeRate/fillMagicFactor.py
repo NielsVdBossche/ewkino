@@ -50,7 +50,7 @@ for flavour,mvathreshold in zip(flavours,mvathresholds):
 
 		for i in thisyearindices:
 			with open(script_name,'w') as script:
-				initJobScript(script)
+				initJobScript(script_name)
 				script.write('cd {}\n'.format(cwd))
 				command = './fillMagicFactor {} {} {} {} {} {} {}'.format(flavour,year,
 											leptonMVA,mvathreshold,
