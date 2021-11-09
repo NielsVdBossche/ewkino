@@ -301,6 +301,10 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
         HistInfo( "B-score_BTagSubLeadJet_" + flag, "DeepFlavor score (j2)", 20 , -1., 1.),
         HistInfo( "B-score_BTagThirdJet_" + flag, "DeepFlavor score (j3)", 20 , -1., 1.),
         HistInfo( "B-score_BTagFourthJet_" + flag, "DeepFlavor score (j4)", 20 , -1., 1.),
+
+        HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS)", 15, 50, 125),
+        HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll}(low)", 10, 5, 15)
+
     };
 
     if (multilep) {

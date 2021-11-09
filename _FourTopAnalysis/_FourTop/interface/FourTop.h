@@ -72,7 +72,8 @@ class FourTop {
         Double_t min_dr_lep_b, sec_min_dr_lep_b;
         Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Double_t ptLepOne, ptLepTwo, ptLepThree;
-
+        Double_t bTagLead, bTagSub, bTagThird, bTagFourth;
+        
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
@@ -87,6 +88,7 @@ class FourTop {
         
         // Main loop functions
         void analyze();
+        void analyzeLean();
         void createMVATrainingSamples();
 
         void linkMVAVariables(TTree* tree, bool isML);

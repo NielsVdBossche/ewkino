@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   analysisLean.sh
+
+log         =   /user/nivanden/condor/logs/AnalysisLean_$(ClusterId).log
+error       =   /user/nivanden/condor/error/AnalysisLean_$(ClusterId).err
+output      =   /user/nivanden/condor/output/AnalysisLean_$(ClusterId).out
+
+queue

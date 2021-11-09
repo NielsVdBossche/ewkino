@@ -54,4 +54,11 @@ void FourTop::fillMVAVariables(bool isML) {
     if (isML) {
         ptLepThree   =  lightLeps->at(2)->pt();
     }
+
+    jetCol->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
+
+    bTagLead = jetCol->at(0)->deepFlavor();
+    bTagSub = jetCol->at(1)->deepFlavor();
+    bTagThird = jetCol->at(2)->deepFlavor();
+    bTagFourth = jetCol->size() > 3 ? jetCol->at(3)->deepFlavor() : -1.;
 }

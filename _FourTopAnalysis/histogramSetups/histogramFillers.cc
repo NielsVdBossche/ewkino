@@ -238,6 +238,33 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     fillVal.push_back(jets->size() > 3 ? jets->at(3)->deepFlavor() : -1.);
 
 
+    if (selec->getEvent()->hasOSSFLeptonPair()) {
+        double mass = selec->getEvent()->bestZBosonCandidateMass();
+        fillVal.push_back(mass);
+    } else {
+        fillVal.push_back(0.);
+
+    }
+
+    unsigned currentSize = fillVal.size();
+    for( const auto& leptonPtrPair : lightLeps->pairCollection() ){
+        //veto SF pairs of low mass
+        Lepton& lepton1 = *( leptonPtrPair.first );
+        Lepton& lepton2 = *( leptonPtrPair.second );
+        if(! sameFlavor( lepton1, lepton2 )){
+            continue;
+        }
+        if(( lepton1 + lepton2 ).mass() < 15.){
+            fillVal.push_back((lepton1 + lepton2).mass());
+            break;
+        }
+    }
+
+    if (currentSize == fillVal.size()) {
+        fillVal.push_back(16.);
+    }
+
+
     if (multilep) {
         fillVal.push_back((*lightLeps)[2].pt());
         fillVal.push_back((*lightLeps)[2].eta());

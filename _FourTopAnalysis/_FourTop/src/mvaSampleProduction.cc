@@ -9,6 +9,11 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     tree->Branch("N_b_loose",       &n_b_loose,     "N_b_loose/D");
     tree->Branch("dr_bJets",        &deltaRBjets,   "dr_bJets/D");
 
+    tree->Branch("bTagLead",        &bTagLead,      "bTagLead/D");
+    tree->Branch("bTagSub",         &bTagSub,       "bTagSub/D");
+    tree->Branch("bTagThird",       &bTagThird,     "bTagThird/D");
+    tree->Branch("bTagFourth",      &bTagFourth,    "bTagFourth/D");
+
     tree->Branch("dr_leps",         &dRleps,        "dr_leps/D");
     tree->Branch("aziAngle",        &aziAngle,      "aziAngle/D");
     tree->Branch("ht",              &ht,            "ht/D");
