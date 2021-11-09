@@ -49,9 +49,9 @@ for flavour,mvathreshold in zip(flavours,mvathresholds):
 		print('found '+str(len(thisyearindices))+' samples for '+year+' '+flavour+'s.')
 
 		for i in thisyearindices:
-			with open(script_name,'w') as script:
-				initJobScript(script_name)
-				script.write('cd {}\n'.format(cwd))
+			initJobScript(script_name)
+			with open(script_name,'a') as script:
+				#script.write('cd {}\n'.format(cwd))
 				command = './fillMagicFactor {} {} {} {} {} {} {}'.format(flavour,year,
 											leptonMVA,mvathreshold,
 											sampledirectory,samplelist,i)
