@@ -24,29 +24,31 @@ if not os.path.exists('./fillMCFakeRateMeasurement'):
 # loop and submit jobs
 cwd = os.getcwd()
 for year in years:
-    for flavour in flavours:
-	samplelist = os.path.join(samplelistdirectory,
-		    'samples_tunefoselection_'+flavour+'_'+year+'.txt')
-	# check number of samples
-	nsamples = 0
-	with open(samplelist) as sf:
-	    for sl in sf:
-		if(sl[0] == '#'): continue
-		if(sl[0] == '\n'): continue
-		nsamples += 1
-	print('found '+str(nsamples)+' samples for '+year+' '+flavour+'s.')
+	for flavour in flavours:
+		samplelist = os.path.join(samplelistdirectory,
+				'samples_tunefoselection_'+flavour+'_'+year+'.txt')
+		# check number of samples
+		nsamples = 0
+		with open(samplelist) as sf:
+			for sl in sf:
+				if(sl[0] == '#'): continue
+				if(sl[0] == '\n'): continue
+				nsamples += 1
+		print('found '+str(nsamples)+' samples for '+year+' '+flavour+'s.')
         for i in range(nsamples):
-	    if(istestrun and i!=11): continue
-            script_name = 'fillMCFakeRateMeasurement.sh'
-            with open(script_name,'w') as script:
-                initializeJobScript(script)
-                script.write('cd {}\n'.format(cwd))
-                command = './fillMCFakeRateMeasurement {} {} {} {} {} {}'.format(
-			    flavour,year,sampledirectory,samplelist,i,istestrun)
-                script.write(command+'\n')
-	    if not istestrun:
-		submitQsubJob(script_name)
-            # alternative: run locally
-	    else:
-		os.system('bash '+script_name)
+			if(istestrun and i!=11): continue
+			
+			script_name = 'fillMCFakeRateMeasurement.sh'
+			with open(script_name,'w') as script:
+				initializeJobScript(script)
+				script.write('cd {}\n'.format(cwd))
+				command = './fillMCFakeRateMeasurement {} {} {} {} {} {}'.format(
+				flavour,year,sampledirectory,samplelist,i,istestrun)
+				script.write(command+'\n')
+
+			if not istestrun:
+				submitQsubJob(script_name)
+				# alternative: run locally
+			else:
+				os.system('bash '+script_name)
 

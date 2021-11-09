@@ -254,10 +254,10 @@ void fillFakeRateMeasurementHistograms(const std::string& leptonFlavor, const st
 }  
 
 void fillMCFakeRateMeasurementHistograms( const std::string& flavor, const std::string& year, 
-					    const std::string& sampleDirectory, 
-					    const std::string& sampleList,
-					    const unsigned sampleIndex,
-					    const bool isTestRun ){
+                                            const std::string& sampleDirectory, 
+                                            const std::string& sampleList,
+                                            const unsigned sampleIndex,
+                                            const bool isTestRun ){
 
     std::cout<<"starting function fillMCFakeRateMeasurementHistograms"<<std::endl;
     fakeRate::checkFlavorString( flavor );
@@ -335,44 +335,44 @@ void fillMCFakeRateMeasurementHistograms( const std::string& flavor, const std::
     std::cout<<"start event loop for "<<numberOfEntries<<" events."<<std::endl;
     for( long unsigned entry = 0; entry < numberOfEntries; ++entry ){
         Event event = treeReader.buildEvent( entry );
-	if( isTestRun ){
-	    /*std::cout << "-------------------------" << std::endl;
-	    std::cout << "event ID: " << event.runNumber() << "/" << event.luminosityBlock();
-	    std::cout << "/" << event.eventNumber() << std::endl;
-	    for( auto lepton : event.leptonCollection() ){
-		lepton->print();
-		std::cout << std::endl;
-	    }*/
-	}
+        if( isTestRun ){
+            /*std::cout << "-------------------------" << std::endl;
+            std::cout << "event ID: " << event.runNumber() << "/" << event.luminosityBlock();
+            std::cout << "/" << event.eventNumber() << std::endl;
+            for( auto lepton : event.leptonCollection() ){
+            lepton->print();
+            std::cout << std::endl;
+            }*/
+        }
 
-	// apply MET filters (not included in passFakeRateEventSelection!)
-	if( !event.passMetFilters() ) continue;
+        // apply MET filters (not included in passFakeRateEventSelection!)
+        if( !event.passMetFilters() ) continue;
 
-        // apply fake-rate selection
-	// arguments: event, onlyMuons, onlyElectrons, onlyTight, requireJet, deltaR, jetPt (def 25) 
-        if( !fakeRate::passFakeRateEventSelection( event, isMuon, !isMuon, false, true, 0.7) ){
-	    continue;
-	}
+            // apply fake-rate selection
+        // arguments: event, onlyMuons, onlyElectrons, onlyTight, requireJet, deltaR, jetPt (def 25) 
+            if( !fakeRate::passFakeRateEventSelection( event, isMuon, !isMuon, false, true, 0.7) ){
+            continue;
+        }
 
         LightLepton& lepton = event.lightLeptonCollection()[ 0 ];
 
-        // lepton should be nonprompt
+            // lepton should be nonprompt
         if( lepton.isPrompt() ) continue;
-	// note: in the line below leptons from photons were excluded, 
-	// but this doesn't seem to be correct
-        //if( lepton.matchPdgId() == 22 ) continue;
+            // note: in the line below leptons from photons were excluded, 
+            // but this doesn't seem to be correct
+            //if( lepton.matchPdgId() == 22 ) continue;
 
-	if( isTestRun ){
-	    //std::cout << "event passed FO selection" << std::endl;
-	    std::cout << "event ID: " << event.runNumber() << "/" << event.luminosityBlock();
-            std::cout << "/" << event.eventNumber() << std::endl;
-	    std::cout << "(scaled) weight: " << event.weight() << std::endl;
-	    //if( event.eventNumber()==3088713 ){
-		//std::cout << lepton << std::endl;
-	    //}
-	}
+        if( isTestRun ){
+            //std::cout << "event passed FO selection" << std::endl;
+            std::cout << "event ID: " << event.runNumber() << "/" << event.luminosityBlock();
+                std::cout << "/" << event.eventNumber() << std::endl;
+            std::cout << "(scaled) weight: " << event.weight() << std::endl;
+            //if( event.eventNumber()==3088713 ){
+            //std::cout << lepton << std::endl;
+            //}
+        }
 
-	double weight = event.weight();
+        double weight = event.weight();
 
         // fill 2D denominator histogram 
         histogram::fillValues( denominatorMap.get(), lepton.pt(), lepton.absEta(), weight );
@@ -381,18 +381,18 @@ void fillMCFakeRateMeasurementHistograms( const std::string& flavor, const std::
         if( lepton.isTight() ){
             histogram::fillValues(numeratorMap.get(), lepton.pt(), lepton.absEta(), weight );
         }
-    
-	// fill heavy flavour 1D histograms
-	if(lepton.provenanceCompressed()==1 || lepton.provenanceCompressed()==2){
-	    heavydenominatorMap.get()->Fill(lepton.pt(), weight);
-	    if(lepton.isTight()) heavynumeratorMap.get()->Fill(lepton.pt(), weight);
-	}
+        
+        // fill heavy flavour 1D histograms
+        if(lepton.provenanceCompressed()==1 || lepton.provenanceCompressed()==2){
+            heavydenominatorMap.get()->Fill(lepton.pt(), weight);
+            if(lepton.isTight()) heavynumeratorMap.get()->Fill(lepton.pt(), weight);
+        }
 
-	// fill light flavour 1D histograms
-	else{
-	    lightdenominatorMap.get()->Fill(lepton.pt(), weight);
+        // fill light flavour 1D histograms
+        else {
+            lightdenominatorMap.get()->Fill(lepton.pt(), weight);
             if(lepton.isTight()) lightnumeratorMap.get()->Fill(lepton.pt(), weight);
-	}
+        }
     }
 
     std::cout<<"finished event loop"<<std::endl;
