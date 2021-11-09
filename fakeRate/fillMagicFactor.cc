@@ -74,6 +74,8 @@ void determineMagicFactor( const std::string& leptonFlavor, const std::string& y
         // select loose leptons
         event.selectLooseLeptons();
         event.cleanElectronsFromLooseMuons();
+
+        event.makeSubLeptonCollections();
         
         for( const auto& leptonPtr : event.lightLeptonCollection() ){
 
