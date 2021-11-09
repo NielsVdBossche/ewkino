@@ -294,7 +294,7 @@ bool TreeReader::is2016PostVFP() const{
 
 bool TreeReader::is2016() const{
     checkCurrentSample();
-    return _currentSamplePtr->is2016PreVFP() || _currentSamplePtr->is2016PostVFP();
+    return _currentSamplePtr->is2016PreVFP() || _currentSamplePtr->is2016PostVFP() || _currentSamplePtr->is2016();
 }
 
 

@@ -17,7 +17,7 @@ class JetSelector{
                 return isGood2016PreVFP();
             } else if (jetPtr->is2016PostVFP()) {
                 return isGood2016PostVFP();
-            } else if( jetPtr->is2018() ){
+            } else if( jetPtr->is2017() ){
                 return isGood2017();
             } else {
                 return isGood2018();

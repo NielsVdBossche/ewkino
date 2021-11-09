@@ -86,18 +86,18 @@ void determineMagicFactor( const std::string& leptonFlavor, const std::string& y
 
             // apply cone-correction to leptons failing the MVA cut 
             double ptVal = leptonPtr->pt();
-	    double mvaVal = (leptonMVA=="leptonMVAttH") ? leptonPtr->leptonMVAttH() : 
-			    (leptonMVA=="leptonMVAtZq") ? leptonPtr->leptonMVAtZq() : 0.;
-			    //(leptonMVA=="leptonMVATOP") ? leptonPtr->leptonMVATOP() : 0.;
+	        double mvaVal = (leptonMVA=="leptonMVAttH") ? leptonPtr->leptonMVAttH() : 
+			                (leptonMVA=="leptonMVAtZq") ? leptonPtr->leptonMVAtZq() : 
+			                (leptonMVA=="leptonMVATOP") ? leptonPtr->leptonMVATOP() : 0.;
             if( mvaVal <= mvaThreshold ){
                 ptVal /= leptonPtr->ptRatio();
             }
 
-	    // fill histograms
-	    double weight = (event.weight()>0.) ? 1 : -1;
+            // fill histograms
+            double weight = (event.weight()>0.) ? 1 : -1;
             pTWeightedLeptonMVAHistogram->Fill( mvaVal , weight*ptVal );
             leptonMVAHistogram->Fill( mvaVal , weight );
-	}
+        }
     }
     std::cout<<"finished event loop"<<std::endl;
 

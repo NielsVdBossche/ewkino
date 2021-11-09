@@ -39,6 +39,7 @@ class Sample{
         bool isData() const { return _isData; }
         bool isMC() const { return !_isData; }
 
+        bool is2016() const {return !( _is2017 || _is2018);}
         bool is2016PreVFP() const { return !( _is2017 || _is2018 || _is2016PostVFP ); }
         bool is2016PostVFP() const {return _is2016PostVFP;}
         bool is2017() const { return _is2017; }

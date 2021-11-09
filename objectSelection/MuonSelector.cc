@@ -5,7 +5,7 @@
 
 
 double leptonMVACutMuon(){
-    return 0.85;
+    return 0.65;
 }
 
 
@@ -27,7 +27,7 @@ bool MuonSelector::isLooseBase() const{
     if (muonPtr->leptonMVATOP() < 0.5) return false;
     */
 
-    if (muonPtr->pt() <= 10) return false;
+    if (muonPtr->pt() <= 5) return false;
     if (muonPtr->absEta() >= 2.4) return false;
     if (! muonPtr->isMediumPOGMuon()) return false;
     //if (! muonPtr->isPFMuon())
@@ -39,7 +39,8 @@ bool MuonSelector::isLooseBase() const{
 
     // Tight charge requirements:
     if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
-    if (muonPtr->leptonMVATOP() < 0.05) return false;
+    //if (muonPtr->leptonMVATOP() < 0.05) return false;
+    // no mva req
 
     return true;
 }
@@ -87,67 +88,63 @@ bool MuonSelector::isFOBase() const{
     // Fakeable object
 
     if( !isLoose() ) return false;
-    //if( muonPtr->uncorrectedPt() <= 10 ) return false;
-    /*
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
-        if( muonPtr->ptRatio() <= 0.65 ) return false;
-    }
-    */
+    if( muonPtr->pt() <= 10 ) return false;
 
-    //if (muonPtr->pt() < 20) return false;
-    if (muonPtr->leptonMVATOP() < 0.65) return false;
+    if (muonPtr->leptonMVATOP() < 0.65) {
+        if( muonPtr->ptRatio() <= 0.45 ) return false;
+    }
 
     return true;
 }
 
 
 bool MuonSelector::isFO2016PreVFP() const{
-    /*
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016(), bTagWP::mediumDeepFlavor2016(), muonPtr->uncorrectedPt() );
+    
+    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
+        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PreVFP(), bTagWP::mediumDeepFlavor2016PreVFP(), muonPtr->uncorrectedPt() );
         if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
     } else {
-        if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016() ) return false;
+        if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016PreVFP() ) return false;
     }
-    */
+    
     return true;
 }
 
 bool MuonSelector::isFO2016PostVFP() const{
-    /*
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016(), bTagWP::mediumDeepFlavor2016(), muonPtr->uncorrectedPt() );
+    
+    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
+        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PostVFP(), bTagWP::mediumDeepFlavor2016PostVFP(), muonPtr->uncorrectedPt() );
         if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
     } else {
-        if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016() ) return false;
+        if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016PostVFP() ) return false;
     }
-    */
+    
     return true;
 }
 
 
 bool MuonSelector::isFO2017() const{
-    /*
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+    
+    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
         double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2017(), bTagWP::mediumDeepFlavor2017(), muonPtr->uncorrectedPt() );
         if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
     } else {
         if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2017() ) return false;
     }
-    */
+    
     return true;
 }
 
 
 bool MuonSelector::isFO2018() const{
-    /*
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+    
+    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
         double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2018(), bTagWP::mediumDeepFlavor2018(), muonPtr->uncorrectedPt() );
         if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
     } else {
         if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2018() ) return false;
     }
-    */
+    
     return true;
 }
 
