@@ -26,7 +26,7 @@ namespace mvaDataManager {
     TMVA::DataLoader* buildDataLoader(std::string& sampleList, std::string& treeName, mvaConfiguration config);
 
     // All other helpful functions
-    std::pair<Double_t*, std::vector<Double_t>*> prepareTChain(TChain* chain, mvaConfiguration config);
+    std::pair<Double_t*, std::vector<Double_t>*> prepareTTree(TTree* chain, mvaConfiguration config);
     void readChainToLoader(TChain* chain, TString& className, TMVA::DataLoader* dataloader, std::pair<Double_t*, std::vector<Double_t>*>& vars);
 }
 

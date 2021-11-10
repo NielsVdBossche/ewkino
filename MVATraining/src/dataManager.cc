@@ -3,7 +3,7 @@
 #include "../../Tools/interface/parseTools.h"
 #include "../../Tools/interface/stringTools.h"
 
-std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTChain(TChain* chain, mvaConfiguration config) {
+std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree* chain, mvaConfiguration config) {
     Double_t* weight = new Double_t;
     *weight = 1.; // unless changed elsewhere
 
@@ -112,26 +112,55 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
     std::ifstream fileStream(sampleList);
     std::string line;
 
-    std::vector<TChain*> chains;
+    //std::vector<TChain*> chains;
+    TRandom3 *r = new TRandom3(777);
 
     while (getline(fileStream, line)) {
         if (parseTools::skipLine(line)) continue;
 
         std::string className = parseTools::splitNameAndValue(line).second;
         TString classNameAlt = className.c_str();
-        TChain* newClass = new TChain(treeName.c_str());
-        chains.push_back(newClass);
+        //TTree* newClassElement = new TChain(treeName.c_str());
+        //chains.push_back(newClass);
 
-        std::pair<Double_t*, std::vector<Double_t>*> vars = prepareTChain(newClass, config);
+        //std::pair<Double_t*, std::vector<Double_t>*> vars = prepareTTree(newClassElement, config);
 
         while (getline(fileStream, line) && ! stringTools::stringStartsWith(line, "End")) {
             if (parseTools::skipLine(line)) continue;
 
-            std::string currentFile = basePath + line;
-            newClass->Add(currentFile.c_str());
+            // split line in elements based on spaces
+            std::istringstream stream(line);
+            std::string fileName, splitFraction;
+
+            stream >> fileName;// >> splitFraction;
+
+            std::string currentFile = basePath + fileName;
+
+            TFile* input = new TFile(currentFile.c_str(), "open");
+            TTree* newClassElement  = (TTree*) input->Get(treeName.c_str());
+
+            std::pair<Double_t*, std::vector<Double_t>*> vars = prepareTTree(newClassElement, config);
+            
+            double ptrain = 0.8;
+            if (stream >> splitFraction) {
+                ptrain = std::stod(splitFraction);
+            }
+
+            for (int i=0; i < newClassElement->GetEntries(); i++) {
+                newClassElement->GetEntry(i);
+
+                float rnd = r->Rndm();
+                if (rnd < ptrain) {
+                    dataloader->AddTrainingEvent(className, *vars.second, *vars.first);
+                } else {
+                    dataloader->AddTestEvent(className, *vars.second, *vars.first);
+                }
+            }
+
+            input->Close();
         }
 
-        readChainToLoader(newClass, classNameAlt, dataloader, vars);
+        //readChainToLoader(newClass, classNameAlt, dataloader, vars);
     }
     
     dataloader->PrepareTrainingAndTestTree("","","SplitMode=Random:NormMode=NumEvents:!V");
