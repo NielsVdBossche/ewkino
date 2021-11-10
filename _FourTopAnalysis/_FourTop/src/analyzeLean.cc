@@ -41,6 +41,9 @@ void FourTop:: analyzeLean() {
             if (selection->numberOfLeps() < 2) continue; // atm we check our tight leps here, for nonprompt est, this becomes FO
             if (selection->numberOfLeps() == 2 && selection->getMediumLepCol()->hasOSPair()) continue;
 
+            if (selection->numberOfJets() < 2 || selection->numberOfMediumBJets() < 1) continue;
+            if (selection->getJetCol()->scalarPtSum() < 100) continue;
+
             // Apply scale factors
             // TODO
             
@@ -69,7 +72,7 @@ void FourTop:: analyzeLean() {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
-                continue;
+                //continue;
             }
 
             // Fill histograms
