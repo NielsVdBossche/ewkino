@@ -53,6 +53,11 @@ void FourTop::createMVATrainingSamples() {
         TTree* trainingTree_ML = new TTree("ML_tree", "ML_tree");
         linkMVAVariables(trainingTree_ML, true);
 
+        TTree* trainingTree_DL_loose = new TTree("DL_tree_loose", "DL_tree_loose");
+        linkMVAVariables(trainingTree_DL_loose, false);
+        TTree* trainingTree_ML_loose = new TTree("ML_tree_loose", "ML_tree_loose");
+        linkMVAVariables(trainingTree_ML_loose, true);
+
         std::cout << "Event loop" << std::endl;
 
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
@@ -64,6 +69,23 @@ void FourTop::createMVATrainingSamples() {
             currentEvent = treeReader->buildEventPtr( entry );
             selection->addNewEvent(currentEvent);
 
+            // first mass cleaning just to get rid of shit
+            if (! selection->passLowMassVeto()) {
+                continue;
+            } else if (! selection->passZBosonVeto()) {
+                continue;
+            }
+            
+            if (selection->passLeanSelection()) {
+                if (selection->numberOfLeps() == 2) {
+                    fillMVAVariables(false);
+                    trainingTree_DL_loose->Fill();
+                } else {
+                    fillMVAVariables(true);
+                    trainingTree_ML_loose->Fill();
+                }
+            }
+
             if (infuseNonPrompt && ttgOverlapCheck > 0) {
                 if (! selection->passBaselineEventSelectionWithAltLeptons()) {
                     continue;
@@ -72,12 +94,6 @@ void FourTop::createMVATrainingSamples() {
                 continue;
             }
 
-            if (! selection->passLowMassVeto()) {
-                continue;
-            } else if (! selection->passZBosonVeto()) {
-                continue;
-            }
-            
             if (! selection->passFullEventSelection()) {
                 // Full event selection should be the same as normal event selection.
                 continue;
@@ -103,7 +119,8 @@ void FourTop::createMVATrainingSamples() {
 
         trainingTree_DL->Write(trainingTree_DL->GetName(), TObject::kOverwrite);
         trainingTree_ML->Write(trainingTree_ML->GetName(), TObject::kOverwrite);
-
+        trainingTree_DL_loose->Write(trainingTree_DL_loose->GetName(), TObject::kOverwrite);
+        trainingTree_ML_loose->Write(trainingTree_ML_loose->GetName(), TObject::kOverwrite);
 
         currentOutputFile->Close();
     }

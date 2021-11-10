@@ -9,6 +9,8 @@ EventFourT::EventFourT() {
     mediumLeps = new LeptonCollection();
     jets = new JetCollection();
     bTagJets = new JetCollection();
+
+    topReco = new TopReconstructionNew(this);
 }
 
 void EventFourT::cleanSelection() {
@@ -47,6 +49,7 @@ void EventFourT::objectSelection() {
     nLooseB = event->numberOfLooseBTaggedJets();
     nLooseLep = looseLeps->size();
     nLep = mediumLeps->size();
+    ht = jets->scalarPtSum();
 }
 
 bool EventFourT::passBaselineEventSelection() {
@@ -67,7 +70,7 @@ bool EventFourT::passBaselineEventSelection() {
     if (bTagJets->size() < 1) return false;
 
     if (event->met().pt() < 25) return false;
-    if (jets->scalarPtSum() < 300) return false;
+    if (ht < 300) return false;
 
     return true;
 }
@@ -106,9 +109,28 @@ bool EventFourT::passZBosonVeto() {
     if (event->hasOSSFLeptonPair()) {
         double mass = event->bestZBosonCandidateMass();
         //if (mass > 76 && mass < 106) return false;
-        if (fabs(mass - particle::mZ) < 10.) return false;
+        if (fabs(mass - particle::mZ) < 7.5) return false;
     }
 
     return true;
 }
 
+bool EventFourT::passLeanSelection() {
+    if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
+    if (nLep == 2 && mediumLeps->hasOSPair()) return false;
+
+    if (nJets < 2 || nMediumB < 1) return false;
+    if (ht < 100) return false;
+
+    if (nLep == 3) {
+        if (ht < 200) return false;
+        if (nJets < 3) return false;
+    }
+
+    if (nLep == 2) {
+        if (ht < 300) return false;
+        if (nJets < 4) return false;
+    }
+    
+    return true;
+}

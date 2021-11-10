@@ -264,6 +264,14 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         fillVal.push_back(16.);
     }
 
+    TopReconstructionNew* topReco = selec->getTopReco();
+
+    topReco->RecoBestTwoTops();
+    fillVal.push_back(topReco->getBestRecoTop().first);
+    fillVal.push_back(topReco->getBestRecoTop().second);
+    fillVal.push_back(topReco->getSecondBestRecoTop().first);
+    fillVal.push_back(topReco->getSecondBestRecoTop().second);
+
 
     if (multilep) {
         fillVal.push_back((*lightLeps)[2].pt());

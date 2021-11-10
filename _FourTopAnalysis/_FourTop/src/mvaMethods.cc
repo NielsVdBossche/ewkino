@@ -43,6 +43,8 @@ void FourTop::fillMVAVariables(bool isML) {
 
     jetCol->sortByPt();
     ptJetOne         =  jetCol->at(0)->pt();
+    ptJetTwo         =  jetCol->at(1)->pt();
+    ptJetThree       =  (n_jets_f >= 3 ? jetCol->at(2)->pt() : 0.);
     ptJetFour        =  (n_jets_f >= 4 ? jetCol->at(3)->pt() : 0.);
     ptJetFive        =  (n_jets_f >= 5 ? jetCol->at(4)->pt() : 0.);
     ptJetSix         =  (n_jets_f >= 6 ? jetCol->at(5)->pt() : 0.);
@@ -53,12 +55,13 @@ void FourTop::fillMVAVariables(bool isML) {
 
     if (isML) {
         ptLepThree   =  lightLeps->at(2)->pt();
+        ptLepFour    =  lightLeps->at(3)->pt();
     }
 
     jetCol->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
 
     bTagLead = jetCol->at(0)->deepFlavor();
     bTagSub = jetCol->at(1)->deepFlavor();
-    bTagThird = jetCol->at(2)->deepFlavor();
+    bTagThird = jetCol->size() > 2 ? jetCol->at(2)->deepFlavor() : -1.;
     bTagFourth = jetCol->size() > 3 ? jetCol->at(3)->deepFlavor() : -1.;
 }

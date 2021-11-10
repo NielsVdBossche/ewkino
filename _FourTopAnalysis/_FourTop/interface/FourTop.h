@@ -18,6 +18,8 @@
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 
+#include "../../TopQuarkReconstruction/interface/TopReconstructionNew.h"
+
 
 class FourTop {
     private:
@@ -73,7 +75,7 @@ class FourTop {
         Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Double_t ptLepOne, ptLepTwo, ptLepThree;
         Double_t bTagLead, bTagSub, bTagThird, bTagFourth;
-        
+        Double_t ptJetTwo, ptJetThree, ptLepFour;
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...

@@ -11,6 +11,8 @@
 #include "../../Event/interface/Event.h"
 #include "../FourTopEventHandling/interface/EventFourT.h"
 
+#include "../TopQuarkReconstruction/interface/TopReconstructionNew.h"
+
 // Might move this functionality back to FourTop class itself
 
 namespace fourTopHists {

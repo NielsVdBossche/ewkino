@@ -302,9 +302,17 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
         HistInfo( "B-score_BTagThirdJet_" + flag, "DeepFlavor score (j3)", 20 , -1., 1.),
         HistInfo( "B-score_BTagFourthJet_" + flag, "DeepFlavor score (j4)", 20 , -1., 1.),
 
-        HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS)", 15, 50, 125),
-        HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll}(low)", 10, 5, 15)
+        HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 15, 50, 125),
+        HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll}(low) [GeV]", 10, 5, 15),
 
+        HistInfo( "LepJetPtRatio_LeadLep_" + flag, "p_{T} ratio (l1,j)", 20, 0, 2),
+        HistInfo( "LepJetPtRatio_SubLeadLep_" + flag, "p_{T} ratio (l2,j)", 20, 0, 2),
+
+        HistInfo( "BestTopMass_" + flag, "Best M_{top} [GeV]", 20, 100, 300),
+        HistInfo( "BestTopCorrWMass_" + flag, "M_{W} [GeV]", 10, 50, 150),
+
+        HistInfo( "SecondBestTopMass_" + flag, "Sec. best M_{top} [GeV]", 20, 100, 300),
+        HistInfo( "SecondBestTopCorrWMass_" + flag, "M_{W} [GeV]", 10, 50, 150)
     };
 
     if (multilep) {
@@ -313,6 +321,7 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
         histInfoVec->push_back( HistInfo( "leptonPhiThird_" + flag, "#phi (l3)", 12, - M_PI, M_PI) );
         histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 18, 25, 205) );
         histInfoVec->push_back( HistInfo( "leptonMvaTOPThird_" + flag, "score (l3)", 40, -1, 1) );
+        histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
 
         if (fourLep) {
             histInfoVec->push_back( HistInfo( "leptonPtFour_" + flag, "p_{T}(l4) [GeV]", 20, 0, 200) );
@@ -320,6 +329,7 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
             histInfoVec->push_back( HistInfo( "leptonPhiFour_" + flag, "#phi (l4)", 12, - M_PI, M_PI) );
             histInfoVec->push_back( HistInfo( "leptonEFour_" + flag, "E(l4) [GeV]", 18, 25, 205) );
             histInfoVec->push_back( HistInfo( "leptonMvaTOPFour_" + flag, "score (l4)", 40, -1, 1) );
+            histInfoVec->push_back( HistInfo( "LepJetPtRatio_FourthLep_" + flag, "p_{T} ratio (l4,j)", 20, 0, 2) );
         }
     }
 

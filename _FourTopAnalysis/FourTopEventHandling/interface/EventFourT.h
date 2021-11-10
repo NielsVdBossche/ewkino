@@ -10,6 +10,8 @@
 #include "../../../Event/interface/JetCollection.h"
 
 #include "../../../constants/particleMasses.h"
+#include "../../TopQuarkReconstruction/interface/TopReconstructionNew.h"
+
 
 enum eventClass {
     SSDL=2,
@@ -32,8 +34,11 @@ class EventFourT {
         JetCollection* bTagJets;
 
         int nJets, nMediumB, nTightB, nLooseB, nLooseLep, nLep;
+        double ht;
 
         bool isNormalSelected;
+
+        TopReconstructionNew* topReco;
         
     public:
 
@@ -53,6 +58,8 @@ class EventFourT {
         JetCollection* getJetCol() {return jets;}
         JetCollection* getBtagJetCol() {return bTagJets;}
 
+        TopReconstructionNew* getTopReco() {return topReco;}
+
         int numberOfJets() const {return nJets;}
         int numberOfMediumBJets() const {return nMediumB;}
         int numberOfTightBJets() const {return nTightB;}
@@ -64,6 +71,7 @@ class EventFourT {
         void objectSelection();
         bool passBaselineEventSelection();
         bool passFullEventSelection();
+        bool passLeanSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
 
