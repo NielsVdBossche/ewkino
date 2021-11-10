@@ -32,7 +32,7 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
         nameString << "B_";
     }
 
-    nameString << nTrees << "_" << depth;
+    nameString << nTrees << "_" << depth << "_" << std::setprecision(2) << shrinkage << "_" << cuts;
 
     optionString << ":IgnoreNegWeightsInTraining";
     std::cout << optionString.str() << std::endl;
