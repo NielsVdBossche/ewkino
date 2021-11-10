@@ -1,4 +1,4 @@
-TTTT            TTTTUnskimmed_2016PreVFP.root                                             0.01197
-TTTT            TTTTUnskimmed_2016PostVFP.root                                            0.01197
-TTTT            TTTTUnskimmed_2017.root                                                   0.01197
-TTTT            TTTTUnskimmed_2018.root                                                   0.01197
+TTTT            TTTTUnskimmed_2016PreVFP.root                                             0.01197           forceIs2016PreVFP
+TTTT            TTTTUnskimmed_2016PostVFP.root                                            0.01197           forceIs2016PostVFP
+TTTT            TTTTUnskimmed_2017.root                                                   0.01197           forceIs2017
+TTTT            TTTTUnskimmed_2018.root                                                   0.01197           forceIs2018
