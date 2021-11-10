@@ -18,9 +18,6 @@
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 
-#include "../../TopQuarkReconstruction/interface/TopReconstructionNew.h"
-
-
 class FourTop {
     private:
         std::vector<HistInfo>* histInfoVec_DL = nullptr; // Histogram for DL kinematics

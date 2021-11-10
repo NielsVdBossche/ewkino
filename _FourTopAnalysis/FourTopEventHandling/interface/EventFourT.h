@@ -12,6 +12,7 @@
 #include "../../../constants/particleMasses.h"
 #include "../../TopQuarkReconstruction/interface/TopReconstructionNew.h"
 
+class TopReconstructionNew;
 
 enum eventClass {
     SSDL=2,

@@ -4,6 +4,8 @@
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../../constants/particleMasses.h"
 
+class EventFourT;
+
 class TopReconstructionNew {
     private:
         EventFourT* selection;
