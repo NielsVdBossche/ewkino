@@ -44,6 +44,10 @@ void FourTop:: analyzeLean() {
             if (selection->numberOfJets() < 2 || selection->numberOfMediumBJets() < 1) continue;
             if (selection->getJetCol()->scalarPtSum() < 100) continue;
 
+            if (selection->numberOfLeps() == 2 && selection->getJetCol()->scalarPtSum() < 200) continue;
+            if (selection->numberOfLeps() < 4 && selection->numberOfJets() < 3) continue;
+
+
             // Apply scale factors
             // TODO
             
