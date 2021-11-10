@@ -44,8 +44,11 @@ void FourTop:: analyzeLean() {
             if (selection->numberOfJets() < 2 || selection->numberOfMediumBJets() < 1) continue;
             if (selection->getJetCol()->scalarPtSum() < 100) continue;
 
-            if (selection->numberOfLeps() == 2 && selection->getJetCol()->scalarPtSum() < 200) continue;
+            if (selection->numberOfLeps() == 3 && selection->getJetCol()->scalarPtSum() < 200) continue;
+            if (selection->numberOfLeps() == 2 && selection->getJetCol()->scalarPtSum() < 300) continue;
             if (selection->numberOfLeps() < 4 && selection->numberOfJets() < 3) continue;
+            if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 4) continue;
+
 
 
             // Apply scale factors
@@ -71,7 +74,7 @@ void FourTop:: analyzeLean() {
 
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
-                //continue;
+                continue;
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllHists(false, selection);
