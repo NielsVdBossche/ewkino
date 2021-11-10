@@ -10,11 +10,11 @@ TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* out
     return factory;
 }
 
-void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, bool gradientBoost, bool baggedBoost) {
+void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, double shrinkage, int cuts, bool baggedBoost) {
     std::stringstream optionString;
     std::stringstream nameString;
 
-    optionString << "!H:!V:NTrees=" << nTrees << ":MaxDepth=" << depth;
+    optionString << "!H:!V:NTrees=" << nTrees << ":MaxDepth=" << depth << ":nCuts=" << cuts;
 
     nameString << initsetup;
     
@@ -24,7 +24,7 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
     
 
 
-    optionString << ":BoostType=Grad:Shrinkage=0.10";
+    optionString << ":BoostType=Grad:Shrinkage=" << std::setprecision(2) << shrinkage;
     nameString << "G_";
     
     if (baggedBoost) {
@@ -47,14 +47,19 @@ void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader
 
 void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
     bool baggedBoost = false;
+    int nTrees[] = {100, 200, 300, 400, 500, 750, 1000, 1250, 1500, 2000};
+    int depths[] = {2, 3, 4, 5};
+    double shrinkages[] = {0.05, 0.1, 0.25, 0.5, 0.75, 1., 1.5, 2.};
+    int cuts[] = {10, 20, 30, 50, 75, 100, 200, 300};
 
-    for (int nTrees = 100; nTrees < 1001; nTrees += 50) {
-        for (int depths = 2; depths < 5; depths++) {
-            addBDT(factory, dataloader, initsetup, nTrees, depths, true, baggedBoost);
-            baggedBoost = true;
-            addBDT(factory, dataloader, initsetup, nTrees, depths, true, baggedBoost);
-
-            baggedBoost = false;
+    for (int i=0; i < 10; i++) { // trees
+        for (int j=0; j < 4; j++) { //depth
+            for (int k=0; k < 8; k++) { // shrink
+                for (int l=0; l < 8; l++) { // cuts
+                    addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
+                    //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], true);
+                }
+            }
         }
     }
 }
