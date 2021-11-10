@@ -72,7 +72,7 @@ void FourTop:: analyzeLean() {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
-                //continue;
+                continue;
             }
 
             // Fill histograms

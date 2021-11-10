@@ -9,6 +9,8 @@
 #include "../../../Event/interface/MuonCollection.h"
 #include "../../../Event/interface/JetCollection.h"
 
+#include "../../../constants/particleMasses.h"
+
 enum eventClass {
     SSDL=2,
     TriLep=3,
