@@ -300,6 +300,9 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
         HistInfo( "mtLeadLepMET_" + flag, "M_{T}(W) [GeV]", 20, 0, 200),
         HistInfo( "mtSubLeadLepMET_" + flag, "M_{T}(W) [GeV]", 20, 0, 200),
 
+        //HistInfo( "m2ll_" + flag, "MT", 10, 0, 100),
+        HistInfo( "m2llAlt_" + flag, "MT", 10, 0, 100),
+
         HistInfo( "B-score_BTagLeadJet_" + flag, "DeepFlavor score (j1)", 20 , -1., 1.),
         HistInfo( "B-score_BTagSubLeadJet_" + flag, "DeepFlavor score (j2)", 20 , -1., 1.),
         HistInfo( "B-score_BTagThirdJet_" + flag, "DeepFlavor score (j3)", 20 , -1., 1.),
@@ -317,8 +320,6 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
         HistInfo( "SecondBestTopMass_" + flag, "Sec. best M_{top} [GeV]", 20, 100, 300),
         HistInfo( "SecondBestTopCorrWMass_" + flag, "M_{W} [GeV]", 10, 50, 150),
 
-        HistInfo( "m2ll_" + flag, "MT", 10, 0, 100),
-        HistInfo( "m2llAlt_" + flag, "MT", 10, 0, 100)
 
 
     };
