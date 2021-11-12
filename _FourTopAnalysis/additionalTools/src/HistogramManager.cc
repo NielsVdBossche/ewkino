@@ -1,8 +1,8 @@
 #include "../interface/HistogramManager.h"
 
-HistogramManager::HistogramManager(std::string& channel, std::vector<HistInfo*>) {
+HistogramManager::HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo) {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ){
-        nonpromptHists->at(dist) = histInfo->at(dist)->makeHist( histInfo->at(dist)->name() + "_nonprompt");
+        nonpromptHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_nonprompt");
     }
 }
 
@@ -26,18 +26,18 @@ void HistogramManager::fillHistograms(std::vector<double>& fillValues, double ev
 void HistogramManager::newSample(std::string& uniqueSampleName) {
     // make new hists from stuff
     for( size_t dist = 0; dist < histInfo->size(); ++dist ){
-        currentSampleHists->at(dist) = histInfo->at(dist)->makeHist( histInfo->at(dist)->name() + "_" + uniqueSampleName);
+        currentSampleHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_" + uniqueSampleName);
     }
 }
 
 void HistogramManager::writeCurrentHistograms() {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ) {
-        currentSampleHists->at(dist)->Write(TString(histInfo->at(dist)->name()), TObject::kOverwrite);
+        currentSampleHists->at(dist)->Write(TString(histInfo->at(dist).name()), TObject::kOverwrite);
     }
 }
 
 void HistogramManager::writeNonpromptHistograms() {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ) {
-        nonpromptHists->at(dist)->Write(TString(histInfo->at(dist)->name()), TObject::kOverwrite);
+        nonpromptHists->at(dist)->Write(TString(histInfo->at(dist).name()), TObject::kOverwrite);
     }
 }

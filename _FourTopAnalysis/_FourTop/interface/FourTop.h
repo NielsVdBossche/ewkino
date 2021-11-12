@@ -14,6 +14,7 @@
 #include "../../histogramSetups/histogramSetup.h"
 #include "../../additionalTools/interface/histHelper.h"
 #include "../../additionalTools/interface/calculators.h"
+#include "../../additionalTools/interface/HistogramManager.h"
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"

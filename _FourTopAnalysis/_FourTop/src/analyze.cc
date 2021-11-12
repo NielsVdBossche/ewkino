@@ -12,6 +12,13 @@ void FourTop:: analyze() {
     // ->-> Fill histograms
     // Similar to ewkino example but using more of an object-oriented way of working... + more pointers!
 
+    // build histograms for kinematic variables
+    // use a fill vector builder and a int or something like that to specify setup?
+    // might be more useful... 
+    std::string channel = "DL";
+    std::vector<HistInfo>* infoDL = fourTopHists::allHists("DL", false, false);
+    HistogramManager* DLManager = new HistogramManager(channel, infoDL);
+
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
 
@@ -24,7 +31,7 @@ void FourTop:: analyze() {
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            //if (entry > 10000) break;
+            if (entry > 10000) break;
             delete currentEvent;
 
             // Initialize event
@@ -56,7 +63,7 @@ void FourTop:: analyze() {
             // Basic non-prompt handling (using MC to estimate the contribution):
             size_t fillIndex = sampleIndex;
             std::vector<double> fillVec;
-            
+            bool nonPrompt = false;
             // If nonprompt: fillIndex becomes index of nonprompt histograms
             LeptonCollection* lepCol;
             if (selection->isEventNormalSelected()) {
@@ -68,6 +75,7 @@ void FourTop:: analyze() {
             for (const auto& leptonPtr : *lepCol) {
                 if (! leptonPtr->isPrompt()) {
                     fillIndex = treeReader->numberOfSamples();
+                    nonPrompt = true;
                     break;
                 }
                 // TODO:
@@ -114,7 +122,8 @@ void FourTop:: analyze() {
             // Fill histograms
             if (selection->numberOfLeps() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
+                //histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
+                DLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 if (histInfoVec_mva_DL) {
                     std::vector<Float_t> scores = mva_DL->scoreEvent();
                     mva_DL->fillHistograms(scores, hists_mva_DL->at(fillIndex), currentEvent->weight());
@@ -168,9 +177,10 @@ void FourTop:: analyze() {
         gDirectory->cd(outdir.c_str());
 
         // Rewrite this to a dedicated function maybe, or something where we don't have to call sampleIndex each time?
-        for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-            hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
-        }
+        //for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
+        //    hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+        //}
+        DLManager->writeCurrentHistograms();
 
         for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
             hists_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
@@ -225,9 +235,10 @@ void FourTop:: analyze() {
     gDirectory->mkdir("nonPrompt");
     gDirectory->cd("nonPrompt");
 
-    for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-        hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
-    }
+    //for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
+    //    hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+    //}
+    DLManager->writeNonpromptHistograms();
 
     for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
         hists_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
