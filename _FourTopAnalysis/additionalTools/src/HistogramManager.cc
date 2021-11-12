@@ -1,6 +1,6 @@
 #include "../interface/HistogramManager.h"
 
-HistogramManager::HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo) {
+HistogramManager::HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo) : channel(channel), histInfo(histInfo) {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ){
         nonpromptHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_nonprompt");
     }
