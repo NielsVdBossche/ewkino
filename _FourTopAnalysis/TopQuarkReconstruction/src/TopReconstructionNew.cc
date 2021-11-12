@@ -31,13 +31,13 @@ std::pair<double, double> TopReconstructionNew::getBestTop(std::vector<unsigned>
     JetCollection* jets = selection->getJetCol();
 
     std::vector<int> newExcl;
-    double bestCurrentMass = 0.;
-    double bestCurrentW_mass = 0.;
+    double bestCurrentMass = 1000.;
+    double bestCurrentW_mass = 1000.;
 
     for (unsigned k = 0; k < jets->size(); k++) {
         Jet* jetOne = jets->at(k);
 
-        if (! jetOne->isBTaggedMedium()) continue;
+        if (! jetOne->isBTaggedLoose()) continue;
 
         if (std::find(exclusions.begin(), exclusions.end(), k) != exclusions.end()) continue;
 
