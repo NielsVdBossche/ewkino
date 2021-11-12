@@ -11,6 +11,7 @@ Even though its short, do the computation in a separate cc file to avoid having 
 
 namespace mt2{
     double mt2( const PhysicsObject&, const PhysicsObject&, const Met& );
+    double mt2Alt(const PhysicsObject&, const PhysicsObject&, const Met&);
 }
 
 #endif 

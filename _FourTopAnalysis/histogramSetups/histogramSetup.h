@@ -13,6 +13,8 @@
 
 #include "../TopQuarkReconstruction/interface/TopReconstructionNew.h"
 
+#include "../../Tools/interface/mt2.h"
+
 // Might move this functionality back to FourTop class itself
 
 namespace fourTopHists {

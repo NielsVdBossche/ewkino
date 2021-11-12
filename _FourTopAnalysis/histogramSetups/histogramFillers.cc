@@ -229,7 +229,11 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         (jets->size() > 3 ? jets->at(3)->deepFlavor() : -1.),
 
         mt(*lightLeps->at(0), selec->getEvent()->met()),
-        mt(*lightLeps->at(1), selec->getEvent()->met())
+        mt(*lightLeps->at(1), selec->getEvent()->met()),
+
+        mt2::mt2(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met()),
+        mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met())
+
     };
 
     jets->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
