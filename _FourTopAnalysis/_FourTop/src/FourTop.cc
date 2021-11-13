@@ -100,11 +100,11 @@ void FourTop::createHistInfoVec() {
     std::vector< Sample > sampleVec = treeReader->sampleVector();
 
     //hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
-    hists_3L = histHelper::initHistograms(histInfoVec_3L, sampleVec);
-    hists_4L = histHelper::initHistograms(histInfoVec_4L, sampleVec);
-    hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
-    hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
-    hists_Other = histHelper::initHistograms(histInfoVec_Other, sampleVec);
+    //hists_3L = histHelper::initHistograms(histInfoVec_3L, sampleVec);
+    //hists_4L = histHelper::initHistograms(histInfoVec_4L, sampleVec);
+    //hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
+    //hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
+    //hists_Other = histHelper::initHistograms(histInfoVec_Other, sampleVec);
 }
 
 void FourTop::createMVAHandlers() {

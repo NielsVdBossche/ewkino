@@ -35,12 +35,12 @@ class FourTop {
         std::vector<HistInfo_2D>* histInfoVec2D_mva_3L = nullptr;
         std::vector<HistInfo_2D>* histInfoVec2D_mva_4L = nullptr;
 
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_DL;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_3L;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_4L;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRZ;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRW;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_Other;
+        //std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_DL;
+        //std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_3L;
+        //std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_4L;
+        //std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRZ;
+        //std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRW;
+        //std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_Other;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_DL;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_3L;
         std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_4L;

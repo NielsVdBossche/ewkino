@@ -15,9 +15,29 @@ void FourTop:: analyze() {
     // build histograms for kinematic variables
     // use a fill vector builder and a int or something like that to specify setup?
     // might be more useful... 
-    std::string channel = "DL";
-    std::vector<HistInfo>* infoDL = fourTopHists::allHists("DL", false, false);
-    HistogramManager* DLManager = new HistogramManager(channel, infoDL);
+    std::string channelDL = "DL";
+    std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
+
+    std::string channel3L = "3L";
+    std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
+    HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
+
+    std::string channel4L = "4L";
+    std::vector<HistInfo>* info4L = fourTopHists::allHists(channel4L, true, true);
+    HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
+
+    std::string channelCRZ = "CRZ";
+    std::vector<HistInfo>* infoCRZ = fourTopHists::allHists(channelCRZ, false, false);
+    HistogramManager* CRZManager = new HistogramManager(channelCRZ, infoCRZ);
+
+    std::string channelCRW = "CRW";
+    std::vector<HistInfo>* infoCRW = fourTopHists::allHists(channelCRW, false, false);
+    HistogramManager* CRWManager = new HistogramManager(channelCRW, infoCRW);
+
+    std::string channelCRO = "CRO";
+    std::vector<HistInfo>* infoCRO = fourTopHists::allHists(channelCRO, false, false);
+    HistogramManager* CROManager = new HistogramManager(channelCRO, infoCRO);
 
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
@@ -31,11 +51,16 @@ void FourTop:: analyze() {
 
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         DLManager->newSample(uniqueName);
+        TriLManager->newSample(uniqueName);
+        FourLManager->newSample(uniqueName);
+        CRZManager->newSample(uniqueName);
+        CRWManager->newSample(uniqueName);
+        CROManager->newSample(uniqueName);
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            //if (entry > 10000) break;
+            if (entry > 10000) break;
             delete currentEvent;
 
             // Initialize event
@@ -102,7 +127,8 @@ void FourTop:: analyze() {
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
+                //histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
+                CRZManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 //delete currentEvent;
                 continue;
             }
@@ -110,7 +136,7 @@ void FourTop:: analyze() {
             // Full object selection (only keep the real useful stuff and rest is control)
             if (! selection->passFullEventSelection()) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_Other->at(fillIndex)), currentEvent->weight());
+                CROManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 //delete currentEvent;
                 continue;
             }
@@ -118,7 +144,7 @@ void FourTop:: analyze() {
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
+                CRWManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 //delete currentEvent;
                 continue;
             }
@@ -135,8 +161,7 @@ void FourTop:: analyze() {
                 }
             } else if (selection->numberOfLeps() == 3) {
                 fillVec = fourTopHists::fillAllHists(true, selection);
-                histHelper::histFiller(fillVec, &(hists_3L->at(fillIndex)), currentEvent->weight());
-
+                TriLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 if (histInfoVec_mva_3L) {
                     std::vector<Float_t> scores = mva_ML->scoreEvent();
                     mva_ML->fillHistograms(scores, hists_mva_3L->at(fillIndex), currentEvent->weight());
@@ -144,7 +169,7 @@ void FourTop:: analyze() {
                 }
             } else {
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
-                histHelper::histFiller(fillVec, &(hists_4L->at(fillIndex)), currentEvent->weight());
+                FourLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
                 if (histInfoVec_mva_3L) {
                     std::vector<Float_t> scores = mva_ML->scoreEvent();
@@ -185,26 +210,31 @@ void FourTop:: analyze() {
         //    hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
         //}
         DLManager->writeCurrentHistograms();
+        TriLManager->writeCurrentHistograms();
+        FourLManager->writeCurrentHistograms();
+        CRZManager->writeCurrentHistograms();
+        CRWManager->writeCurrentHistograms();
+        CROManager->writeCurrentHistograms();
 
-        for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
-            hists_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
-            hists_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
-            hists_CRZ->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_CRW->size(); ++dist ) {
-            hists_CRW->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_Other->size(); ++dist ) {
-            hists_Other->at(sampleIndex)[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
-        }
+        //for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
+        //    hists_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
+        //}
+//
+        //for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
+        //    hists_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
+        //}
+//
+        //for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
+        //    hists_CRZ->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
+        //}
+//
+        //for( size_t dist = 0; dist < histInfoVec_CRW->size(); ++dist ) {
+        //    hists_CRW->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
+        //}
+//
+        //for( size_t dist = 0; dist < histInfoVec_Other->size(); ++dist ) {
+        //    hists_Other->at(sampleIndex)[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
+        //}
         
         if (histInfoVec_mva_DL) {
             for( size_t dist = 0; dist < histInfoVec_mva_DL->size(); ++dist ) {
@@ -243,26 +273,11 @@ void FourTop:: analyze() {
     //    hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
     //}
     DLManager->writeNonpromptHistograms();
-
-    for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
-        hists_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
-        hists_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
-        hists_CRZ->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_CRW->size(); ++dist ) {
-        hists_CRW->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_Other->size(); ++dist ) {
-        hists_Other->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
-    }
+    TriLManager->writeCurrentHistograms();
+    FourLManager->writeCurrentHistograms();
+    CRZManager->writeCurrentHistograms();
+    CRWManager->writeCurrentHistograms();
+    CROManager->writeCurrentHistograms();
 
     if (histInfoVec_mva_DL) {
         for( size_t dist = 0; dist < histInfoVec_mva_DL->size(); ++dist ) {
