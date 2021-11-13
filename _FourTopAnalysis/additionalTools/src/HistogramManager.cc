@@ -1,6 +1,7 @@
 #include "../interface/HistogramManager.h"
 
 HistogramManager::HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo) : channel(channel), histInfo(histInfo) {
+    nonpromptHists = new std::vector<std::shared_ptr<TH1D>>;
     for( size_t dist = 0; dist < histInfo->size(); ++dist ){
         nonpromptHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_nonprompt");
     }
@@ -25,6 +26,7 @@ void HistogramManager::fillHistograms(std::vector<double>& fillValues, double ev
 
 void HistogramManager::newSample(std::string& uniqueSampleName) {
     // make new hists from stuff
+    currentSampleHists = new std::vector<std::shared_ptr<TH1D>>;
     for( size_t dist = 0; dist < histInfo->size(); ++dist ){
         currentSampleHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_" + uniqueSampleName);
     }

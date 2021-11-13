@@ -22,11 +22,15 @@ void FourTop:: analyze() {
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
 
+    std::vector<Sample> sampleVec = treeReader->sampleVector();
+
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
+        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
+        DLManager->newSample(uniqueName);
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
