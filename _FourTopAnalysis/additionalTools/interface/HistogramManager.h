@@ -22,10 +22,12 @@ Class HistogramManager:
 */
 class HistogramManager {
     private:
+
+        std::string channel;
+        
         std::vector<std::shared_ptr<TH1D>> *nonpromptHists, *currentSampleHists;
         std::vector<HistInfo>* histInfo;
 
-        std::string channel;
     public:
         HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo);
         ~HistogramManager();

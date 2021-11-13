@@ -99,7 +99,7 @@ void FourTop::createHistInfoVec() {
     // Init histograms
     std::vector< Sample > sampleVec = treeReader->sampleVector();
 
-    hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
+    //hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
     hists_3L = histHelper::initHistograms(histInfoVec_3L, sampleVec);
     hists_4L = histHelper::initHistograms(histInfoVec_4L, sampleVec);
     hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
