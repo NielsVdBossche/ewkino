@@ -47,15 +47,15 @@ void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader
 
 void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
     bool baggedBoost = false;
-    int nTrees[] = {100, 200, 300, 400, 500, 750, 1000, 1250, 1500, 2000};
+    int nTrees[] = {200, 500, 1000, 1500, 2000};
     int depths[] = {2, 3, 4, 5};
-    double shrinkages[] = {0.05, 0.1, 0.25, 0.5, 0.75, 1., 1.5, 2.};
-    int cuts[] = {10, 20, 30, 50, 75, 100, 200, 300};
+    double shrinkages[] = {0.1, 0.5, 1., 2.};
+    int cuts[] = {20, 50, 100, 200};
 
-    for (int i=0; i < 10; i++) { // trees
+    for (int i=0; i < 5; i++) { // trees
         for (int j=0; j < 4; j++) { //depth
-            for (int k=0; k < 8; k++) { // shrink
-                for (int l=0; l < 8; l++) { // cuts
+            for (int k=0; k < 4; k++) { // shrink
+                for (int l=0; l < 4; l++) { // cuts
                     addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
                     //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], true);
                 }
