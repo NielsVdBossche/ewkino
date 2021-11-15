@@ -7,18 +7,38 @@
 void FourTop:: analyzeLean() {
 
     // Loop samples
+    std::string channelDL = "DL";
+    std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
 
-    // -> Loop entries
-    // ->-> Fill histograms
-    // Similar to ewkino example but using more of an object-oriented way of working... + more pointers!
+    std::string channel3L = "3L";
+    std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
+    HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
+
+    std::string channel4L = "4L";
+    std::vector<HistInfo>* info4L = fourTopHists::allHists(channel4L, true, true);
+    HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
+
+    std::string channelCRZ = "CRZ";
+    std::vector<HistInfo>* infoCRZ = fourTopHists::allHists(channelCRZ, false, false);
+    HistogramManager* CRZManager = new HistogramManager(channelCRZ, infoCRZ);
 
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
+
+    std::vector<Sample> sampleVec = treeReader->sampleVector();
+
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
         std::cout << treeReader->currentSample().fileName() << std::endl;
+
+        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
+        DLManager->newSample(uniqueName);
+        TriLManager->newSample(uniqueName);
+        FourLManager->newSample(uniqueName);
+        CRZManager->newSample(uniqueName);
 
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
@@ -60,10 +80,13 @@ void FourTop:: analyzeLean() {
             
             // If nonprompt: fillIndex becomes index of nonprompt histograms
             LeptonCollection* lepCol = selection->getMediumLepCol();
+            bool nonPrompt = false;
 
             for (const auto& leptonPtr : *lepCol) {
                 if (! leptonPtr->isPrompt()) {
                     fillIndex = treeReader->numberOfSamples();
+                    nonPrompt = true;
+
                     break;
                 }
             }
@@ -78,20 +101,20 @@ void FourTop:: analyzeLean() {
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
+                CRZManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 continue;
             }
 
             // Fill histograms
             if (selection->numberOfLeps() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
+                DLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
             } else if (selection->numberOfLeps() == 3) {
                 fillVec = fourTopHists::fillAllHists(true, selection);
-                histHelper::histFiller(fillVec, &(hists_3L->at(fillIndex)), currentEvent->weight());
+                TriLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
             } else {
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
-                histHelper::histFiller(fillVec, &(hists_4L->at(fillIndex)), currentEvent->weight());
+                FourLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
             }
 
         }
@@ -109,21 +132,10 @@ void FourTop:: analyzeLean() {
         gDirectory->cd(outdir.c_str());
 
         // Rewrite this to a dedicated function maybe, or something where we don't have to call sampleIndex each time?
-        for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-            hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
-            hists_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
-            hists_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
-            hists_CRZ->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
-        }
+        DLManager->writeCurrentHistograms();
+        TriLManager->writeCurrentHistograms();
+        FourLManager->writeCurrentHistograms();
+        CRZManager->writeCurrentHistograms();
     }
 
     // Don't forget non-prompt contributions
@@ -131,21 +143,10 @@ void FourTop:: analyzeLean() {
     gDirectory->mkdir("nonPrompt");
     gDirectory->cd("nonPrompt");
 
-    for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-        hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
-        hists_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
-        hists_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
-        hists_CRZ->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
-    }
+    DLManager->writeNonpromptHistograms();
+    TriLManager->writeCurrentHistograms();
+    FourLManager->writeCurrentHistograms();
+    CRZManager->writeCurrentHistograms();
 
     outfile->Close();
 }
