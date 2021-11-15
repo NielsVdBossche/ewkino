@@ -8,12 +8,12 @@ import os
 #from jobSubmission import submitQsubJob, initializeJobScript
 
 sys.path.append(os.path.abspath('../'))
-from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript
+from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript, submitCommandAsCondorJob
 
 # set global properties
 flavours = ['muon','electron']
 leptonMVA = 'leptonMVATOP'
-mvathresholds = [0.65,0.6] # must be of same length as flavours
+mvathresholds = [0.65, 0.6] # must be of same length as flavours
 years = ['2016','2017','2018']
 samplelist = os.path.abspath('sampleListsNew/samples_magicfactor.txt')
 sampledirectory = '/pnfs/iihe/cms/store/user/llambrec/ntuples_fakerate/'
@@ -49,14 +49,15 @@ for flavour,mvathreshold in zip(flavours,mvathresholds):
 		print('found '+str(len(thisyearindices))+' samples for '+year+' '+flavour+'s.')
 
 		for i in thisyearindices:
-			initJobScript(script_name)
-			with open(script_name,'a') as script:
+			#initJobScript(script_name)
+			#with open(script_name,'a') as script:
 				#script.write('cd {}\n'.format(cwd))
-				command = './fillMagicFactor {} {} {} {} {} {} {}'.format(flavour,year,
-											leptonMVA,mvathreshold,
-											sampledirectory,samplelist,i)
-				script.write(command+'\n')
+			command = './fillMagicFactor {} {} {} {} {} {} {}'.format(flavour,year,
+										leptonMVA,mvathreshold, sampledirectory,samplelist,i)
+
+			submitCommandAsCondorJob(script_name, command)
+			#	script.write(command+'\n')
 			#submitQsubJob(script_name)
-			submitScriptAsCondorJob(script_name)
+			#submitScriptAsCondorJob(script_name)
 			# alternative: run locally
 			#os.system('bash '+script_name)
