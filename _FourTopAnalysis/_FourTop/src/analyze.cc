@@ -273,11 +273,11 @@ void FourTop:: analyze() {
     //    hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
     //}
     DLManager->writeNonpromptHistograms();
-    TriLManager->writeCurrentHistograms();
-    FourLManager->writeCurrentHistograms();
-    CRZManager->writeCurrentHistograms();
-    CRWManager->writeCurrentHistograms();
-    CROManager->writeCurrentHistograms();
+    TriLManager->writeNonpromptHistograms();
+    FourLManager->writeNonpromptHistograms();
+    CRZManager->writeNonpromptHistograms();
+    CRWManager->writeNonpromptHistograms();
+    CROManager->writeNonpromptHistograms();
 
     if (histInfoVec_mva_DL) {
         for( size_t dist = 0; dist < histInfoVec_mva_DL->size(); ++dist ) {

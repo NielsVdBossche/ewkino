@@ -144,9 +144,9 @@ void FourTop:: analyzeLean() {
     gDirectory->cd("nonPrompt");
 
     DLManager->writeNonpromptHistograms();
-    TriLManager->writeCurrentHistograms();
-    FourLManager->writeCurrentHistograms();
-    CRZManager->writeCurrentHistograms();
+    TriLManager->writeNonpromptHistograms();
+    FourLManager->writeNonpromptHistograms();
+    CRZManager->writeNonpromptHistograms();
 
     outfile->Close();
 }
