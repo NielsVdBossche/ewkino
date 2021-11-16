@@ -33,7 +33,7 @@ bool ElectronSelector::isLooseBase() const{
     if (electronPtr->leptonMVATOP() < 0.5) return false;
     */
 
-    if (electronPtr->pt() < 7) return false;
+    if (electronPtr->uncorrectedPt() < 7) return false;
     if (electronPtr->absEta() >= 2.5) return false;
     // IsGSF
     if (electronPtr->numberOfMissingHits() >= 2) return false;
@@ -101,7 +101,7 @@ bool ElectronSelector::isFOBase() const{
     //if (electronPtr->pt() < 20) return false;
 
     // Fakeable object
-    if (electronPtr->pt() <= 10) return false;
+    if (electronPtr->uncorrectedPt() <= 10) return false;
     if( electronPtr->hOverE() >= 0.1 ) return false;
     if( electronPtr->inverseEMinusInverseP() <= -0.04 ) return false;
     if (! electronPtr->passChargeConsistency()) return false;

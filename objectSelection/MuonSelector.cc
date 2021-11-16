@@ -27,7 +27,7 @@ bool MuonSelector::isLooseBase() const{
     if (muonPtr->leptonMVATOP() < 0.5) return false;
     */
 
-    if (muonPtr->pt() <= 5) return false;
+    if (muonPtr->uncorrectedPt() <= 5) return false;
     if (muonPtr->absEta() >= 2.4) return false;
     if (! muonPtr->isMediumPOGMuon()) return false;
     //if (! muonPtr->isPFMuon())
@@ -88,7 +88,7 @@ bool MuonSelector::isFOBase() const{
     // Fakeable object
 
     if( !isLoose() ) return false;
-    if( muonPtr->pt() <= 10 ) return false;
+    if( muonPtr->uncorrectedPt() <= 10 ) return false;
 
     if (muonPtr->leptonMVATOP() < 0.65) {
         if( muonPtr->ptRatio() <= 0.45 ) return false;
