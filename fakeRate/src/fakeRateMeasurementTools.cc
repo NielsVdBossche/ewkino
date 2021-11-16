@@ -397,7 +397,7 @@ void fillMCFakeRateMeasurementHistograms( const std::string& flavor, const std::
 
     std::cout<<"finished event loop"<<std::endl;
 
-    std::string file_name = "fakeRateMeasurement_MC_" + flavor + "_" + year;
+    std::string file_name = "MCFakeRateMeasurementSubFiles/fakeRateMeasurement_MC_" + flavor + "_" + year;
     file_name.append("_histograms_sample_"+std::to_string(sampleIndex)+".root");
     TFile* histogram_file = TFile::Open( file_name.c_str(), "RECREATE" );
 

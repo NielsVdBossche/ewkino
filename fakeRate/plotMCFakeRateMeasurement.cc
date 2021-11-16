@@ -26,7 +26,7 @@ int main( int argc, char* argv[] ){
 
     // read 2D histograms
     std::string instanceName = flavor + "_" + year;
-    std::string file_name = "fakeRateMeasurement_MC_" + instanceName;
+    std::string file_name = "MCFakeRateMeasurementSubFiles/fakeRateMeasurement_MC_" + instanceName;
     file_name.append("_histograms.root");
     TFile* measurement_filePtr = TFile::Open( file_name.c_str() );
 

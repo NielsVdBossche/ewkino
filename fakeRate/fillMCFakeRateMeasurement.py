@@ -36,8 +36,9 @@ for year in years:
 				if(sl[0] == '#'): continue
 				if(sl[0] == '\n'): continue
 				nsamples += 1
+
 		print('found '+str(nsamples)+' samples for '+year+' '+flavour+'s.')
-        for i in range(nsamples):
+		for i in range(nsamples):
 			if(istestrun and i!=11): continue
 			
 			script_name = 'fillMCFakeRateMeasurement.sh'
