@@ -38,7 +38,7 @@ bool MuonSelector::isLooseBase() const{
 
 
     // Tight charge requirements:
-    if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
+    //if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
     //if (muonPtr->leptonMVATOP() < 0.05) return false;
     // no mva req
 
@@ -93,6 +93,8 @@ bool MuonSelector::isFOBase() const{
     if (muonPtr->leptonMVATOP() < 0.65) {
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
+
+    if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
 
     return true;
 }
@@ -192,5 +194,5 @@ cone correction
 
 
 double MuonSelector::coneCorrection() const{
-    return ( 0.75 / muonPtr->ptRatio() );
+    return ( 0.71 / muonPtr->ptRatio() );
 }

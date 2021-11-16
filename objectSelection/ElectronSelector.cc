@@ -187,5 +187,5 @@ cone correction
 */
 
 double ElectronSelector::coneCorrection() const{
-    return ( 0.9 / electronPtr->ptRatio() );
+    return ( 0.71 / electronPtr->ptRatio() );
 }

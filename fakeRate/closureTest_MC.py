@@ -4,8 +4,9 @@
 import sys
 import os
 # in order to import local functions: append location to sys.path
-sys.path.append(os.path.abspath('../skimmer'))
-from jobSubmission import submitQsubJob, initializeJobScript
+sys.path.append(os.path.abspath('../'))
+from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript, submitCommandAsCondorJob
+#from jobSubmission import submitQsubJob, initializeJobScript.
 
 # set global properties
 isMCFR = True
@@ -32,13 +33,14 @@ for year in years:
 			script_name = 'closureTest_MC.sh'
 			samplelist = os.path.join(samplelistdirectory,
 					'samples_closureTest_'+process+'_'+year+'.txt')
-			with open(script_name,'w') as script:
-				initializeJobScript(script)
-				script.write('cd {}\n'.format(cwd))
-				command = './closureTest_MC {} {} {} {} {} {} {}'.format(
-						isMCFR,use_mt,process,year,flavour,
-						sampledirectory,samplelist)
-				script.write(command+'\n')
-			submitQsubJob(script_name)
+			#with open(script_name,'w') as script:
+			#	initializeJobScript(script)
+			#	script.write('cd {}\n'.format(cwd))
+			command = './closureTest_MC {} {} {} {} {} {} {}'.format(
+					isMCFR,use_mt,process,year,flavour,
+					sampledirectory,samplelist)
+			submitCommandAsCondorJob(script_name, command)
+			#	script.write(command+'\n')
+			#submitQsubJob(script_name)
 			# alternative: run locally
 			#os.system('bash '+script_name)

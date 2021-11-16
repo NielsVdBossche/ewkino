@@ -23,7 +23,7 @@ std::vector< HistInfo > makeDistributionInfoDefault(){
 	HistInfo( "leptonEtaTrailing", "|#eta|^{trailing lepton}", 10, 0, 2.5 ),
 	
 	HistInfo( "met", "E_{T}^{miss} (GeV)", 10, 0, 300 ),
-        HistInfo( "mt", "M_{T}^{W} (GeV)", 10, 0, 300 ),
+    HistInfo( "mt", "M_{T}^{W} (GeV)", 10, 0, 300 ),
 	HistInfo( "mll", "M_{ll} (GeV)", 10, 0, 200 ),
 	HistInfo( "ltmet", "L_{T} + E_{T}^{miss} (GeV)", 10, 0, 300 ),
 	HistInfo( "ht", "H_{T} (GeV)", 10, 0, 600 ),
@@ -69,12 +69,13 @@ bool passClosureTestEventSelection( Event& event, const bool requireMuon = false
     event.applyLeptonConeCorrection(); // move cone corrected pt toward a lepton lvl function instead of just applying it to all and then calling the uncorrectedPt afterwards? Seems kinda wasteful in calculations
     event.cleanElectronsFromLooseMuons();
     event.selectFOLeptons();
+
     if( event.numberOfLightLeptons() < 2 ) return false;
     if (event.numberOfLightLeptons() == 2 && event.lightLeptonCollection()[0].charge() != event.lightLeptonCollection()[1].charge()) return false;
     event.selectGoodJets();
     event.cleanJetsFromFOLeptons();
     event.sortLeptonsByPt();
-    
+
     size_t numberOfNonPromptLeptons = 0;
     size_t numberOfPromptLeptons = 0;
     for( auto& leptonPtr : event.lightLeptonCollection() ){
