@@ -47,6 +47,8 @@ class MVAHandler_4T {
         Float_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Float_t ptLepOne, ptLepTwo, ptLepThree;
 
+        std::vector<double> scoresCurrent;
+
     public:
         MVAHandler_4T(MVAConfigs config, EventFourT* selec);
         ~MVAHandler_4T();
@@ -55,14 +57,18 @@ class MVAHandler_4T {
         std::vector<HistInfo>* createHistograms(bool fourLep = false);
         std::vector<HistInfo_2D>* create2DHistograms(bool fourLep = false);
 
+        int getMaxClass() const {return maxClass;}
+
         //std::string histogramIdentifier();
 
-        std::vector<Float_t> scoreEvent();
+        std::vector<double> scoreEvent();
         void fillVariables();
-        void fillHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH1D>>& histograms, double weight);
-        void fill2DHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH2D>>& histograms, double weight);
+        void fillVector(std::vector<double>& fillVec);
+        std::vector<std::pair<double, double>> fill2DVector();
+        void fillHistograms(std::vector<std::shared_ptr<TH1D>>& histograms, double weight);
+        void fill2DHistograms(std::vector<std::shared_ptr<TH2D>>& histograms, double weight);
 
-        std::pair<MVAClasses, Float_t> getClassAndScore(std::vector<Float_t>& scores);
+        std::pair<MVAClasses, double> getClassAndScore();
 };  
 
 #endif

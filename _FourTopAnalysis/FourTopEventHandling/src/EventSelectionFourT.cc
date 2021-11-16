@@ -18,12 +18,14 @@ void EventFourT::cleanSelection() {
     delete mediumLeps;
     delete jets;
     delete bTagJets;
+    scoresMVA.clear();
 }
 
 void EventFourT::addNewEvent(Event* newEvent) {
     cleanSelection();
     event = newEvent;
     isNormalSelected = true;
+    
     objectSelection();
 }
 

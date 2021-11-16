@@ -143,34 +143,58 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(bool fourLep) {
 
     return histInfoVec;
 }
-
-void MVAHandler_4T::fillHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH1D>>& histograms, double weight) {
+/*
+void MVAHandler_4T::fillVector(std::vector<Float_t>& scores, std::vector<double>& fillVec) {
     for (int i=0; i < maxClass; i++) {
-        histogram::fillValue(histograms[i].get(), scores[i], weight);
+        fillVec.push_back(scores[i]);
     }
 
     std::pair<MVAClasses, Float_t> classific = getClassAndScore(scores);
 
     histogram::fillValue(histograms[classific.first + maxClass].get(), classific.second, weight);
 }
+*/
 
-void MVAHandler_4T::fill2DHistograms(std::vector<Float_t>& scores, std::vector<std::shared_ptr<TH2D>>& histograms, double weight) {
+std::vector<std::pair<double, double>> MVAHandler_4T::fill2DVector() {
+    std::vector<std::pair<double, double>> fillVec;
     for (int i=0; i < maxClass; i++) {
-        histogram::fillValues(histograms[i].get(), scores[i], scores[(i + 1) % 3], weight);
+        fillVec.push_back({scoresCurrent[i], scoresCurrent[(i + 1) % 3]});
+    }
+
+    return fillVec;
+}
+
+void MVAHandler_4T::fillHistograms(std::vector<std::shared_ptr<TH1D>>& histograms, double weight) {
+    for (int i=0; i < maxClass; i++) {
+        histogram::fillValue(histograms[i].get(), scoresCurrent[i], weight);
+    }
+
+    std::pair<MVAClasses, double> classific = getClassAndScore();
+
+    histogram::fillValue(histograms[classific.first + maxClass].get(), classific.second, weight);
+}
+
+void MVAHandler_4T::fill2DHistograms(std::vector<std::shared_ptr<TH2D>>& histograms, double weight) {
+    for (int i=0; i < maxClass; i++) {
+        histogram::fillValues(histograms[i].get(), scoresCurrent[i], scoresCurrent[(i + 1) % 3], weight);
     }
 }
 
 
-std::vector<Float_t> MVAHandler_4T::scoreEvent() {
+std::vector<double> MVAHandler_4T::scoreEvent() {
     fillVariables();
     
-    std::vector<Float_t> returnVec;
+    std::vector<double> returnVec;
 
     if (currentConfig <= Binary_ML) {
-        returnVec.push_back(reader->EvaluateMVA("BDTCurr"));
+        returnVec.push_back(double(reader->EvaluateMVA("BDTCurr")));
     } else {
-        returnVec = reader->EvaluateMulticlass("BDTCurr");
+        std::vector<Float_t> returnVecTemp;
+        returnVecTemp = reader->EvaluateMulticlass("BDTCurr");
+        returnVec = std::vector<double>(returnVecTemp.begin(), returnVecTemp.end());
     }
+
+    scoresCurrent = returnVec;
 
     return returnVec;
 }
@@ -231,12 +255,12 @@ void MVAHandler_4T::fillVariables() {
     }
 }
 
-std::pair<MVAClasses, Float_t> MVAHandler_4T::getClassAndScore(std::vector<Float_t>& scores) {
+std::pair<MVAClasses, double> MVAHandler_4T::getClassAndScore() {
     if (maxClass == 1) {
-        return {(MVAClasses) 0, scores[0]};
+        return {(MVAClasses) 0, scoresCurrent[0]};
     }
 
-    int indexMaxScore = std::max_element(scores.begin(),scores.end()) - scores.begin();
+    int indexMaxScore = std::max_element(scoresCurrent.begin(),scoresCurrent.end()) - scoresCurrent.begin();
 
-    return {(MVAClasses) indexMaxScore, scores[indexMaxScore]};
+    return {(MVAClasses) indexMaxScore, scoresCurrent[indexMaxScore]};
 }

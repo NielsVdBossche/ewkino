@@ -17,11 +17,52 @@ std::vector<std::shared_ptr<TH1D>>* HistogramManager::getHistograms(bool nonProm
     else return currentSampleHists;
 }
 
+std::vector<std::shared_ptr<TH2D>>* HistogramManager::get2DHistograms(bool nonPrompt) {
+    if (nonPrompt) return nonpromptHists2D;
+    else return currentSampleHists2D;
+}
+
+void HistogramManager::extendHistInfo(std::vector<HistInfo>* extraHistInfo) {
+    histInfo->insert(histInfo->end(), extraHistInfo->begin(), extraHistInfo->end());
+    
+    for( size_t dist = 0; dist < extraHistInfo->size(); ++dist ){
+        nonpromptHists->push_back(extraHistInfo->at(dist).makeHist( extraHistInfo->at(dist).name() + "_nonprompt"));
+    }
+}
+
+
 void HistogramManager::fillHistograms(std::vector<double>& fillValues, double eventWeight, bool nonPrompt) {
     std::vector<std::shared_ptr<TH1D>>* histsToFill = getHistograms(nonPrompt);
 
     // fill hists
-    histHelper::histFiller(fillValues, histsToFill, eventWeight);
+    for (size_t dist = 0; dist < fillValues.size(); dist++) {
+        histogram::fillValue(histsToFill->at(dist).get(), fillValues[dist], eventWeight);
+    }
+}
+
+void HistogramManager::fill2DHistograms(std::vector<std::pair<double, double>>& fillValues, double eventWeight, bool nonPrompt) {
+    std::vector<std::shared_ptr<TH2D>>* histsToFill = get2DHistograms(nonPrompt);
+
+    // fill hists
+    for (size_t dist = 0; dist < fillValues.size(); dist++) {
+        histogram::fillValues(histsToFill->at(dist).get(), fillValues[dist].first, fillValues[dist].second, eventWeight);
+    }
+}
+
+void HistogramManager::fillSingleHistogram(size_t index, double value, double eventWeight, double nonPrompt) {
+    std::vector<std::shared_ptr<TH1D>>* histsToFill = getHistograms(nonPrompt);
+
+    // fill hists
+    histogram::fillValue(histsToFill->at(index).get(), value, eventWeight);
+
+}
+
+void HistogramManager::fillSingle2DHistograms(size_t index, std::pair<double, double>& values, double eventWeight, bool nonPrompt) {
+    std::vector<std::shared_ptr<TH2D>>* histsToFill = get2DHistograms(nonPrompt);
+
+    // fill hists
+    histogram::fillValues(histsToFill->at(index).get(), values.first, values.second, eventWeight);
+
 }
 
 void HistogramManager::newSample(std::string& uniqueSampleName) {

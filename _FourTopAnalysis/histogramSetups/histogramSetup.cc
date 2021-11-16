@@ -319,9 +319,6 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
 
         HistInfo( "SecondBestTopMass_" + flag, "Sec. best M_{top} [GeV]", 20, 100, 300),
         HistInfo( "SecondBestTopCorrWMass_" + flag, "M_{W} [GeV]", 10, 50, 150),
-
-
-
     };
 
     if (multilep) {

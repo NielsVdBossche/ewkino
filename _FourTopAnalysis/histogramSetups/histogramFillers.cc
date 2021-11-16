@@ -295,5 +295,10 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         }
     }
 
+    if (selec->isMVARated()) {
+        std::vector<double> scores = selec->getMVAScores();
+        fillVal.insert(fillVal.end(), scores.begin(), scores.end());
+    }
+
     return fillVal;
 }

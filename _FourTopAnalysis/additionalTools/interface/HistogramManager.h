@@ -7,7 +7,7 @@
 
 /*
 Class HistogramManager:
-    Takes as input: channel, a vector of HistInfo*
+    Takes as input: channel, a vector of HistInfo
 
     The channel will be used as the flag in the future for the individual channels in the final filename
 
@@ -28,6 +28,9 @@ class HistogramManager {
         std::vector<std::shared_ptr<TH1D>> *nonpromptHists, *currentSampleHists;
         std::vector<HistInfo>* histInfo;
 
+        std::vector<std::shared_ptr<TH2D>> *nonpromptHists2D, *currentSampleHists2D;
+        std::vector<HistInfo_2D>* histInfo2D;
+
     public:
         HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo);
         ~HistogramManager();
@@ -35,11 +38,20 @@ class HistogramManager {
         std::string getChannel() const {return channel;}
         std::vector<HistInfo>* getHistInfo() {return histInfo;}
         std::vector<std::shared_ptr<TH1D>>* getHistograms(bool nonPrompt);
+
+        std::vector<HistInfo_2D>* get2DHistInfo() {return histInfo2D;}
+        std::vector<std::shared_ptr<TH2D>>* get2DHistograms(bool nonPrompt);
         
         void setChannel(std::string& newChannel) {channel = newChannel;}
         void setHistInfo(std::vector<HistInfo>* newHistInfo) {histInfo = new std::vector<HistInfo>(*newHistInfo);}
+        void extendHistInfo(std::vector<HistInfo>* extraHistInfo);
+        void set2DHistInfo(std::vector<HistInfo_2D>* newHistInfo) {histInfo2D = new std::vector<HistInfo_2D>(*newHistInfo);}
         
         void fillHistograms(std::vector<double>& fillValues, double eventWeight, bool nonPrompt);
+        void fill2DHistograms(std::vector<std::pair<double, double>>& fillValues, double eventWeight, bool nonPrompt);
+
+        void fillSingleHistogram(size_t index, double value, double eventWeight, double nonPrompt);
+        void fillSingle2DHistograms(size_t index, std::pair<double, double>& values, double eventWeight, bool nonPrompt);
 
         void newSample(std::string& uniqueSampleName);
 

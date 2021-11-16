@@ -46,7 +46,7 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode) {
         intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
         intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
         
-        createHistInfoVec();
+        //createHistInfoVec();
 
         if (mode == 1) {
             createMVAHandlers();
@@ -57,39 +57,18 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode) {
 FourTop::~FourTop() {
 
     //outfile->Close();
-
-    // Delete histograms
-
-    // Delete histogramInfo
-    if (histInfoVec_DL) {
-        delete histInfoVec_DL;
-        delete histInfoVec_3L;
-        delete histInfoVec_4L;
-        delete histInfoVec_CRZ;    
-        delete histInfoVec_CRW;
-        delete histInfoVec_Other;
-    }
-
-    if (histInfoVec_mva_DL) {
-        delete histInfoVec_mva_DL;
-        delete histInfoVec_mva_3L;
-        delete histInfoVec_mva_4L;
-        delete histInfoVec2D_mva_DL;
-        delete histInfoVec2D_mva_3L;
-        delete histInfoVec2D_mva_4L;
-    }
 }
 
 // Prepare 
 void FourTop::createHistInfoVec() {
 
     // Temp solution
-    histInfoVec_DL = fourTopHists::allHists("DL", false);
-    histInfoVec_3L = fourTopHists::allHists("3L", true);
-    histInfoVec_4L = fourTopHists::allHists("4L", true, true);
-    histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
-    histInfoVec_CRW = fourTopHists::allHists("CRW", false);
-    histInfoVec_Other = fourTopHists::allHists("CRO", false);
+    //histInfoVec_DL = fourTopHists::allHists("DL", false);
+    //histInfoVec_3L = fourTopHists::allHists("3L", true);
+    //histInfoVec_4L = fourTopHists::allHists("4L", true, true);
+    //histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
+    //histInfoVec_CRW = fourTopHists::allHists("CRW", false);
+    //histInfoVec_Other = fourTopHists::allHists("CRO", false);
 
     // Go over settings, voor elke setting, add de passende histosetup bij het totaal
     // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken
@@ -97,7 +76,7 @@ void FourTop::createHistInfoVec() {
     // Set hier mss ook setting voor lengte -> fill vector zelfde lengte, anders teveel checks/constructing voor vector?
 
     // Init histograms
-    std::vector< Sample > sampleVec = treeReader->sampleVector();
+    //std::vector< Sample > sampleVec = treeReader->sampleVector();
 
     //hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
     //hists_3L = histHelper::initHistograms(histInfoVec_3L, sampleVec);
@@ -110,23 +89,4 @@ void FourTop::createHistInfoVec() {
 void FourTop::createMVAHandlers() {
     mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection);
     mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection);
-
-    std::vector< Sample > sampleVec = treeReader->sampleVector();
-
-    histInfoVec_mva_DL = mva_DL->createHistograms();
-    histInfoVec_mva_3L = mva_ML->createHistograms();
-    histInfoVec_mva_4L = mva_ML->createHistograms(true);
-
-    hists_mva_DL = histHelper::initHistograms(histInfoVec_mva_DL, sampleVec);
-    hists_mva_3L = histHelper::initHistograms(histInfoVec_mva_3L, sampleVec);
-    hists_mva_4L = histHelper::initHistograms(histInfoVec_mva_4L, sampleVec);
-
-
-    histInfoVec2D_mva_DL = mva_DL->create2DHistograms();
-    histInfoVec2D_mva_3L = mva_ML->create2DHistograms();
-    histInfoVec2D_mva_4L = mva_ML->create2DHistograms(true);
-
-    hists2D_mva_DL = histHelper::init2DHistograms(histInfoVec2D_mva_DL, sampleVec);
-    hists2D_mva_3L = histHelper::init2DHistograms(histInfoVec2D_mva_3L, sampleVec);
-    hists2D_mva_4L = histHelper::init2DHistograms(histInfoVec2D_mva_4L, sampleVec);
 }
