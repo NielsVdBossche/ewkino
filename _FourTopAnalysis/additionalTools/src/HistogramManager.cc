@@ -77,10 +77,18 @@ void HistogramManager::writeCurrentHistograms() {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ) {
         currentSampleHists->at(dist)->Write(TString(histInfo->at(dist).name()), TObject::kOverwrite);
     }
+
+    for( size_t dist = 0; dist < histInfo2D->size(); ++dist ) {
+        currentSampleHists2D->at(dist)->Write(TString(histInfo2D->at(dist).name()), TObject::kOverwrite);
+    }
 }
 
 void HistogramManager::writeNonpromptHistograms() {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ) {
         nonpromptHists->at(dist)->Write(TString(histInfo->at(dist).name()), TObject::kOverwrite);
+    }
+
+    for( size_t dist = 0; dist < histInfo2D->size(); ++dist ) {
+        nonpromptHists2D->at(dist)->Write(TString(histInfo2D->at(dist).name()), TObject::kOverwrite);
     }
 }
