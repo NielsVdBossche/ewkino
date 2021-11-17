@@ -58,10 +58,27 @@ void FourTop::fillMVAVariables(bool isML) {
         ptLepFour    =  lightLeps->at(3)->pt();
     }
 
+    bTagPtLead = (jetCol->size() > 0 ? jetCol->at(0)->deepFlavor() : -1.);
+    bTagPtSub = (jetCol->size() > 1 ? jetCol->at(1)->deepFlavor() : -1.);
+    bTagPtThird = (jetCol->size() > 2 ? jetCol->at(2)->deepFlavor() : -1.);
+    bTagPtFourth = (jetCol->size() > 3 ? jetCol->at(3)->deepFlavor() : -1.);
+    
     jetCol->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
 
     bTagLead = jetCol->at(0)->deepFlavor();
     bTagSub = jetCol->at(1)->deepFlavor();
     bTagThird = jetCol->size() > 2 ? jetCol->at(2)->deepFlavor() : -1.;
     bTagFourth = jetCol->size() > 3 ? jetCol->at(3)->deepFlavor() : -1.;
+
+    TopReconstructionNew* topReco = selection->getTopReco();
+
+    topReco->RecoBestTwoTops();
+    massBestTop = topReco->getBestRecoTop().first;
+    massBestTopW = topReco->getBestRecoTop().second;
+    massSecTop = topReco->getSecondBestRecoTop().first;
+    massSecTopW = topReco->getSecondBestRecoTop().second;
+
+    mtLeadLepMET = mt(*lightLeps->at(0), selection->getEvent()->met());
+    mtSubLeadLepMET = mt(*lightLeps->at(1), selection->getEvent()->met());
+    m2ll = mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selection->getEvent()->met());
 }

@@ -14,6 +14,11 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     tree->Branch("bTagThird",       &bTagThird,     "bTagThird/D");
     tree->Branch("bTagFourth",      &bTagFourth,    "bTagFourth/D");
 
+    tree->Branch("bTagPtLead",        &bTagPtLead,      "bTagPtLead/D");
+    tree->Branch("bTagPtSub",         &bTagPtSub,       "bTagPtSub/D");
+    tree->Branch("bTagPtThird",       &bTagPtThird,     "bTagPtThird/D");
+    tree->Branch("bTagPtFourth",      &bTagPtFourth,    "bTagPtFourth/D");
+
     tree->Branch("dr_leps",         &dRleps,        "dr_leps/D");
     tree->Branch("aziAngle",        &aziAngle,      "aziAngle/D");
     tree->Branch("ht",              &ht,            "ht/D");
@@ -26,6 +31,13 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     tree->Branch("pt_jet_six",      &ptJetSix,      "pt_jet_six/D");
     tree->Branch("pt_lep_one",      &ptLepOne,      "pt_lep_one/D");
     tree->Branch("pt_lep_two",      &ptLepTwo,      "pt_lep_two/D");
+    tree->Branch("massBestTop",     &massBestTop,    "massBestTop/D");
+    tree->Branch("massBestTopW",    &massBestTopW,   "massBestTopW/D");
+    tree->Branch("massSecTop",      &massSecTop,     "massSecTop/D");
+    tree->Branch("massSecTopW",     &massSecTopW,    "massSecTopW/D");
+    tree->Branch("m2ll",            &m2ll,           "m2ll/D");
+    tree->Branch("mtLeadLepMET",    &mtLeadLepMET,   "mtLeadLepMET/D");
+    tree->Branch("mtSubLeadLepMET", &mtSubLeadLepMET,"mtSubLeadLepMET/D");
 
     if (isML) {
         tree->Branch("pt_lep_three",    &ptLepThree,    "pt_lep_three/D");

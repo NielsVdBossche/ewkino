@@ -72,7 +72,10 @@ class FourTop {
         Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Double_t ptLepOne, ptLepTwo, ptLepThree;
         Double_t bTagLead, bTagSub, bTagThird, bTagFourth;
+        Double_t bTagPtLead, bTagPtSub, bTagPtThird, bTagPtFourth;
         Double_t ptJetTwo, ptJetThree, ptLepFour;
+        Double_t massBestTop, massBestTopW, massSecTop, massSecTopW;
+        Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
