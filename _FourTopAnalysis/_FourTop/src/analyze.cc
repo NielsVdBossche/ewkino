@@ -37,7 +37,7 @@ void FourTop:: analyze() {
     std::vector<HistInfo>* info4L = fourTopHists::allHists(channel4L, true, true);
     HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
     size_t fourlPosMVA = info4L->size();
-    FourLManager->extendHistInfo(mva_ML->createHistograms());
+    FourLManager->extendHistInfo(mva_ML->createHistograms(true));
     FourLManager->set2DHistInfo(mva_ML->create2DHistograms(true));
 
     fourlPosMVA += mva_ML->getMaxClass();
