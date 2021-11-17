@@ -12,14 +12,65 @@ void FourTop:: analyze() {
     // ->-> Fill histograms
     // Similar to ewkino example but using more of an object-oriented way of working... + more pointers!
 
+    // build histograms for kinematic variables
+    // use a fill vector builder and a int or something like that to specify setup?
+    // might be more useful... 
+    std::string channelDL = "DL";
+    std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
+    size_t dlPosMVA = infoDL->size();
+    DLManager->extendHistInfo(mva_DL->createHistograms());
+    DLManager->set2DHistInfo(mva_DL->create2DHistograms());
+
+    dlPosMVA += mva_DL->getMaxClass();
+
+    std::string channel3L = "3L";
+    std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
+    HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
+    size_t mlPosMVA = info3L->size();
+    TriLManager->extendHistInfo(mva_ML->createHistograms());
+    TriLManager->set2DHistInfo(mva_ML->create2DHistograms());
+
+    mlPosMVA += mva_ML->getMaxClass();
+
+    std::string channel4L = "4L";
+    std::vector<HistInfo>* info4L = fourTopHists::allHists(channel4L, true, true);
+    HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
+    size_t fourlPosMVA = info4L->size();
+    FourLManager->extendHistInfo(mva_ML->createHistograms(true));
+    FourLManager->set2DHistInfo(mva_ML->create2DHistograms(true));
+
+    fourlPosMVA += mva_ML->getMaxClass();
+
+    std::string channelCRZ = "CRZ";
+    std::vector<HistInfo>* infoCRZ = fourTopHists::allHists(channelCRZ, false, false);
+    HistogramManager* CRZManager = new HistogramManager(channelCRZ, infoCRZ);
+
+    std::string channelCRW = "CRW";
+    std::vector<HistInfo>* infoCRW = fourTopHists::allHists(channelCRW, false, false);
+    HistogramManager* CRWManager = new HistogramManager(channelCRW, infoCRW);
+
+    std::string channelCRO = "CRO";
+    std::vector<HistInfo>* infoCRO = fourTopHists::allHists(channelCRO, false, false);
+    HistogramManager* CROManager = new HistogramManager(channelCRO, infoCRO);
+
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
+
+    std::vector<Sample> sampleVec = treeReader->sampleVector();
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
+        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
+        DLManager->newSample(uniqueName);
+        TriLManager->newSample(uniqueName);
+        FourLManager->newSample(uniqueName);
+        CRZManager->newSample(uniqueName);
+        CRWManager->newSample(uniqueName);
+        CROManager->newSample(uniqueName);
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
@@ -54,9 +105,8 @@ void FourTop:: analyze() {
             // TODO
             
             // Basic non-prompt handling (using MC to estimate the contribution):
-            size_t fillIndex = sampleIndex;
             std::vector<double> fillVec;
-            
+            bool nonPrompt = false;
             // If nonprompt: fillIndex becomes index of nonprompt histograms
             LeptonCollection* lepCol;
             if (selection->isEventNormalSelected()) {
@@ -67,88 +117,96 @@ void FourTop:: analyze() {
 
             for (const auto& leptonPtr : *lepCol) {
                 if (! leptonPtr->isPrompt()) {
-                    fillIndex = treeReader->numberOfSamples();
+                    nonPrompt = true;
                     break;
                 }
-                // TODO:
-                // alternative implementation: use pointers to vectors of histograms to fill:
-                // one set is for the current samp, one for nonprompt and one for the ones to be filled
-                // this does require 5 operations at least for rerouten adresses, but is this more efficient than a lookup
-                // but is this more efficient than a lookup in the full vectors every loop
-                // OR 
-                // in this way a pair is maybe the most efficient option
-                // for each sample, it gets re-initialized per sample, but lookup is a lot easier.
-                // and still more compatible with current method employed
-                // But cant easily do [0] and [1], so then we are back to vector i guess
-                // but it does not make sense to init for all samples at once
             }
             
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
-                //delete currentEvent;
+
                 continue;
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
-                //delete currentEvent;
+                //histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
+                CRZManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+
                 continue;
             }
 
             // Full object selection (only keep the real useful stuff and rest is control)
             if (! selection->passFullEventSelection()) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_Other->at(fillIndex)), currentEvent->weight());
-                //delete currentEvent;
+                CROManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+
                 continue;
             }
 
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_CRW->at(fillIndex)), currentEvent->weight());
-                //delete currentEvent;
+                CRWManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 continue;
             }
 
             // Fill histograms
+            // MVA scores to event handler
+            // If assigned, add to fillVec
+            // else not
+            // from mva handler, then ask a class index + stuff for further calculations, keep these indices somehow managed
             if (selection->numberOfLeps() == 2) {
+                std::vector<double> scores = mva_DL->scoreEvent();
+
                 fillVec = fourTopHists::fillAllHists(false, selection);
-                histHelper::histFiller(fillVec, &(hists_DL->at(fillIndex)), currentEvent->weight());
-                if (histInfoVec_mva_DL) {
-                    std::vector<Float_t> scores = mva_DL->scoreEvent();
-                    mva_DL->fillHistograms(scores, hists_mva_DL->at(fillIndex), currentEvent->weight());
-                    mva_DL->fill2DHistograms(scores, hists2D_mva_DL->at(fillIndex), currentEvent->weight());
-                }
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
+
+                DLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+                
+                std::vector<std::pair<double, double>> fillVec2D = mva_DL->fill2DVector();
+                DLManager->fill2DHistograms(fillVec2D, currentEvent->weight(), nonPrompt);
+
+                std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();                
+                DLManager->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, currentEvent->weight(), nonPrompt);
+
             } else if (selection->numberOfLeps() == 3) {
+                std::vector<double> scores = mva_ML->scoreEvent();
+
                 fillVec = fourTopHists::fillAllHists(true, selection);
-                histHelper::histFiller(fillVec, &(hists_3L->at(fillIndex)), currentEvent->weight());
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
-                if (histInfoVec_mva_3L) {
-                    std::vector<Float_t> scores = mva_ML->scoreEvent();
-                    mva_ML->fillHistograms(scores, hists_mva_3L->at(fillIndex), currentEvent->weight());
-                    mva_ML->fill2DHistograms(scores, hists2D_mva_3L->at(fillIndex), currentEvent->weight());
-                }
+                TriLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+
+                std::vector<std::pair<double, double>> fillVec2D = mva_ML->fill2DVector();
+                TriLManager->fill2DHistograms(fillVec2D, currentEvent->weight(), nonPrompt);
+
+                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();                
+                TriLManager->fillSingleHistogram(mlPosMVA + classAndScore.first, classAndScore.second, currentEvent->weight(), nonPrompt);
+                
             } else {
-                fillVec = fourTopHists::fillAllHists(true, selection, true);
-                histHelper::histFiller(fillVec, &(hists_4L->at(fillIndex)), currentEvent->weight());
+                std::vector<double> scores = mva_ML->scoreEvent();
 
-                if (histInfoVec_mva_3L) {
-                    std::vector<Float_t> scores = mva_ML->scoreEvent();
-                    mva_ML->fillHistograms(scores, hists_mva_4L->at(fillIndex), currentEvent->weight());
-                    mva_ML->fill2DHistograms(scores, hists2D_mva_4L->at(fillIndex), currentEvent->weight());
-                }
+                fillVec = fourTopHists::fillAllHists(true, selection, true);
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
+
+                FourLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+
+                std::vector<std::pair<double, double>> fillVec2D = mva_ML->fill2DVector();
+                FourLManager->fill2DHistograms(fillVec2D, currentEvent->weight(), nonPrompt);
+
+                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();                
+                FourLManager->fillSingleHistogram(fourlPosMVA + classAndScore.first, classAndScore.second, currentEvent->weight(), nonPrompt);
+                
             }
 
             // TODO: Systematics
             if (currentEvent->isData()) {
-                //delete currentEvent;
+
                 continue;
             }
 
             //// Start filling histograms
 
-            //delete currentEvent;
         }
         
         // Output management: save histograms to a ROOT file.
@@ -168,56 +226,15 @@ void FourTop:: analyze() {
         gDirectory->cd(outdir.c_str());
 
         // Rewrite this to a dedicated function maybe, or something where we don't have to call sampleIndex each time?
-        for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-            hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
-            hists_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
-            hists_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
-            hists_CRZ->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_CRW->size(); ++dist ) {
-            hists_CRW->at(sampleIndex)[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_Other->size(); ++dist ) {
-            hists_Other->at(sampleIndex)[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
-        }
-        
-        if (histInfoVec_mva_DL) {
-            for( size_t dist = 0; dist < histInfoVec_mva_DL->size(); ++dist ) {
-                hists_mva_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_DL->at(dist).name()), TObject::kOverwrite);
-            }
-
-            for( size_t dist = 0; dist < histInfoVec_mva_3L->size(); ++dist ) {
-                hists_mva_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_3L->at(dist).name()), TObject::kOverwrite);
-            }
-
-            for( size_t dist = 0; dist < histInfoVec_mva_4L->size(); ++dist ) {
-                hists_mva_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec_mva_4L->at(dist).name()), TObject::kOverwrite);
-            }
-
-            for( size_t dist = 0; dist < histInfoVec2D_mva_DL->size(); ++dist ) {
-                hists2D_mva_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_DL->at(dist).name()), TObject::kOverwrite);
-            }
-
-            for( size_t dist = 0; dist < histInfoVec2D_mva_3L->size(); ++dist ) {
-                hists2D_mva_3L->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_3L->at(dist).name()), TObject::kOverwrite);
-            }
-
-            for( size_t dist = 0; dist < histInfoVec2D_mva_4L->size(); ++dist ) {
-                hists2D_mva_4L->at(sampleIndex)[dist]->Write(TString(histInfoVec2D_mva_4L->at(dist).name()), TObject::kOverwrite);
-            }
-        }
-
+        //for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
+        //    hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
+        //}
+        DLManager->writeCurrentHistograms();
+        TriLManager->writeCurrentHistograms();
+        FourLManager->writeCurrentHistograms();
+        CRZManager->writeCurrentHistograms();
+        CRWManager->writeCurrentHistograms();
+        CROManager->writeCurrentHistograms();
     }
 
     // Don't forget non-prompt contributions
@@ -225,55 +242,12 @@ void FourTop:: analyze() {
     gDirectory->mkdir("nonPrompt");
     gDirectory->cd("nonPrompt");
 
-    for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-        hists_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_3L->size(); ++dist ) {
-        hists_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_3L->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_4L->size(); ++dist ) {
-        hists_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_4L->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_CRZ->size(); ++dist ) {
-        hists_CRZ->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRZ->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_CRW->size(); ++dist ) {
-        hists_CRW->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_CRW->at(dist).name()), TObject::kOverwrite);
-    }
-
-    for( size_t dist = 0; dist < histInfoVec_Other->size(); ++dist ) {
-        hists_Other->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_Other->at(dist).name()), TObject::kOverwrite);
-    }
-
-    if (histInfoVec_mva_DL) {
-        for( size_t dist = 0; dist < histInfoVec_mva_DL->size(); ++dist ) {
-            hists_mva_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_DL->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_mva_3L->size(); ++dist ) {
-            hists_mva_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_3L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec_mva_4L->size(); ++dist ) {
-            hists_mva_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec_mva_4L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec2D_mva_DL->size(); ++dist ) {
-            hists2D_mva_DL->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_DL->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec2D_mva_3L->size(); ++dist ) {
-            hists2D_mva_3L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_3L->at(dist).name()), TObject::kOverwrite);
-        }
-
-        for( size_t dist = 0; dist < histInfoVec2D_mva_4L->size(); ++dist ) {
-            hists2D_mva_4L->at(treeReader->numberOfSamples())[dist]->Write(TString(histInfoVec2D_mva_4L->at(dist).name()), TObject::kOverwrite);
-        }
-    }
+    DLManager->writeNonpromptHistograms();
+    TriLManager->writeNonpromptHistograms();
+    FourLManager->writeNonpromptHistograms();
+    CRZManager->writeNonpromptHistograms();
+    CRWManager->writeNonpromptHistograms();
+    CROManager->writeNonpromptHistograms();
 
     outfile->Close();
 }

@@ -40,6 +40,7 @@ class EventFourT {
         bool isNormalSelected;
 
         TopReconstructionNew* topReco;
+        std::vector<double> scoresMVA;
         
     public:
 
@@ -82,6 +83,11 @@ class EventFourT {
         void altObjectSelection();
         LeptonCollection* getAltLeptonCol() {return altLeps;}
 
+        // MVA related
+        void fillMVAScores(std::vector<double>& scoresMVANew) {scoresMVA = scoresMVANew;}
+        bool isMVARated() const {return scoresMVA.size() != 0;}
+        std::vector<double>& getMVAScores() {return scoresMVA;}
+        
         // HistogramFillers
         //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
 };

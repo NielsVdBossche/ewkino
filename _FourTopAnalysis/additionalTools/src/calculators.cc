@@ -54,3 +54,26 @@ std::vector<double> calculators::mindRLepAndJet(JetCollection& jets, LeptonColle
     return dRs;
 
 }
+
+std::pair<std::shared_ptr<Jet>, std::shared_ptr<Lepton>> calculators::closestLepAndJet(JetCollection& jets, LeptonCollection& leptons) {
+    // calculate which are closest
+
+    std::vector< std::shared_ptr< Jet > >::iterator jet;
+    std::vector< std::shared_ptr< Lepton > >::iterator lep;
+
+    double dr = 10.;
+    std::pair<std::shared_ptr<Jet>, std::shared_ptr<Lepton>> closestPair;
+
+    for (jet =  jets.begin(); jet != jets.end(); jet++) {
+        for (lep = leptons.begin(); lep != leptons.end(); lep++) {
+            double drNew = deltaR(**jet, **lep);
+            
+            if (drNew < dr) {
+                dr = drNew;
+                closestPair = {*jet, *lep};
+            }
+        }
+    }
+
+    return closestPair;
+}

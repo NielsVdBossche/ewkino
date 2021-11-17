@@ -14,40 +14,13 @@
 #include "../../histogramSetups/histogramSetup.h"
 #include "../../additionalTools/interface/histHelper.h"
 #include "../../additionalTools/interface/calculators.h"
+#include "../../additionalTools/interface/HistogramManager.h"
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 
 class FourTop {
     private:
-        std::vector<HistInfo>* histInfoVec_DL = nullptr; // Histogram for DL kinematics
-        std::vector<HistInfo>* histInfoVec_3L = nullptr; // Histogram for ML kinematics
-        std::vector<HistInfo>* histInfoVec_4L = nullptr; 
-        std::vector<HistInfo>* histInfoVec_CRZ = nullptr;
-        std::vector<HistInfo>* histInfoVec_CRW = nullptr;
-        std::vector<HistInfo>* histInfoVec_Other = nullptr;
-        std::vector<HistInfo>* histInfoVec_mva_DL = nullptr;
-        std::vector<HistInfo>* histInfoVec_mva_3L = nullptr;
-        std::vector<HistInfo>* histInfoVec_mva_4L = nullptr;
-
-        std::vector<HistInfo_2D>* histInfoVec2D_mva_DL = nullptr;
-        std::vector<HistInfo_2D>* histInfoVec2D_mva_3L = nullptr;
-        std::vector<HistInfo_2D>* histInfoVec2D_mva_4L = nullptr;
-
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_DL;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_3L;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_4L;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRZ;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_CRW;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_Other;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_DL;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_3L;
-        std::vector< std::vector<std::shared_ptr<TH1D>>>* hists_mva_4L;
-
-        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_DL;
-        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_3L;
-        std::vector< std::vector<std::shared_ptr<TH2D>>>* hists2D_mva_4L;
-
         TreeReader* treeReader;
 
         // Is this used?
