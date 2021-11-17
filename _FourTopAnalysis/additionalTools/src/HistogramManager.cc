@@ -80,6 +80,8 @@ void HistogramManager::newSample(std::string& uniqueSampleName) {
         currentSampleHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_" + uniqueSampleName);
     }
     if (histInfo2D) {
+        currentSampleHists2D = new std::vector<std::shared_ptr<TH2D>>(histInfo2D->size());
+
         for( size_t dist = 0; dist < histInfo2D->size(); ++dist ){
             currentSampleHists2D->at(dist) = histInfo2D->at(dist).makeHist_2D( histInfo2D->at(dist).name() + "_" + uniqueSampleName);
         }
