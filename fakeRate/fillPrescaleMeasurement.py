@@ -4,8 +4,10 @@
 import sys
 import os
 # in order to import local functions: append location to sys.path
-sys.path.append(os.path.abspath('../skimmer'))
-from jobSubmission import submitQsubJob, initializeJobScript
+sys.path.append(os.path.abspath('../'))
+#from jobSubmission import submitQsubJob, initializeJobScript
+from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript, submitCommandAsCondorJob
+
 
 # set global properties
 years = ['2016','2017','2018']
@@ -22,24 +24,26 @@ if not os.path.exists('./fillPrescaleMeasurement'):
 # loop and submit jobs
 cwd = os.getcwd()
 for year in years:
-    samplelist = os.path.join(samplelistdirectory,
+	samplelist = os.path.join(samplelistdirectory,
 				'samples_fakeratemeasurement_'+year+'.txt')
     # check number of samples
-    nsamples = 0
-    with open(samplelist) as sf:
-	for sl in sf: 
-	    if not sl[0] == '#': nsamples += 1
-    print('found '+str(nsamples)+' samples for '+year)
-    print('start submitting')
-    for i in range(nsamples):
-	script_name = 'fillPrescaleMeasurement.sh'
-	with open(script_name,'w') as script:
-	    initializeJobScript(script)
-	    script.write('cd {}\n'.format(cwd))
-	    command = './fillPrescaleMeasurement {} {} {} {}'.format(
+	nsamples = 0
+	with open(samplelist) as sf:
+		for sl in sf: 
+			if not sl[0] == '#': nsamples += 1
+	print('found '+str(nsamples)+' samples for '+year)
+	print('start submitting')
+	for i in range(nsamples):
+		script_name = 'fillPrescaleMeasurement.sh'
+		#with open(script_name,'w') as script:
+		#	initializeJobScript(script)
+		#	script.write('cd {}\n'.format(cwd))
+		command = './fillPrescaleMeasurement {} {} {} {}'.format(
 			year,sampledirectory,samplelist,i)
-	    script.write(command+'\n')
-	submitQsubJob(script_name)
+		submitCommandAsCondorJob(script_name, command)
+
+
+
 	# alternative: run locally
 	#os.system('bash '+script_name)
 	
