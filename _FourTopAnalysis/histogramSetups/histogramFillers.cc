@@ -295,11 +295,6 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
             fillVal.push_back((*lightLeps)[3].leptonMVATOP());
         }
     }
-    /*
-    if (selec->isMVARated()) {
-        std::vector<double> scores = selec->getMVAScores();
-        fillVal.insert(fillVal.end(), scores.begin(), scores.end());
-    }*/
 
     return fillVal;
 }

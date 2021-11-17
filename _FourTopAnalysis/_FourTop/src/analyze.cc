@@ -157,10 +157,7 @@ void FourTop:: analyze() {
             // from mva handler, then ask a class index + stuff for further calculations, keep these indices somehow managed
             if (selection->numberOfLeps() == 2) {
                 std::vector<double> scores = mva_DL->scoreEvent();
-                //selection->fillMVAScores(scores);
-                if (scores.size() != 3) {
-                    std::cout << "Scores are not long enough" << std::endl;
-                }
+
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
@@ -174,9 +171,9 @@ void FourTop:: analyze() {
 
             } else if (selection->numberOfLeps() == 3) {
                 std::vector<double> scores = mva_ML->scoreEvent();
-                selection->fillMVAScores(scores);
 
                 fillVec = fourTopHists::fillAllHists(true, selection);
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
                 TriLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
@@ -188,9 +185,9 @@ void FourTop:: analyze() {
                 
             } else {
                 std::vector<double> scores = mva_ML->scoreEvent();
-                selection->fillMVAScores(scores);
 
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
                 FourLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
