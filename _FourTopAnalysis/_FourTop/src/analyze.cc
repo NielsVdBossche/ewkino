@@ -75,7 +75,7 @@ void FourTop:: analyze() {
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            //if (entry > 10000) break;
+            if (entry > 10000) break;
             delete currentEvent;
 
             // Initialize event
@@ -157,9 +157,12 @@ void FourTop:: analyze() {
             // from mva handler, then ask a class index + stuff for further calculations, keep these indices somehow managed
             if (selection->numberOfLeps() == 2) {
                 std::vector<double> scores = mva_DL->scoreEvent();
-                selection->fillMVAScores(scores);
-
+                //selection->fillMVAScores(scores);
+                if (scores.size() != 3) {
+                    std::cout << "Scores are not long enough" << std::endl;
+                }
                 fillVec = fourTopHists::fillAllHists(false, selection);
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
                 DLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 
