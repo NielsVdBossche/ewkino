@@ -29,7 +29,7 @@ class HistogramManager {
         std::vector<HistInfo>* histInfo;
 
         std::vector<std::shared_ptr<TH2D>> *nonpromptHists2D, *currentSampleHists2D;
-        std::vector<HistInfo_2D>* histInfo2D;
+        std::vector<HistInfo_2D>* histInfo2D = nullptr;
 
     public:
         HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo);
@@ -45,7 +45,7 @@ class HistogramManager {
         void setChannel(std::string& newChannel) {channel = newChannel;}
         void setHistInfo(std::vector<HistInfo>* newHistInfo) {histInfo = new std::vector<HistInfo>(*newHistInfo);}
         void extendHistInfo(std::vector<HistInfo>* extraHistInfo);
-        void set2DHistInfo(std::vector<HistInfo_2D>* newHistInfo) {histInfo2D = new std::vector<HistInfo_2D>(*newHistInfo);}
+        void set2DHistInfo(std::vector<HistInfo_2D>* newHistInfo);
         
         void fillHistograms(std::vector<double>& fillValues, double eventWeight, bool nonPrompt);
         void fill2DHistograms(std::vector<std::pair<double, double>>& fillValues, double eventWeight, bool nonPrompt);

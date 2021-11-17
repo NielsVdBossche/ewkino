@@ -30,6 +30,14 @@ void HistogramManager::extendHistInfo(std::vector<HistInfo>* extraHistInfo) {
     }
 }
 
+void HistogramManager::set2DHistInfo(std::vector<HistInfo_2D>* newHistInfo) {
+    histInfo2D = new std::vector<HistInfo_2D>(*newHistInfo);
+    nonpromptHists2D = new std::vector<std::shared_ptr<TH2D>>(histInfo->size());
+    for( size_t dist = 0; dist < histInfo2D->size(); ++dist ){
+        nonpromptHists2D->at(dist) = histInfo2D->at(dist).makeHist_2D( histInfo2D->at(dist).name() + "_nonprompt");
+    }
+}
+
 
 void HistogramManager::fillHistograms(std::vector<double>& fillValues, double eventWeight, bool nonPrompt) {
     std::vector<std::shared_ptr<TH1D>>* histsToFill = getHistograms(nonPrompt);
@@ -71,15 +79,21 @@ void HistogramManager::newSample(std::string& uniqueSampleName) {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ){
         currentSampleHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_" + uniqueSampleName);
     }
+    if (histInfo2D) {
+        for( size_t dist = 0; dist < histInfo2D->size(); ++dist ){
+            currentSampleHists2D->at(dist) = histInfo2D->at(dist).makeHist_2D( histInfo2D->at(dist).name() + "_" + uniqueSampleName);
+        }
+    }
 }
 
 void HistogramManager::writeCurrentHistograms() {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ) {
         currentSampleHists->at(dist)->Write(TString(histInfo->at(dist).name()), TObject::kOverwrite);
     }
-
-    for( size_t dist = 0; dist < histInfo2D->size(); ++dist ) {
-        currentSampleHists2D->at(dist)->Write(TString(histInfo2D->at(dist).name()), TObject::kOverwrite);
+    if (histInfo2D) {
+        for( size_t dist = 0; dist < histInfo2D->size(); ++dist ) {
+            currentSampleHists2D->at(dist)->Write(TString(histInfo2D->at(dist).name()), TObject::kOverwrite);
+        }
     }
 }
 
@@ -87,8 +101,9 @@ void HistogramManager::writeNonpromptHistograms() {
     for( size_t dist = 0; dist < histInfo->size(); ++dist ) {
         nonpromptHists->at(dist)->Write(TString(histInfo->at(dist).name()), TObject::kOverwrite);
     }
-
-    for( size_t dist = 0; dist < histInfo2D->size(); ++dist ) {
-        nonpromptHists2D->at(dist)->Write(TString(histInfo2D->at(dist).name()), TObject::kOverwrite);
+    if (histInfo2D) {
+        for( size_t dist = 0; dist < histInfo2D->size(); ++dist ) {
+            nonpromptHists2D->at(dist)->Write(TString(histInfo2D->at(dist).name()), TObject::kOverwrite);
+        }
     }
 }

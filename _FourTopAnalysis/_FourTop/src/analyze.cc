@@ -38,7 +38,7 @@ void FourTop:: analyze() {
     HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
     size_t fourlPosMVA = info4L->size();
     FourLManager->extendHistInfo(mva_ML->createHistograms());
-    FourLManager->set2DHistInfo(mva_ML->create2DHistograms());
+    FourLManager->set2DHistInfo(mva_ML->create2DHistograms(true));
 
     fourlPosMVA += mva_ML->getMaxClass();
 
