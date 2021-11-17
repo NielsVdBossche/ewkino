@@ -243,7 +243,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     fillVal.push_back(jets->size() > 2 ? jets->at(2)->deepFlavor() : -1.);
     fillVal.push_back(jets->size() > 3 ? jets->at(3)->deepFlavor() : -1.);
 
-    /*
+    
     if (selec->getEvent()->hasOSSFLeptonPair()) {
         double mass = selec->getEvent()->bestZBosonCandidateMass();
         fillVal.push_back(mass);
@@ -269,7 +269,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     if (currentSize == fillVal.size()) {
         fillVal.push_back(16.);
     }
-    */
+    
 
     TopReconstructionNew* topReco = selec->getTopReco();
 
