@@ -9,9 +9,9 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
     std::vector<Double_t>* dataVector = nullptr;
     if (config == BDT_DL || config == NN_DL) {
-        dataVector = new std::vector<Double_t>(17);
+        dataVector = new std::vector<Double_t>(32);
     } else if (config == BDT_ML || config == NN_ML) {
-        dataVector = new std::vector<Double_t>(18);
+        dataVector = new std::vector<Double_t>(33);
     }
 
     if ( config == BDT_DL || config == NN_DL || config == BDT_ML || config == NN_ML) {
@@ -32,10 +32,26 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("pt_jet_six",  &dataVector->at(14));
         chain->SetBranchAddress("pt_lep_one",  &dataVector->at(15));
         chain->SetBranchAddress("pt_lep_two",  &dataVector->at(16));
+
+        chain->SetBranchAddress("bTagLead",        &dataVector->at(17));
+        chain->SetBranchAddress("bTagSub",         &dataVector->at(18));
+        chain->SetBranchAddress("bTagThird",       &dataVector->at(19));
+        chain->SetBranchAddress("bTagFourth",      &dataVector->at(20));
+        chain->SetBranchAddress("bTagPtLead",      &dataVector->at(21));
+        chain->SetBranchAddress("bTagPtSub",       &dataVector->at(22));
+        chain->SetBranchAddress("bTagPtThird",     &dataVector->at(23));
+        chain->SetBranchAddress("bTagPtFourth",    &dataVector->at(24));
+        chain->SetBranchAddress("massBestTop",     &dataVector->at(25));
+        chain->SetBranchAddress("massBestTopW",    &dataVector->at(26));
+        chain->SetBranchAddress("massSecTop",      &dataVector->at(27));
+        chain->SetBranchAddress("massSecTopW",     &dataVector->at(28));
+        chain->SetBranchAddress("m2ll",            &dataVector->at(29));
+        chain->SetBranchAddress("mtLeadLepMET",    &dataVector->at(30));
+        chain->SetBranchAddress("mtSubLeadLepMET", &dataVector->at(31));
     }
 
     if (config == BDT_ML || config == NN_ML) {
-        chain->SetBranchAddress("pt_lep_three", &dataVector->at(17));
+        chain->SetBranchAddress("pt_lep_three", &dataVector->at(32));
     }
 
     return {weight, dataVector};
@@ -59,6 +75,21 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
     dataloader->AddVariable("pt_jet_six", 'F');
     dataloader->AddVariable("pt_lep_one", 'F');
     dataloader->AddVariable("pt_lep_two", 'F');
+    dataloader->AddVariable("bTagLead",       'F');
+    dataloader->AddVariable("bTagSub",        'F');
+    dataloader->AddVariable("bTagThird",      'F');
+    dataloader->AddVariable("bTagFourth",     'F');
+    dataloader->AddVariable("bTagPtLead",     'F');
+    dataloader->AddVariable("bTagPtSub",      'F');
+    dataloader->AddVariable("bTagPtThird",    'F');
+    dataloader->AddVariable("bTagPtFourth",   'F');
+    dataloader->AddVariable("massBestTop",    'F');
+    dataloader->AddVariable("massBestTopW",   'F');
+    dataloader->AddVariable("massSecTop",     'F');
+    dataloader->AddVariable("massSecTopW",    'F');
+    dataloader->AddVariable("m2ll",           'F');
+    dataloader->AddVariable("mtLeadLepMET",   'F');
+    dataloader->AddVariable("mtSubLeadLepMET",'F');
 
     if (config == BDT_ML || config == NN_ML) {
         dataloader->AddVariable("pt_lep_three", 'F');
