@@ -91,7 +91,7 @@ bool MuonSelector::isFOBase() const{
     if( muonPtr->uncorrectedPt() <= 10 ) return false;
 
     if (muonPtr->leptonMVATOP() < 0.65) {
-        if( muonPtr->ptRatio() <= 0.45 ) return false;
+        if( muonPtr->ptRatio() <= 0.55 ) return false;
     }
 
     if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
