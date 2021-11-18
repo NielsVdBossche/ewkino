@@ -1,7 +1,7 @@
 #include "../interface/mvaSetups.h"
 
 TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile) {
-    std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D:AnalysisType=";
+    std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
 
     analysType += "Multiclass";
 
