@@ -39,7 +39,7 @@ void FourTop::fillMVAVariables(bool isML) {
 
     //massToPt         =  currentEvent;
     min_dr_lep_b     =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[0] : 5.);
-    sec_min_dr_lep_b =  (mindR_Bjet_lep.size() > 1 ? mindR_Bjet_lep[1] : 5.);
+    sec_min_dr_lep_b =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.);
 
     jetCol->sortByPt();
     ptJetOne         =  (n_jets_f >= 1 ? jetCol->at(0)->pt() : 0.);
