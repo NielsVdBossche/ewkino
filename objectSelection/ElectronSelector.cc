@@ -109,7 +109,7 @@ bool ElectronSelector::isFOBase() const{
 
     if (electronPtr->leptonMVATOP() < 0.6) {
         if (! electronPtr->isLoosePOGElectron()) return false;
-        if (electronPtr->ptRatio() < 0.5) return false; 
+        if (electronPtr->ptRatio() < 0.55) return false; 
     }
 
     return true;

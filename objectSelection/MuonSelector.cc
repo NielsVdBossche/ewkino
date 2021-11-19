@@ -91,7 +91,7 @@ bool MuonSelector::isFOBase() const{
     if( muonPtr->uncorrectedPt() <= 10 ) return false;
 
     if (muonPtr->leptonMVATOP() < 0.65) {
-        if( muonPtr->ptRatio() <= 0.55 ) return false;
+        if( muonPtr->ptRatio() <= 0.65 ) return false;
     }
 
     if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
@@ -103,8 +103,9 @@ bool MuonSelector::isFOBase() const{
 bool MuonSelector::isFO2016PreVFP() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PreVFP(), bTagWP::mediumDeepFlavor2016PreVFP(), muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PreVFP(), bTagWP::mediumDeepFlavor2016PreVFP(), muonPtr->uncorrectedPt() );
+        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PreVFP()) return false;
     } else {
         if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016PreVFP() ) return false;
     }
@@ -115,8 +116,9 @@ bool MuonSelector::isFO2016PreVFP() const{
 bool MuonSelector::isFO2016PostVFP() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PostVFP(), bTagWP::mediumDeepFlavor2016PostVFP(), muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PostVFP(), bTagWP::mediumDeepFlavor2016PostVFP(), muonPtr->uncorrectedPt() );
+        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PostVFP()) return false;
     } else {
         if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016PostVFP() ) return false;
     }
@@ -128,8 +130,10 @@ bool MuonSelector::isFO2016PostVFP() const{
 bool MuonSelector::isFO2017() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2017(), bTagWP::mediumDeepFlavor2017(), muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2017(), bTagWP::mediumDeepFlavor2017(), muonPtr->uncorrectedPt() );
+        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2017()) return false;
+
     } else {
         if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2017() ) return false;
     }
@@ -141,8 +145,10 @@ bool MuonSelector::isFO2017() const{
 bool MuonSelector::isFO2018() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2018(), bTagWP::mediumDeepFlavor2018(), muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2018(), bTagWP::mediumDeepFlavor2018(), muonPtr->uncorrectedPt() );
+        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2018()) return false;
+
     } else {
         if( muonPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2018() ) return false;
     }
