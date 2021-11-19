@@ -81,4 +81,8 @@ void FourTop::fillMVAVariables(bool isML) {
     mtLeadLepMET = mt(*lightLeps->at(0), selection->getEvent()->met());
     mtSubLeadLepMET = mt(*lightLeps->at(1), selection->getEvent()->met());
     m2ll = mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selection->getEvent()->met());
+
+    m2bb = (n_bjets_f >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
+    m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
+
 }

@@ -232,7 +232,10 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         mt(*lightLeps->at(1), selec->getEvent()->met()),
 
         //mt2::mt2(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met()),
-        mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met())
+        mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met()),
+        (nb >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
+        (nb >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
+
 
     };
 

@@ -36,6 +36,8 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     tree->Branch("massSecTop",      &massSecTop,     "massSecTop/D");
     tree->Branch("massSecTopW",     &massSecTopW,    "massSecTopW/D");
     tree->Branch("m2ll",            &m2ll,           "m2ll/D");
+    tree->Branch("m2bb",            &m2bb,           "m2bb/D");
+    tree->Branch("m2lblb",          &m2lblb,         "m2lblb/D");
     tree->Branch("mtLeadLepMET",    &mtLeadLepMET,   "mtLeadLepMET/D");
     tree->Branch("mtSubLeadLepMET", &mtSubLeadLepMET,"mtSubLeadLepMET/D");
 
