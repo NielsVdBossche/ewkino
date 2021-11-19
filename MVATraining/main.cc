@@ -47,10 +47,10 @@ int main(int argc, char const *argv[]) {
     if (conf < mvaConfiguration::NN_DL) {
         std::cout << "DOING ADDITION OF BDTS" << std::endl;
 
-        if (searchSetup == "search") mvaSetupManager::searchBDT(factory, data, setup);
-        else mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 0.10, 20, true);
+        mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 0.10, 20, true);
 
-        factory->OptimizeAllMethods("ROCIntegral","FitGA");
+        if (searchSetup == "search") factory->OptimizeAllMethods("ROCIntegral","FitGA");
+        
     } else {
         mvaSetupManager::addNN(factory, data, setup);
     }
