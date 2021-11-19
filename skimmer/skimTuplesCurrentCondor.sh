@@ -1,1 +1,1 @@
-python skimTuplesCondor.py /pnfs/iihe/cms/store/user/lwezenbe/heavyNeutrino 2017_ULv3 /pnfs/iihe/cms/store/user/nivanden/skims/rawSkims light_SSdilepton_or_trilep 250 24:00:00
+python skimTuples.py /pnfs/iihe/cms/store/user/nivanden/heavyNeutrino 2016_ULpreVFP /pnfs/iihe/cms/store/user/nivanden/skims/rawSkims light_SSdilepton_or_trilep 100 24:00:00 TTWW

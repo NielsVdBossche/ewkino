@@ -7,7 +7,8 @@ import time
 
 
 #import other code from framework
-from jobSubmission import submitQsubJob, initializeJobScript
+sys.path.append(os.path.abspath('../'))
+from jobSubmission.condorTools import submitCommandsAsCondorJob
 from fileListing import *
 
 
@@ -48,17 +49,20 @@ if __name__ == '__main__' :
     output_directory_base = sys.argv[3] 
     skim_condition = sys.argv[4]
     files_per_job = int(sys.argv[5]) if len( sys.argv ) >= 6 else 50
-    wall_time = sys.argv[6] if len( sys.argv ) >= 7 else '24:00:00' 
+    processes = sys.argv[6] if len( sys.argv ) >= 7 else ''
     if len( sys.argv ) <= 4:
         print( 'Error: skimTuples.py requires additional command-line arguments.' )
         print( 'Usage: python skimTuples.py < input_directory > < ntuple_version > < output_directory > < skim_condition > < files_per_job > < wall_time >' )
-        print( 'files_per_job and wall_time have default values of 50 and 24:00:00' )
+        print( 'files_per_job and wall_time have default values of 50' )
         sys.exit()
     
     #make a list of samples (the main directories) and the subdirectories with the latest version of the ntuples ( one for each main directory )
     sample_directories = []
     sample_sub_directories = []
     for sample_directory, subdirectory in listSampleDirectories( input_directory, version_name ):
+        if processes != '' and not processes in sample_directory: 
+            continue
+        
         sample_directories.append( sample_directory )
         sample_sub_directories.append( subdirectory )
     
@@ -81,17 +85,12 @@ if __name__ == '__main__' :
         
             #make a job script 
             script_name = 'skimmer.sh'
-            with open( script_name, 'w') as script:
-                initializeJobScript( script, cmssw_version = 'CMSSW_10_6_20')
-                script.write('cd {}\n'.format( current_directory ) )
-                script.write("echo 'working on {}'\n".format(chunk[0]))
-                for f in chunk :
-                    skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
-                    script.write( skim_command )
+
+            commands = []
+            for f in chunk :
+                skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
+                commands.append(skim_command)
             
-
-            submission_command = 'condor_submit skimJob.sub'
-
-            qsub_output = subprocess.check_output( submission_command, shell=True, stderr=subprocess.STDOUT )
+            submitCommandsAsCondorJob(script_name, commands)
 
 

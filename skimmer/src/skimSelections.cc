@@ -27,8 +27,8 @@ bool passLightDLSameChargeSkim(Event& event) {
 
 bool passLight_SSdilepton_or_trilep(Event& event) {
     event.selectLooseLeptons();
-    event.cleanElectronsFromFOMuons();
-    event.makeSubLeptonCollections(); 
+    //event.cleanElectronsFromFOMuons();
+    //event.makeSubLeptonCollections(); 
     return (passLightDLSameChargeSkim(event) || passLightTrilepSkim(event));
 }
 
@@ -98,5 +98,4 @@ bool passSkim( Event& event, skimCondition cond){
 
     //event.makeSubLeptonCollections();
     return skimFunctionMap[cond](event);
-
 }
