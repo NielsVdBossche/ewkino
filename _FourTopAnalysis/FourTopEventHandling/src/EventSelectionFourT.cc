@@ -121,6 +121,8 @@ bool EventFourT::passLeanSelection() {
     if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
     if (nLep == 2 && mediumLeps->hasOSPair()) return false;
 
+    if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
+
     if (nJets < 2 || nMediumB < 1) return false;
     if (ht < 100) return false;
 
