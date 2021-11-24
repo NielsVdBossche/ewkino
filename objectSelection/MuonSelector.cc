@@ -73,7 +73,7 @@ FO muon selection
 //interpolation between loose and medium working point of deep flavor from 20 to 45 GeV in muon pT as defined in the ttH analysis
 double slidingDeepFlavorThreshold( const double looseWP, const double mediumWP, const double pt ){
     static const double minPt = 20.;
-    static const double maxPt = 45.;
+    static const double maxPt = 40.;
     if( pt < minPt ){
         return mediumWP;
     } else if( pt > maxPt ){
@@ -94,18 +94,17 @@ bool MuonSelector::isFOBase() const{
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
 
-    //if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
+    if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
 
     return true;
 }
 
-
 bool MuonSelector::isFO2016PreVFP() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PreVFP(), bTagWP::mediumDeepFlavor2016PreVFP(), muonPtr->uncorrectedPt() );
-        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PreVFP()) return false;
+        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.02, muonPtr->uncorrectedPt() );
+        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PreVFP()) return false;
     } 
     
     return true;
@@ -114,9 +113,9 @@ bool MuonSelector::isFO2016PreVFP() const{
 bool MuonSelector::isFO2016PostVFP() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2016PostVFP(), bTagWP::mediumDeepFlavor2016PostVFP(), muonPtr->uncorrectedPt() );
-        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PostVFP()) return false;
+        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.02, muonPtr->uncorrectedPt() );
+        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PostVFP()) return false;
     } 
     
     return true;
@@ -126,9 +125,9 @@ bool MuonSelector::isFO2016PostVFP() const{
 bool MuonSelector::isFO2017() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2017(), bTagWP::mediumDeepFlavor2017(), muonPtr->uncorrectedPt() );
-        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2017()) return false;
+        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.025, muonPtr->uncorrectedPt() );
+        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2017()) return false;
 
     } 
     
@@ -139,9 +138,9 @@ bool MuonSelector::isFO2017() const{
 bool MuonSelector::isFO2018() const{
     
     if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        //double deepFlavorCut = slidingDeepFlavorThreshold( bTagWP::looseDeepFlavor2018(), bTagWP::mediumDeepFlavor2018(), muonPtr->uncorrectedPt() );
-        //if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2018()) return false;
+        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.025, muonPtr->uncorrectedPt() );
+        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
+        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2018()) return false;
 
     } 
     
