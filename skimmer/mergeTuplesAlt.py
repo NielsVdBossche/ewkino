@@ -30,7 +30,7 @@ if (len(sys.argv) >= 3):
     if (sys.argv[2] == "TTTrainingSamples"):
         outSubdir += "/mvaSamples"
 
-
+processes = ["TTWW", "TTWZ", "TTZZ", "TTHH", "TTWH", "TTZH"]
 
 for dir in os.listdir(inputBase):
     print(dir)
@@ -38,6 +38,9 @@ for dir in os.listdir(inputBase):
     version = dir.split("_version_")[-1]
 
     if (version != skimVersion):
+        continue
+
+    if not any(process in dir for process in processes):
         continue
     
     # join path outputbase + folder
