@@ -4,6 +4,8 @@
 #include "../../objects/interface/PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
 
+#include <cmath>
+
 template< typename ObjectType > class PhysicsObjectCollection;
 
 class GenLepton : public PhysicsObject {
@@ -21,6 +23,7 @@ class GenLepton : public PhysicsObject {
         Int_t momPdg() {return _MomPdg;}
         bool isPrompt() const {return _IsPrompt;}
         bool isLightLepton() const {return (_Flavor == 0 || _Flavor == 1);}
+        bool isUseful() const {return absEta() < 2.5;}
 
 
     private:

@@ -14,7 +14,7 @@ std::vector<HistInfo>* histInfoGen(std::string flag, bool trilep, bool fourlep) 
         HistInfo( "leptonEtaLeading_" + flag, "#eta (l1)", 14, -2.8, 2.8), // Might switch to det segmentation
         HistInfo( "leptonPhiLeading_" + flag, "#phi (l1)", 12, - M_PI, M_PI),
         HistInfo( "leptonELeading_" + flag, "E(l1) [GeV]", 50, 0, 500),
-        HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 40, 0, 200),
+        HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 40, 0, 150),
         HistInfo( "leptonEtaSecond_" + flag, "#eta (l2)", 14, -2.8, 2.8), // Might switch to det segmentation
         HistInfo( "leptonPhiSecond_" + flag, "#phi (l2)", 12, - M_PI, M_PI),
         HistInfo( "leptonESecond_" + flag, "E(l2) [GeV]", 50, 0, 500),
