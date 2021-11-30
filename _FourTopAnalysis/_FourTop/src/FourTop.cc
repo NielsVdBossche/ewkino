@@ -9,7 +9,7 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-FourTop::FourTop(std::vector<std::string>& argvString, int mode) {
+FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, int mode) {
     // Set settings according to input
     // prepare details of analysis in separate functions
     
@@ -18,7 +18,7 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode) {
     selection = new EventFourT();
 
     if (mode < 2) {
-        std::string outputFileName = "Output/AnalysisOutput_";
+        std::string outputFileName = "Output/" + outputName + "_";
         std::ostringstream oss;
 
         auto t = std::time(nullptr);
