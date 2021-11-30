@@ -41,6 +41,7 @@ void EventFourT::objectSelection() {
 
     looseLeps = new LeptonCollection(event->looseLeptonCollection());
     mediumLeps = new LeptonCollection(event->TightLeptonCollection());
+    foLeps = new LeptonCollection(event->FOLeptonCollection());
 
     jets = new JetCollection(event->jetCollection());
     bTagJets = new JetCollection(event->mediumBTagCollection());
@@ -52,6 +53,7 @@ void EventFourT::objectSelection() {
     nLooseLep = looseLeps->size();
     nLep = mediumLeps->size();
     ht = jets->scalarPtSum();
+    met = event->met().pt();
 }
 
 bool EventFourT::passBaselineEventSelection() {
@@ -137,5 +139,12 @@ bool EventFourT::passLeanSelection() {
         if (nJets < 4) return false;
     }
     
+    return true;
+}
+
+bool EventFourT::leptonsArePrompt() {
+    for( const auto& leptonPtr : *mediumLeps ){
+        if( !leptonPtr->isPrompt() ) return false;
+    }
     return true;
 }

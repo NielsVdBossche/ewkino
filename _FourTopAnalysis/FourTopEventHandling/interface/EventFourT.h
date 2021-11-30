@@ -25,7 +25,9 @@ class EventFourT {
         Event* event = nullptr;
 
         LeptonCollection* looseLeps;
+        LeptonCollection* foLeps;
         LeptonCollection* mediumLeps;
+
 
         // These should only be used to increase nonprompt yield. Should be triggered by other functions and only done when ttbar sample used
         // Additionally, the event selection based on these should take into account the full event selection but allow one of the leptons to be loose
@@ -35,7 +37,7 @@ class EventFourT {
         JetCollection* bTagJets;
 
         int nJets, nMediumB, nTightB, nLooseB, nLooseLep, nLep;
-        double ht;
+        double ht, met;
 
         bool isNormalSelected;
 
@@ -68,6 +70,8 @@ class EventFourT {
         int numberOfLooseBJets() const {return nLooseB;}
         int numberOfLooseLeps() const {return nLooseLep;}
         int numberOfLeps() const {return nLep;}
+        double getHT() const {return ht;}
+        double getMET() const {return met;}
         bool isEventNormalSelected() const {return isNormalSelected;}
 
         void objectSelection();
@@ -76,6 +80,9 @@ class EventFourT {
         bool passLeanSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
+
+        bool leptonsArePrompt();
+        bool leptonsAreTight();
 
         // altLep event selection and activation functions
         bool passBaselineEventSelectionWithAltLeptons();

@@ -65,6 +65,7 @@ class FourTop {
         // Main loop functions
         void analyze();
         void analyzeLean();
+        void cutFlow();
         void createMVATrainingSamples();
 
         void linkMVAVariables(TTree* tree, bool isML);
