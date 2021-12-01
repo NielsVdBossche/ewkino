@@ -16,9 +16,9 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
     if ( config == BDT_DL || config == NN_DL || config == BDT_ML || config == NN_ML) {
         chain->SetBranchAddress("N_jets",    &dataVector->at(0));
-        chain->SetBranchAddress("N_b",       &dataVector->at(1));
-        chain->SetBranchAddress("N_b_tight", &dataVector->at(2));
-        chain->SetBranchAddress("N_b_loose", &dataVector->at(3));
+        //chain->SetBranchAddress("N_b",       &dataVector->at(1));
+        //chain->SetBranchAddress("N_b_tight", &dataVector->at(2));
+        //chain->SetBranchAddress("N_b_loose", &dataVector->at(3));
         chain->SetBranchAddress("dr_bJets",  &dataVector->at(4));
         chain->SetBranchAddress("dr_leps",   &dataVector->at(5));
         chain->SetBranchAddress("aziAngle",  &dataVector->at(6));
@@ -29,14 +29,14 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("pt_jet_one",  &dataVector->at(11));
         chain->SetBranchAddress("pt_jet_four", &dataVector->at(12));
         chain->SetBranchAddress("pt_jet_five", &dataVector->at(13));
-        chain->SetBranchAddress("pt_jet_six",  &dataVector->at(14));
+        //chain->SetBranchAddress("pt_jet_six",  &dataVector->at(14));
         chain->SetBranchAddress("pt_lep_one",  &dataVector->at(15));
         chain->SetBranchAddress("pt_lep_two",  &dataVector->at(16));
 
         chain->SetBranchAddress("bTagLead",        &dataVector->at(17));
         chain->SetBranchAddress("bTagSub",         &dataVector->at(18));
         chain->SetBranchAddress("bTagThird",       &dataVector->at(19));
-        chain->SetBranchAddress("bTagFourth",      &dataVector->at(20));
+        //chain->SetBranchAddress("bTagFourth",      &dataVector->at(20));
         chain->SetBranchAddress("bTagPtLead",      &dataVector->at(21));
         chain->SetBranchAddress("bTagPtSub",       &dataVector->at(22));
         chain->SetBranchAddress("bTagPtThird",     &dataVector->at(23));
@@ -48,6 +48,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("m2ll",            &dataVector->at(29));
         chain->SetBranchAddress("mtLeadLepMET",    &dataVector->at(30));
         chain->SetBranchAddress("mtSubLeadLepMET", &dataVector->at(31));
+
     }
 
     if (config == BDT_ML || config == NN_ML) {
@@ -59,9 +60,9 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
 void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* dataloader) {
     dataloader->AddVariable("N_jets", 'F');
-    dataloader->AddVariable("N_b", 'F');
-    dataloader->AddVariable("N_b_tight", 'F');
-    dataloader->AddVariable("N_b_loose", 'F');
+    //dataloader->AddVariable("N_b", 'F');
+    //dataloader->AddVariable("N_b_tight", 'F');
+    //dataloader->AddVariable("N_b_loose", 'F');
     dataloader->AddVariable("dr_bJets", 'F');
     dataloader->AddVariable("dr_leps", 'F');
     dataloader->AddVariable("aziAngle", 'F');
@@ -72,13 +73,13 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
     dataloader->AddVariable("pt_jet_one", 'F');
     dataloader->AddVariable("pt_jet_four", 'F');
     dataloader->AddVariable("pt_jet_five", 'F');
-    dataloader->AddVariable("pt_jet_six", 'F');
+    //dataloader->AddVariable("pt_jet_six", 'F');
     dataloader->AddVariable("pt_lep_one", 'F');
     dataloader->AddVariable("pt_lep_two", 'F');
     dataloader->AddVariable("bTagLead",       'F');
     dataloader->AddVariable("bTagSub",        'F');
     dataloader->AddVariable("bTagThird",      'F');
-    dataloader->AddVariable("bTagFourth",     'F');
+    //dataloader->AddVariable("bTagFourth",     'F');
     dataloader->AddVariable("bTagPtLead",     'F');
     dataloader->AddVariable("bTagPtSub",      'F');
     dataloader->AddVariable("bTagPtThird",    'F');
@@ -179,6 +180,13 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
 
             for (int i=0; i < newClassElement->GetEntries(); i++) {
                 newClassElement->GetEntry(i);
+
+                std::vector<Double_t> variables = *vars.second;
+                variables.erase(variables.begin()+1);
+                variables.erase(variables.begin()+2);
+                variables.erase(variables.begin()+3);
+                variables.erase(variables.begin()+14);
+                variables.erase(variables.begin()+20);
 
                 float rnd = r->Rndm();
                 if (rnd < ptrain) {
