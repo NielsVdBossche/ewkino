@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     // Settings splitsen if necessary
 
     // main func call
-    FourTop analysisObject("Cutflow", argvStr, 2);
+    FourTop analysisObject("Cutflow", argvStr, 1);
 
     analysisObject.cutFlow();
 }
