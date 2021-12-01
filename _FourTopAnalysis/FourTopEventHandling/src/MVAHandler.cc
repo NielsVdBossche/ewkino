@@ -31,9 +31,9 @@ void MVAHandler_4T::initReader() {
     }
 
     reader->AddVariable("N_jets", &n_jets_f);
-    reader->AddVariable("N_b", &n_bjets_f);
-    reader->AddVariable("N_b_tight", &n_b_tight);
-    reader->AddVariable("N_b_loose", &n_b_loose);
+    //reader->AddVariable("N_b", &n_bjets_f);
+    //reader->AddVariable("N_b_tight", &n_b_tight);
+    //reader->AddVariable("N_b_loose", &n_b_loose);
     reader->AddVariable("dr_bJets", &deltaRBjets);
     reader->AddVariable("dr_leps", &dRleps);
     reader->AddVariable("aziAngle", &aziAngle);
@@ -44,14 +44,14 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("pt_jet_one", &ptJetOne);
     reader->AddVariable("pt_jet_four", &ptJetFour);
     reader->AddVariable("pt_jet_five", &ptJetFive);
-    reader->AddVariable("pt_jet_six", &ptJetSix);
+    //reader->AddVariable("pt_jet_six", &ptJetSix);
     reader->AddVariable("pt_lep_one", &ptLepOne);
     reader->AddVariable("pt_lep_two", &ptLepTwo);
 
     reader->AddVariable("bTagLead",        &bTagLead);
     reader->AddVariable("bTagSub",         &bTagSub);
     reader->AddVariable("bTagThird",       &bTagThird);
-    reader->AddVariable("bTagFourth",      &bTagFourth);
+    //reader->AddVariable("bTagFourth",      &bTagFourth);
     reader->AddVariable("bTagPtLead",      &bTagPtLead);
     reader->AddVariable("bTagPtSub",       &bTagPtSub);
     reader->AddVariable("bTagPtThird",     &bTagPtThird);
