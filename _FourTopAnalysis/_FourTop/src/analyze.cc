@@ -43,15 +43,15 @@ void FourTop:: analyze() {
     fourlPosMVA += mva_ML->getMaxClass();
 
     std::string channelCRZ = "CRZ";
-    std::vector<HistInfo>* infoCRZ = fourTopHists::allHists(channelCRZ, false, false);
+    std::vector<HistInfo>* infoCRZ = fourTopHists::infoLean(channelCRZ, true);
     HistogramManager* CRZManager = new HistogramManager(channelCRZ, infoCRZ);
 
     std::string channelCRW = "CRW";
-    std::vector<HistInfo>* infoCRW = fourTopHists::allHists(channelCRW, false, false);
+    std::vector<HistInfo>* infoCRW = fourTopHists::infoLean(channelCRW, false);
     HistogramManager* CRWManager = new HistogramManager(channelCRW, infoCRW);
 
     std::string channelCRO = "CRO";
-    std::vector<HistInfo>* infoCRO = fourTopHists::allHists(channelCRO, false, false);
+    std::vector<HistInfo>* infoCRO = fourTopHists::infoLean(channelCRO, false);
     HistogramManager* CROManager = new HistogramManager(channelCRO, infoCRO);
 
     std::cout << "event loop" << std::endl;
@@ -128,8 +128,7 @@ void FourTop:: analyze() {
                 continue;
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
-                fillVec = fourTopHists::fillAllHists(false, selection);
-                //histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
+                fillVec = fourTopHists::fillAllLean(true, selection);
                 CRZManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
                 continue;
@@ -137,7 +136,7 @@ void FourTop:: analyze() {
 
             // Full object selection (only keep the real useful stuff and rest is control)
             if (! selection->passFullEventSelection()) {
-                fillVec = fourTopHists::fillAllHists(false, selection);
+                fillVec = fourTopHists::fillAllLean(false, selection);
                 CROManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
                 continue;
@@ -145,7 +144,7 @@ void FourTop:: analyze() {
 
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
-                fillVec = fourTopHists::fillAllHists(false, selection);
+                fillVec = fourTopHists::fillAllLean(false, selection);
                 CRWManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 continue;
             }

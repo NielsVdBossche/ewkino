@@ -301,3 +301,55 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
 
     return fillVal;
 }
+
+std::vector<double> fillAllHists(bool multilep, EventFourT* selec){
+    JetCollection* jets = selec->getJetCol();
+    JetCollection* bJets = selec->getBtagJetCol();
+    LightLeptonCollection* lightLeps;
+    if (selec->isEventNormalSelected()) {
+        lightLeps = (LightLeptonCollection*) selec->getMediumLepCol();
+    } else {
+        lightLeps = (LightLeptonCollection*) selec->getAltLeptonCol();
+    }
+
+    int nb = bJets->size();
+    int nlep = lightLeps->size();
+
+    std::vector<double> fillVal = {
+        (*lightLeps)[0].pt(),
+        (*lightLeps)[1].pt(),
+        (*lightLeps)[0].eta(),
+        (*lightLeps)[1].eta(),
+        (*lightLeps)[0].energy(),
+        (*lightLeps)[1].energy(),
+
+        double(bJets->size()),
+        double(jets->size()),
+
+        jets->scalarPtSum(),
+        selec->getEvent()->metPt(),
+
+        lightLeps->scalarPtSum(), // LT
+        double(lightLeps->size()),
+    };
+
+
+
+    
+    if (selec->getEvent()->hasOSSFLeptonPair()) {
+        double mass = selec->getEvent()->bestZBosonCandidateMass();
+        fillVal.push_back(mass);
+    } else {
+        fillVal.push_back(0.);
+
+    }
+
+    if (multilep) {
+        fillVal.push_back(nlep >= 3? (*lightLeps)[2].pt() : 0.);
+        fillVal.push_back(nlep >= 3? (*lightLeps)[2].eta() : 0.);
+        fillVal.push_back(nlep >= 3? (*lightLeps)[2].energy() : 0.);
+    }
+
+    return fillVal;
+}
+
