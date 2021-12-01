@@ -212,7 +212,7 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
     return histInfoVec;
 }
 
-std::vector<HistInfo>* infoLean(std::string flag, bool multilep) {
+std::vector<HistInfo>* fourTopHists::infoLean(std::string flag, bool multilep) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
