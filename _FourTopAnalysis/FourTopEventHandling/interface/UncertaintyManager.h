@@ -1,5 +1,5 @@
-#ifndef UNCERTAINTY_4T_H
-#define UNCERTAINTY_4T_H
+#ifndef UNCERTAINTYMANAGER_4T_H
+#define UNCERTAINTYMANAGER_4T_H
 
 #include <map>
 #include <vector>
@@ -10,23 +10,12 @@
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
 
-#include "../../FourTopEventHandling/interface/EventFourT.h"
-#include "../../FourTopEventHandling/interface/MVAHandler.h"
-#include "../../additionalTools/interface/histHelper.h"
+#include "EventFourT.h"
+#include "MVAHandler.h"
+#include "Uncertainty.h"
 
 #include "../../../TreeReader/interface/TreeReader.h"
-
-// Shape uncertainties
-// JEC and JER are year dependant
-enum shapeUncertaintyIdentifier {
-    jecDown,
-    jecUp,
-    jerDown,
-    jerUp,
-    end  /// always at the end for easier loops
-};
-
-// potential things to add: btag, met, leptons, scale, pileup, prefire, 
+#include "../../additionalTools/interface/histHelper.h"
 
 // Next should be flat uncertainty (map or somthing)
 
@@ -51,43 +40,45 @@ class UncertaintyWrapper {
         // this function is then applied by the uncertainty object i guess.
         // OR a base object for the LL with a dedicated subclass which is actually used in the linking, but this might get complicated fast
         
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_DL;
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_DL;
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_DL;
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_DL;
+//
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_ML;
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_ML;
+//
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRZ;
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRZ;
+//
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRW;
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRW;
+//
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRO;
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRO;
 
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_ML;
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_ML;
+        Uncertainty *unc_dl, *unc_3l, *unc_4l, *unc_crw, *unc_crz, *unc_cro;
 
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRZ;
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRZ;
-
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRW;
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRW;
-
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRO;
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRO;
-
-        std::vector<HistInfo>* histogramsUnc_info_DL;
-
-        std::vector<HistInfo>* histogramsUnc_info_ML;
-
-        std::vector<HistInfo>* histogramsUnc_info_CRZ;
-
-        std::vector<HistInfo>* histogramsUnc_info_CRW;
-
-        std::vector<HistInfo>* histogramsUnc_info_CRO;
+        //std::vector<HistInfo>* histogramsUnc_info_DL;
+//
+        //std::vector<HistInfo>* histogramsUnc_info_ML;
+//
+        //std::vector<HistInfo>* histogramsUnc_info_CRZ;
+//
+        //std::vector<HistInfo>* histogramsUnc_info_CRW;
+//
+        //std::vector<HistInfo>* histogramsUnc_info_CRO;
 
         EventFourT* selection;
         TreeReader* treeReader;
     public:
         UncertaintyWrapper(EventFourT* selection, TreeReader* reader);
 
-        void initDL(std::vector<HistInfo>* dlInfo);
-        void initML(std::vector<HistInfo>* mlInfo);
-        void initCRZ(std::vector<HistInfo>* crzInfo);
-        void initCRW(std::vector<HistInfo>* crwInfo);
-        void initCRO(std::vector<HistInfo>* croInfo);
+        //void initDL(std::vector<HistInfo>* dlInfo);
+        //void initML(std::vector<HistInfo>* mlInfo);
+        //void initCRZ(std::vector<HistInfo>* crzInfo);
+        //void initCRW(std::vector<HistInfo>* crwInfo);
+        //void initCRO(std::vector<HistInfo>* croInfo);
 
-        std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* uncertaintyHistogramInit(std::vector<HistInfo>* info, bool up);
+        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* uncertaintyHistogramInit(std::vector<HistInfo>* info, bool up);
 
         // all other required functions
 };
