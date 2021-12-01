@@ -182,11 +182,11 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
                 newClassElement->GetEntry(i);
 
                 std::vector<Double_t> variables = *vars.second;
-                variables.erase(variables.begin()+1);
-                variables.erase(variables.begin()+2);
-                variables.erase(variables.begin()+3);
-                variables.erase(variables.begin()+14);
                 variables.erase(variables.begin()+20);
+                variables.erase(variables.begin()+14);
+                variables.erase(variables.begin()+3);
+                variables.erase(variables.begin()+2);
+                variables.erase(variables.begin()+1);
 
                 float rnd = r->Rndm();
                 if (rnd < ptrain) {
