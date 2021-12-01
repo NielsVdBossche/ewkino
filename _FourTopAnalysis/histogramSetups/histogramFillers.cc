@@ -302,7 +302,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     return fillVal;
 }
 
-std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec){
+std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
     JetCollection* jets = selec->getJetCol();
     JetCollection* bJets = selec->getBtagJetCol();
     LightLeptonCollection* lightLeps;
