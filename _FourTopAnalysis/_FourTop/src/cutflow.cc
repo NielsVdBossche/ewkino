@@ -6,7 +6,7 @@
 
 std::vector<HistInfo>* getCutflowHist(std::string flag) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
-    *histInfoVec = {HistInfo("Cutflow_" + flag, "", 11, -.5, 10.5)};
+    *histInfoVec = {HistInfo("Cutflow_" + flag, "", 12, -1.5, 10.5)};
     return histInfoVec;
 }
 
