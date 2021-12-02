@@ -41,6 +41,7 @@ bool ElectronSelector::isLooseBase() const{
     if (electronPtr->dz() >= 0.1) return false;
     if (electronPtr->sip3d() >= 8) return false;
     if (electronPtr->miniIso() >= 0.4) return false;
+    if (fabs(electronPtr->etaSuperCluster()) > 1.4442 && fabs(electronPtr->etaSuperCluster()) < 1.566) return false;
 
     // Tight charge requirements:
     //if (! electronPtr->passChargeConsistency()) return false;
