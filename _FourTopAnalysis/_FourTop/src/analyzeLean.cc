@@ -11,8 +11,8 @@ void FourTop:: analyzeLean() {
     std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
     size_t dlPosMVA = infoDL->size();
-    DLManager->extendHistInfo(mva_DL->createHistograms());
-    DLManager->set2DHistInfo(mva_DL->create2DHistograms());
+    DLManager->extendHistInfo(mva_DL->createHistograms(""));
+    DLManager->set2DHistInfo(mva_DL->create2DHistograms(""));
 
     dlPosMVA += mva_DL->getMaxClass();
 
@@ -20,8 +20,8 @@ void FourTop:: analyzeLean() {
     std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
     HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
     size_t mlPosMVA = info3L->size();
-    TriLManager->extendHistInfo(mva_ML->createHistograms());
-    TriLManager->set2DHistInfo(mva_ML->create2DHistograms());
+    TriLManager->extendHistInfo(mva_ML->createHistograms(""));
+    TriLManager->set2DHistInfo(mva_ML->create2DHistograms(""));
 
     mlPosMVA += mva_ML->getMaxClass();
 
@@ -29,8 +29,8 @@ void FourTop:: analyzeLean() {
     std::vector<HistInfo>* info4L = fourTopHists::allHists(channel4L, true, true);
     HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
     size_t fourlPosMVA = info4L->size();
-    FourLManager->extendHistInfo(mva_ML->createHistograms(true));
-    FourLManager->set2DHistInfo(mva_ML->create2DHistograms(true));
+    FourLManager->extendHistInfo(mva_ML->createHistograms("", true));
+    FourLManager->set2DHistInfo(mva_ML->create2DHistograms("", true));
 
     fourlPosMVA += mva_ML->getMaxClass();
 
