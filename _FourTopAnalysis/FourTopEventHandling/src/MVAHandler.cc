@@ -70,10 +70,10 @@ void MVAHandler_4T::initReader() {
 
     reader->BookMVA("BDTCurr", weightFilePath);
 
-    createHistograms();
+    createHistograms("");
 }
 
-std::vector<HistInfo>* MVAHandler_4T::createHistograms(bool fourLep) {
+std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
     std::vector<HistInfo>* histInfoVec = new std::vector<HistInfo>;
@@ -104,14 +104,14 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(bool fourLep) {
     }; // Review names when appropriate
 
     for (int el = 0; el < maxClass; el++) {
-        std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier;
+        std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
         histInfoVec->push_back(HistInfo(name, xaxis, 15, 0., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
-        std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier;
+        std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
         histInfoVec->push_back(HistInfo(name, xaxis , 15, 0., 1.));
@@ -120,7 +120,7 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(bool fourLep) {
     return histInfoVec;
 }
 
-std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(bool fourLep) {
+std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
     std::vector<HistInfo_2D>* histInfoVec = new std::vector<HistInfo_2D>;
@@ -149,7 +149,7 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(bool fourLep) {
     }; // Review names when appropriate
 
     for (int el = 0; el < maxClass; el++) {
-        std::string name = "2D_BDTScore_" + translator[(MVAClasses) el] + "_" + translator[(MVAClasses) ((el + 1) % maxClass)] + identifier;
+        std::string name = "2D_BDTScore_" + translator[(MVAClasses) el] + "_" + translator[(MVAClasses) ((el + 1) % maxClass)] + identifier + additionalFlag;
 
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
         std::string yaxis = "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)];

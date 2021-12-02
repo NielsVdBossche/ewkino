@@ -61,8 +61,8 @@ class MVAHandler_4T {
         ~MVAHandler_4T();
         
         void initReader();
-        std::vector<HistInfo>* createHistograms(bool fourLep = false);
-        std::vector<HistInfo_2D>* create2DHistograms(bool fourLep = false);
+        std::vector<HistInfo>* createHistograms(std::string additionalFlag, bool fourLep = false);
+        std::vector<HistInfo_2D>* create2DHistograms(std::string additionalFlag, bool fourLep = false);
 
         int getMaxClass() const {return maxClass;}
 
