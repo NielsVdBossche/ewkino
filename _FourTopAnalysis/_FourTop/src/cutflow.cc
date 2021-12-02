@@ -6,7 +6,7 @@
 
 std::vector<HistInfo>* getCutflowHist(std::string flag) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
-    *histInfoVec = {HistInfo("Cutflow_" + flag, "", 12, -1.5, 10.5)};
+    *histInfoVec = {HistInfo("Cutflow_" + flag, "", 11, 0.5, 10.5)};
     return histInfoVec;
 }
 
@@ -59,13 +59,13 @@ void FourTop::cutFlow() {
                 else if (selection->numberOfLooseLeps() == 4) fourlepSteps = steps;
 
                 for (int i = 0; i < dlSteps; i++) {
-                    dlHist->Fill(i - 1, weight);
+                    dlHist->Fill(i, weight);
                 }
                 for (int i = 0; i < trilepSteps; i++) {
-                    trilepHist->Fill(i - 1, weight);
+                    trilepHist->Fill(i, weight);
                 }
                 for (int i = 0; i < fourlepSteps; i++) {
-                    fourlepHist->Fill(i - 1, weight);
+                    fourlepHist->Fill(i, weight);
                 }
             }
 
@@ -121,7 +121,7 @@ void FourTop::cutFlow() {
             if (selection->getMET() < 25) continue;
             steps++;
 
-            if (selection->numberOfLeps() == 3) steps++;
+            if (selection->numberOfLeps() <= 3) steps++;
             if (selection->numberOfLeps() == 2) steps++;
 
         }
