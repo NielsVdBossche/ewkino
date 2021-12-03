@@ -158,7 +158,7 @@ std::pair< bool, bool > analysisTools::fileIs2017Or2018( const std::string& file
 
 
 void analysisTools::checkYearString( const std::string& yearString ){
-    if( !( yearString == "2016PreVFP" || yearString == "2016PostVFP" || yearString == "2017" || yearString == "2018" || yearString == "2016") ){
+    if( !( yearString == "2016PreVFP" || yearString == "2016PostVFP" || yearString == "2017" || yearString == "2018" || yearString == "2016" || yearString == "Combi") ){
         throw std::invalid_argument( "Year string is '" + yearString + "' while it must be either '2016PreVFP', '2016PostVFP', '2017' or '2018'" );
     }
 }

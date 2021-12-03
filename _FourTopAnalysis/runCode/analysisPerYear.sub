@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   analysisPerYear.sh
+
+log         =   /user/nivanden/condor/logs/analysis_year_$(ClusterId).log
+error       =   /user/nivanden/condor/error/analysis_year_$(ClusterId).err
+output      =   /user/nivanden/condor/output/analysis_year_$(ClusterId).out
+
+queue 1 arguments in 2016PreVFP.txt, 2016PostVFP.txt, 2017.txt, 2018.txt

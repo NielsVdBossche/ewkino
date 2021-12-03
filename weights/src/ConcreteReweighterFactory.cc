@@ -125,70 +125,11 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
 
     //reweighter to return
     CombinedReweighter combinedReweighter;
-
-    //TODO: mva ID???
-    //make muon ID Reweighter
-    // note: these files are not present in the repository, replace by code below in order for the reweighter to work!
-    /*TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/leptonSF_m_" + year + "_3lTight.root" ).c_str() );
-    std::shared_ptr< TH2 > muonSFHist( dynamic_cast< TH2* >( muonSFFile->Get( "SFglobal" ) ) ); */
-    TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/looseToTight_" + year + "_m_3l.root" ).c_str() );
-    std::shared_ptr< TH2 > muonSFHist( dynamic_cast< TH2* >( muonSFFile->Get( "EGamma_SF2D" ) ) );
-    muonSFHist->SetDirectory( gROOT );
-    muonSFFile->Close();
-
-    MuonReweighter muonReweighter( muonSFHist, new TightSelector );
-    combinedReweighter.addReweighter( "muonID", std::make_shared< ReweighterMuons >( muonReweighter ) );
-
-    //TODO: mva ID???
-    //make electron ID Reweighter
-    // note: these files are not present in the repository, replace by code below in order for the reweighter to work!
-    /*TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/leptonSF_e_" + year + "_3lTight.root" ).c_str() );
-    std::shared_ptr< TH2 > electronSFHist( dynamic_cast< TH2* >( eleSFFile->Get( "SFglobal" ) ) ); */
-    TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/looseToTight_" + year + "_e_3l.root" ).c_str() );
-    std::shared_ptr< TH2 > electronSFHist( dynamic_cast< TH2* >( eleSFFile->Get( "EGamma_SF2D" ) ) );
-    electronSFHist->SetDirectory( gROOT );
-    eleSFFile->Close();
-
-    ElectronIDReweighter electronIDReweighter( electronSFHist, new TightSelector );
-    combinedReweighter.addReweighter( "electronID", std::make_shared< ReweighterElectronsID >( electronIDReweighter ) );
-
-    //make electron Reconstruction Reweighter
-    if( year == "2016" || year == "2017" ){
-
-        //pT below 20 GeV
-        TFile* eleRecoSFFile_pTBelow20 = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/egamma_recoEff_" + year + "_pTBelow20.root" ).c_str() );
-        std::shared_ptr< TH2 > electronRecoSFHist_pTBelow20( dynamic_cast< TH2* >( eleRecoSFFile_pTBelow20->Get( "EGamma_SF2D" ) ) );
-        electronRecoSFHist_pTBelow20->SetDirectory( gROOT );
-        eleRecoSFFile_pTBelow20->Close();
-
-        ElectronIDReweighter electronRecoReweighter_pTBelow20( electronRecoSFHist_pTBelow20, new LooseMaxPtSelector< 20 > );
-        combinedReweighter.addReweighter( "electronReco_pTBelow20", std::make_shared< ReweighterElectronsID >( electronRecoReweighter_pTBelow20 ) );
-
-        //pT above 20 GeV
-        TFile* eleRecoSFFile_pTAbove20 = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/egamma_recoEff_" + year + "_pTAbove20.root" ).c_str() );
-        std::shared_ptr< TH2 > electronRecoSFHist_pTAbove20( dynamic_cast< TH2* >( eleRecoSFFile_pTAbove20->Get( "EGamma_SF2D" ) ) );
-        electronRecoSFHist_pTAbove20->SetDirectory( gROOT );
-        eleRecoSFFile_pTAbove20->Close();
-
-        ElectronIDReweighter electronRecoReweighter_pTAbove20( electronRecoSFHist_pTAbove20, new LooseMinPtSelector< 20 > );
-        combinedReweighter.addReweighter( "electronReco_pTAbove20", std::make_shared< ReweighterElectronsID >( electronRecoReweighter_pTAbove20 ) );
-
-    } else if( year == "2018" ){
-
-        //inclusive pT 
-        TFile* eleRecoSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/egamma_recoEff_" + year + ".root" ).c_str() );
-        std::shared_ptr< TH2 > electronRecoSFHist ( dynamic_cast< TH2* >( eleRecoSFFile->Get( "EGamma_SF2D" ) ) );
-        electronRecoSFHist->SetDirectory( gROOT );
-        eleRecoSFFile->Close();
-
-        ElectronIDReweighter electronRecoReweighter( electronRecoSFHist, new LooseSelector );
-        combinedReweighter.addReweighter( "electronReco", std::make_shared< ReweighterElectronsID >( electronRecoReweighter ) );
-
-    }
+    
     
     //make pileup Reweighter
     combinedReweighter.addReweighter( "pileup", std::make_shared< ReweighterPileup >( samples, weightDirectory ) );
-    
+    /*
     //make b-tagging Reweighter 
     const std::string& bTagWP = "tight";
 
@@ -223,7 +164,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     combinedReweighter.addReweighter( "bTag_light", std::make_shared< ReweighterBTagLightFlavorDeepCSV >( weightDirectory, bTagSFPath, bTagWP, bTagEffMCHist_udsg ) );
 
     //make prefire Reweighter
-    combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
+    combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );*/
 
     return combinedReweighter;
 }
