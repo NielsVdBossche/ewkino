@@ -19,10 +19,6 @@
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 
-#include "../../../weights/interface/CombinedReweighter.h"
-#include "../../../weights/interface/ConcreteReweighterFactory.h"
-
-
 class FourTop {
     private:
         TreeReader* treeReader;
@@ -33,8 +29,8 @@ class FourTop {
         bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar 
 
         // General settings for analysis run
-        std::string yearString = "Combi";
- 
+
+
         // IO-management
         TFile* outfile;
         
@@ -65,8 +61,6 @@ class FourTop {
         void createMVAHandlers();
 
         // Event selection components
-        void setYearString(std::string year) {yearString = year;}
-        std::string getYearString() {return yearString;}
         
         // Main loop functions
         void analyze();
