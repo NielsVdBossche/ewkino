@@ -120,9 +120,9 @@ void FourTop:: analyze() {
             }
 
             double weight = currentEvent->weight();
-            if( currentEvent->isMC() ){
-                weight *= reweighter.totalWeight( *currentEvent );
-            }
+            //if( currentEvent->isMC() ){
+            ////    weight *= reweighter.totalWeight( *currentEvent );
+            //}
             
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
@@ -131,7 +131,7 @@ void FourTop:: analyze() {
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
                 fillVec = fourTopHists::fillAllLean(true, selection);
-                CRZManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+                CRZManager->fillHistograms(fillVec, weight, nonPrompt);
 
                 continue;
             }
@@ -139,14 +139,14 @@ void FourTop:: analyze() {
             // Full object selection (only keep the real useful stuff and rest is control)
             if (! selection->passFullEventSelection()) {
                 fillVec = fourTopHists::fillAllLean(false, selection);
-                CROManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+                CROManager->fillHistograms(fillVec, weight, nonPrompt);
                 continue;
             }
 
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 fillVec = fourTopHists::fillAllLean(false, selection);
-                CRWManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+                CRWManager->fillHistograms(fillVec, weight, nonPrompt);
 
                 continue;
             }
