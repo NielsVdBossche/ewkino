@@ -128,7 +128,8 @@ void FourTop:: analyze() {
                 continue;
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
-                fillVec = fourTopHists::fillAllLean(true, selection);
+                fillVec = fourTopHists::fillAllHists(false, selection);
+                //histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), currentEvent->weight());
                 CRZManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
                 continue;
@@ -136,7 +137,7 @@ void FourTop:: analyze() {
 
             // Full object selection (only keep the real useful stuff and rest is control)
             if (! selection->passFullEventSelection()) {
-                fillVec = fourTopHists::fillAllLean(false, selection);
+                fillVec = fourTopHists::fillAllHists(false, selection);
                 CROManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
                 continue;
@@ -144,7 +145,7 @@ void FourTop:: analyze() {
 
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
-                fillVec = fourTopHists::fillAllLean(false, selection);
+                fillVec = fourTopHists::fillAllHists(false, selection);
                 CRWManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 continue;
             }
