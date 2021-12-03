@@ -30,6 +30,13 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 outputFileName += "EnlargedNonprompt_";
             }
         }
+
+        if (argvString[1] != "allSamples.txt") {
+            std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
+            setYearString(newYearString);
+        }
+
+        outputFileName += yearString + "_";
         
         oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << ".root";
 
