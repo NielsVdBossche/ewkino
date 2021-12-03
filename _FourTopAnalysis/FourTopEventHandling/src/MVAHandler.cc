@@ -56,15 +56,17 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("bTagPtSub",       &bTagPtSub);
     reader->AddVariable("bTagPtThird",     &bTagPtThird);
     reader->AddVariable("bTagPtFourth",    &bTagPtFourth);
-    reader->AddVariable("massBestTop",     &massBestTop);
-    reader->AddVariable("massBestTopW",    &massBestTopW);
-    reader->AddVariable("massSecTop",      &massSecTop);
-    reader->AddVariable("massSecTopW",     &massSecTopW);
     reader->AddVariable("m2ll",            &m2ll);
     reader->AddVariable("mtLeadLepMET",    &mtLeadLepMET);
     reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
 
+    if (!isML) {
+        reader->AddVariable("massSecTop",      &massSecTop);
+
+    }
+
     if (isML) {
+        reader->AddVariable("massBestTop",     &massBestTop);
         reader->AddVariable("pt_lep_three", &ptLepThree);
     }
 
