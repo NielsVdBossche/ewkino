@@ -1,9 +1,12 @@
-#include "../interface/Uncertainty.h"
+#include "../interface/UncertaintyManager.h"
 
 UncertaintyWrapper::UncertaintyWrapper(EventFourT* selection, TreeReader* reader) : selection(selection), treeReader(reader) {
-
+    // init uncertainties for all channels
 }
 
+
+
+/*
 std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* UncertaintyWrapper::uncertaintyHistogramInit(std::vector<HistInfo>* info, bool up) {
     std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* output = new std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>();
 
@@ -59,3 +62,4 @@ void UncertaintyWrapper::initCRO(std::vector<HistInfo>* croInfo) {
     histogramsUncUp_CRO = uncertaintyHistogramInit(croInfo, true);
 }
 
+*/

@@ -6,15 +6,12 @@
 
 void FourTop:: analyze() {
 
-    // Loop samples
+    // reweighter creation
+    std::cout << "building reweighter" << std::endl;
+    std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
+    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
 
-    // -> Loop entries
-    // ->-> Fill histograms
-    // Similar to ewkino example but using more of an object-oriented way of working... + more pointers!
-
-    // build histograms for kinematic variables
-    // use a fill vector builder and a int or something like that to specify setup?
-    // might be more useful... 
+    // Histogram creation
     std::string channelDL = "DL";
     std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
@@ -121,6 +118,11 @@ void FourTop:: analyze() {
                     break;
                 }
             }
+
+            double weight = currentEvent->weight();
+            if( currentEvent->isMC() ){
+                weight *= reweighter.totalWeight( *currentEvent );
+            }
             
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
@@ -138,7 +140,6 @@ void FourTop:: analyze() {
             if (! selection->passFullEventSelection()) {
                 fillVec = fourTopHists::fillAllLean(false, selection);
                 CROManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
-
                 continue;
             }
 
@@ -146,6 +147,7 @@ void FourTop:: analyze() {
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
                 fillVec = fourTopHists::fillAllLean(false, selection);
                 CRWManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+
                 continue;
             }
 
@@ -160,13 +162,13 @@ void FourTop:: analyze() {
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
-                DLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+                DLManager->fillHistograms(fillVec, weight, nonPrompt);
                 
                 std::vector<std::pair<double, double>> fillVec2D = mva_DL->fill2DVector();
-                DLManager->fill2DHistograms(fillVec2D, currentEvent->weight(), nonPrompt);
+                DLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
 
                 std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();                
-                DLManager->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, currentEvent->weight(), nonPrompt);
+                DLManager->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
 
             } else if (selection->numberOfLeps() == 3) {
                 std::vector<double> scores = mva_ML->scoreEvent();
@@ -174,13 +176,13 @@ void FourTop:: analyze() {
                 fillVec = fourTopHists::fillAllHists(true, selection);
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
-                TriLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+                TriLManager->fillHistograms(fillVec, weight, nonPrompt);
 
                 std::vector<std::pair<double, double>> fillVec2D = mva_ML->fill2DVector();
-                TriLManager->fill2DHistograms(fillVec2D, currentEvent->weight(), nonPrompt);
+                TriLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
 
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();                
-                TriLManager->fillSingleHistogram(mlPosMVA + classAndScore.first, classAndScore.second, currentEvent->weight(), nonPrompt);
+                TriLManager->fillSingleHistogram(mlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
                 
             } else {
                 std::vector<double> scores = mva_ML->scoreEvent();
@@ -188,13 +190,13 @@ void FourTop:: analyze() {
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
-                FourLManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+                FourLManager->fillHistograms(fillVec, weight, nonPrompt);
 
                 std::vector<std::pair<double, double>> fillVec2D = mva_ML->fill2DVector();
-                FourLManager->fill2DHistograms(fillVec2D, currentEvent->weight(), nonPrompt);
+                FourLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
 
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();                
-                FourLManager->fillSingleHistogram(fourlPosMVA + classAndScore.first, classAndScore.second, currentEvent->weight(), nonPrompt);
+                FourLManager->fillSingleHistogram(fourlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
                 
             }
 
