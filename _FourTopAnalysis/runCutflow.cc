@@ -1,12 +1,7 @@
 #include "globalSettings.h"
 
 #include "../plotting/tdrStyle.h"
-#include "../Tools/interface/Sample.h"
-#include "../Tools/interface/HistInfo.h"
-#include "../Tools/interface/histogramTools.h"
-#include "../TreeReader/interface/TreeReader.h"
 
-#include "histogramSetups/histogramSetup.h"
 #include "_FourTop/interface/FourTop.h"
 
 // Sets up histograms
@@ -28,7 +23,7 @@ int main(int argc, char* argv[]) {
     // Settings splitsen if necessary
 
     // main func call
-    FourTop analysisObject("trainingTrees", argvStr, 2);
+    FourTop analysisObject("Cutflow", argvStr, 0);
 
-    analysisObject.createMVATrainingSamples();
+    analysisObject.cutFlow();
 }

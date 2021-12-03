@@ -4,8 +4,9 @@
 import sys
 import os
 # in order to import local functions: append location to sys.path
-sys.path.append(os.path.abspath('../skimmer'))
-from jobSubmission import submitQsubJob, initializeJobScript
+sys.path.append(os.path.abspath('../'))
+#from jobSubmission import submitQsubJob, initializeJobScript
+from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript, submitCommandAsCondorJob
 
 flavours = ['muon']
 years = ['2016']
@@ -33,16 +34,19 @@ for flavour in flavours:
 				if(sl[0] == '#'): continue
 				if(sl[0] == '\n'): continue
 				nsamples += 1
-
+			
 		print('found '+str(nsamples)+' samples for '+year+' '+flavour+'s.')
 		for i in range(nsamples):
-			with open(script_name,'w') as script:
-				initializeJobScript(script)
-				script.write('cd {}\n'.format(cwd))
-				command = './fillTuneFOSelection {} {} {} {} {}'.format(
-						flavour,year,sampledirectory,samplelist,i)
-				script.write(command+'\n')
+			#with open(script_name,'w') as script:
+			#	initializeJobScript(script)
+			#	script.write('cd {}\n'.format(cwd))
+			command = './fillTuneFOSelection {} {} {} {} {}'.format(
+					flavour,year,sampledirectory,samplelist,i)
+			
+			submitCommandAsCondorJob(script_name, command)
+
+			#	script.write(command+'\n')
 				
-			submitQsubJob(script_name)
+			#submitQsubJob(script_name)
 			# alternative: run locally
 			#os.system('bash '+script_name)

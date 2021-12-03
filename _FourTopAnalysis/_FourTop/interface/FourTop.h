@@ -49,11 +49,15 @@ class FourTop {
         Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Double_t ptLepOne, ptLepTwo, ptLepThree;
         Double_t bTagLead, bTagSub, bTagThird, bTagFourth;
+        Double_t bTagPtLead, bTagPtSub, bTagPtThird, bTagPtFourth;
         Double_t ptJetTwo, ptJetThree, ptLepFour;
+        Double_t massBestTop, massBestTopW, massSecTop, massSecTopW;
+        Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
+        Double_t m2bb, m2lblb;
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
-        FourTop(std::vector<std::string>& argvString, int mode = 0);
+        FourTop(std::string outputName, std::vector<std::string>& argvString, int mode = 0);
         ~FourTop();
 
         // Prepare 
@@ -67,6 +71,7 @@ class FourTop {
         // Main loop functions
         void analyze();
         void analyzeLean();
+        void cutFlow();
         void createMVATrainingSamples();
 
         void linkMVAVariables(TTree* tree, bool isML);

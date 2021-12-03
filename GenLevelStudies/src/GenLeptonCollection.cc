@@ -9,6 +9,7 @@ GenLeptonCollection::GenLeptonCollection(const TreeReader& treeReader) {
 void GenLeptonCollection::selectLightLeptons() {
     selectObjects(& GenLepton::isLightLepton);
     selectObjects(& GenLepton::isPrompt);
+    selectObjects(& GenLepton::isUseful);
 }
 
 double GenLeptonCollection::getLT() {

@@ -4,8 +4,10 @@
 import os
 import sys
 # in order to import local functions: append location to sys.path
-sys.path.append(os.path.abspath('../skimmer'))
-from jobSubmission import submitQsubJob, initializeJobScript
+sys.path.append(os.path.abspath('../'))
+from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript, submitCommandAsCondorJob
+
+#from jobSubmission import submitQsubJob, initializeJobScript
 
 flavours = ['muon']
 years = ['2016']
@@ -18,30 +20,32 @@ if not os.path.exists('./plotTuneFOSelection'):
 
 # hadd files if needed
 for flavour in flavours:
-    for year in years:
-	filename = 'tuneFOSelection_'+flavour+'_'+year+'_histograms.root'
-	if os.path.exists(filename): continue
-	subfolder = 'TuneFOSelectionSubFiles'
-	cmd = 'hadd '+filename+' '+subfolder
-	cmd += '/tuneFOSelection_'+flavour+'_'+year+'_histograms_sample*.root'
-	#print(cmd)
-	os.system(cmd)
+	for year in years:
+		filename = 'tuneFOSelection_'+flavour+'_'+year+'_histograms.root'
+		if os.path.exists(filename): continue
+		subfolder = 'TuneFOSelectionSubFiles'
+		cmd = 'hadd '+filename+' '+subfolder
+		cmd += '/tuneFOSelection_'+flavour+'_'+year+'_histograms_sample*.root'
+		#print(cmd)
+		os.system(cmd)
 
 cwd = os.getcwd()
 for flavour in flavours:
-    for year in years:
+	for year in years:
 	# check file
-	filename  = 'tuneFOSelection_'+flavour+'_'+year+'_histograms.root'
-	if not os.path.exists(filename):
-	    print('### ERROR ###: file '+filename+' not found, skipping it.')
-	    continue
-	script_name = 'plotTuneFOSelection.sh'
-	with open(script_name,'w') as script:
-            initializeJobScript(script)
-            script.write('cd {}\n'.format(cwd))
-            command = './plotTuneFOSelection {} {}'.format(flavour,year)
-            script.write(command+'\n')
-        submitQsubJob(script_name)
-        # alternative: run locally
-        #os.system('bash '+script_name)
+		filename  = 'tuneFOSelection_'+flavour+'_'+year+'_histograms.root'
+		if not os.path.exists(filename):
+			print('### ERROR ###: file '+filename+' not found, skipping it.')
+			continue
+		script_name = 'plotTuneFOSelection.sh'
+		#with open(script_name,'w') as script:
+		#	initializeJobScript(script)
+		#	script.write('cd {}\n'.format(cwd))
+		command = './plotTuneFOSelection {} {}'.format(flavour,year)
+		submitCommandAsCondorJob(script_name, command)
+
+		#	script.write(command+'\n')
+		#submitQsubJob(script_name)
+			# alternative: run locally
+			#os.system('bash '+script_name)
 

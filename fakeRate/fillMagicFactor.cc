@@ -103,7 +103,7 @@ void determineMagicFactor( const std::string& leptonFlavor, const std::string& y
     }
     std::cout<<"finished event loop"<<std::endl;
 
-    std::string file_name = "magicFactor_" + leptonFlavor + "_" + year;
+    std::string file_name = "MagicFactorSubFiles/magicFactor_" + leptonFlavor + "_" + year;
     file_name.append("_histograms_sample_"+std::to_string(sampleIndex)+".root");
     TFile* histogram_file = TFile::Open( file_name.c_str(), "RECREATE" );
 

@@ -2,9 +2,9 @@ CC=g++ -Wall -Wextra -O3 -g
 CFLAGS= -Wl,--no-as-needed,-lpthread
 CXXFLAGS = -std=gnu++17
 LDFLAGS=`root-config --glibs --cflags` -lTMVA
-SOURCES= main.cc ../codeLibrary.o src/*.cc ../_FourTopAnalysis/additionalTools/src/*.cc
+SOURCES= runCutflow.cc ../codeLibrary.o _FourTop/src/*.cc FourTopEventHandling/src/*.cc histogramSetups/*.cc additionalTools/src/*.cc TopQuarkReconstruction/src/*.cc
 OBJECTS=$(SOURCES:.cc=.o)
-EXECUTABLE=genLevelExec
+EXECUTABLE=cutflowExec
 
 all: 
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)

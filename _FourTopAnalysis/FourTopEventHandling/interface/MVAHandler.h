@@ -7,6 +7,8 @@
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
 #include "../../../Tools/interface/histogramTools.h"
+#include "../../../Tools/interface/mt2.h"
+
 
 #include <utility>
 #include <memory>
@@ -46,6 +48,11 @@ class MVAHandler_4T {
         Float_t min_dr_lep_b, sec_min_dr_lep_b;
         Float_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Float_t ptLepOne, ptLepTwo, ptLepThree;
+        Float_t bTagLead, bTagSub, bTagThird, bTagFourth;
+        Float_t bTagPtLead, bTagPtSub, bTagPtThird, bTagPtFourth;
+        Float_t ptJetTwo, ptJetThree, ptLepFour;
+        Float_t massBestTop, massBestTopW, massSecTop, massSecTopW;
+        Float_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
 
         std::vector<double> scoresCurrent;
 
@@ -54,8 +61,8 @@ class MVAHandler_4T {
         ~MVAHandler_4T();
         
         void initReader();
-        std::vector<HistInfo>* createHistograms(bool fourLep = false);
-        std::vector<HistInfo_2D>* create2DHistograms(bool fourLep = false);
+        std::vector<HistInfo>* createHistograms(std::string additionalFlag, bool fourLep = false);
+        std::vector<HistInfo_2D>* create2DHistograms(std::string additionalFlag, bool fourLep = false);
 
         int getMaxClass() const {return maxClass;}
 

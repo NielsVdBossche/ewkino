@@ -16,8 +16,8 @@ void FourTop:: analyze() {
     std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
     size_t dlPosMVA = infoDL->size();
-    DLManager->extendHistInfo(mva_DL->createHistograms());
-    DLManager->set2DHistInfo(mva_DL->create2DHistograms());
+    DLManager->extendHistInfo(mva_DL->createHistograms(""));
+    DLManager->set2DHistInfo(mva_DL->create2DHistograms(""));
 
     dlPosMVA += mva_DL->getMaxClass();
 
@@ -25,8 +25,8 @@ void FourTop:: analyze() {
     std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
     HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
     size_t mlPosMVA = info3L->size();
-    TriLManager->extendHistInfo(mva_ML->createHistograms());
-    TriLManager->set2DHistInfo(mva_ML->create2DHistograms());
+    TriLManager->extendHistInfo(mva_ML->createHistograms(""));
+    TriLManager->set2DHistInfo(mva_ML->create2DHistograms(""));
 
     mlPosMVA += mva_ML->getMaxClass();
 
@@ -34,21 +34,21 @@ void FourTop:: analyze() {
     std::vector<HistInfo>* info4L = fourTopHists::allHists(channel4L, true, true);
     HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
     size_t fourlPosMVA = info4L->size();
-    FourLManager->extendHistInfo(mva_ML->createHistograms(true));
-    FourLManager->set2DHistInfo(mva_ML->create2DHistograms(true));
+    FourLManager->extendHistInfo(mva_ML->createHistograms("", true));
+    FourLManager->set2DHistInfo(mva_ML->create2DHistograms("", true));
 
     fourlPosMVA += mva_ML->getMaxClass();
 
     std::string channelCRZ = "CRZ";
-    std::vector<HistInfo>* infoCRZ = fourTopHists::allHists(channelCRZ, false, false);
+    std::vector<HistInfo>* infoCRZ = fourTopHists::infoLean(channelCRZ, true);
     HistogramManager* CRZManager = new HistogramManager(channelCRZ, infoCRZ);
 
     std::string channelCRW = "CRW";
-    std::vector<HistInfo>* infoCRW = fourTopHists::allHists(channelCRW, false, false);
+    std::vector<HistInfo>* infoCRW = fourTopHists::infoLean(channelCRW, false);
     HistogramManager* CRWManager = new HistogramManager(channelCRW, infoCRW);
 
     std::string channelCRO = "CRO";
-    std::vector<HistInfo>* infoCRO = fourTopHists::allHists(channelCRO, false, false);
+    std::vector<HistInfo>* infoCRO = fourTopHists::infoLean(channelCRO, false);
     HistogramManager* CROManager = new HistogramManager(channelCRO, infoCRO);
 
     std::cout << "event loop" << std::endl;
@@ -130,25 +130,24 @@ void FourTop:: analyze() {
                 continue;
             } else if (! selection->passZBosonVeto()) {
                 // Build CRZ
-                fillVec = fourTopHists::fillAllHists(false, selection);
-                //histHelper::histFiller(fillVec, &(hists_CRZ->at(fillIndex)), weight);
-                CRZManager->fillHistograms(fillVec, weight, nonPrompt);
+                fillVec = fourTopHists::fillAllLean(true, selection);
+                CRZManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
 
                 continue;
             }
 
             // Full object selection (only keep the real useful stuff and rest is control)
             if (! selection->passFullEventSelection()) {
-                fillVec = fourTopHists::fillAllHists(false, selection);
-                CROManager->fillHistograms(fillVec, weight, nonPrompt);
-
+                fillVec = fourTopHists::fillAllLean(false, selection);
+                CROManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
                 continue;
             }
 
             // Build CRW (might expand these)
             if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
-                fillVec = fourTopHists::fillAllHists(false, selection);
-                CRWManager->fillHistograms(fillVec, weight, nonPrompt);
+                fillVec = fourTopHists::fillAllLean(false, selection);
+                CRWManager->fillHistograms(fillVec, currentEvent->weight(), nonPrompt);
+
                 continue;
             }
 

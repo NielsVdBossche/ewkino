@@ -266,14 +266,14 @@ void fillMCFakeRateMeasurementHistograms( const std::string& flavor, const std::
     
     // define binning for 2D histograms
     // old binning:
-    const std::vector< double > ptBins = {10., 20., 30., 45., 65., 100.};
+    //const std::vector< double > ptBins = {10., 20., 30., 45., 65., 100.};
     // new binning:
-    //const std::vector< double > ptBins = {10., 15., 20., 30., 45., 100.};
+    const std::vector< double > ptBins = {10., 15., 20., 30., 45., 100.};
     std::vector< double > etaBins;
     if( isMuon ){
         etaBins = { 0., 1.2, 2.1, 2.4 }; 
     } else {
-	etaBins = { 0., 0.8, 1.442, 2.5 };
+	    etaBins = { 0., 0.8, 1.442, 2.5 };
     }
 
     // initialize 2D histograms for numerator and denominator
@@ -397,7 +397,7 @@ void fillMCFakeRateMeasurementHistograms( const std::string& flavor, const std::
 
     std::cout<<"finished event loop"<<std::endl;
 
-    std::string file_name = "fakeRateMeasurement_MC_" + flavor + "_" + year;
+    std::string file_name = "MCFakeRateMeasurementSubFiles/fakeRateMeasurement_MC_" + flavor + "_" + year;
     file_name.append("_histograms_sample_"+std::to_string(sampleIndex)+".root");
     TFile* histogram_file = TFile::Open( file_name.c_str(), "RECREATE" );
 

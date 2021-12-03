@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   trainMVALean.sh
+
+log         =   /user/nivanden/condor/logs/trainMVALean_$(ClusterId).log
+error       =   /user/nivanden/condor/error/trainMVALean_$(ClusterId).err
+output      =   /user/nivanden/condor/output/trainMVALean_$(ClusterId).out
+
+queue

@@ -33,7 +33,7 @@ bool ElectronSelector::isLooseBase() const{
     if (electronPtr->leptonMVATOP() < 0.5) return false;
     */
 
-    if (electronPtr->pt() < 7) return false;
+    if (electronPtr->uncorrectedPt() < 7) return false;
     if (electronPtr->absEta() >= 2.5) return false;
     // IsGSF
     if (electronPtr->numberOfMissingHits() >= 2) return false;
@@ -41,6 +41,7 @@ bool ElectronSelector::isLooseBase() const{
     if (electronPtr->dz() >= 0.1) return false;
     if (electronPtr->sip3d() >= 8) return false;
     if (electronPtr->miniIso() >= 0.4) return false;
+    if (fabs(electronPtr->etaSuperCluster()) > 1.4442 && fabs(electronPtr->etaSuperCluster()) < 1.566) return false;
 
     // Tight charge requirements:
     //if (! electronPtr->passChargeConsistency()) return false;
@@ -101,7 +102,7 @@ bool ElectronSelector::isFOBase() const{
     //if (electronPtr->pt() < 20) return false;
 
     // Fakeable object
-    if (electronPtr->pt() <= 10) return false;
+    if (electronPtr->uncorrectedPt() <= 10) return false;
     if( electronPtr->hOverE() >= 0.1 ) return false;
     if( electronPtr->inverseEMinusInverseP() <= -0.04 ) return false;
     if (! electronPtr->passChargeConsistency()) return false;
@@ -109,7 +110,7 @@ bool ElectronSelector::isFOBase() const{
 
     if (electronPtr->leptonMVATOP() < 0.6) {
         if (! electronPtr->isLoosePOGElectron()) return false;
-        if (electronPtr->ptRatio() < 0.5) return false; 
+        if (electronPtr->ptRatio() < 0.45) return false; 
     }
 
     return true;
@@ -118,14 +119,14 @@ bool ElectronSelector::isFOBase() const{
 
 bool ElectronSelector::isFO2016PreVFP() const{
     if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016PreVFP() ) return false;
+        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2016PreVFP() ) return false;
     }
     return true;
 }
 
 bool ElectronSelector::isFO2016PostVFP() const{
     if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2016PostVFP() ) return false;
+        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2016PostVFP() ) return false;
     }
     return true;
 }
@@ -133,7 +134,7 @@ bool ElectronSelector::isFO2016PostVFP() const{
 
 bool ElectronSelector::isFO2017() const{
     if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2017() ) return false;
+        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2017() ) return false;
     }
     return true;
 }
@@ -141,7 +142,7 @@ bool ElectronSelector::isFO2017() const{
 
 bool ElectronSelector::isFO2018() const{
     if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::mediumDeepFlavor2018() ) return false;
+        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2018() ) return false;
     }
     return true;
 }
@@ -187,5 +188,5 @@ cone correction
 */
 
 double ElectronSelector::coneCorrection() const{
-    return ( 0.9 / electronPtr->ptRatio() );
+    return ( 0.71 / electronPtr->ptRatio() );
 }

@@ -4,8 +4,10 @@
 import sys
 import os
 # in order to import local functions: append location to sys.path
-sys.path.append(os.path.abspath('../skimmer'))
-from jobSubmission import submitQsubJob, initializeJobScript
+sys.path.append(os.path.abspath('../'))
+#from jobSubmission import submitQsubJob, initializeJobScript
+from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript, submitCommandAsCondorJob
+
 
 # set global properties
 years = ['2016','2017','2018']
@@ -34,20 +36,22 @@ for year in years:
 				if(sl[0] == '#'): continue
 				if(sl[0] == '\n'): continue
 				nsamples += 1
+
 		print('found '+str(nsamples)+' samples for '+year+' '+flavour+'s.')
-        for i in range(nsamples):
+		for i in range(nsamples):
 			if(istestrun and i!=11): continue
 			
 			script_name = 'fillMCFakeRateMeasurement.sh'
-			with open(script_name,'w') as script:
-				initializeJobScript(script)
-				script.write('cd {}\n'.format(cwd))
-				command = './fillMCFakeRateMeasurement {} {} {} {} {} {}'.format(
-				flavour,year,sampledirectory,samplelist,i,istestrun)
-				script.write(command+'\n')
+			#with open(script_name,'w') as script:
+				#initializeJobScript(script)
+				#script.write('cd {}\n'.format(cwd))
+			command = './fillMCFakeRateMeasurement {} {} {} {} {} {}'.format(
+						flavour,year,sampledirectory,samplelist,i,istestrun)
+				#script.write(command+'\n')
 
 			if not istestrun:
-				submitQsubJob(script_name)
+				submitCommandAsCondorJob(script_name, command)	
+				#submitQsubJob(script_name)
 				# alternative: run locally
 			else:
 				os.system('bash '+script_name)

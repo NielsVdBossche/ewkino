@@ -277,6 +277,7 @@ double Event::mtW(){
 
 
 void Event::makeSubLeptonCollections() {
+    /*
     if (_lightLeptonCollPtr) {
         delete _lightLeptonCollPtr;
     }
@@ -294,7 +295,8 @@ void Event::makeSubLeptonCollections() {
     _electronCollectionPtr = _leptonCollectionPtr->electronCollectionPtr();
     _muonCollectionPtr = _leptonCollectionPtr->muonCollectionPtr();
     _tauCollectionPtr = _leptonCollectionPtr->tauCollectionPtr();
-
+    */
+   return;
 }
 
 bool Event::passTTGOverlap(int sampleType) const {

@@ -41,6 +41,7 @@ void EventFourT::objectSelection() {
 
     looseLeps = new LeptonCollection(event->looseLeptonCollection());
     mediumLeps = new LeptonCollection(event->TightLeptonCollection());
+    foLeps = new LeptonCollection(event->FOLeptonCollection());
 
     jets = new JetCollection(event->jetCollection());
     bTagJets = new JetCollection(event->mediumBTagCollection());
@@ -52,6 +53,7 @@ void EventFourT::objectSelection() {
     nLooseLep = looseLeps->size();
     nLep = mediumLeps->size();
     ht = jets->scalarPtSum();
+    met = event->met().pt();
 }
 
 bool EventFourT::passBaselineEventSelection() {
@@ -121,6 +123,9 @@ bool EventFourT::passLeanSelection() {
     if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
     if (nLep == 2 && mediumLeps->hasOSPair()) return false;
 
+    if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
+    if (event->met().pt() < 25) return false;
+
     if (nJets < 2 || nMediumB < 1) return false;
     if (ht < 100) return false;
 
@@ -134,5 +139,12 @@ bool EventFourT::passLeanSelection() {
         if (nJets < 4) return false;
     }
     
+    return true;
+}
+
+bool EventFourT::leptonsArePrompt() {
+    for( const auto& leptonPtr : *mediumLeps ){
+        if( !leptonPtr->isPrompt() ) return false;
+    }
     return true;
 }
