@@ -34,7 +34,7 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
         for( const auto& var : { "69200", "66000", "72400" } ){
 
             //read data pileup distribution from given file
-            std::string dataPuFilePath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupData/" + "PileupHistogram-goldenJSON-13tev-" + year + "-" + var + "-99bins.root" );
+            std::string dataPuFilePath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupData/" + "PileupHistogram-goldenJSON-13tev-" + year + "-" + var + "ub-99bins.root" );
             if( !systemTools::fileExists( dataPuFilePath ) ){
                 throw std::runtime_error( "File " + dataPuFilePath + " with data pileup weights, necessary for reweighting, is not present." );
             }
