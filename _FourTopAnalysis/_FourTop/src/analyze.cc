@@ -223,10 +223,11 @@ void FourTop:: analyze() {
 
         outfile->cd();
         outfile->cd("Uncertainties");
-        if (! gDirectory->GetDirectory(processName)) {
-            gDirectory->mkdir(processName);
+        const char* processNameNew = treeReader->currentSample().processName().c_str();
+        if (! gDirectory->GetDirectory(processNameNew)) {
+            gDirectory->mkdir(processNameNew);
         }
-        gDirectory->cd(processName);
+        gDirectory->cd(processNameNew);
         gDirectory->mkdir(outdir.c_str());
         gDirectory->cd(outdir.c_str());
 
