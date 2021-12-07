@@ -5,7 +5,10 @@ UncertaintyWrapper::UncertaintyWrapper(HistogramManager* histograms) {
     unsigned id = 0;
 
     while (id != shapeUncId::end) {
+        std::cout << "new unc" << std::endl;
         uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), histograms);
+        std::cout << "unc added" << std::endl;
+
         id++;
     }
 }
