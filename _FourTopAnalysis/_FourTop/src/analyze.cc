@@ -76,6 +76,7 @@ void FourTop:: analyze() {
         CRZManager->newSample(uniqueName);
         CRWManager->newSample(uniqueName);
         CROManager->newSample(uniqueName);
+        mgrAll->newSample(uniqueName);
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 

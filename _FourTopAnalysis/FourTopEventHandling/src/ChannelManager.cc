@@ -6,7 +6,6 @@ ChannelManager::ChannelManager() {
 
 void ChannelManager::addChannel(eventClass channel, HistogramManager* histograms) {
     UncertaintyWrapper* wrapper = new UncertaintyWrapper(histograms);
-    std::cout << "added channel" << std::endl;
     channelMap[channel] = wrapper;
 }
 

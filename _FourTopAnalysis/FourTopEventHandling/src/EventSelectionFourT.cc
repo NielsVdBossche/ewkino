@@ -25,6 +25,7 @@ void EventFourT::addNewEvent(Event* newEvent) {
     cleanSelection();
     event = newEvent;
     isNormalSelected = true;
+    currentClass = eventClass::fail;
     
     objectSelection();
 }
@@ -153,9 +154,8 @@ bool EventFourT::leptonsArePrompt() {
 }
 
 void EventFourT::classifyEvent() {
-    if (! passZBosonVeto()) return;
-
     if (! passBaselineEventSelection()) return;
+    if (! passZBosonVeto()) return;
 
     if (! passFullEventSelection()) {
         currentClass = eventClass::cro;

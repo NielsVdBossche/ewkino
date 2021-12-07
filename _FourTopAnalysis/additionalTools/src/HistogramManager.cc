@@ -26,7 +26,7 @@ HistogramManager::HistogramManager(HistogramManager* copy, std::string& addition
 
     if (copy->histInfo2D) {
         histInfo2D = new std::vector<HistInfo_2D>;
-        for (unsigned i = 0; i < copy->histInfo->size(); i++) {
+        for (unsigned i = 0; i < copy->histInfo2D->size(); i++) {
             std::string newName = copy->histInfo2D->at(i).name() + "_" + additionalFlags;
             HistInfo_2D hardCopy(copy->histInfo2D->at(i));
             hardCopy.setName(newName);
