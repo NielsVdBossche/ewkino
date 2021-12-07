@@ -5,6 +5,7 @@
 #endif
 
 void FourTop:: analyze() {
+    ChannelManager* mgrAll = new ChannelManager();
 
     // reweighter creation
     std::cout << "building reweighter" << std::endl;
@@ -51,6 +52,13 @@ void FourTop:: analyze() {
     std::vector<HistInfo>* infoCRO = fourTopHists::infoLean(channelCRO, false);
     HistogramManager* CROManager = new HistogramManager(channelCRO, infoCRO);
 
+    mgrAll->addChannel(eventClass::ssdl, DLManager);
+    mgrAll->addChannel(eventClass::trilep, TriLManager);
+    mgrAll->addChannel(eventClass::fourlep, FourLManager);
+    mgrAll->addChannel(eventClass::crz, CRZManager);
+    mgrAll->addChannel(eventClass::crw, CRWManager);
+    mgrAll->addChannel(eventClass::cro, CROManager);
+
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
 
@@ -86,127 +94,102 @@ void FourTop:: analyze() {
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
-            // apply baseline selection
-            // Adapted to work with increased nonprompt yields
-            if (infuseNonPrompt && ttgOverlapCheck > 0) {
-                if (! selection->passBaselineEventSelectionWithAltLeptons()) {
-                    //delete currentEvent;
-                    continue;
-                }
-            } else if (! selection->passBaselineEventSelection())  {
-                //delete currentEvent;
+            // Remove mass resonances
+            if (! selection->passLowMassVeto()) {
+
                 continue;
+            } 
+            
+            selection->classifyEvent();
+            // TEMP! Remove for full stuff
+            if (selection->getCurrentClass() == eventClass::fail) continue;
+
+
+            double weight = currentEvent->weight();
+            if( currentEvent->isMC() ){
+                weight *= reweighter.totalWeight( *currentEvent );
             }
 
-            // Apply scale factors
-            // TODO
-            
             // Basic non-prompt handling (using MC to estimate the contribution):
             std::vector<double> fillVec;
+            std::vector<std::pair<double, double>> fillVec2D;
+            std::vector<std::pair<int, double>> singleEntries;
             bool nonPrompt = false;
-            // If nonprompt: fillIndex becomes index of nonprompt histograms
-            LeptonCollection* lepCol;
-            if (selection->isEventNormalSelected()) {
-                lepCol = selection->getMediumLepCol();
-            } else {
-                lepCol = selection->getAltLeptonCol();
-            }
 
-            for (const auto& leptonPtr : *lepCol) {
+            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
                 if (! leptonPtr->isPrompt()) {
                     nonPrompt = true;
                     break;
                 }
             }
 
-            double weight = currentEvent->weight();
-            //if( currentEvent->isMC() ){
-            ////    weight *= reweighter.totalWeight( *currentEvent );
-            //}
-            
-            // Remove mass resonances
-            if (! selection->passLowMassVeto()) {
+            // fill all histograms
+            if (selection->getCurrentClass() >= eventClass::crz && selection->getCurrentClass() < eventClass::ssdl) {
+                fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
 
-                continue;
-            } else if (! selection->passZBosonVeto()) {
-                // Build CRZ
-                fillVec = fourTopHists::fillAllLean(true, selection);
-                CRZManager->fillHistograms(fillVec, weight, nonPrompt);
+            } else if (selection->getCurrentClass() == eventClass::ssdl) {   
 
-                continue;
-            }
-
-            // Full object selection (only keep the real useful stuff and rest is control)
-            if (! selection->passFullEventSelection()) {
-                fillVec = fourTopHists::fillAllLean(false, selection);
-                CROManager->fillHistograms(fillVec, weight, nonPrompt);
-                continue;
-            }
-
-            // Build CRW (might expand these)
-            if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
-                fillVec = fourTopHists::fillAllLean(false, selection);
-                CRWManager->fillHistograms(fillVec, weight, nonPrompt);
-
-                continue;
-            }
-
-            // Fill histograms
-            // MVA scores to event handler
-            // If assigned, add to fillVec
-            // else not
-            // from mva handler, then ask a class index + stuff for further calculations, keep these indices somehow managed
-            if (selection->numberOfLeps() == 2) {
                 std::vector<double> scores = mva_DL->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(false, selection);
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
+                fillVec2D = mva_DL->fill2DVector();
+
+                std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
+                singleEntries.push_back({dlPosMVA + classAndScore.first, classAndScore.second});
+
                 DLManager->fillHistograms(fillVec, weight, nonPrompt);
-                
-                std::vector<std::pair<double, double>> fillVec2D = mva_DL->fill2DVector();
                 DLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-
-                std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();                
                 DLManager->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
-
-            } else if (selection->numberOfLeps() == 3) {
+            } else if (selection->getCurrentClass() == eventClass::trilep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection);
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
+                fillVec2D = mva_ML->fill2DVector();
+
+                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
+                singleEntries.push_back({mlPosMVA + classAndScore.first, classAndScore.second});
+
                 TriLManager->fillHistograms(fillVec, weight, nonPrompt);
-
-                std::vector<std::pair<double, double>> fillVec2D = mva_ML->fill2DVector();
                 TriLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-
-                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();                
                 TriLManager->fillSingleHistogram(mlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
-                
-            } else {
+            } else if (selection->getCurrentClass() == eventClass::fourlep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
-                FourLManager->fillHistograms(fillVec, weight, nonPrompt);
+                fillVec2D = mva_ML->fill2DVector();
 
-                std::vector<std::pair<double, double>> fillVec2D = mva_ML->fill2DVector();
-                FourLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-
-                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();                
-                FourLManager->fillSingleHistogram(fourlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();  
+                singleEntries.push_back({fourlPosMVA + classAndScore.first, classAndScore.second});
                 
+                FourLManager->fillHistograms(fillVec, weight, nonPrompt);
+                FourLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                FourLManager->fillSingleHistogram(fourlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
             }
+
 
             // TODO: Systematics
-            if (currentEvent->isData()) {
-
-                continue;
-            }
+            if (currentEvent->isData()) continue;
 
             //// Start filling histograms
+            // loop uncertainties
+            UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
+
+            unsigned uncID = shapeUncId::pileup;
+            while (selection->getCurrentClass() != eventClass::fail && uncID != shapeUncId::end) {
+                std::string uncString = "pileup";
+                double weightUp = reweighter[ uncString ]->weightUp( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
+                double weightDown = reweighter[ uncString ]->weightDown( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
+
+                uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weightUp, weightDown, nonPrompt);
+
+                uncID = uncID + 1;
+            }
 
         }
         
@@ -236,6 +219,17 @@ void FourTop:: analyze() {
         CRZManager->writeCurrentHistograms();
         CRWManager->writeCurrentHistograms();
         CROManager->writeCurrentHistograms();
+
+        outfile->cd();
+        outfile->cd("Uncertainties");
+        if (! gDirectory->GetDirectory(processName)) {
+            gDirectory->mkdir(processName);
+        }
+        gDirectory->cd(processName);
+        gDirectory->mkdir(outdir.c_str());
+        gDirectory->cd(outdir.c_str());
+
+        mgrAll->writeCurrentHistograms();
     }
 
     // Don't forget non-prompt contributions
@@ -249,6 +243,13 @@ void FourTop:: analyze() {
     CRZManager->writeNonpromptHistograms();
     CRWManager->writeNonpromptHistograms();
     CROManager->writeNonpromptHistograms();
+
+    outfile->cd("Uncertainties");
+    gDirectory->mkdir("nonPrompt");
+    gDirectory->cd("nonPrompt");
+    
+    mgrAll->writeNonpromptHistograms();
+
 
     outfile->Close();
 }

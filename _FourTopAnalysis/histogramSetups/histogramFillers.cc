@@ -312,7 +312,7 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
         lightLeps = (LightLeptonCollection*) selec->getAltLeptonCol();
     }
 
-    int nb = bJets->size();
+    //int nb = bJets->size();
     int nlep = lightLeps->size();
 
     std::vector<double> fillVal = {

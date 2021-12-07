@@ -6,33 +6,33 @@
 #include "EventFourT.h"
 
 // Shape uncertainties
-// JEC and JER are year dependant
-enum shapeUncertaintyIdentifier {
-    jecDown,
-    jecUp,
-    jerDown,
-    jerUp,
+enum shapeUncId {
+    pileup,
     end  /// always at the end for easier loops
 };
 
 // potential things to add: btag, met, leptons, scale, pileup, prefire, 
+//std::map<shapeUncId, std::string> translateUnc;// = {{pileup, "pileup"}};
 
+class Uncertainty {
+    private:
+        shapeUncId id;
 
-class Uncertainty : public HistogramManager {
-private:
-    shapeUncertaintyIdentifier id;
+        // pair of weight up and down
+        // naming of the histograms is here perhaps the hardest thing
+        HistogramManager* upHists;
+        HistogramManager* downHists;
+    public:
+        Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms);
+        ~Uncertainty();
 
-    Uncertainty* next = nullptr;
+        void newSample(std::string& uniqueName);
+        void fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
 
-public:
-    Uncertainty(std::string& channel, std::vector<HistInfo>* histInfo, int uncNumber);
-    ~Uncertainty();
-
-    Uncertainty* getNext() const {return next;}
-    void setNext(Uncertainty* newNext) {next = newNext;}
-
-    void applyUncertainty(EventFourT* event, bool nonPrompt, bool trilep, bool fourlep);
-
+        void writeCurrentHistograms();
+        void writeNonpromptHistograms();
 };
 
 #endif

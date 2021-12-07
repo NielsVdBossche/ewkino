@@ -1,65 +1,64 @@
 #include "../interface/UncertaintyManager.h"
 
-UncertaintyWrapper::UncertaintyWrapper(EventFourT* selection, TreeReader* reader) : selection(selection), treeReader(reader) {
+UncertaintyWrapper::UncertaintyWrapper(HistogramManager* histograms) {
     // init uncertainties for all channels
-}
+    unsigned id = 0;
 
-
-
-/*
-std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* UncertaintyWrapper::uncertaintyHistogramInit(std::vector<HistInfo>* info, bool up) {
-    std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* output = new std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>();
-
-    unsigned uncertainty = 0;
-    if (up) uncertainty++;
-
-    std::vector< Sample > sampleVec = treeReader->sampleVector();
-
-    for (; uncertainty < shapeUncertaintyIdentifier::end; uncertainty += 2) {
-        (*output)[(shapeUncertaintyIdentifier)up] = *histHelper::initHistograms(info, sampleVec);
+    while (id != shapeUncId::end) {
+        uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), histograms);
+        id++;
     }
-
-    return output;
 }
 
-void UncertaintyWrapper::initDL(std::vector<HistInfo>* dlInfo) {
-    histogramsUnc_info_DL = dlInfo;
-    // Functie taken in infovector and building uncertainty histograms
-
-    histogramsUncDown_DL = uncertaintyHistogramInit(dlInfo, false);
-    histogramsUncUp_DL = uncertaintyHistogramInit(dlInfo, true);
+void UncertaintyWrapper::fillUncertainty(shapeUncId id, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    uncHistMap[id]->fillHistograms(fillVec, weightUp, weightDown, nonPrompt);
 }
 
-void UncertaintyWrapper::initML(std::vector<HistInfo>* mlInfo) {
-    histogramsUnc_info_ML = mlInfo;
-    // Functie taken in infovector and building uncertainty histograms
-
-    histogramsUncDown_ML = uncertaintyHistogramInit(mlInfo, false);
-    histogramsUncUp_ML = uncertaintyHistogramInit(mlInfo, true);
+void UncertaintyWrapper::fillSingleHistograms(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    uncHistMap[id]->fillSingleHistograms(fillVec, weightUp, weightDown, nonPrompt);
 }
 
-void UncertaintyWrapper::initCRZ(std::vector<HistInfo>* crzInfo) {
-    histogramsUnc_info_CRZ = crzInfo;
-    // Functie taken in infovector and building uncertainty histograms
-
-    histogramsUncDown_CRZ = uncertaintyHistogramInit(crzInfo, false);
-    histogramsUncUp_CRZ = uncertaintyHistogramInit(crzInfo, true);
+void UncertaintyWrapper::fill2DHistograms(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    uncHistMap[id]->fill2DHistograms(fillVec, weightUp, weightDown, nonPrompt);
 }
 
-void UncertaintyWrapper::initCRW(std::vector<HistInfo>* crwInfo) {
-    histogramsUnc_info_CRW = crwInfo;
-    // Functie taken in infovector and building uncertainty histograms
+void UncertaintyWrapper::newSample(std::string& uniqueSampleName) {
+    unsigned id = 0;
 
-    histogramsUncDown_CRW = uncertaintyHistogramInit(crwInfo, false);
-    histogramsUncUp_CRW = uncertaintyHistogramInit(crwInfo, true);
+    while (id != shapeUncId::end) {
+        uncHistMap[shapeUncId(id)]->newSample(uniqueSampleName);
+        id++;
+    }
 }
 
-void UncertaintyWrapper::initCRO(std::vector<HistInfo>* croInfo) {
-    histogramsUnc_info_CRO = croInfo;
-    // Functie taken in infovector and building uncertainty histograms
+void UncertaintyWrapper::writeCurrentHistograms() {
+    unsigned id = 0;
 
-    histogramsUncDown_CRO = uncertaintyHistogramInit(croInfo, false);
-    histogramsUncUp_CRO = uncertaintyHistogramInit(croInfo, true);
+    while (id != shapeUncId::end) {
+        std::string uncName = translateUnc[shapeUncId(id)];
+        if (! gDirectory->GetDirectory(uncName.c_str())) {
+            gDirectory->mkdir(uncName.c_str());
+        }
+        gDirectory->cd(uncName.c_str());
+        
+        uncHistMap[shapeUncId(id)]->writeCurrentHistograms();
+        id++;
+    }
 }
 
-*/
+void UncertaintyWrapper::writeNonpromptHistograms() {
+    unsigned id = 0;
+
+    while (id != shapeUncId::end) {
+        std::string uncName = translateUnc[shapeUncId(id)];
+        gDirectory->mkdir(uncName.c_str());
+        gDirectory->cd(uncName.c_str());
+        gDirectory->mkdir("up");
+        gDirectory->mkdir("down");
+
+        uncHistMap[shapeUncId(id)]->writeNonpromptHistograms();
+        
+        gDirectory->cd("..");
+        id++;
+    }
+}

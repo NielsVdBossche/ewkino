@@ -15,9 +15,13 @@
 class TopReconstructionNew;
 
 enum eventClass {
-    SSDL=2,
-    TriLep=3,
-    FourLep=4
+    fail,
+    crz,
+    cro,
+    crw,
+    ssdl,
+    trilep,
+    fourlep
 };
 
 class EventFourT {
@@ -28,10 +32,11 @@ class EventFourT {
         LeptonCollection* foLeps;
         LeptonCollection* mediumLeps;
 
-
         // These should only be used to increase nonprompt yield. Should be triggered by other functions and only done when ttbar sample used
         // Additionally, the event selection based on these should take into account the full event selection but allow one of the leptons to be loose
         LeptonCollection* altLeps; 
+
+        eventClass currentClass = fail;
 
         JetCollection* jets;
         JetCollection* bTagJets;
@@ -72,6 +77,7 @@ class EventFourT {
         int numberOfLeps() const {return nLep;}
         double getHT() const {return ht;}
         double getMET() const {return met;}
+        eventClass getCurrentClass() const {return currentClass;}
         bool isEventNormalSelected() const {return isNormalSelected;}
 
         void objectSelection();
@@ -80,6 +86,7 @@ class EventFourT {
         bool passLeanSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
+        void classifyEvent();
 
         bool leptonsArePrompt();
         bool leptonsAreTight();
