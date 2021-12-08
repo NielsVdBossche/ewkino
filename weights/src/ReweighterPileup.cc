@@ -26,6 +26,16 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
     //make sure the pileup distribution is normalized to unity
     pileupMC->Scale( 1. / pileupMC->GetSumOfWeights() );
 
+    // workaround to remove the last bin of data
+    std::shared_ptr< TH1 > pileupMCTemp = std::make_shared<TH1D>( "pileupRecreation", "pileupRecreation",  pileupMC->GetNbinsX() - 1, pileupMC->GetBinLowEdge(0), pileupMC->GetBinLowEdge(pileupMC->GetNbinsX() - 1) + pileupMC->GetBinWidth(pileupMC->GetNbinsX() - 1));
+
+    for (int i = 0; i < pileupMCTemp->GetNbinsX() + 1; i++) {
+        pileupMCTemp->SetBinContent(i, pileupMC->GetBinContent(i));
+        pileupMCTemp->SetBinError(i, pileupMC->GetBinError(i));
+    }
+
+    pileupMC = pileupMCTemp;
+
     //store all pileup weights in a map
     std::map< std::string, std::map< std::string, std::shared_ptr< TH1 > > > pileupWeights;
     std::map<std::string, std::string> conversion = { {"69200", "central"}, {"66000", "down"}, {"72400", "up"}};
@@ -42,18 +52,7 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
             TFile* dataPileupFilePtr = TFile::Open( dataPuFilePath.c_str() );
             std::shared_ptr< TH1 > pileupData( dynamic_cast< TH1* >( dataPileupFilePtr->Get( "pileup" ) ) );
             pileupData->SetDirectory( gROOT );
-            
-
-            // workaround to remove the last bin of data
-            std::shared_ptr< TH1 > pileupDataTemp = std::make_shared<TH1D>( "pileupRecreation", "pileupRecreation",  pileupData->GetNbinsX() - 1, pileupData->GetBinLowEdge(0), pileupData->GetBinLowEdge(pileupData->GetNbinsX() - 1) + pileupData->GetBinWidth(pileupData->GetNbinsX() - 1));
-
-            for (int i = 0; i < pileupDataTemp->GetNbinsX() + 1; i++) {
-                pileupDataTemp->SetBinContent(i, pileupData->GetBinContent(i));
-                pileupDataTemp->SetBinError(i, pileupData->GetBinError(i));
-            }
-
-            pileupData = pileupDataTemp;
-
+        
             //make sure the pileup distribution is normalized to unity
             pileupData->Scale( 1. / pileupData->GetSumOfWeights() );
 
