@@ -58,7 +58,7 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
     }
 
     //write pileup weights to a new ROOT file 
-    std::string outputFilePath = stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + sample.fileName();
+    std::string outputFilePath = stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + stringTools::fileNameFromPath(sample.fileName());
 
     //make output directory if needed
     systemTools::makeDirectory( stringTools::directoryNameFromPath( outputFilePath ) );
@@ -81,7 +81,7 @@ ReweighterPileup::ReweighterPileup( const std::vector< Sample >& sampleList, con
         //skip data samples!
         if( sample.isData() ) continue;
 
-        std::string pileupWeightPath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + sample.fileName() );
+        std::string pileupWeightPath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + stringTools::fileNameFromPath(sample.fileName()) );
 
         //for each sample check if the necessary pileup weights are available, and produce them if not 
         if( !systemTools::fileExists( pileupWeightPath ) ){

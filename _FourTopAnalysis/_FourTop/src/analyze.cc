@@ -53,7 +53,6 @@ void FourTop:: analyze() {
     DLManager_mm->extendHistInfo(mva_DL->createHistograms("_mm"));
     DLManager_mm->set2DHistInfo(mva_DL->create2DHistograms("_mm"));
 
-    dlPosMVA += mva_DL->getMaxClass();
     std::string channel3L = "3L";
     std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
     HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
@@ -145,7 +144,7 @@ void FourTop:: analyze() {
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() ){
-            //    weight *= reweighter.totalWeight( *currentEvent );
+                weight *= reweighter.totalWeight( *currentEvent );
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
