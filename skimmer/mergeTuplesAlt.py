@@ -30,8 +30,7 @@ if (len(sys.argv) >= 3):
     if (sys.argv[2] == "TTTrainingSamples"):
         outSubdir += "/mvaSamples"
 
-processes = ["TTWW", "TTWZ", "TTZZ", "TTHH", "TTWH", "TTZH"]
-
+processes = ["TTTJ", "TTTW", "ST_tW", "GluGluToContin", "THQ", "DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX", "DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM", "ST_t-channel", "ST_s-channel", "WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8", "WZ", "ZZ", "TTWJetsToQQ"]
 for dir in os.listdir(inputBase):
     print(dir)
     # catch version, decide outputfolder
