@@ -23,35 +23,35 @@ void FourTop:: analyze() {
     dlPosMVA += mva_DL->getMaxClass();
 
     // extra histograms
-    channelDL = "DL_++";
+    channelDL = "DL++";
     std::vector<HistInfo>* infoDL_pp = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager_pp = new HistogramManager(channelDL, infoDL_pp);
-    DLManager_pp->extendHistInfo(mva_DL->createHistograms("_++"));
-    DLManager_pp->set2DHistInfo(mva_DL->create2DHistograms("_++"));
+    DLManager_pp->extendHistInfo(mva_DL->createHistograms("++"));
+    DLManager_pp->set2DHistInfo(mva_DL->create2DHistograms("++"));
 
-    channelDL = "DL_--";
+    channelDL = "DL--";
     std::vector<HistInfo>* infoDL_nn = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager_nn = new HistogramManager(channelDL, infoDL_nn);
-    DLManager_nn->extendHistInfo(mva_DL->createHistograms("_--"));
-    DLManager_nn->set2DHistInfo(mva_DL->create2DHistograms("_--"));
+    DLManager_nn->extendHistInfo(mva_DL->createHistograms("--"));
+    DLManager_nn->set2DHistInfo(mva_DL->create2DHistograms("--"));
 
-    channelDL = "DL_ee";
+    channelDL = "DLee";
     std::vector<HistInfo>* infoDL_ee = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager_ee = new HistogramManager(channelDL, infoDL_ee);
-    DLManager_ee->extendHistInfo(mva_DL->createHistograms("_ee"));
-    DLManager_ee->set2DHistInfo(mva_DL->create2DHistograms("_ee"));
+    DLManager_ee->extendHistInfo(mva_DL->createHistograms("ee"));
+    DLManager_ee->set2DHistInfo(mva_DL->create2DHistograms("ee"));
 
-    channelDL = "DL_em";
+    channelDL = "DLem";
     std::vector<HistInfo>* infoDL_em = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager_em = new HistogramManager(channelDL, infoDL_em);
-    DLManager_em->extendHistInfo(mva_DL->createHistograms("_em"));
-    DLManager_em->set2DHistInfo(mva_DL->create2DHistograms("_em"));
+    DLManager_em->extendHistInfo(mva_DL->createHistograms("em"));
+    DLManager_em->set2DHistInfo(mva_DL->create2DHistograms("em"));
 
-    channelDL = "DL_mm";
+    channelDL = "DLmm";
     std::vector<HistInfo>* infoDL_mm = fourTopHists::allHists(channelDL, false, false);
     HistogramManager* DLManager_mm = new HistogramManager(channelDL, infoDL_mm);
-    DLManager_mm->extendHistInfo(mva_DL->createHistograms("_mm"));
-    DLManager_mm->set2DHistInfo(mva_DL->create2DHistograms("_mm"));
+    DLManager_mm->extendHistInfo(mva_DL->createHistograms("mm"));
+    DLManager_mm->set2DHistInfo(mva_DL->create2DHistograms("mm"));
 
     std::string channel3L = "3L";
     std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);

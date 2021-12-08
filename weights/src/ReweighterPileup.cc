@@ -27,7 +27,7 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
     pileupMC->Scale( 1. / pileupMC->GetSumOfWeights() );
 
     // workaround to remove the last bin of data
-    std::shared_ptr< TH1 > pileupMCTemp = std::make_shared<TH1D>( "pileupRecreation", "pileupRecreation",  pileupMC->GetNbinsX() - 1, pileupMC->GetBinLowEdge(0), pileupMC->GetBinLowEdge(pileupMC->GetNbinsX() - 1) + pileupMC->GetBinWidth(pileupMC->GetNbinsX() - 1));
+    std::shared_ptr< TH1 > pileupMCTemp = std::make_shared<TH1D>( "pileupRecreation", "pileupRecreation",  pileupMC->GetNbinsX() - 1, 0., 99.);
 
     for (int i = 0; i < pileupMCTemp->GetNbinsX() + 1; i++) {
         pileupMCTemp->SetBinContent(i, pileupMC->GetBinContent(i));
