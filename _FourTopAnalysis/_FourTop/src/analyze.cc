@@ -22,6 +22,38 @@ void FourTop:: analyze() {
 
     dlPosMVA += mva_DL->getMaxClass();
 
+    // extra histograms
+    channelDL = "DL_++";
+    std::vector<HistInfo>* infoDL_pp = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager_pp = new HistogramManager(channelDL, infoDL_pp);
+    DLManager_pp->extendHistInfo(mva_DL->createHistograms("_++"));
+    DLManager_pp->set2DHistInfo(mva_DL->create2DHistograms("_++"));
+
+    channelDL = "DL_--";
+    std::vector<HistInfo>* infoDL_nn = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager_nn = new HistogramManager(channelDL, infoDL_nn);
+    DLManager_nn->extendHistInfo(mva_DL->createHistograms("_--"));
+    DLManager_nn->set2DHistInfo(mva_DL->create2DHistograms("_--"));
+
+    channelDL = "DL_ee";
+    std::vector<HistInfo>* infoDL_ee = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager_ee = new HistogramManager(channelDL, infoDL_ee);
+    DLManager_ee->extendHistInfo(mva_DL->createHistograms("_ee"));
+    DLManager_ee->set2DHistInfo(mva_DL->create2DHistograms("_ee"));
+
+    channelDL = "DL_em";
+    std::vector<HistInfo>* infoDL_em = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager_em = new HistogramManager(channelDL, infoDL_em);
+    DLManager_em->extendHistInfo(mva_DL->createHistograms("_em"));
+    DLManager_em->set2DHistInfo(mva_DL->create2DHistograms("_em"));
+
+    channelDL = "DL_mm";
+    std::vector<HistInfo>* infoDL_mm = fourTopHists::allHists(channelDL, false, false);
+    HistogramManager* DLManager_mm = new HistogramManager(channelDL, infoDL_mm);
+    DLManager_mm->extendHistInfo(mva_DL->createHistograms("_mm"));
+    DLManager_mm->set2DHistInfo(mva_DL->create2DHistograms("_mm"));
+
+    dlPosMVA += mva_DL->getMaxClass();
     std::string channel3L = "3L";
     std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
     HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
@@ -108,7 +140,7 @@ void FourTop:: analyze() {
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() ){
-                weight *= reweighter.totalWeight( *currentEvent );
+            //    weight *= reweighter.totalWeight( *currentEvent );
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
@@ -143,6 +175,30 @@ void FourTop:: analyze() {
                 DLManager->fillHistograms(fillVec, weight, nonPrompt);
                 DLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
                 DLManager->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+
+                if (selection->getLepton(0)->charge() > 0) {
+                    DLManager_pp->fillHistograms(fillVec, weight, nonPrompt);
+                    DLManager_pp->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                    DLManager_pp->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                } else {
+                    DLManager_nn->fillHistograms(fillVec, weight, nonPrompt);
+                    DLManager_nn->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                    DLManager_nn->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                }
+
+                if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) {
+                    DLManager_ee->fillHistograms(fillVec, weight, nonPrompt);
+                    DLManager_ee->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                    DLManager_ee->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                } else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) {
+                    DLManager_mm->fillHistograms(fillVec, weight, nonPrompt);
+                    DLManager_mm->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                    DLManager_mm->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                } else {
+                    DLManager_em->fillHistograms(fillVec, weight, nonPrompt);
+                    DLManager_em->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                    DLManager_em->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                }
             } else if (selection->getCurrentClass() == eventClass::trilep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
@@ -220,6 +276,11 @@ void FourTop:: analyze() {
         CRZManager->writeCurrentHistograms();
         CRWManager->writeCurrentHistograms();
         CROManager->writeCurrentHistograms();
+        DLManager_pp->writeCurrentHistograms();
+        DLManager_nn->writeCurrentHistograms();
+        DLManager_ee->writeCurrentHistograms();
+        DLManager_em->writeCurrentHistograms();
+        DLManager_mm->writeCurrentHistograms();
 
         outfile->cd();
         outfile->cd("Uncertainties");
@@ -245,6 +306,12 @@ void FourTop:: analyze() {
     CRZManager->writeNonpromptHistograms();
     CRWManager->writeNonpromptHistograms();
     CROManager->writeNonpromptHistograms();
+
+    DLManager_pp->writeNonpromptHistograms();
+    DLManager_nn->writeNonpromptHistograms();
+    DLManager_ee->writeNonpromptHistograms();
+    DLManager_em->writeNonpromptHistograms();
+    DLManager_mm->writeNonpromptHistograms();
 
     outfile->cd("Uncertainties");
     gDirectory->mkdir("nonPrompt");

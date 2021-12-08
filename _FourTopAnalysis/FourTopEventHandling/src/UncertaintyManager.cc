@@ -36,10 +36,18 @@ void UncertaintyWrapper::writeCurrentHistograms() {
 
     while (id != shapeUncId::end) {
         std::string uncName = translateUnc[shapeUncId(id)];
-        gDirectory->mkdir(uncName.c_str());
-        gDirectory->cd(uncName.c_str());
-        gDirectory->mkdir("up");
-        gDirectory->mkdir("down");
+        if (! gDirectory->GetDirectory(uncName.c_str())) {
+            gDirectory->mkdir(uncName.c_str());
+            gDirectory->cd(uncName.c_str());
+            gDirectory->mkdir("up");
+            gDirectory->mkdir("down");
+        } else {
+            gDirectory->cd(uncName.c_str());
+        }
+        //gDirectory->mkdir(uncName.c_str());
+        //gDirectory->cd(uncName.c_str());
+        //gDirectory->mkdir("up");
+        //gDirectory->mkdir("down");
         
         uncHistMap[shapeUncId(id)]->writeCurrentHistograms();
         gDirectory->cd("..");
