@@ -187,7 +187,7 @@ void FourTop:: analyze() {
                 double weightUp = reweighter[ uncString ]->weightUp( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
                 double weightDown = reweighter[ uncString ]->weightDown( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
 
-                uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weightUp, weightDown, nonPrompt);
+                uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
 
                 uncID = uncID + 1;
             }
