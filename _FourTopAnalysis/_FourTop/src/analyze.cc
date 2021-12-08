@@ -103,6 +103,11 @@ void FourTop:: analyze() {
 
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         DLManager->newSample(uniqueName);
+        DLManager_pp->newSample(uniqueName);
+        DLManager_nn->newSample(uniqueName);
+        DLManager_ee->newSample(uniqueName);
+        DLManager_em->newSample(uniqueName);
+        DLManager_mm->newSample(uniqueName);
         TriLManager->newSample(uniqueName);
         FourLManager->newSample(uniqueName);
         CRZManager->newSample(uniqueName);
