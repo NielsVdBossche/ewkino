@@ -42,6 +42,17 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
             TFile* dataPileupFilePtr = TFile::Open( dataPuFilePath.c_str() );
             std::shared_ptr< TH1 > pileupData( dynamic_cast< TH1* >( dataPileupFilePtr->Get( "pileup" ) ) );
             pileupData->SetDirectory( gROOT );
+            
+
+            // workaround to remove the last bin of data
+            std::shared_ptr< TH1 > pileupDataTemp = std::make_shared<TH1D>( "pileupRecreation", "pileupRecreation",  pileupData->GetNbinsX() - 1, pileupData->GetBinLowEdge(0), pileupData->GetBinLowEdge(pileupData->GetNbinsX() - 1) + pileupData->GetBinWidth(pileupData->GetNbinsX() - 1));
+
+            for (int i = 0; i < pileupDataTemp->GetNbinsX() + 1; i++) {
+                pileupDataTemp->SetBinContent(i, pileupData->GetBinContent(i));
+                pileupDataTemp->SetBinError(i, pileupData->GetBinError(i));
+            }
+
+            pileupData = pileupDataTemp;
 
             //make sure the pileup distribution is normalized to unity
             pileupData->Scale( 1. / pileupData->GetSumOfWeights() );
