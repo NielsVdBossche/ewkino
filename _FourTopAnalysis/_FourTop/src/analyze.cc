@@ -74,14 +74,23 @@ void FourTop:: analyze() {
     std::string channelCRZ = "CRZ";
     std::vector<HistInfo>* infoCRZ = fourTopHists::infoLean(channelCRZ, true);
     HistogramManager* CRZManager = new HistogramManager(channelCRZ, infoCRZ);
+    size_t crzPosMVA = infoCRZ->size();
+    CRZManager->extendHistInfo(mva_ML->createHistograms("_CRZ", true));
+    CRZManager->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
 
     std::string channelCRW = "CRW";
     std::vector<HistInfo>* infoCRW = fourTopHists::infoLean(channelCRW, false);
     HistogramManager* CRWManager = new HistogramManager(channelCRW, infoCRW);
+    size_t crwPosMVA = infoCRW->size();
+    CRWManager->extendHistInfo(mva_DL->createHistograms("_CRW", true));
+    CRWManager->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
 
     std::string channelCRO = "CRO";
     std::vector<HistInfo>* infoCRO = fourTopHists::infoLean(channelCRO, false);
     HistogramManager* CROManager = new HistogramManager(channelCRO, infoCRO);
+    size_t croPosMVA = infoCRO->size();
+    CROManager->extendHistInfo(mva_DL->createHistograms("_CRO", true));
+    CROManager->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
 
     mgrAll->addChannel(eventClass::ssdl, DLManager);
     mgrAll->addChannel(eventClass::trilep, TriLManager);
@@ -161,8 +170,41 @@ void FourTop:: analyze() {
             }
 
             // fill all histograms
-            if (selection->getCurrentClass() >= eventClass::crz && selection->getCurrentClass() < eventClass::ssdl) {
+            if (selection->getCurrentClass() == eventClass::crz) {
+                std::vector<double> scores = mva_ML->scoreEvent();
+
                 fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
+                fillVec2D = mva_ML->fill2DVector();
+
+                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
+                singleEntries.push_back({crzPosMVA + classAndScore.first, classAndScore.second});
+
+                CRZManager->fillHistograms(fillVec, weight, nonPrompt);
+                CRZManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                CRZManager->fillSingleHistogram(crzPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+
+            } else if (selection->getCurrentClass() == eventClass::crw || selection->getCurrentClass() == eventClass::cro) {
+                std::vector<double> scores = mva_DL->scoreEvent();
+
+                fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
+                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
+                fillVec2D = mva_DL->fill2DVector();
+
+                std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
+                singleEntries.push_back({crwPosMVA + classAndScore.first, classAndScore.second});
+
+                if (selection->getCurrentClass() == eventClass::crw) {
+                    singleEntries.push_back({crwPosMVA + classAndScore.first, classAndScore.second});
+                    CRWManager->fillHistograms(fillVec, weight, nonPrompt);
+                    CRWManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                    CRWManager->fillSingleHistogram(crwPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                } else {
+                    singleEntries.push_back({croPosMVA + classAndScore.first, classAndScore.second});
+                    CROManager->fillHistograms(fillVec, weight, nonPrompt);
+                    CROManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
+                    CROManager->fillSingleHistogram(croPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                }
 
             } else if (selection->getCurrentClass() == eventClass::ssdl) {   
 
