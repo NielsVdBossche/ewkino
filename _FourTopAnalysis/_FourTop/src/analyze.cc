@@ -192,7 +192,6 @@ void FourTop:: analyze() {
                 fillVec2D = mva_DL->fill2DVector();
 
                 std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
-                singleEntries.push_back({crwPosMVA + classAndScore.first, classAndScore.second});
 
                 if (selection->getCurrentClass() == eventClass::crw) {
                     singleEntries.push_back({crwPosMVA + classAndScore.first, classAndScore.second});

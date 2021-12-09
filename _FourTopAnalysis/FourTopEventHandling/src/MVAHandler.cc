@@ -261,8 +261,8 @@ void MVAHandler_4T::fillVariables() {
     }
 
     //massToPt         =  currentEvent;
-    min_dr_lep_b     =  mindR_Bjet_lep[0];
-    sec_min_dr_lep_b =  mindR_Bjet_lep[1];
+    min_dr_lep_b     =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[0] : 5.);
+    sec_min_dr_lep_b =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.);
 
     jetCol->sortByPt();
     ptJetOne         =  jetCol->at(0)->pt();
@@ -275,7 +275,7 @@ void MVAHandler_4T::fillVariables() {
     ptLepTwo         =  lightLeps->at(1)->pt();
 
     if (isML) {
-        ptLepThree   =  lightLeps->at(2)->pt();
+        ptLepThree   =  (selection->numberOfLeps() > 2 ? lightLeps->at(2)->pt() : 0.);
     }
 
     bTagPtLead = (jetCol->size() > 0 ? jetCol->at(0)->deepFlavor() : -1.);
