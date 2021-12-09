@@ -1,0 +1,7 @@
+executable = skimmer$(I).sh
+output = /user/nivanden/condor/output/skimmer_out_$(ClusterId)_$(ProcId)
+error = /user/nivanden/condor/error/skimmer_err_$(ClusterId)_$(ProcId)
+log = /user/nivanden/condor/logs/skimmer_log_$(ClusterId)_$(ProcId)
+
+queue I in 33, 34, 41, 57, 58, 65, 88, 89, 94 
+
