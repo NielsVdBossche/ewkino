@@ -7,20 +7,20 @@ import subprocess
 inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/rawSkims/"
 outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/"
 
-skimVersion = ""
+skimVersion = []
 outSubdir = ""
 
 if (sys.argv[1] == '0'):
-    skimVersion = "2016_ULpreVFP"
+    skimVersion = ["2016_ULpreVFP", "RunIISummer20UL16MiniAODAPV", "MiniAOD2016preVFP", "2016_ULpreVFP_Nov"]
     outSubdir = "2016PreVFP"
 elif (sys.argv[1] == '1'):
-    skimVersion = "2016_ULpostVFP"
+    skimVersion = ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]
     outSubdir = "2016PostVFP"
 elif (sys.argv[1] == '2'):
-    skimVersion = "2017_UL"
+    skimVersion = ["2017_UL", "RunIISummer20UL17MiniAOD", "MiniAOD2017", "2018_Nov"]
     outSubdir = "2017"
 elif (sys.argv[1] == '3'):
-    skimVersion = "2018_UL"
+    skimVersion = ["2018_UL", "RunIISummer20UL18MiniAOD", "MiniAOD2018", "2017_Nov"]
     outSubdir = "2018"
 
 print(skimVersion)
@@ -36,7 +36,7 @@ for dir in os.listdir(inputBase):
     # catch version, decide outputfolder
     version = dir.split("_version_")[-1]
 
-    if (version != skimVersion):
+    if not any(skimver in dir for skimver in skimVersion):
         continue
 
     if not any(process in dir for process in processes):
@@ -55,7 +55,9 @@ for dir in os.listdir(inputBase):
 
     # Strip names
     #dir = dir[15:] # NOT NECESSARY -> all information in filename itself 
-    if ("singlelep" in inputFileName):
+    if ("singlelepton" in inputFileName):
+        outputFileName = inputFileName.split("singlelepton_")[0][:-17] + ".root"
+    elif ("singlelep" in inputFileName):
         outputFileName = inputFileName.split("singlelep_")[0][:-17] + ".root" # should cut away date
     elif ("ssdilep" in inputFileName):
         outputFileName = inputFileName.split("ssdilep_")[0][:-17] + ".root" # should cut away date
