@@ -34,17 +34,17 @@ void Uncertainty::fill2DHistograms(std::vector<std::pair<double, double>>& fillV
 
 void Uncertainty::writeCurrentHistograms() {
 
-    gDirectory->cd("up");
+    gDirectory->cd("Up");
     upHists->writeCurrentHistograms();
-    gDirectory->cd("../down");
+    gDirectory->cd("../Down");
     downHists->writeCurrentHistograms();
     gDirectory->cd("..");
 }
 
 void Uncertainty::writeNonpromptHistograms() {
-    gDirectory->cd("up");
+    gDirectory->cd("Up");
     upHists->writeNonpromptHistograms();    
-    gDirectory->cd("../down");
+    gDirectory->cd("../Down");
     downHists->writeNonpromptHistograms();
     gDirectory->cd("..");
 }
