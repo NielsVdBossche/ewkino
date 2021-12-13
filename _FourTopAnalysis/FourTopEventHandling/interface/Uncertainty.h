@@ -7,8 +7,10 @@
 
 // Shape uncertainties
 enum shapeUncId {
-    isr,
-    fsr,
+    isrShape,
+    isrNorm,
+    fsrShape,
+    fsrNorm,
     end  /// always at the end for easier loops
 };
 

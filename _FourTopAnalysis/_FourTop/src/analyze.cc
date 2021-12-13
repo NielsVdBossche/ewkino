@@ -7,6 +7,8 @@
 void FourTop:: analyze() {
     ChannelManager* mgrAll = new ChannelManager();
 
+    std::shared_ptr< SampleCrossSections > xsecs;
+
     // reweighter creation
     std::cout << "building reweighter" << std::endl;
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
@@ -127,6 +129,8 @@ void FourTop:: analyze() {
         mgrAll->newSample(uniqueName);
         // check if TTbar or TTGamma sample
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+
+        xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -285,15 +289,23 @@ void FourTop:: analyze() {
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
 
-            unsigned uncID = shapeUncId::end;
+            unsigned uncID = 0;
             while (selection->getCurrentClass() != eventClass::fail && uncID != shapeUncId::end) {
                 double weightUp = 1.;
                 double weightDown = 1.;
 
-                if (uncID == shapeUncId::isr) {
-
-                } else if (uncID == shapeUncId::fsr) {
-
+                if (uncID == shapeUncId::isrShape) {
+                    weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
+                    weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
+                } else if (uncID == shapeUncId::isrNorm) {
+                    weightUp = xsecs.get()->crossSectionRatio_ISR_2();
+                    weightDown = xsecs.get()->crossSectionRatio_ISR_0p5();
+                } else if (uncID == shapeUncId::fsrShape) {
+                    weightUp = currentEvent->generatorInfo().relativeWeight_FSR_2() / xsecs.get()->crossSectionRatio_FSR_2();
+                    weightDown = currentEvent->generatorInfo().relativeWeight_FSR_0p5() / xsecs.get()->crossSectionRatio_FSR_0p5();
+                } else if (uncID == shapeUncId::fsrNorm) {
+                    weightUp = xsecs.get()->crossSectionRatio_FSR_2();
+                    weightDown = xsecs.get()->crossSectionRatio_FSR_0p5();
                 }
                 //std::string uncString = "pileup";
                 //double weightUp = reweighter[ uncString ]->weightUp( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
@@ -318,7 +330,7 @@ void FourTop:: analyze() {
         }
         gDirectory->cd(processName);
 
-        std::string outdir = stringTools::fileNameFromPath(treeReader->currentSample().fileName());
+        std::string outdir = stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(treeReader->currentSample().fileName()));
         gDirectory->mkdir(outdir.c_str()); // got to switch to gDirectory. Otherwise keeps working as if we're on level of file
         gDirectory->cd(outdir.c_str());
 
