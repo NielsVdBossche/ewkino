@@ -7,7 +7,8 @@
 
 // Shape uncertainties
 enum shapeUncId {
-    pileup,
+    isr,
+    fsr,
     end  /// always at the end for easier loops
 };
 

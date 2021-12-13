@@ -35,7 +35,7 @@ class UncertaintyWrapper {
         // OR a base object for the LL with a dedicated subclass which is actually used in the linking, but this might get complicated fast
         
         std::map<shapeUncId, Uncertainty*> uncHistMap;
-        std::map<shapeUncId, std::string> translateUnc = {{pileup, "pileup"}};
+        std::map<shapeUncId, std::string> translateUnc = {{isr, "isr"}, {fsr, "fsr"}};
 
     public:
         UncertaintyWrapper(HistogramManager* histograms);

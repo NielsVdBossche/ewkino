@@ -77,6 +77,7 @@ void FourTop:: analyze() {
     size_t crzPosMVA = infoCRZ->size();
     CRZManager->extendHistInfo(mva_ML->createHistograms("_CRZ", true));
     CRZManager->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
+    crzPosMVA += mva_ML->getMaxClass();
 
     std::string channelCRW = "CRW";
     std::vector<HistInfo>* infoCRW = fourTopHists::infoLean(channelCRW, false);
@@ -84,6 +85,7 @@ void FourTop:: analyze() {
     size_t crwPosMVA = infoCRW->size();
     CRWManager->extendHistInfo(mva_DL->createHistograms("_CRW", true));
     CRWManager->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
+    crwPosMVA += mva_DL->getMaxClass();
 
     std::string channelCRO = "CRO";
     std::vector<HistInfo>* infoCRO = fourTopHists::infoLean(channelCRO, false);
@@ -91,6 +93,7 @@ void FourTop:: analyze() {
     size_t croPosMVA = infoCRO->size();
     CROManager->extendHistInfo(mva_DL->createHistograms("_CRO", true));
     CROManager->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
+    croPosMVA += mva_DL->getMaxClass();
 
     mgrAll->addChannel(eventClass::ssdl, DLManager);
     mgrAll->addChannel(eventClass::trilep, TriLManager);
@@ -153,7 +156,7 @@ void FourTop:: analyze() {
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() ){
-                weight *= reweighter.totalWeight( *currentEvent );
+                //weight *= reweighter.totalWeight( *currentEvent );
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
@@ -282,11 +285,19 @@ void FourTop:: analyze() {
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
 
-            unsigned uncID = shapeUncId::pileup;
+            unsigned uncID = shapeUncId::end;
             while (selection->getCurrentClass() != eventClass::fail && uncID != shapeUncId::end) {
-                std::string uncString = "pileup";
-                double weightUp = reweighter[ uncString ]->weightUp( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
-                double weightDown = reweighter[ uncString ]->weightDown( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
+                double weightUp = 1.;
+                double weightDown = 1.;
+
+                if (uncID == shapeUncId::isr) {
+
+                } else if (uncID == shapeUncId::fsr) {
+
+                }
+                //std::string uncString = "pileup";
+                //double weightUp = reweighter[ uncString ]->weightUp( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
+                //double weightDown = reweighter[ uncString ]->weightDown( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
 
                 uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
 
