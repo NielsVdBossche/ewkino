@@ -55,9 +55,12 @@ for dir in os.listdir(inputBase):
 
     # Strip names
     #dir = dir[15:] # NOT NECESSARY -> all information in filename itself 
-    if ("singlelepton" in inputFileName):
-        outputFileName = inputFileName.split("singlelepton_")[0][:-17] + ".root"
-    elif ("singlelep" in inputFileName):
+    if ("pnfsiihecmsstoreusergmestdacheavyNeutrinoUL" in inputFileName) :
+        inputFileName = inputFileName[len("pnfsiihecmsstoreusergmestdacheavyNeutrinoUL"):]
+
+    #if ("singlelepton" in inputFileName):
+    #    outputFileName = inputFileName.split("singlelepton_")[0][:-17] + ".root"
+    if ("singlelep" in inputFileName):
         outputFileName = inputFileName.split("singlelep_")[0][:-17] + ".root" # should cut away date
     elif ("ssdilep" in inputFileName):
         outputFileName = inputFileName.split("ssdilep_")[0][:-17] + ".root" # should cut away date
