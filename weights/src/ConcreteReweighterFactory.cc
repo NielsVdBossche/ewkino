@@ -128,7 +128,8 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     
     
     //make pileup Reweighter
-    combinedReweighter.addReweighter( "pileup", std::make_shared< ReweighterPileup >( samples, weightDirectory ) );
+    //combinedReweighter.addReweighter( "pileup", std::make_shared< ReweighterPileup >( samples, weightDirectory ) );
+    
     /*
     //make b-tagging Reweighter 
     const std::string& bTagWP = "tight";

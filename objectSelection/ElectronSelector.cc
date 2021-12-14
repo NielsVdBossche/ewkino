@@ -6,51 +6,49 @@
 //include other parts of framework
 #include "bTagWP.h"
 
+///// general comments /////
+// - tzq loose was simply copied from Marek's code, 
+//   in order to perform a trigger efficiency measurement;
+//   it was not yet tested or used in any other way.
 
-/*
-loose electron selection
-*/
-
-
-double leptonMVACutElectron(){
-    return 0.6;
+// define here what mva threshold to use in tZq ID's listed below
+double electronMVACut(){
+    return 0.4;
 }
 
+// define here what mva value to use in tZq ID's listed below
+double electronMVAValue(const Electron* electronPtr){
+    return electronPtr->leptonMVATOP();
+}
 
+// define here what b-tagger to use in all tZq ID's listed below
+// warning: deepFlavor is hard-coded in ttH ID!
+double electronJetBTagValue(const Electron* electronPtr){
+    //return electronPtr->closestJetDeepCSV();
+    return electronPtr->closestJetDeepFlavor();
+}
+
+// define here what cone correction factor to use
+double electronConeCorrectionFactor(){
+    return 0.67;
+}
+
+/*
+----------------------------------------------------------------
+loose electron selection (common for ttH and tZq IDs)
+----------------------------------------------------------------
+*/
 bool ElectronSelector::isLooseBase() const{
-
-    /*
-    // Willem's cuts
     if( electronPtr->uncorrectedPt() < 7 ) return false;
+    //if( electronPtr->uncorrectedPt() < 5 ) return false; // for syncing with TT
     if( electronPtr->absEta() >= 2.5 ) return false;
     if( fabs( electronPtr->dxy() ) >= 0.05 ) return false;
     if( fabs( electronPtr->dz() ) >= 0.1 ) return false;
     if( electronPtr->sip3d() >= 8 ) return false;
     if( electronPtr->numberOfMissingHits() >= 2 ) return false;
     if( electronPtr->miniIso() >= 0.4 ) return false;
-    if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
-
-    if (electronPtr->leptonMVATOP() < 0.5) return false;
-    */
-
-    if (electronPtr->uncorrectedPt() < 7) return false;
-    if (electronPtr->absEta() >= 2.5) return false;
-    // IsGSF
-    if (electronPtr->numberOfMissingHits() >= 2) return false;
-    if (electronPtr->dxy() >= 0.05) return false;
-    if (electronPtr->dz() >= 0.1) return false;
-    if (electronPtr->sip3d() >= 8) return false;
-    if (electronPtr->miniIso() >= 0.4) return false;
-    if (fabs(electronPtr->etaSuperCluster()) > 1.4442 && fabs(electronPtr->etaSuperCluster()) < 1.566) return false;
-
-    // Tight charge requirements:
-    //if (! electronPtr->passChargeConsistency()) return false;
-    // already necessary here?
-    //if (electronPtr->leptonMVATOP() < 0.) return false;
-
     return true;
 }
-
 
 
 bool ElectronSelector::isLoose2016PreVFP() const{ 
@@ -71,95 +69,127 @@ bool ElectronSelector::isLoose2018() const{
     return true;
 }
 
+/*
+--------------------------------------------------------------------------------
+help function for FO ID's
+-------------------------------------------------------------------------------
+*/
+
+//interpolation between two working points of deepFlavor between two pT values
+double electronSlidingDeepFlavorThreshold( const double lowPt, const double lowPtWP,
+                                    const double highPt, const double highPtWP,
+                                    const double pt ){
+    if( pt < lowPt ){
+        return lowPtWP;
+    } else if( pt > highPt ){
+        return highPtWP;
+    } else {
+        return ( lowPtWP + ( highPtWP - lowPtWP ) / ( highPt - lowPt ) * ( pt - lowPt ) );
+    }
+}
 
 /*
-FO electron selection
+-------------------------------------------------------------------
+FO electron selection for medium 0p4 tZq ID
+-------------------------------------------------------------------
 */
 
 bool ElectronSelector::isFOBase() const{
     if( !isLoose() ) return false;
-    /*
-    // Old selection
     if( electronPtr->uncorrectedPt() <= 10 ) return false;
-    if( electronPtr->numberOfMissingHits() > 0 ) return false;
     if( electronPtr->hOverE() >= 0.1 ) return false;
     if( electronPtr->inverseEMinusInverseP() <= -0.04 ) return false;
-    if( electronPtr->etaSuperCluster() <= 1.479 ){
+    if( std::abs(electronPtr->etaSuperCluster()) <= 1.479 ){
         if( electronPtr->sigmaIEtaEta() >= 0.011 ) return false;
     } else {
         if( electronPtr->sigmaIEtaEta() >= 0.030 ) return false;
     }
-    
-    Seems not relevant when leptonMVATOP is available?
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
-        if( !electronPtr->passElectronMVAFall17NoIsoWP80() ) return false;
-        if( electronPtr->ptRatio() <= 0.7 ) return false;
-    }
-    
     if( !electronPtr->passConversionVeto() ) return false;
-    */
-
-    //if (electronPtr->pt() < 20) return false;
-
-    // Fakeable object
-    if (electronPtr->uncorrectedPt() <= 10) return false;
-    if( electronPtr->hOverE() >= 0.1 ) return false;
-    if( electronPtr->inverseEMinusInverseP() <= -0.04 ) return false;
-    if (! electronPtr->passChargeConsistency()) return false;
-    if( !electronPtr->passConversionVeto() ) return false;
-
-    if (electronPtr->leptonMVATOP() < 0.6) {
-        if (! electronPtr->isLoosePOGElectron()) return false;
-        if (electronPtr->ptRatio() < 0.45) return false; 
-    }
-
+    if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
+    // put tunable FO cuts below
+    //if( electronMVAValue(electronPtr) < electronMVACut() ){
+    //}
     return true;
 }
-
 
 bool ElectronSelector::isFO2016PreVFP() const{
-    if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2016PreVFP() ) return false;
+    if( electronMVAValue(electronPtr) < electronMVACut() ){
+	// modification attempt:
+	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
+        //    electronPtr->uncorrectedPt()) ) return false;
+	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
+	// Tu Thong's original FO ID:
+        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.05,
+	    electronPtr->uncorrectedPt()) ) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
     }
     return true;
 }
+
 
 bool ElectronSelector::isFO2016PostVFP() const{
-    if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2016PostVFP() ) return false;
+    if( electronMVAValue(electronPtr) < electronMVACut() ){
+	// modification attempt:
+	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
+        //    electronPtr->uncorrectedPt()) ) return false;
+	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
+	// Tu Thong's original FO ID:
+        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.05,
+	    electronPtr->uncorrectedPt()) ) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
     }
     return true;
 }
-
 
 bool ElectronSelector::isFO2017() const{
-    if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2017() ) return false;
+    if( electronMVAValue(electronPtr) < electronMVACut() ){
+	// modification attempt:
+	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
+        //    electronPtr->uncorrectedPt()) ) return false;
+	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
+	// Tu Thong's original FO ID:
+	/*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.08,
+	    electronPtr->uncorrectedPt()) ) return false;
+	if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
     }
     return true;
 }
-
 
 bool ElectronSelector::isFO2018() const{
-    if (electronPtr->leptonMVATOP() < 0.6) {
-        if( electronPtr->closestJetDeepFlavor() >= bTagWP::tightDeepFlavor2018() ) return false;
+    if( electronMVAValue(electronPtr) < electronMVACut() ){
+	// modification attempt:
+	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
+        //    electronPtr->uncorrectedPt()) ) return false;
+        if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+	if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
+	// Tu Thong's original FO ID:
+        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.4,50,0.05,
+	    electronPtr->uncorrectedPt())) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
     }
     return true;
 }
 
-
 /*
-tight electron selection
+-------------------------------------------------------------------------
+tight electron selection for medium 0p4 tZq ID
+-------------------------------------------------------------------------
 */
 
 bool ElectronSelector::isTightBase() const{
     if( !isFO() ) return false;
-    //if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ) return false;
-
-    //if (electronPtr->pt() < 20) return false;
-    if (electronPtr->leptonMVATOP() < 0.6) return false;
-
-
+    if( electronMVAValue(electronPtr) <= electronMVACut() ) return false;
     return true;
 }
 
@@ -182,11 +212,10 @@ bool ElectronSelector::isTight2018() const{
     return true;
 }
 
-
 /*
 cone correction
 */
 
 double ElectronSelector::coneCorrection() const{
-    return ( 0.71 / electronPtr->ptRatio() );
+    return ( electronConeCorrectionFactor() / electronPtr->ptRatio() );
 }
