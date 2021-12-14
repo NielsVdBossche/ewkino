@@ -289,7 +289,7 @@ void FourTop:: analyze() {
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
 
-            unsigned uncID = 0;
+            unsigned uncID = shapeUncId::end;
             while (selection->getCurrentClass() != eventClass::fail && uncID != shapeUncId::end) {
                 double weightUp = 1.;
                 double weightDown = 1.;
