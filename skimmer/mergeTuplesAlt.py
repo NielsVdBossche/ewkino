@@ -14,13 +14,13 @@ if (sys.argv[1] == '0'):
     skimVersion = ["2016_ULpreVFP", "RunIISummer20UL16MiniAODAPV", "MiniAOD2016preVFP", "2016_ULpreVFP_Nov"]
     outSubdir = "2016PreVFP"
 elif (sys.argv[1] == '1'):
-    skimVersion = ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]
+    skimVersion = ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD-106X", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]
     outSubdir = "2016PostVFP"
 elif (sys.argv[1] == '2'):
-    skimVersion = ["2017_UL", "RunIISummer20UL17MiniAOD", "MiniAOD2017", "2018_Nov"]
+    skimVersion = ["2017_UL", "RunIISummer20UL17MiniAOD", "MiniAOD2017", "2017_Nov"]
     outSubdir = "2017"
 elif (sys.argv[1] == '3'):
-    skimVersion = ["2018_UL", "RunIISummer20UL18MiniAOD", "MiniAOD2018", "2017_Nov"]
+    skimVersion = ["2018_UL", "RunIISummer20UL18MiniAOD", "MiniAOD2018", "2018_Nov"]
     outSubdir = "2018"
 
 print(skimVersion)
