@@ -137,7 +137,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     combinedReweighter.addReweighter( "electronReco_pTBelow20", std::make_shared< ReweighterElectronsID >( electronRecoReweighter_pTBelow20 ) );
 
     //pT above 20 GeV
-    TFile* eleRecoSFFile_pTAbove20 = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/egammaEffi_ptAbove.txt_EGM2D_UL" + year + ".root" ).c_str() );
+    TFile* eleRecoSFFile_pTAbove20 = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/egammaEffi_ptAbove20.txt_EGM2D_UL" + year + ".root" ).c_str() );
     std::shared_ptr< TH2 > electronRecoSFHist_pTAbove20( dynamic_cast< TH2* >( eleRecoSFFile_pTAbove20->Get( "EGamma_SF2D" ) ) );
     electronRecoSFHist_pTAbove20->SetDirectory( gROOT );
     eleRecoSFFile_pTAbove20->Close();
