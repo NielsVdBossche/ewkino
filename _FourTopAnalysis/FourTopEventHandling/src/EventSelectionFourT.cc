@@ -47,6 +47,8 @@ void EventFourT::objectSelection() {
     jets = new JetCollection(event->jetCollection());
     bTagJets = new JetCollection(event->mediumBTagCollection());
 
+    event->selectTightLeptons();
+
     nJets = jets->size();
     nMediumB = bTagJets->size();
     nTightB = event->numberOfTightBTaggedJets();

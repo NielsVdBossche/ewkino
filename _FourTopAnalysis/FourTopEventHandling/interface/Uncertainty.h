@@ -11,6 +11,8 @@ enum shapeUncId {
     isrNorm,
     fsrShape,
     fsrNorm,
+    electronReco,
+    pileup,
     end  /// always at the end for easier loops
 };
 

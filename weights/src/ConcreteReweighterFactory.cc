@@ -125,7 +125,25 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
 
     //reweighter to return
     CombinedReweighter combinedReweighter;
-    
+
+    // electron reco reweighter
+    //pT below 20 GeV
+    TFile* eleRecoSFFile_pTBelow20 = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/egammaEffi_ptBelow20.txt_EGM2D_UL" + year + ".root" ).c_str() );
+    std::shared_ptr< TH2 > electronRecoSFHist_pTBelow20( dynamic_cast< TH2* >( eleRecoSFFile_pTBelow20->Get( "EGamma_SF2D" ) ) );
+    electronRecoSFHist_pTBelow20->SetDirectory( gROOT );
+    eleRecoSFFile_pTBelow20->Close();
+
+    ElectronIDReweighter electronRecoReweighter_pTBelow20( electronRecoSFHist_pTBelow20, new LooseMaxPtSelector< 20 > );
+    combinedReweighter.addReweighter( "electronReco_pTBelow20", std::make_shared< ReweighterElectronsID >( electronRecoReweighter_pTBelow20 ) );
+
+    //pT above 20 GeV
+    TFile* eleRecoSFFile_pTAbove20 = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/egammaEffi_ptAbove.txt_EGM2D_UL" + year + ".root" ).c_str() );
+    std::shared_ptr< TH2 > electronRecoSFHist_pTAbove20( dynamic_cast< TH2* >( eleRecoSFFile_pTAbove20->Get( "EGamma_SF2D" ) ) );
+    electronRecoSFHist_pTAbove20->SetDirectory( gROOT );
+    eleRecoSFFile_pTAbove20->Close();
+
+    ElectronIDReweighter electronRecoReweighter_pTAbove20( electronRecoSFHist_pTAbove20, new LooseMinPtSelector< 20 > );
+    combinedReweighter.addReweighter( "electronReco_pTAbove20", std::make_shared< ReweighterElectronsID >( electronRecoReweighter_pTAbove20 ) );
     
     //make pileup Reweighter
     //combinedReweighter.addReweighter( "pileup", std::make_shared< ReweighterPileup >( samples, weightDirectory ) );

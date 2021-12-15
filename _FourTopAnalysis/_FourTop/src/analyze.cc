@@ -132,6 +132,16 @@ void FourTop:: analyze() {
 
         xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
+        int numberOfPSVariations = 0;
+        bool hasValidPSs = false; // global switch to use later on in the event loop
+        if(!treeReader->isData()){
+            std::cout << "finding available PS scale variations...\n";
+            Event event = treeReader->buildEvent(0);
+            numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
+            if(numberOfPSVariations==14) hasValidPSs = true;
+            std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
+        } 
+
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
             delete currentEvent;
@@ -289,27 +299,37 @@ void FourTop:: analyze() {
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
 
-            unsigned uncID = shapeUncId::end;
-            while (selection->getCurrentClass() != eventClass::fail && uncID != shapeUncId::end) {
+            unsigned uncID = 0;
+            while (selection->getCurrentClass() != eventClass::fail && uncID <= shapeUncId::pileup) {
                 double weightUp = 1.;
                 double weightDown = 1.;
 
-                if (uncID == shapeUncId::isrShape) {
+                if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
-                } else if (uncID == shapeUncId::isrNorm) {
+                } else if (uncID == shapeUncId::isrNorm && hasValidPSs) {
                     weightUp = xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = xsecs.get()->crossSectionRatio_ISR_0p5();
-                } else if (uncID == shapeUncId::fsrShape) {
+                } else if (uncID == shapeUncId::fsrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_FSR_2() / xsecs.get()->crossSectionRatio_FSR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_FSR_0p5() / xsecs.get()->crossSectionRatio_FSR_0p5();
-                } else if (uncID == shapeUncId::fsrNorm) {
+                } else if (uncID == shapeUncId::fsrNorm && hasValidPSs) {
                     weightUp = xsecs.get()->crossSectionRatio_FSR_2();
                     weightDown = xsecs.get()->crossSectionRatio_FSR_0p5();
+                } else if (uncID == shapeUncId::electronReco) {
+
+                        weightDown *= reweighter[ "electronReco_pTBelow20" ]->weightDown(*currentEvent) 
+                            * reweighter[ "electronReco_pTAbove20" ]->weightDown(*currentEvent) 
+                            / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) 
+                                * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
+                        weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) 
+                            * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
+                            / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) 
+                                * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
+                } else if (uncID == shapeUncId::pileup) {
+                    weightUp = reweighter[ "pileup" ]->weightUp( *currentEvent ) / reweighter[ "pileup" ]->weight( *currentEvent );
+                    weightDown = reweighter[ "pileup" ]->weightDown( *currentEvent ) / reweighter[ "pileup" ]->weight( *currentEvent );
                 }
-                //std::string uncString = "pileup";
-                //double weightUp = reweighter[ uncString ]->weightUp( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
-                //double weightDown = reweighter[ uncString ]->weightDown( *currentEvent ) / reweighter[ uncString ]->weight( *currentEvent );
 
                 uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
 
