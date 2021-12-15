@@ -170,7 +170,7 @@ void FourTop:: analyze() {
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() ){
-                //weight *= reweighter.totalWeight( *currentEvent );
+                weight *= reweighter.totalWeight( *currentEvent );
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
