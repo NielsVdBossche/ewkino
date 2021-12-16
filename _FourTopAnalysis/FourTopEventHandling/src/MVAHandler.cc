@@ -19,10 +19,10 @@ void MVAHandler_4T::initReader() {
         isML = true;
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
-        weightFilePath += "FourTopClassification_Temp_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        weightFilePath += "FourTopClassification_DL_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == TriClass_ML) {
         isML = true;
-        weightFilePath += "FourTopClassification_Temp_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+        weightFilePath += "FourTopClassification_ML_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == FourClass_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == FourClass_ML) {
@@ -31,9 +31,9 @@ void MVAHandler_4T::initReader() {
     }
 
     reader->AddVariable("N_jets", &n_jets_f);
-    //reader->AddVariable("N_b", &n_bjets_f);
-    //reader->AddVariable("N_b_tight", &n_b_tight);
-    //reader->AddVariable("N_b_loose", &n_b_loose);
+    reader->AddVariable("N_b", &n_bjets_f);
+    reader->AddVariable("N_b_tight", &n_b_tight);
+    reader->AddVariable("N_b_loose", &n_b_loose);
     reader->AddVariable("dr_bJets", &deltaRBjets);
     reader->AddVariable("dr_leps", &dRleps);
     reader->AddVariable("aziAngle", &aziAngle);
@@ -44,37 +44,32 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("pt_jet_one", &ptJetOne);
     reader->AddVariable("pt_jet_four", &ptJetFour);
     reader->AddVariable("pt_jet_five", &ptJetFive);
-    //reader->AddVariable("pt_jet_six", &ptJetSix);
-    //reader->AddVariable("pt_lep_one", &ptLepOne);
+    reader->AddVariable("pt_jet_six", &ptJetSix);
+    reader->AddVariable("pt_lep_one", &ptLepOne);
     reader->AddVariable("pt_lep_two", &ptLepTwo);
 
     reader->AddVariable("bTagLead",        &bTagLead);
     reader->AddVariable("bTagSub",         &bTagSub);
     reader->AddVariable("bTagThird",       &bTagThird);
-    //reader->AddVariable("bTagFourth",      &bTagFourth);
+    reader->AddVariable("bTagFourth",      &bTagFourth);
     reader->AddVariable("bTagPtLead",      &bTagPtLead);
     reader->AddVariable("bTagPtSub",       &bTagPtSub);
     reader->AddVariable("bTagPtThird",     &bTagPtThird);
     reader->AddVariable("bTagPtFourth",    &bTagPtFourth);
-    //reader->AddVariable("m2ll",            &m2ll);
+    reader->AddVariable("m2ll",            &m2ll);
     reader->AddVariable("m2bb",            &m2bb);
-    //reader->AddVariable("m2lblb",          &m2lblb);
+    reader->AddVariable("m2lblb",          &m2lblb);
     reader->AddVariable("mtLeadLepMET",    &mtLeadLepMET);
     reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
     reader->AddVariable("massBestTop",     &massBestTop);
-    //reader->AddVariable("massBestTopW",    &massBestTopW);
+    reader->AddVariable("massBestTopW",    &massBestTopW);
     reader->AddVariable("massSecTop",      &massSecTop);
-    //reader->AddVariable("massSecTopW",     &massSecTopW);
+    reader->AddVariable("massSecTopW",     &massSecTopW);
 
     if (!isML) {
-        reader->AddVariable("pt_jet_six", &ptJetSix);
-        reader->AddVariable("bTagFourth",      &bTagFourth);
-        reader->AddVariable("m2ll",            &m2ll);
     }
 
     if (isML) {
-        reader->AddVariable("pt_lep_one", &ptLepOne);
-        reader->AddVariable("m2lblb",          &m2lblb);
         reader->AddVariable("pt_lep_three", &ptLepThree);
     }
 
