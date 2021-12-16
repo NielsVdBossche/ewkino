@@ -33,6 +33,9 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
 
         if (argvString[1] != "allSamples.txt") {
             std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
+            if (! analysisTools::checkYearStringNoErr( newYearString )) {
+                newYearString = "2018";
+            }
             setYearString(newYearString);
         }
 

@@ -9,6 +9,7 @@
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
 #include "../../../Tools/interface/SampleCrossSections.h"
+#include "../../../Tools/interface/analysisTools.h"
 #include "../../../TreeReader/interface/TreeReader.h"
 #include "../../../Event/interface/Event.h"
 
