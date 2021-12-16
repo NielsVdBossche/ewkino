@@ -111,7 +111,7 @@ void FourTop:: analyze() {
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
-
+        std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
