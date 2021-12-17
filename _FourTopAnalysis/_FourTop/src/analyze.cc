@@ -6,14 +6,13 @@
 
 void FourTop:: analyze() {
     ChannelManager* mgrAll = new ChannelManager();
-
     std::shared_ptr< SampleCrossSections > xsecs;
 
     // reweighter creation
     std::cout << "building reweighter" << std::endl;
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
-
+    
     // Histogram creation
     std::string channelDL = "DL";
     std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
@@ -104,6 +103,8 @@ void FourTop:: analyze() {
     mgrAll->addChannel(eventClass::crw, CRWManager);
     mgrAll->addChannel(eventClass::cro, CROManager);
 
+    std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUncMap();
+
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
 
@@ -187,7 +188,8 @@ void FourTop:: analyze() {
             }
 
             // fill all histograms
-            if (selection->getCurrentClass() == eventClass::crz) {
+            eventClass nominalClass = selection->getCurrentClass();
+            if (nominalClass == eventClass::crz) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
@@ -201,7 +203,7 @@ void FourTop:: analyze() {
                 CRZManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
                 CRZManager->fillSingleHistogram(crzPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
 
-            } else if (selection->getCurrentClass() == eventClass::crw || selection->getCurrentClass() == eventClass::cro) {
+            } else if (nominalClass == eventClass::crw || nominalClass == eventClass::cro) {
                 std::vector<double> scores = mva_DL->scoreEvent();
 
                 fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
@@ -210,7 +212,7 @@ void FourTop:: analyze() {
 
                 std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
 
-                if (selection->getCurrentClass() == eventClass::crw) {
+                if (nominalClass == eventClass::crw) {
                     singleEntries.push_back({crwPosMVA + classAndScore.first, classAndScore.second});
                     CRWManager->fillHistograms(fillVec, weight, nonPrompt);
                     CRWManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
@@ -222,7 +224,7 @@ void FourTop:: analyze() {
                     CROManager->fillSingleHistogram(croPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
                 }
 
-            } else if (selection->getCurrentClass() == eventClass::ssdl) {   
+            } else if (nominalClass == eventClass::ssdl) {   
 
                 std::vector<double> scores = mva_DL->scoreEvent();
 
@@ -261,7 +263,7 @@ void FourTop:: analyze() {
                     DLManager_em->fill2DHistograms(fillVec2D, weight, nonPrompt);
                     DLManager_em->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
                 }
-            } else if (selection->getCurrentClass() == eventClass::trilep) {
+            } else if (nominalClass == eventClass::trilep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection);
@@ -275,7 +277,7 @@ void FourTop:: analyze() {
                 TriLManager->fillHistograms(fillVec, weight, nonPrompt);
                 TriLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
                 TriLManager->fillSingleHistogram(mlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
-            } else if (selection->getCurrentClass() == eventClass::fourlep) {
+            } else if (nominalClass == eventClass::fourlep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
@@ -304,6 +306,13 @@ void FourTop:: analyze() {
                 double weightUp = 1.;
                 double weightDown = 1.;
 
+                if (uncID <= shapeUncId::pileup) {
+                    // all uncertainties with simple reweighting
+                    std::string id = uncTranslateMap[shapeUncId(uncID)];
+                    double weightNominalInv = 1. / reweighter[ id ]->weight( *currentEvent );
+                    weightUp = reweighter[ id ]->weightUp( *currentEvent ) * weightNominalInv;
+                    weightDown = reweighter[ id ]->weightDown( *currentEvent ) * weightNominalInv;
+                }
                 if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
@@ -317,17 +326,10 @@ void FourTop:: analyze() {
                     weightUp = xsecs.get()->crossSectionRatio_FSR_2();
                     weightDown = xsecs.get()->crossSectionRatio_FSR_0p5();
                 } else if (uncID == shapeUncId::electronReco) {
-                        weightDown *= reweighter[ "electronReco_pTBelow20" ]->weightDown(*currentEvent) 
-                            * reweighter[ "electronReco_pTAbove20" ]->weightDown(*currentEvent) 
-                            / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) 
-                                * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
-                        weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) 
-                            * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
-                            / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) 
-                                * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
-                } else if (uncID == shapeUncId::pileup) {
-                    weightUp = reweighter[ "pileup" ]->weightUp( *currentEvent ) / reweighter[ "pileup" ]->weight( *currentEvent );
-                    weightDown = reweighter[ "pileup" ]->weightDown( *currentEvent ) / reweighter[ "pileup" ]->weight( *currentEvent );
+                    weightDown *= reweighter[ "electronReco_pTBelow20" ]->weightDown(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightDown(*currentEvent) 
+                        / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
+                    weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
+                        / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                 }
 
                 uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);

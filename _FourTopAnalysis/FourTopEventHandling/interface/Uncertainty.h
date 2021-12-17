@@ -7,12 +7,16 @@
 
 // Shape uncertainties
 enum shapeUncId {
+    muonIDStat,
+    muonIDSys,
+    EleIDStat,
+    EleIDSys,
+    pileup,
+    electronReco,
     isrShape,
     isrNorm,
     fsrShape,
     fsrNorm,
-    electronReco,
-    pileup,
     end  /// always at the end for easier loops
 };
 

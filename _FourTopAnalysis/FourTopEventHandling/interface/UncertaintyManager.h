@@ -35,12 +35,15 @@ class UncertaintyWrapper {
         // OR a base object for the LL with a dedicated subclass which is actually used in the linking, but this might get complicated fast
         
         std::map<shapeUncId, Uncertainty*> uncHistMap;
-        std::map<shapeUncId, std::string> translateUnc = {{isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, {fsrNorm, "fsrNorm"}, {electronReco, "electronReco"}, {pileup, "pileup"}};
+        std::map<shapeUncId, std::string> translateUnc = { {muonIDSys, "muonIDSyst"}, {muonIDStat, "muonIDStat"}, {EleIDSys, "electronIDSyst"}, {EleIDStat, "electronIDStat"},
+                                                           {pileup, "pileup"}, {electronReco, "electronReco"}, {isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, 
+                                                           {fsrNorm, "fsrNorm"} };
 
     public:
         UncertaintyWrapper(HistogramManager* histograms);
 
         Uncertainty* getUncertainty(shapeUncId id) {return uncHistMap[id];}
+        std::map<shapeUncId, std::string> getTranslateUncMap() {return translateUnc;}
 
         void fillUncertainty(shapeUncId id, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
         void fillSingleHistograms(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
