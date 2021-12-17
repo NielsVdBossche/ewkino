@@ -14,7 +14,7 @@ class ChannelManager
         ~ChannelManager();
         
         UncertaintyWrapper* getChannelUncertainties(eventClass channel) {return channelMap[channel];}
-        std::map<shapeUncId, std::string> getTranslateUncMap() {return channelMap[eventClass(0)]->getTranslateUncMap();}
+        std::map<shapeUncId, std::string> getTranslateUncMap() {return channelMap[eventClass::crz]->getTranslateUncMap();}
         //void fillUncertainty();
 
         void newSample(std::string& uniqueName);
