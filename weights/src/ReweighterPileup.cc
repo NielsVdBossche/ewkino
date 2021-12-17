@@ -120,6 +120,30 @@ ReweighterPileup::ReweighterPileup( const std::vector< Sample >& sampleList, con
     }
 }
 
+ReweighterPileup::ReweighterPileup(std::string& year, const std::string& weightDirectory) {
+    std::string yearSuffix;
+
+    if( year == "2016PreVFP") {
+        yearSuffix = "16PreVFP";
+    } else if (year == "2016PostVFP"){
+        yearSuffix = "16PostVFP";
+    } else if(year == "2017"){
+        yearSuffix = "17";
+    } else{
+        yearSuffix = "18";
+    }
+    std::string pileupWeightPath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/Collisions" + yearSuffix + "_UltraLegacy_goldenJSON.root");
+
+    TFile* puWeightFilePtr = TFile::Open( pileupWeightPath.c_str() );
+
+    UL_puWeightsCentral = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( puWeightFilePtr->Get( "nominal" ) ) );
+    UL_puWeightsCentral->SetDirectory( gROOT );
+    UL_puWeightsDown = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( puWeightFilePtr->Get( "down" ) ) );
+    UL_puWeightsDown->SetDirectory( gROOT );
+    UL_puWeightsUp = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( puWeightFilePtr->Get( "up" ) ) );
+    UL_puWeightsUp->SetDirectory( gROOT );
+    puWeightFilePtr->Close();
+}
 
 double ReweighterPileup::weight( const Event& event, const std::map< std::string, std::shared_ptr< TH1 > >& weightMap ) const{
     auto it = weightMap.find( event.sample().uniqueName() );
@@ -130,17 +154,25 @@ double ReweighterPileup::weight( const Event& event, const std::map< std::string
     return histogram::contentAtValue( histPtr, event.generatorInfo().numberOfTrueInteractions() );
 }
 
+double ReweighterPileup::weight( const Event& event, const std::shared_ptr< TH1 >& weightMap) const {
+    TH1* histPtr = weightMap.get();
+    return histogram::contentAtValue( histPtr, event.generatorInfo().numberOfTrueInteractions() );
+}
+
 
 double ReweighterPileup::weight( const Event& event ) const{
-    return weight( event, puWeightsCentral );
+    return weight( event, UL_puWeightsCentral );
+    //return weight( event, puWeightsCentral );
 }
 
 
 double ReweighterPileup::weightDown( const Event& event ) const{
-    return weight( event, puWeightsDown );
+    return weight( event, UL_puWeightsDown );
+    //return weight( event, puWeightsDown );
 }
 
 
 double ReweighterPileup::weightUp( const Event& event ) const{
-    return weight( event, puWeightsUp );
+    return weight( event, UL_puWeightsUp );
+    //return weight( event, puWeightsUp );
 }

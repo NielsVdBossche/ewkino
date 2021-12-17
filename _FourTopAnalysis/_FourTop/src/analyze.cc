@@ -300,7 +300,7 @@ void FourTop:: analyze() {
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
 
             unsigned uncID = 0;
-            while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::pileup) {
+            while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
                 double weightUp = 1.;
                 double weightDown = 1.;
 
@@ -317,7 +317,6 @@ void FourTop:: analyze() {
                     weightUp = xsecs.get()->crossSectionRatio_FSR_2();
                     weightDown = xsecs.get()->crossSectionRatio_FSR_0p5();
                 } else if (uncID == shapeUncId::electronReco) {
-
                         weightDown *= reweighter[ "electronReco_pTBelow20" ]->weightDown(*currentEvent) 
                             * reweighter[ "electronReco_pTAbove20" ]->weightDown(*currentEvent) 
                             / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) 
@@ -370,6 +369,9 @@ void FourTop:: analyze() {
         DLManager_em->writeCurrentHistograms();
         DLManager_mm->writeCurrentHistograms();
 
+        gDirectory->mkdir("analytics");
+        gDirectory->cd("analytics");
+
         outfile->cd();
         outfile->cd("Uncertainties");
         const char* processNameNew = treeReader->currentSample().processName().c_str();
@@ -384,6 +386,8 @@ void FourTop:: analyze() {
     }
 
     // Don't forget non-prompt contributions
+
+    std::cerr << "start printing nonprompt hists" << std::endl;
     outfile->cd("Nominal");
     gDirectory->mkdir("nonPrompt");
     gDirectory->cd("nonPrompt");
@@ -400,6 +404,8 @@ void FourTop:: analyze() {
     DLManager_ee->writeNonpromptHistograms();
     DLManager_em->writeNonpromptHistograms();
     DLManager_mm->writeNonpromptHistograms();
+
+    std::cerr << "start printing nonprompt uncertainty hists" << std::endl;
 
     outfile->cd("Uncertainties");
     gDirectory->mkdir("nonPrompt");

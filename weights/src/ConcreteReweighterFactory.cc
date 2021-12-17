@@ -146,7 +146,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     combinedReweighter.addReweighter( "electronReco_pTAbove20", std::make_shared< ReweighterElectronsID >( electronRecoReweighter_pTAbove20 ) );
     
     //make pileup Reweighter
-    //combinedReweighter.addReweighter( "pileup", std::make_shared< ReweighterPileup >( samples, weightDirectory ) );
+    combinedReweighter.addReweighter( "pileup", std::make_shared< ReweighterPileup >( year, weightDirectory ) );
     
     /*
     //make b-tagging Reweighter 

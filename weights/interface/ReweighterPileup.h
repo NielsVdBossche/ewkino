@@ -13,17 +13,24 @@
 class ReweighterPileup : public Reweighter {
 
     public:
-        ReweighterPileup( const std::vector< Sample >& sampleList, const std::string& weightDirectory );
+        ReweighterPileup( const std::vector< Sample >& sampleList, const std::string& weightDirectory ); // DEPRECATED
+        ReweighterPileup(std::string& year, const std::string& weightDirectory);
 
         virtual double weight( const Event& ) const override;
         virtual double weightDown( const Event& ) const override;
         virtual double weightUp( const Event& ) const override;
 
     private: 
-        std::map< std::string, std::shared_ptr< TH1 > > puWeightsCentral;
-        std::map< std::string, std::shared_ptr< TH1 > > puWeightsDown;
-        std::map< std::string, std::shared_ptr< TH1 > > puWeightsUp;
-        double weight( const Event&, const std::map< std::string, std::shared_ptr< TH1 > >& ) const;
+        std::map< std::string, std::shared_ptr< TH1 > > puWeightsCentral; // DEPRECATED
+        std::map< std::string, std::shared_ptr< TH1 > > puWeightsDown; // DEPRECATED
+        std::map< std::string, std::shared_ptr< TH1 > > puWeightsUp; // DEPRECATED
+
+        std::shared_ptr< TH1 > UL_puWeightsCentral;
+        std::shared_ptr< TH1 > UL_puWeightsDown;
+        std::shared_ptr< TH1 > UL_puWeightsUp;
+        double weight( const Event&, const std::map< std::string, std::shared_ptr< TH1 > >& ) const; // DEPRECATED
+        double weight( const Event&, const std::shared_ptr< TH1 >& ) const;
+
 };
 
 
