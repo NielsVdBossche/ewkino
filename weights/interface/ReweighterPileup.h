@@ -14,7 +14,7 @@ class ReweighterPileup : public Reweighter {
 
     public:
         ReweighterPileup( const std::vector< Sample >& sampleList, const std::string& weightDirectory ); // DEPRECATED
-        ReweighterPileup(std::string& year, const std::string& weightDirectory);
+        ReweighterPileup( const std::string& year, const std::string& weightDirectory);
 
         virtual double weight( const Event& ) const override;
         virtual double weightDown( const Event& ) const override;

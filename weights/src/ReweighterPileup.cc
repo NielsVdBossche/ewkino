@@ -120,7 +120,7 @@ ReweighterPileup::ReweighterPileup( const std::vector< Sample >& sampleList, con
     }
 }
 
-ReweighterPileup::ReweighterPileup(std::string& year, const std::string& weightDirectory) {
+ReweighterPileup::ReweighterPileup( const std::string& year, const std::string& weightDirectory) {
     std::string yearSuffix;
 
     if( year == "2016PreVFP") {
