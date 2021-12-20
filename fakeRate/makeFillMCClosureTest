@@ -1,9 +1,9 @@
 CC=g++ -Wall -Wextra -O3
-CFLAGS= -Wl,--no-as-needed
+CFLAGS= -Wl,--no-as-needed,-lTMVA
 LDFLAGS=`root-config --glibs --cflags`
-SOURCES= plotHistogramsInFile.cc src/*.cc ../codeLibrary.o
+SOURCES= fillMCClosureTest.cc ../codeLibrary.o
 OBJECTS=$(SOURCES:.cc=.o)
-EXECUTABLE=plotHistogramsInFile
+EXECUTABLE=fillMCClosureTest
 
 all:
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)

@@ -1,12 +1,12 @@
-CC=g++ -Wall -Wextra -O3
-CFLAGS= -Wl,--no-as-needed,-lTMVA
+CC=g++ -Wall -Wextra 
+CFLAGS= -Wl,--no-as-needed
 LDFLAGS=`root-config --glibs --cflags`
-SOURCES= closureTest_MC.cc ../codeLibrary.o
+SOURCES= ElectronScale_test.cc ../../codeLibrary.o 
 OBJECTS=$(SOURCES:.cc=.o)
-EXECUTABLE=closureTest_MC
+EXECUTABLE= ElectronScale_test
 
-all:
+all: 
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
-
+	
 clean:
 	rm -rf *o $(EXECUTABLE)

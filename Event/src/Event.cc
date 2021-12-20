@@ -275,28 +275,38 @@ double Event::mtW(){
     return mt( WLepton(), met() );
 }
 
+// copy event with modified energy/momentum scales
+// experimental stage! need to check what attributes are copied or modified in-place!
 
-void Event::makeSubLeptonCollections() {
-    /*
-    if (_lightLeptonCollPtr) {
-        delete _lightLeptonCollPtr;
-    }
-    if (_electronCollectionPtr) {
-        delete _electronCollectionPtr;
-    }
-    if (_muonCollectionPtr) {
-        delete _muonCollectionPtr;
-    }
-    if (_tauCollectionPtr) {
-        delete _tauCollectionPtr;
-    }
+void Event::setLeptonCollection( const LeptonCollection& lepCollection ){
+    _leptonCollectionPtr = new LeptonCollection( lepCollection);
+}
 
-    _lightLeptonCollPtr = _leptonCollectionPtr->lightLeptonCollectionPtr();
-    _electronCollectionPtr = _leptonCollectionPtr->electronCollectionPtr();
-    _muonCollectionPtr = _leptonCollectionPtr->muonCollectionPtr();
-    _tauCollectionPtr = _leptonCollectionPtr->tauCollectionPtr();
-    */
-   return;
+Event Event::variedLeptonCollectionEvent(
+		    LeptonCollection (LeptonCollection::*variedCollection)() const ) const{
+    Event newevt = Event( *this );
+    LeptonCollection lepCollection = (this->leptonCollection().*variedCollection)();
+    //newevt._leptonCollectionPtr = new LeptonCollection( lepCollection );
+    // (the above does not work since _leptonCollectionPtr is private,
+    //  try to solve by defining a public function doing the same thing, but not optimal.)
+    newevt.setLeptonCollection( lepCollection );  
+    return newevt;
+}
+
+Event Event::electronScaleUpEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronScaleUpCollection );
+}
+
+Event Event::electronScaleDownEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronScaleDownCollection );
+}
+
+Event Event::electronResUpEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronResUpCollection );
+}
+
+Event Event::electronResDownEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronResDownCollection );
 }
 
 bool Event::passTTGOverlap(int sampleType) const {
@@ -310,5 +320,4 @@ bool Event::passTTGOverlap(int sampleType) const {
         return false;
     }
     return true;
-    
 }
