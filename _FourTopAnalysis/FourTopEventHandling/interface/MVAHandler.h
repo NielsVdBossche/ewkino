@@ -52,7 +52,7 @@ class MVAHandler_4T {
         Float_t bTagPtLead, bTagPtSub, bTagPtThird, bTagPtFourth;
         Float_t ptJetTwo, ptJetThree, ptLepFour;
         Float_t massBestTop, massBestTopW, massSecTop, massSecTopW;
-        Float_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
+        Float_t m2ll, m2bb, m2lblb, mtLeadLepMET, mtSubLeadLepMET;
 
         std::vector<double> scoresCurrent;
 

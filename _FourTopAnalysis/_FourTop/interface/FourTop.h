@@ -8,6 +8,8 @@
 
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
+#include "../../../Tools/interface/SampleCrossSections.h"
+#include "../../../Tools/interface/analysisTools.h"
 #include "../../../TreeReader/interface/TreeReader.h"
 #include "../../../Event/interface/Event.h"
 
@@ -18,6 +20,9 @@
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
+#include "../../FourTopEventHandling/interface/UncertaintyManager.h"
+#include "../../FourTopEventHandling/interface/ChannelManager.h"
+
 
 class FourTop {
     private:

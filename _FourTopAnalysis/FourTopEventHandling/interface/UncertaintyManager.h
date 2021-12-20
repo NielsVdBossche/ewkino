@@ -14,14 +14,8 @@
 #include "MVAHandler.h"
 #include "Uncertainty.h"
 
-#include "../../../TreeReader/interface/TreeReader.h"
-#include "../../additionalTools/interface/histHelper.h"
-
-// Next should be flat uncertainty (map or somthing)
-
-// Lastly something to keep track of correlations
-
-// Functions to build datacards as well
+#include "../../additionalTools/interface/HistogramManager.h"
+//#include "../../additionalTools/interface/histHelper.h"
 
 class UncertaintyWrapper {
     private:
@@ -40,46 +34,24 @@ class UncertaintyWrapper {
         // this function is then applied by the uncertainty object i guess.
         // OR a base object for the LL with a dedicated subclass which is actually used in the linking, but this might get complicated fast
         
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_DL;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_DL;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_ML;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_ML;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRZ;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRZ;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRW;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRW;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRO;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRO;
+        std::map<shapeUncId, Uncertainty*> uncHistMap;
+        std::map<shapeUncId, std::string> translateUnc = { {muonIDSys, "muonIDSyst"}, {muonIDStat, "muonIDStat"}, {EleIDSys, "electronIDSyst"}, {EleIDStat, "electronIDStat"},
+                                                           {pileup, "pileup"}, {electronReco, "electronReco"}, {isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, 
+                                                           {fsrNorm, "fsrNorm"} };
 
-        Uncertainty *unc_dl, *unc_3l, *unc_4l, *unc_crw, *unc_crz, *unc_cro;
-
-        //std::vector<HistInfo>* histogramsUnc_info_DL;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_ML;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_CRZ;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_CRW;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_CRO;
-
-        EventFourT* selection;
-        TreeReader* treeReader;
     public:
-        UncertaintyWrapper(EventFourT* selection, TreeReader* reader);
+        UncertaintyWrapper(HistogramManager* histograms);
 
-        //void initDL(std::vector<HistInfo>* dlInfo);
-        //void initML(std::vector<HistInfo>* mlInfo);
-        //void initCRZ(std::vector<HistInfo>* crzInfo);
-        //void initCRW(std::vector<HistInfo>* crwInfo);
-        //void initCRO(std::vector<HistInfo>* croInfo);
+        Uncertainty* getUncertainty(shapeUncId id) {return uncHistMap[id];}
+        std::map<shapeUncId, std::string> getTranslateUncMap() {return translateUnc;}
 
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* uncertaintyHistogramInit(std::vector<HistInfo>* info, bool up);
+        void fillUncertainty(shapeUncId id, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSingleHistograms(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fill2DHistograms(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
 
+        void newSample(std::string& uniqueSampleName);
+        void writeCurrentHistograms();
+        void writeNonpromptHistograms();
         // all other required functions
 };
 

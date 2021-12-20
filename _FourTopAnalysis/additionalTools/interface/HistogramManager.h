@@ -33,6 +33,7 @@ class HistogramManager {
 
     public:
         HistogramManager(std::string& channel, std::vector<HistInfo>* histInfo);
+        HistogramManager(HistogramManager* copy, std::string& additionalFlags);
         ~HistogramManager();
 
         std::string getChannel() const {return channel;}

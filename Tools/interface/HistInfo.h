@@ -16,6 +16,16 @@ class HistInfo{
 
     public:
         HistInfo() = default;
+        HistInfo(const HistInfo& h1) {
+            fileName = h1.fileName;
+            xLabel = h1.xLabel;
+            nBins = h1.nBins;
+            xMin = h1.xMin;
+            xMax = h1.xMax;
+            binLabels = h1.binLabels;
+            maxBinC = h1.maxBinC;
+            binWidth = h1.binWidth;
+        }
 
         //constructor takes an optional vector of strings to label the bins 
         HistInfo( const std::string& name, const std::string& x, unsigned bins, double min, double max, const std::vector< std::string>& binLabelList = std::vector<std::string>() ):
@@ -57,6 +67,8 @@ class HistInfo{
 
         std::string name() const { return fileName; }
         double maxBinCenter() const { return maxBinC; }
+
+        void setName(std::string newName) {fileName = newName;}
 
     protected:
         std::string fileName;

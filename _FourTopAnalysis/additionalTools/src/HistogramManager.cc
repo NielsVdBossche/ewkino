@@ -7,6 +7,38 @@ HistogramManager::HistogramManager(std::string& channel, std::vector<HistInfo>* 
     }
 }
 
+HistogramManager::HistogramManager(HistogramManager* copy, std::string& additionalFlags) {
+    // do stuffs
+
+    histInfo = new std::vector<HistInfo>;
+
+    for (unsigned i = 0; i < copy->histInfo->size(); i++) {
+        std::string newName = copy->histInfo->at(i).name() + "_" + additionalFlags;
+        HistInfo hardCopy(copy->histInfo->at(i));
+        hardCopy.setName(newName);
+        histInfo->push_back(hardCopy);
+    }
+
+    nonpromptHists = new std::vector<std::shared_ptr<TH1D>>(histInfo->size());
+    for( size_t dist = 0; dist < histInfo->size(); ++dist ){
+        nonpromptHists->at(dist) = histInfo->at(dist).makeHist( histInfo->at(dist).name() + "_nonprompt");
+    }
+
+    if (copy->histInfo2D) {
+        histInfo2D = new std::vector<HistInfo_2D>;
+        for (unsigned i = 0; i < copy->histInfo2D->size(); i++) {
+            std::string newName = copy->histInfo2D->at(i).name() + "_" + additionalFlags;
+            HistInfo_2D hardCopy(copy->histInfo2D->at(i));
+            hardCopy.setName(newName);
+            histInfo2D->push_back(hardCopy);
+        }
+        nonpromptHists2D = new std::vector<std::shared_ptr<TH2D>>(histInfo->size());
+        for( size_t dist = 0; dist < histInfo2D->size(); ++dist ){
+            nonpromptHists2D->at(dist) = histInfo2D->at(dist).makeHist_2D( histInfo2D->at(dist).name() + "_nonprompt");
+        }
+    }
+}
+
 HistogramManager::~HistogramManager() {
     delete histInfo;
 

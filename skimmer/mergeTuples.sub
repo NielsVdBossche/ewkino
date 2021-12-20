@@ -1,5 +1,5 @@
 executable = mergeTuplesAlt.py
-arguments  = $(Process) TTTrainingSamples
+arguments  = $(Process)
 
 output	= /user/nivanden/condor/output/mergetuples_$(Process).out
 error	= /user/nivanden/condor/error/mergetuples_$(Process).err

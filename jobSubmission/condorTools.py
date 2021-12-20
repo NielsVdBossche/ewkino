@@ -81,8 +81,8 @@ def submitCondorJob(jobDescription):
     ### submit a job description file as a condor job
     fname = os.path.splitext(jobDescription)[0]+'.sub'
     if not os.path.exists(fname):
-	    print('### ERROR ###: job description file {} not found'.format(fname))
-	    sys.exit()
+        print('### ERROR ###: job description file {} not found'.format(fname))
+        sys.exit()
     # maybe later extend this part to account for failed submissions etc!
     os.system('condor_submit {}'.format(fname))
 

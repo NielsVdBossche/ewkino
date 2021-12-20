@@ -53,4 +53,4 @@ ugent2016-master/*
 *.weights.xml
 *.class.C
 
-
+*.pyc

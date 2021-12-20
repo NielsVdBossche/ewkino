@@ -3,45 +3,46 @@
 //b-tagging working points
 #include "bTagWP.h"
 
+///// general comments /////
+// - tzq loose was simply copied from Marek's code, 
+//   in order to perform a trigger efficiency measurement;
+//   it was not yet tested or used in any other way.
 
-double leptonMVACutMuon(){
-    return 0.65;
+// define here what mva threshold to use in tZq ID's listed below
+double muonMVACut(){
+    return 0.4;
 }
 
+// define here what mva value to use in tZq ID's listed below
+double muonMVAValue(const Muon* muonPtr){
+    return muonPtr->leptonMVATOP();
+}
+
+// define here what b-tagger to use in all tZq ID's listed below
+// warning: deepFlavor is hard-coded in ttH ID!
+double muonJetBTagValue(const Muon* muonPtr){
+    //return muonPtr->closestJetDeepCSV();
+    return muonPtr->closestJetDeepFlavor();
+}
+
+double muonConeCorrectionFactor(){
+    return 0.67;
+}
 
 /*
-loose muon selection
+-------------------------------------------------------------------
+loose muon selection (common to tZq, ttH and old tZq ID)
+-------------------------------------------------------------------
 */
 
 bool MuonSelector::isLooseBase() const{
-    /*
-    // Old selection
     if( muonPtr->uncorrectedPt() <= 5 ) return false;
     if( muonPtr->absEta() >= 2.4 ) return false; 
     if( fabs( muonPtr->dxy() ) >= 0.05 ) return false;
     if( fabs( muonPtr->dz() ) >= 0.1 ) return false;
     if( muonPtr->sip3d() >= 8 ) return false;
     if( muonPtr->miniIso() >= 0.4 ) return false;
-    if( !muonPtr->isLoosePOGMuon() ) return false;
-
-    if (muonPtr->leptonMVATOP() < 0.5) return false;
-    */
-
-    if (muonPtr->uncorrectedPt() <= 5) return false;
-    if (muonPtr->absEta() >= 2.4) return false;
-    if (! muonPtr->isMediumPOGMuon()) return false;
-    //if (! muonPtr->isPFMuon())
-    if (muonPtr->dxy() >= 0.05) return false;
-    if (muonPtr->dz() >= 0.1) return false;
-    if (muonPtr->sip3d() >= 8) return false;
-    if (muonPtr->miniIso() >= 0.4) return false;
-
-
-    // Tight charge requirements:
-    //if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
-    //if (muonPtr->leptonMVATOP() < 0.05) return false;
-    // no mva req
-
+    if( !muonPtr->isMediumPOGMuon() ) return false;
     return true;
 }
 
@@ -65,102 +66,90 @@ bool MuonSelector::isLoose2018() const{
     return true;
 }
 
-
 /*
-FO muon selection
+--------------------------------------------------------------------------------
+help function for FO ID's
+-------------------------------------------------------------------------------
 */
 
-//interpolation between loose and medium working point of deep flavor from 20 to 45 GeV in muon pT as defined in the ttH analysis
-double slidingDeepFlavorThreshold( const double looseWP, const double mediumWP, const double pt ){
-    static const double minPt = 20.;
-    static const double maxPt = 40.;
-    if( pt < minPt ){
-        return mediumWP;
-    } else if( pt > maxPt ){
-        return looseWP;
+//interpolation between two working points of deepFlavor between two pT values
+double muonSlidingDeepFlavorThreshold( const double lowPt, const double lowPtWP, 
+				    const double highPt, const double highPtWP,
+				    const double pt ){
+    if( pt < lowPt ){
+        return lowPtWP;
+    } else if( pt > highPt ){
+        return highPtWP;
     } else {
-        return ( mediumWP - ( mediumWP - looseWP ) / ( maxPt - minPt ) * ( pt - minPt ) );
+        return ( lowPtWP + ( highPtWP - lowPtWP ) / ( highPt - lowPt ) * ( pt - lowPt ) );
     }
 }
 
 
-bool MuonSelector::isFOBase() const{
-    // Fakeable object
+/*
+---------------------------------------------------------------------------------
+FO muon selection for medium 0.4 tZq ID
+---------------------------------------------------------------------------------
+*/
 
+bool MuonSelector::isFOBase() const{
     if( !isLoose() ) return false;
     if( muonPtr->uncorrectedPt() <= 10 ) return false;
-
-    if (muonPtr->leptonMVATOP() < 0.65) {
-        if( muonPtr->ptRatio() <= 0.45 ) return false;
-    }
-
-    if (muonPtr->trackPtError() / muonPtr->trackPt() >= 0.2) return false;
-
+    // put tunable FO-cuts below
+    //if( muonMVAValue(muonPtr) <= muonMVACut() ){
+    //}
     return true;
 }
 
+
 bool MuonSelector::isFO2016PreVFP() const{
-    
-    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.02, muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PreVFP()) return false;
-    } 
-    
+    if( muonMVAValue(muonPtr) <= muonMVACut() ){
+        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.02, 40., 0.015, 
+		muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->ptRatio() <= 0.45 ) return false;
+    }
     return true;
 }
 
 bool MuonSelector::isFO2016PostVFP() const{
-    
-    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.02, muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2016PostVFP()) return false;
-    } 
-    
+    if( muonMVAValue(muonPtr) <= muonMVACut() ){
+        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.02, 40., 0.015, 
+		muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->ptRatio() <= 0.45 ) return false;
+    }
     return true;
 }
 
 
 bool MuonSelector::isFO2017() const{
-    
-    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.025, muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2017()) return false;
-
-    } 
-    
+    if( muonMVAValue(muonPtr) <= muonMVACut() ){
+        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.025, 40., 0.015, 
+                muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->ptRatio() <= 0.45 ) return false;
+    }
     return true;
 }
 
 
 bool MuonSelector::isFO2018() const{
-    
-    if( muonPtr->leptonMVATOP() <= leptonMVACutMuon() ){
-        double deepFlavorCut = slidingDeepFlavorThreshold( 0.015, 0.025, muonPtr->uncorrectedPt() );
-        if( muonPtr->closestJetDeepFlavor() >= deepFlavorCut ) return false;
-        //if (muonPtr->closestJetDeepFlavor() >= bTagWP::looseDeepFlavor2018()) return false;
-
-    } 
-    
+    if( muonMVAValue(muonPtr) <= muonMVACut() ){
+        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.025, 40., 0.015, 
+                muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->ptRatio() <= 0.45 ) return false;
+    }
     return true;
 }
 
 
 /*
-tight muon selection
+----------------------------------------------------------------------------
+tight muon selection for medium 0p4 tZq ID
+----------------------------------------------------------------------------
 */
 
 bool MuonSelector::isTightBase() const{
     if( !isFO() ) return false;
-    //if( !muonPtr->isMediumPOGMuon() ) return false;
-    //if (muonPtr->pt() < 20) return false;
-    //if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ) return false;
-
-    if (muonPtr->leptonMVATOP() < 0.65) return false;
-
-    
+    if( muonMVAValue(muonPtr) <= muonMVACut() ) return false;
     return true;
 }
 
@@ -174,7 +163,6 @@ bool MuonSelector::isTight2016PostVFP() const{
 }
 
 
-
 bool MuonSelector::isTight2017() const{
     return true;
 }
@@ -184,12 +172,10 @@ bool MuonSelector::isTight2018() const{
     return true;
 }
 
-
 /*
 cone correction
 */
 
-
 double MuonSelector::coneCorrection() const{
-    return ( 0.71 / muonPtr->ptRatio() );
+    return ( muonConeCorrectionFactor() / muonPtr->ptRatio() );
 }

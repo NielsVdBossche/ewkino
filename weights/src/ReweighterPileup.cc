@@ -26,6 +26,16 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
     //make sure the pileup distribution is normalized to unity
     pileupMC->Scale( 1. / pileupMC->GetSumOfWeights() );
 
+    // workaround to remove the last bin of data
+    std::shared_ptr< TH1 > pileupMCTemp = std::make_shared<TH1D>( "pileupRecreation", "pileupRecreation",  pileupMC->GetNbinsX() - 1, 0., 99.);
+
+    for (int i = 0; i < pileupMCTemp->GetNbinsX() + 1; i++) {
+        pileupMCTemp->SetBinContent(i, pileupMC->GetBinContent(i));
+        pileupMCTemp->SetBinError(i, pileupMC->GetBinError(i));
+    }
+
+    pileupMC = pileupMCTemp;
+
     //store all pileup weights in a map
     std::map< std::string, std::map< std::string, std::shared_ptr< TH1 > > > pileupWeights;
 
@@ -33,7 +43,7 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
         for( const auto& var : { "central", "down", "up" } ){
 
             //read data pileup distribution from given file
-            std::string dataPuFilePath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupData/" + "dataPuHist_" + year + "Inclusive_" + var + ".root" );
+            std::string dataPuFilePath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupData/" + "PileupHistogram-goldenJSON-13tev-" + year + "-" + var + "ub-99bins.root" );
             if( !systemTools::fileExists( dataPuFilePath ) ){
                 throw std::runtime_error( "File " + dataPuFilePath + " with data pileup weights, necessary for reweighting, is not present." );
             }
@@ -41,7 +51,7 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
             TFile* dataPileupFilePtr = TFile::Open( dataPuFilePath.c_str() );
             std::shared_ptr< TH1 > pileupData( dynamic_cast< TH1* >( dataPileupFilePtr->Get( "pileup" ) ) );
             pileupData->SetDirectory( gROOT );
-
+        
             //make sure the pileup distribution is normalized to unity
             pileupData->Scale( 1. / pileupData->GetSumOfWeights() );
 
@@ -57,7 +67,7 @@ void computeAndWritePileupWeights( const Sample& sample, const std::string& weig
     }
 
     //write pileup weights to a new ROOT file 
-    std::string outputFilePath = stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + sample.fileName();
+    std::string outputFilePath = stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + stringTools::fileNameFromPath(sample.fileName());
 
     //make output directory if needed
     systemTools::makeDirectory( stringTools::directoryNameFromPath( outputFilePath ) );
@@ -80,7 +90,7 @@ ReweighterPileup::ReweighterPileup( const std::vector< Sample >& sampleList, con
         //skip data samples!
         if( sample.isData() ) continue;
 
-        std::string pileupWeightPath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + sample.fileName() );
+        std::string pileupWeightPath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/pileupWeights_" + stringTools::fileNameFromPath(sample.fileName()) );
 
         //for each sample check if the necessary pileup weights are available, and produce them if not 
         if( !systemTools::fileExists( pileupWeightPath ) ){
@@ -107,6 +117,30 @@ ReweighterPileup::ReweighterPileup( const std::vector< Sample >& sampleList, con
     }
 }
 
+ReweighterPileup::ReweighterPileup( const std::string& year, const std::string& weightDirectory) {
+    std::string yearSuffix;
+
+    if( year == "2016PreVFP") {
+        yearSuffix = "16PreVFP";
+    } else if (year == "2016PostVFP"){
+        yearSuffix = "16PostVFP";
+    } else if(year == "2017"){
+        yearSuffix = "17";
+    } else{
+        yearSuffix = "18";
+    }
+    std::string pileupWeightPath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/pileupWeights/Collisions" + yearSuffix + "_UltraLegacy_goldenJSON.root");
+
+    TFile* puWeightFilePtr = TFile::Open( pileupWeightPath.c_str() );
+
+    UL_puWeightsCentral = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( puWeightFilePtr->Get( "nominal" ) ) );
+    UL_puWeightsCentral->SetDirectory( gROOT );
+    UL_puWeightsDown = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( puWeightFilePtr->Get( "down" ) ) );
+    UL_puWeightsDown->SetDirectory( gROOT );
+    UL_puWeightsUp = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( puWeightFilePtr->Get( "up" ) ) );
+    UL_puWeightsUp->SetDirectory( gROOT );
+    puWeightFilePtr->Close();
+}
 
 double ReweighterPileup::weight( const Event& event, const std::map< std::string, std::shared_ptr< TH1 > >& weightMap ) const{
     auto it = weightMap.find( event.sample().uniqueName() );
@@ -117,17 +151,25 @@ double ReweighterPileup::weight( const Event& event, const std::map< std::string
     return histogram::contentAtValue( histPtr, event.generatorInfo().numberOfTrueInteractions() );
 }
 
+double ReweighterPileup::weight( const Event& event, const std::shared_ptr< TH1 >& weightMap) const {
+    TH1* histPtr = weightMap.get();
+    return histogram::contentAtValue( histPtr, event.generatorInfo().numberOfTrueInteractions() );
+}
+
 
 double ReweighterPileup::weight( const Event& event ) const{
-    return weight( event, puWeightsCentral );
+    return weight( event, UL_puWeightsCentral );
+    //return weight( event, puWeightsCentral );
 }
 
 
 double ReweighterPileup::weightDown( const Event& event ) const{
-    return weight( event, puWeightsDown );
+    return weight( event, UL_puWeightsDown );
+    //return weight( event, puWeightsDown );
 }
 
 
 double ReweighterPileup::weightUp( const Event& event ) const{
-    return weight( event, puWeightsUp );
+    return weight( event, UL_puWeightsUp );
+    //return weight( event, puWeightsUp );
 }

@@ -25,6 +25,7 @@ void EventFourT::addNewEvent(Event* newEvent) {
     cleanSelection();
     event = newEvent;
     isNormalSelected = true;
+    currentClass = eventClass::fail;
     
     objectSelection();
 }
@@ -45,6 +46,8 @@ void EventFourT::objectSelection() {
 
     jets = new JetCollection(event->jetCollection());
     bTagJets = new JetCollection(event->mediumBTagCollection());
+
+    event->selectTightLeptons();
 
     nJets = jets->size();
     nMediumB = bTagJets->size();
@@ -113,7 +116,10 @@ bool EventFourT::passZBosonVeto() {
     if (event->hasOSSFLeptonPair()) {
         double mass = event->bestZBosonCandidateMass();
         //if (mass > 76 && mass < 106) return false;
-        if (fabs(mass - particle::mZ) < 7.5) return false;
+        if (fabs(mass - particle::mZ) < 7.5) {
+            currentClass = eventClass::crz;
+            return false;
+        }
     }
 
     return true;
@@ -147,4 +153,28 @@ bool EventFourT::leptonsArePrompt() {
         if( !leptonPtr->isPrompt() ) return false;
     }
     return true;
+}
+
+void EventFourT::classifyEvent() {
+    if (! passBaselineEventSelection()) return;
+    if (! passZBosonVeto()) return;
+
+    if (! passFullEventSelection()) {
+        currentClass = eventClass::cro;
+        return;
+    }
+
+    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
+        currentClass = eventClass::crw;
+        return;
+    }
+
+    if (numberOfLeps() == 2) {
+        currentClass = eventClass::ssdl;
+    } else if (numberOfLeps() == 3) {
+        currentClass = eventClass::trilep;
+    } else if (numberOfLeps() == 4) {
+        currentClass = eventClass::fourlep;
+    }
+    return;
 }

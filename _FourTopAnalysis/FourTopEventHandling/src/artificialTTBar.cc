@@ -47,6 +47,6 @@ bool EventFourT::passFullEventSelectonWithAltLeptons() {
 }
 
 void EventFourT::altObjectSelection() {
-    altLeps = new LeptonCollection(*looseLeps);
+    altLeps = new LeptonCollection(*foLeps);
     altLeps->selectObjects(leptonPtReq);
 }
