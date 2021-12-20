@@ -19,6 +19,9 @@
 
 //include Event code 
 #include "Event/src/LeptonCollection.cc"
+#include "Event/src/MuonCollection.cc"
+#include "Event/src/ElectronCollection.cc"
+#include "Event/src/TauCollection.cc"
 #include "Event/src/JetCollection.cc"
 #include "Event/src/JetInfo.cc"
 #include "Event/src/TriggerInfo.cc"
@@ -59,7 +62,9 @@
 #include "weights/src/ReweighterBTag.cc"
 #include "weights/src/ReweighterBTagHeavyFlavor.cc"
 #include "weights/src/ReweighterBTagLightFlavor.cc"
+#include "weights/src/ReweighterBTagShape.cc"
 #include "weights/src/ReweighterPileup.cc"
 #include "weights/src/ReweighterPrefire.cc"
+#include "weights/src/ReweighterEmpty.cc"
 #include "weights/src/CombinedReweighter.cc"
 #include "weights/src/ConcreteReweighterFactory.cc"

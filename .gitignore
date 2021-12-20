@@ -1,56 +1,12 @@
-# Prerequisites
-*.d
+# gitignore file
+# see e.g. here: https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# compiled code library
+codeLibrary.o
 
-# Precompiled Headers
-*.gch
-*.pch
+# compiled python code
+**.pyc
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-*.root
-*.png
-
-root/*
-
-analyzer_exec
-plotter_stack_exec
-*_exec
-*Exec
-
-venv/*
-
-*.pdf
-
-ugent2016-master/*
-
-.vscode/*
-*.code-workspace
-
-*.weights.xml
-*.class.C
-
-
+# root files
+# (exceptions may exist, e.g. scalefactors, but should be added manually)
+**.root

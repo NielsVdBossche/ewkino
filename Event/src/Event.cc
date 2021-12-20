@@ -275,40 +275,37 @@ double Event::mtW(){
     return mt( WLepton(), met() );
 }
 
+// copy event with modified energy/momentum scales
+// experimental stage! need to check what attributes are copied or modified in-place!
 
-void Event::makeSubLeptonCollections() {
-    /*
-    if (_lightLeptonCollPtr) {
-        delete _lightLeptonCollPtr;
-    }
-    if (_electronCollectionPtr) {
-        delete _electronCollectionPtr;
-    }
-    if (_muonCollectionPtr) {
-        delete _muonCollectionPtr;
-    }
-    if (_tauCollectionPtr) {
-        delete _tauCollectionPtr;
-    }
-
-    _lightLeptonCollPtr = _leptonCollectionPtr->lightLeptonCollectionPtr();
-    _electronCollectionPtr = _leptonCollectionPtr->electronCollectionPtr();
-    _muonCollectionPtr = _leptonCollectionPtr->muonCollectionPtr();
-    _tauCollectionPtr = _leptonCollectionPtr->tauCollectionPtr();
-    */
-   return;
+void Event::setLeptonCollection( const LeptonCollection& lepCollection ){
+    _leptonCollectionPtr = new LeptonCollection( lepCollection);
 }
 
-bool Event::passTTGOverlap(int sampleType) const {
-    if (sampleType == 0 || isData()) return true;
-
-    unsigned int ttgEventType = _generatorInfoPtr->ttgEventType();
-    
-    if (sampleType == 1 && ttgEventType > 2) {
-        return false;
-    } else if (sampleType == 2 && ttgEventType < 3) {
-        return false;
-    }
-    return true;
-    
+Event Event::variedLeptonCollectionEvent(
+		    LeptonCollection (LeptonCollection::*variedCollection)() const ) const{
+    Event newevt = Event( *this );
+    LeptonCollection lepCollection = (this->leptonCollection().*variedCollection)();
+    //newevt._leptonCollectionPtr = new LeptonCollection( lepCollection );
+    // (the above does not work since _leptonCollectionPtr is private,
+    //  try to solve by defining a public function doing the same thing, but not optimal.)
+    newevt.setLeptonCollection( lepCollection );  
+    return newevt;
 }
+
+Event Event::electronScaleUpEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronScaleUpCollection );
+}
+
+Event Event::electronScaleDownEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronScaleDownCollection );
+}
+
+Event Event::electronResUpEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronResUpCollection );
+}
+
+Event Event::electronResDownEvent() const{
+    return variedLeptonCollectionEvent( &LeptonCollection::electronResDownCollection );
+}
+

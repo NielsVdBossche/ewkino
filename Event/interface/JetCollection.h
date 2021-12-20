@@ -35,8 +35,9 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection JECUpCollection() const;
         JetCollection JERDownCollection() const;
         JetCollection JERUpCollection() const;
-	    JetCollection JECUpCollection( std::string source ) const;
-	    JetCollection JECDownCollection( std::string source ) const;
+	JetCollection JECUpCollection( std::string source ) const;
+	JetCollection JECDownCollection( std::string source ) const;
+	JetCollection getVariedJetCollection( const std::string& variation ) const;
 
         //select jets
         void selectGoodJets();

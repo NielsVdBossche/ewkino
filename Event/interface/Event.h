@@ -55,13 +55,11 @@ class Event {
         GeneratorInfo& generatorInfo() const;
         SusyMassInfo& susyMassInfo() const;
 
-        LeptonCollection* getLeptonCollectionPtr() const{ return _leptonCollectionPtr; }
-        JetCollection* getJetCollectionPtr() const{ return _jetCollectionPtr; }
-        Met* getMetPtr() const{ return _metPtr; }
-        TriggerInfo* getTriggerInfoPtr() const{ return _triggerInfoPtr; }
-	    JetInfo* getJetInfoPtr() const{ return _jetInfoPtr; }
-        EventTags* getEventTagsPtr() const{ return _eventTagsPtr; }
-        GeneratorInfo* getGeneratorInfoPtr() const;
+	// return jet collection and met with varied JEC/JER/Uncl uncertainties
+	JetCollection getJetCollection( const std::string& variation ) const{ 
+	    return (*_jetCollectionPtr).getVariedJetCollection( variation); }
+	Met getMet( const std::string& variation ) const{
+	    return (*_metPtr).getVariedMet( variation); }
 
         Lepton& lepton( const LeptonCollection::size_type leptonIndex ) const{ 
 	    return (*_leptonCollectionPtr)[ leptonIndex ]; }
@@ -227,6 +225,15 @@ class Event {
         long unsigned luminosityBlock(){ return eventTags().luminosityBlock(); }
         long unsigned runNumber(){ return eventTags().runNumber(); }
 
+	// copy event with modified energy/momentum scales
+	// experimental stage! need to check what attributes are copied or modified in-place!
+	Event electronScaleUpEvent() const;
+	Event electronScaleDownEvent() const;
+	Event electronResUpEvent() const;
+	Event electronResDownEvent() const;
+	void setLeptonCollection( const LeptonCollection& );
+	// (to do: check if a public function arbitrarily modifying the lepton collection 
+	//         can be avoided...)
 
     private:
         LeptonCollection* _leptonCollectionPtr = nullptr;
@@ -266,6 +273,9 @@ class Event {
         //check the presence of susy information
         bool hasSusyMassInfo() const{ return ( _susyMassInfoPtr != nullptr ); }
         void checkSusyMassInfo() const;
+
+	Event variedLeptonCollectionEvent(
+                    LeptonCollection (LeptonCollection::*variedCollection)() const ) const;
 };
 
 #endif

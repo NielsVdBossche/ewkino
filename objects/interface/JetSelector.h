@@ -13,10 +13,8 @@ class JetSelector{
         bool isGood() const{
             if( !isGoodBase() ) return false;
             
-            if( jetPtr->is2016PreVFP() ){
-                return isGood2016PreVFP();
-            } else if (jetPtr->is2016PostVFP()) {
-                return isGood2016PostVFP();
+            if( jetPtr->is2016() ){
+                return isGood2016();
             } else if( jetPtr->is2017() ){
                 return isGood2017();
             } else {
