@@ -36,7 +36,7 @@ class UncertaintyWrapper {
         std::map<shapeUncId, Uncertainty*> uncHistMap;
         std::map<shapeUncId, std::string> translateUnc = { {muonIDSys, "muonIDSyst"}, {muonIDStat, "muonIDStat"}, {EleIDSys, "electronIDSyst"}, {EleIDStat, "electronIDStat"},
                                                            {pileup, "pileup"}, {electronReco, "electronReco"}, {isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, 
-                                                           {fsrNorm, "fsrNorm"} };
+                                                           {fsrNorm, "fsrNorm"}, {JER, "JER"}, {JEC, "JEC"} };
 
     public:
         UncertaintyWrapper(HistogramManager* histograms);

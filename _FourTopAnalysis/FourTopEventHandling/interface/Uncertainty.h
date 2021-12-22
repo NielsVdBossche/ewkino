@@ -2,6 +2,7 @@
 #define UNCERTAINTY_4T_H
 
 #include "../../additionalTools/interface/HistogramManager.h"
+#include <map>
 
 // Shape uncertainties
 enum shapeUncId {
