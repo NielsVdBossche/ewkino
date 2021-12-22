@@ -11,8 +11,12 @@
 
 #include "../../../constants/particleMasses.h"
 #include "../../TopQuarkReconstruction/interface/TopReconstructionNew.h"
+#include "Uncertainty.h"
+//#include "MVAHandler.h"
 
 class TopReconstructionNew;
+class MVAHandler_4T;
+///enum shapeUncId;
 
 enum eventClass {
     fail,
@@ -49,10 +53,18 @@ class EventFourT {
         TopReconstructionNew* topReco;
         std::vector<double> scoresMVA;
         
+        MVAHandler_4T* dl_MVA, *ml_MVA;
+
+        std::map<eventClass, int> offsets;
+
     public:
 
         EventFourT();
         ~EventFourT() {cleanSelection();};
+
+        void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}
+        void setMLMVA(MVAHandler_4T* ml_new) {ml_MVA = ml_new;}
+        void setOffsets(std::map<eventClass, int> newOffsets) {offsets = newOffsets;}
 
         void cleanSelection();
         void addNewEvent(Event* newEvent);
@@ -90,6 +102,12 @@ class EventFourT {
 
         bool leptonsArePrompt();
         bool leptonsAreTight();
+
+        eventClass classifyUncertainty(shapeUncId id, bool up);
+        std::vector<double> fillVector();
+        std::vector<std::pair<int, double>> singleFillEntries();
+        std::vector<std::pair<double, double>> fillVector2D();
+
 
         // altLep event selection and activation functions
         bool passBaselineEventSelectionWithAltLeptons();

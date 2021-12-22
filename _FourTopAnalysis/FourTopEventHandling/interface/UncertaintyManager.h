@@ -10,7 +10,6 @@
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
 
-#include "EventFourT.h"
 #include "MVAHandler.h"
 #include "Uncertainty.h"
 
@@ -48,6 +47,10 @@ class UncertaintyWrapper {
         void fillUncertainty(shapeUncId id, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
         void fillSingleHistograms(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
         void fill2DHistograms(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+
+        void fillUpOrDownUncertainty(shapeUncId id, std::vector<double>& fillVec, double weightUp, bool up, bool nonPrompt);
+        void fillUpOrDownSingleHistograms(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, double weightUp, bool up, bool nonPrompt);
+        void fillUpOrDown2DHistograms(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, double weightUp, bool up, bool nonPrompt);
 
         void newSample(std::string& uniqueSampleName);
         void writeCurrentHistograms();

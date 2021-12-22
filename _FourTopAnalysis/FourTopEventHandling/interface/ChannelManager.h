@@ -15,6 +15,10 @@ class ChannelManager
         
         UncertaintyWrapper* getChannelUncertainties(eventClass channel) {return channelMap[channel];}
         std::map<shapeUncId, std::string> getTranslateUncMap() {return channelMap[eventClass::crz]->getTranslateUncMap();}
+
+        void fillUpHistograms(eventClass, shapeUncId, std::vector<double>&, std::vector<std::pair<int, double>>&, std::vector<std::pair<double, double>>&, double, bool);
+        void fillDownHistograms(eventClass, shapeUncId, std::vector<double>&, std::vector<std::pair<int, double>>&, std::vector<std::pair<double, double>>&, double, bool);
+
         //void fillUncertainty();
 
         void newSample(std::string& uniqueName);

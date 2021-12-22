@@ -95,13 +95,22 @@ void FourTop:: analyze() {
     CROManager->extendHistInfo(mva_DL->createHistograms("_CRO", true));
     CROManager->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
     croPosMVA += mva_DL->getMaxClass();
-
+    
     mgrAll->addChannel(eventClass::ssdl, DLManager);
     mgrAll->addChannel(eventClass::trilep, TriLManager);
     mgrAll->addChannel(eventClass::fourlep, FourLManager);
     mgrAll->addChannel(eventClass::crz, CRZManager);
     mgrAll->addChannel(eventClass::crw, CRWManager);
     mgrAll->addChannel(eventClass::cro, CROManager);
+
+    std::map<eventClass, int> offsets;
+    offsets[eventClass::cro] = croPosMVA;
+    offsets[eventClass::crw] = crwPosMVA;
+    offsets[eventClass::crz] = crzPosMVA;
+    offsets[eventClass::ssdl] = dlPosMVA;
+    offsets[eventClass::trilep] = mlPosMVA;
+    offsets[eventClass::fourlep] = fourlPosMVA;
+    selection->setOffsets(offsets);
 
     std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUncMap();
 
@@ -160,9 +169,8 @@ void FourTop:: analyze() {
 
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
-
                 continue;
-            } 
+            }
             
             selection->classifyEvent();
             // TEMP! Remove for full stuff
@@ -300,6 +308,14 @@ void FourTop:: analyze() {
             //// Start filling histograms
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
+            std::vector<double> fillVecUp = fillVec;
+            std::vector<double> fillVecDown = fillVec;
+            std::vector<std::pair<int, double>> singleEntriesUp = singleEntries;
+            std::vector<std::pair<int, double>> singleEntriesDown = singleEntries;
+            std::vector<std::pair<double, double>> fillVec2DUp = fillVec2D;
+            std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
+            eventClass upClass;
+            eventClass downClass;
 
             unsigned uncID = 0;
             while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
@@ -330,11 +346,37 @@ void FourTop:: analyze() {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
+                } else if (uncID == shapeUncId::JER) {
+                    upClass = selection->classifyUncertainty(shapeUncId::JER, false);
+                    fillVecUp = selection->fillVector();
+                    singleEntriesUp = selection->singleFillEntries();
+                    fillVec2DUp = selection->fillVector2D();
+
+                    downClass = selection->classifyUncertainty(shapeUncId::JER, true);
+                    fillVecDown = selection->fillVector();
+                    singleEntriesDown = selection->singleFillEntries();
+                    fillVec2DDown = selection->fillVector2D();
+                } else if (uncID == shapeUncId::JEC) {
+                    upClass = selection->classifyUncertainty(shapeUncId::JEC, false);
+                    fillVecUp = selection->fillVector();
+                    singleEntriesUp = selection->singleFillEntries();
+                    fillVec2DUp = selection->fillVector2D();
+
+                    downClass = selection->classifyUncertainty(shapeUncId::JEC, true);
+                    fillVecDown = selection->fillVector();
+                    singleEntriesDown = selection->singleFillEntries();
+                    fillVec2DDown = selection->fillVector2D();
                 }
 
-                uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
-                uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
-                uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                if (uncID < shapeUncId::JER) {
+                    uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
+                    uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
+                    uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                } else {
+                    mgrAll->fillUpHistograms(upClass, shapeUncId(uncID), fillVecUp, singleEntriesUp, fillVec2DUp, weight, nonPrompt);
+                    mgrAll->fillDownHistograms(downClass, shapeUncId(uncID), fillVecDown, singleEntriesDown, fillVec2DDown, weight, nonPrompt);
+                }
+
                 uncID = uncID + 1;
             }
 

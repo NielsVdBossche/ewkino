@@ -35,3 +35,18 @@ void ChannelManager::writeNonpromptHistograms() {
         currClass++;
     }
 }
+
+void ChannelManager::fillUpHistograms(eventClass ev, shapeUncId id, std::vector<double>& fill, std::vector<std::pair<int, double>>& singles, std::vector<std::pair<double, double>>& fill2d, double weight, bool nonprompt) {
+    if (ev == eventClass::fail) return;
+    channelMap[ev]->fillUpOrDownUncertainty(id, fill, weight, true, nonprompt);
+    channelMap[ev]->fillUpOrDownSingleHistograms(id, singles, weight, true, nonprompt);
+    channelMap[ev]->fillUpOrDown2DHistograms(id, fill2d, weight, true, nonprompt);
+}
+
+void ChannelManager::fillDownHistograms(eventClass ev, shapeUncId id, std::vector<double>& fill, std::vector<std::pair<int, double>>& singles, std::vector<std::pair<double, double>>& fill2d, double weight, bool nonprompt) {
+    if (ev == eventClass::fail) return;
+    channelMap[ev]->fillUpOrDownUncertainty(id, fill, weight, false, nonprompt);
+    channelMap[ev]->fillUpOrDownSingleHistograms(id, singles, weight, false, nonprompt);
+    channelMap[ev]->fillUpOrDown2DHistograms(id, fill2d, weight, false, nonprompt);
+}
+

@@ -2,8 +2,6 @@
 #define UNCERTAINTY_4T_H
 
 #include "../../additionalTools/interface/HistogramManager.h"
-#include "../../histogramSetups/histogramSetup.h"
-#include "EventFourT.h"
 
 // Shape uncertainties
 enum shapeUncId {
@@ -17,6 +15,8 @@ enum shapeUncId {
     isrNorm,
     fsrShape,
     fsrNorm,
+    JER,
+    JEC,
     end  /// always at the end for easier loops
 };
 
@@ -39,6 +39,10 @@ class Uncertainty {
         void fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
         void fillSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
         void fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+
+        void fillUpOrDownHistograms(std::vector<double>& fillVec, double weight, bool up, bool nonPrompt);
+        void fillUpOrDownSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weight, bool up, bool nonPrompt);
+        void fillUpOrDown2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weight, bool up, bool nonPrompt);
 
         void writeCurrentHistograms();
         void writeNonpromptHistograms();
