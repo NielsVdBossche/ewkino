@@ -250,11 +250,12 @@ std::vector<double> EventFourT::fillVector() {
 }
 
 std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
+    std::vector<std::pair<int, double>> singleEntries;
+    if (currentClass == eventClass::fail) return singleEntries;
     MVAHandler_4T* currentMVA = dl_MVA;
     //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
     if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
 
-    std::vector<std::pair<int, double>> singleEntries;
 
     std::pair<MVAClasses, double> classAndScore = currentMVA->getClassAndScore();
     int offset = offsets[currentClass];  
@@ -264,10 +265,12 @@ std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
 }
 
 std::vector<std::pair<double, double>> EventFourT::fillVector2D() {
+    std::vector<std::pair<double, double>> fillVec2D;
+    if (currentClass == eventClass::fail) return fillVec2D;
     MVAHandler_4T* currentMVA = dl_MVA;
     //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
     if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
-    std::vector<std::pair<double, double>> fillVec2D = currentMVA->fill2DVector();
+    fillVec2D = currentMVA->fill2DVector();
 
     return fillVec2D;
 }
