@@ -12,6 +12,7 @@ enum shapeUncId {
     EleIDSys,
     pileup,
     electronReco,
+    qcdScale,
     isrShape,
     isrNorm,
     fsrShape,
@@ -27,11 +28,15 @@ enum shapeUncId {
 class Uncertainty {
     private:
         shapeUncId id;
+        std::string name;
 
         // pair of weight up and down
         // naming of the histograms is here perhaps the hardest thing
         HistogramManager* upHists;
         HistogramManager* downHists;
+        std::vector<HistogramManager*> envelopeHists;
+
+        bool envelope = false;
     public:
         Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms);
         ~Uncertainty();
@@ -47,6 +52,13 @@ class Uncertainty {
 
         void writeCurrentHistograms();
         void writeNonpromptHistograms();
+
+        void createEnvelope(HistogramManager* histograms);
+        void fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt);
+        void fillEnvelopeSingles(std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
+        void fillEnvelope2Ds(std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
+
+        void finalizeEnvelope(bool nonPrompt);
 };
 
 #endif

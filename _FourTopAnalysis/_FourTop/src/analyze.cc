@@ -308,6 +308,7 @@ void FourTop:: analyze() {
             //// Start filling histograms
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
+
             std::vector<double> fillVecUp = fillVec;
             std::vector<double> fillVecDown = fillVec;
             std::vector<std::pair<int, double>> singleEntriesUp = singleEntries;
@@ -328,8 +329,19 @@ void FourTop:: analyze() {
                     double weightNominalInv = 1. / reweighter[ id ]->weight( *currentEvent );
                     weightUp = reweighter[ id ]->weightUp( *currentEvent ) * weightNominalInv;
                     weightDown = reweighter[ id ]->weightDown( *currentEvent ) * weightNominalInv;
-                }
-                if (uncID == shapeUncId::isrShape && hasValidPSs) {
+                } else if (uncID == shapeUncId::qcdScale) {
+                    std::vector<double> qcdvariations;
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2() / xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2() / xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
+
+                    uncWrapper->fillEnvelope(shapeUncId::qcdScale, fillVec, qcdvariations, nonPrompt);
+                    uncWrapper->fillEnvelopeSingles(shapeUncId::qcdScale, singleEntries, qcdvariations, nonPrompt);
+                    uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
+                } else if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
                 } else if (uncID == shapeUncId::isrNorm && hasValidPSs) {

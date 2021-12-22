@@ -84,3 +84,13 @@ void UncertaintyWrapper::fillUpOrDownSingleHistograms(shapeUncId id, std::vector
 void UncertaintyWrapper::fillUpOrDown2DHistograms(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, double weight, bool up, bool nonPrompt) {
     uncHistMap[id]->fill2DHistograms(fillVec, weight, up, nonPrompt);
 }
+
+void UncertaintyWrapper::fillEnvelope(shapeUncId id, std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt) {
+    uncHistMap[id]->fillEnvelope(fillVec, weight, nonPrompt);
+}
+void UncertaintyWrapper::fillEnvelopeSingles(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, bool nonPrompt) {
+    uncHistMap[id]->fillEnvelopeSingles(fillVec, weight, nonPrompt );
+}
+void UncertaintyWrapper::fillEnvelope2Ds(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, bool nonPrompt) {
+    uncHistMap[id]->fillEnvelope2Ds(fillVec, weight, nonPrompt );
+}

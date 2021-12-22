@@ -55,6 +55,10 @@ class UncertaintyWrapper {
         void newSample(std::string& uniqueSampleName);
         void writeCurrentHistograms();
         void writeNonpromptHistograms();
+
+        void fillEnvelope(shapeUncId id, std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt);
+        void fillEnvelopeSingles(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
+        void fillEnvelope2Ds(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
         // all other required functions
 };
 
