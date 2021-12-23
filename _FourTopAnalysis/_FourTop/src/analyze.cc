@@ -334,8 +334,8 @@ void FourTop:: analyze() {
             std::vector<std::pair<int, double>> singleEntriesDown = singleEntries;
             std::vector<std::pair<double, double>> fillVec2DUp = fillVec2D;
             std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
-            eventClass upClass;
-            eventClass downClass;
+            eventClass upClass = eventClass::fail;
+            eventClass downClass = eventClass::fail;
 
             unsigned uncID = 0;
             while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
@@ -382,22 +382,22 @@ void FourTop:: analyze() {
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                 } else if (uncID == shapeUncId::JER) {
-                    upClass = selection->classifyUncertainty(shapeUncId::JER, false);
+                    upClass = selection->classifyUncertainty(shapeUncId::JER, true);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
 
-                    downClass = selection->classifyUncertainty(shapeUncId::JER, true);
+                    downClass = selection->classifyUncertainty(shapeUncId::JER, false);
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
                 } else if (uncID == shapeUncId::JEC) {
-                    upClass = selection->classifyUncertainty(shapeUncId::JEC, false);
+                    upClass = selection->classifyUncertainty(shapeUncId::JEC, true);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
 
-                    downClass = selection->classifyUncertainty(shapeUncId::JEC, true);
+                    downClass = selection->classifyUncertainty(shapeUncId::JEC, false);
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();

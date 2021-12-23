@@ -188,11 +188,11 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
     //if JER
     if (id == shapeUncId::JER) {
         if (up) {
-            jets = new JetCollection(event->getJetCollectionPtr()->JERDownCollection());
+            jets = new JetCollection(event->getJetCollectionPtr()->JERUpCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->mediumBTagCollection());
         } else {
-            jets = new JetCollection(event->getJetCollectionPtr()->JERUpCollection());
+            jets = new JetCollection(event->getJetCollectionPtr()->JERDownCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->mediumBTagCollection());
         }
@@ -200,15 +200,15 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
 
     } else if (id == shapeUncId::JEC) {
         if (up) {
-            jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection());
-            jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
-            met = event->met().MetJECDown().pt();
-        } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->mediumBTagCollection());
             met = event->met().MetJECUp().pt();
+        } else {
+            jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection());
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            met = event->met().MetJECDown().pt();
         }
     }
 
