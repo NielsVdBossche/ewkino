@@ -102,6 +102,7 @@ void Uncertainty::createEnvelope(HistogramManager* histograms) {
 }
 
 void Uncertainty::fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt) {
+    std::cout << envelopeHists.size() << " " << weight.size() << std::endl;
     for (unsigned i=0; i < weight.size(); i++) {
         envelopeHists[i]->fillHistograms(fillVec, weight[i], nonPrompt);
     }
