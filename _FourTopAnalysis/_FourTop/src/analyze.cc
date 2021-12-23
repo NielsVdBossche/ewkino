@@ -115,12 +115,13 @@ void FourTop:: analyze() {
     std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUncMap();
 
     std::cout << "event loop" << std::endl;
-    currentEvent = new Event();
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
+        currentEvent = treeReader->buildEventPtr(0);
+
         std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
@@ -137,39 +138,47 @@ void FourTop:: analyze() {
         CRWManager->newSample(uniqueName);
         CROManager->newSample(uniqueName);
         mgrAll->newSample(uniqueName);
-        // check if TTbar or TTGamma sample
-        ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
-
-        xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
         int numberOfPSVariations = 0;
-        bool hasValidPSs = false; // global switch to use later on in the event loop
-        if(!treeReader->isData()){
+        int numberOfPdfVariations = 0;
+        bool hasValidQcds = false;
+        bool hasValidPSs = false;
+        if (! treeReader->isData()) {
+            // check if TTbar or TTGamma sample
+            ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+
+            xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
+
             std::cout << "finding available PS scale variations...\n";
             Event event = treeReader->buildEvent(0);
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
             if(numberOfPSVariations==14) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
-        }
 
-        //double qcdScalesMinXSecRatio = 1.;
-        //double qcdScalesMaxXSecRatio = 1.;
-        //std::vector< double > qcdScalesXSecRatios;
-        //bool hasValidQcds = false;
-        //if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-        //    hasValidQcds = true;
-        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
-        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
-        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
-        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
-        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
-        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
-        //    // note: order doesnt matter here as it is only used for min and max calculation
-        //    qcdScalesMinXSecRatio = *std::min_element( qcdScalesXSecRatios.begin(), 
-        //                        qcdScalesXSecRatios.end() );
-        //    qcdScalesMaxXSecRatio = *std::max_element( qcdScalesXSecRatios.begin(), 
-        //                        qcdScalesXSecRatios.end() );
-        //}
+            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
+                hasValidQcds = true;
+            }
+
+            numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+            //double qcdScalesMinXSecRatio = 1.;
+            //double qcdScalesMaxXSecRatio = 1.;
+            //std::vector< double > qcdScalesXSecRatios;
+            //bool hasValidQcds = false;
+            //if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
+            //    hasValidQcds = true;
+            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
+            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
+            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
+            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
+            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
+            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
+            //    // note: order doesnt matter here as it is only used for min and max calculation
+            //    qcdScalesMinXSecRatio = *std::min_element( qcdScalesXSecRatios.begin(), 
+            //                        qcdScalesXSecRatios.end() );
+            //    qcdScalesMaxXSecRatio = *std::max_element( qcdScalesXSecRatios.begin(), 
+            //                        qcdScalesXSecRatios.end() );
+            //}
+        }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -178,10 +187,6 @@ void FourTop:: analyze() {
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
 
-            bool hasValidQcds = false;
-            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-                hasValidQcds = true;
-            }
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
@@ -369,6 +374,23 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelope(shapeUncId::qcdScale, fillVec, qcdvariations, nonPrompt);
                     uncWrapper->fillEnvelopeSingles(shapeUncId::qcdScale, singleEntries, qcdvariations, nonPrompt);
                     uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
+                } else if (uncID == shapeUncId::pdfShapeVar) {
+                    std::vector<double> pdfVariations;
+
+                    for(unsigned i=0; i<numberOfPdfVariations; ++i){
+                        pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+                    }
+
+                    if (numberOfPdfVariations < 100) {
+                        for (unsigned i = pdfVariations.size(); i<100; i++) {
+                            pdfVariations.push_back(weight);
+                        }
+                    }
+
+                    uncWrapper->fillEnvelope(shapeUncId::pdfShapeVar, fillVec, pdfVariations, nonPrompt);
+                    uncWrapper->fillEnvelopeSingles(shapeUncId::pdfShapeVar, singleEntries, pdfVariations, nonPrompt);
+                    uncWrapper->fillEnvelope2Ds(shapeUncId::pdfShapeVar, fillVec2D, pdfVariations, nonPrompt);
+
                 } else if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();

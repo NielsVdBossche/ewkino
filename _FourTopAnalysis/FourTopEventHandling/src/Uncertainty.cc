@@ -8,7 +8,7 @@ Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeU
     upHists = new HistogramManager(histograms, upFlag);
     downHists = new HistogramManager(histograms, downFlag);
 
-    if (id == shapeUncId::qcdScale) {
+    if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
         envelope = true;
         createEnvelope(histograms);
         // generateEnvelope -> if envelope is present, fill histograms for each
@@ -93,6 +93,8 @@ void Uncertainty::createEnvelope(HistogramManager* histograms) {
     int variations = 0;
     if (id == shapeUncId::qcdScale) {
         variations = 6;
+    } else if (id == shapeUncId::pdfShapeVar) {
+        variations = 100;
     }
 
     for (int i=0; i < variations; i++) {
@@ -102,7 +104,6 @@ void Uncertainty::createEnvelope(HistogramManager* histograms) {
 }
 
 void Uncertainty::fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt) {
-    std::cout << envelopeHists.size() << " " << weight.size() << std::endl;
     for (unsigned i=0; i < weight.size(); i++) {
         envelopeHists[i]->fillHistograms(fillVec, weight[i], nonPrompt);
     }

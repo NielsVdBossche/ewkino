@@ -13,6 +13,7 @@ enum shapeUncId {
     pileup,
     electronReco,
     qcdScale,
+    pdfShapeVar,
     isrShape,
     isrNorm,
     fsrShape,
