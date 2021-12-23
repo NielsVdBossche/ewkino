@@ -1,6 +1,6 @@
 #include "../interface/Uncertainty.h"
 
-Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms) {
+Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms) : id(id) {
     name = translateUnc[id];
     std::string upFlag = name + "_Up";
     std::string downFlag = name + "_Down";
