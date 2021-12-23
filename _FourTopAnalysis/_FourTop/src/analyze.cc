@@ -152,24 +152,24 @@ void FourTop:: analyze() {
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
         }
 
-        double qcdScalesMinXSecRatio = 1.;
-        double qcdScalesMaxXSecRatio = 1.;
-        std::vector< double > qcdScalesXSecRatios;
-        bool hasValidQcds = false;
-        if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-            hasValidQcds = true;
-            qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
-            qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
-            qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
-            qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
-            qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
-            qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
-            // note: order doesnt matter here as it is only used for min and max calculation
-            qcdScalesMinXSecRatio = *std::min_element( qcdScalesXSecRatios.begin(), 
-                                qcdScalesXSecRatios.end() );
-            qcdScalesMaxXSecRatio = *std::max_element( qcdScalesXSecRatios.begin(), 
-                                qcdScalesXSecRatios.end() );
-        }
+        //double qcdScalesMinXSecRatio = 1.;
+        //double qcdScalesMaxXSecRatio = 1.;
+        //std::vector< double > qcdScalesXSecRatios;
+        //bool hasValidQcds = false;
+        //if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
+        //    hasValidQcds = true;
+        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
+        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
+        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
+        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
+        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
+        //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
+        //    // note: order doesnt matter here as it is only used for min and max calculation
+        //    qcdScalesMinXSecRatio = *std::min_element( qcdScalesXSecRatios.begin(), 
+        //                        qcdScalesXSecRatios.end() );
+        //    qcdScalesMaxXSecRatio = *std::max_element( qcdScalesXSecRatios.begin(), 
+        //                        qcdScalesXSecRatios.end() );
+        //}
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -177,6 +177,11 @@ void FourTop:: analyze() {
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
+
+            bool hasValidQcds = false;
+            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
+                hasValidQcds = true;
+            }
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
