@@ -166,8 +166,6 @@ void FourTop:: analyze() {
             //if (entry > 10000) break;
             delete currentEvent;
 
-            std::cout << "actually in event loop" << std::endl;
-
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
 
@@ -317,9 +315,6 @@ void FourTop:: analyze() {
 
             // TODO: Systematics
             if (currentEvent->isData()) continue;
-
-            std::cout << "uncertainty time" << std::endl;
-
 
             //// Start filling histograms
             // loop uncertainties
@@ -472,6 +467,8 @@ void FourTop:: analyze() {
 
         gDirectory->mkdir("analytics");
         gDirectory->cd("analytics");
+
+        std::cout << "writing uncertainties" << std::endl;
 
         outfile->cd();
         outfile->cd("Uncertainties");
