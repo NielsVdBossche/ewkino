@@ -9,9 +9,9 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
     std::vector<Double_t>* dataVector = nullptr;
     if (config == BDT_DL || config == NN_DL) {
-        dataVector = new std::vector<Double_t>(34);
+        dataVector = new std::vector<Double_t>(30);
     } else if (config == BDT_ML || config == NN_ML) {
-        dataVector = new std::vector<Double_t>(34);
+        dataVector = new std::vector<Double_t>(31);
     }
     /*
     if ( config == BDT_DL || config == NN_DL || config == BDT_ML || config == NN_ML) {
