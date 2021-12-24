@@ -54,6 +54,10 @@ void UncertaintyWrapper::writeCurrentHistograms() {
     unsigned id = 0;
 
     while (id != shapeUncId::end) {
+        if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
+            id++;
+            continue;
+        }
         std::string uncName = translateUnc[shapeUncId(id)];
         if (! gDirectory->GetDirectory(uncName.c_str())) {
             gDirectory->mkdir(uncName.c_str());
