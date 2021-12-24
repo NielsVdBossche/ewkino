@@ -35,6 +35,10 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection JECUpCollection() const;
         JetCollection JERDownCollection() const;
         JetCollection JERUpCollection() const;
+        JetCollection JER_1p93_DownCollection() const;
+        JetCollection JER_1p93_UpCollection() const;
+        JetCollection JER_1p93_To_2p5_DownCollection() const;
+        JetCollection JER_1p93_To_2p5_UpCollection() const;
 	    JetCollection JECUpCollection( std::string source ) const;
 	    JetCollection JECDownCollection( std::string source ) const;
 

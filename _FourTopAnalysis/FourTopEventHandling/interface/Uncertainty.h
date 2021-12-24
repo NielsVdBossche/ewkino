@@ -18,7 +18,8 @@ enum shapeUncId {
     isrNorm,
     fsrShape,
     fsrNorm,
-    JER,
+    JER_1p93,
+    JER_2p5,
     JEC,
     end  /// always at the end for easier loops
 };
@@ -35,14 +36,14 @@ class Uncertainty {
         // naming of the histograms is here perhaps the hardest thing
         HistogramManager* upHists;
         HistogramManager* downHists;
-        std::vector<HistogramManager*> envelopeHists;
 
-        bool envelope = false;
     public:
         Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms);
-        ~Uncertainty();
+        virtual ~Uncertainty() {};
 
-        void newSample(std::string& uniqueName);
+        virtual void newSample(std::string& uniqueName);
+        //virtual void newProcess(std::string& newProcess, TFile* outfile);
+
         void fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
         void fillSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
         void fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
@@ -51,15 +52,13 @@ class Uncertainty {
         void fillUpOrDownSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weight, bool up, bool nonPrompt);
         void fillUpOrDown2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weight, bool up, bool nonPrompt);
 
-        void writeCurrentHistograms();
+        virtual void writeCurrentHistograms();
         void writeNonpromptHistograms();
 
-        void createEnvelope(HistogramManager* histograms);
-        void fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt);
-        void fillEnvelopeSingles(std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
-        void fillEnvelope2Ds(std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
-
-        void finalizeEnvelope(bool nonPrompt);
+        shapeUncId getID() const {return id;}
+        std::string getName() const {return name;}
+        HistogramManager* getUpHists() {return upHists;}
+        HistogramManager* getDownHists() {return downHists;}
 };
 
 #endif

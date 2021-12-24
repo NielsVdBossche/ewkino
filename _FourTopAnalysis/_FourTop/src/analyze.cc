@@ -139,6 +139,9 @@ void FourTop:: analyze() {
         CROManager->newSample(uniqueName);
         mgrAll->newSample(uniqueName);
 
+        std::string currProcName = sampleVec[sampleIndex].processName();
+        mgrAll->newProcess(currProcName, outfile);
+
         int numberOfPSVariations = 0;
         int numberOfPdfVariations = 0;
         bool hasValidQcds = false;
@@ -363,7 +366,7 @@ void FourTop:: analyze() {
                     continue;
                     std::vector<double> pdfVariations;
 
-                    for(unsigned i=0; i<numberOfPdfVariations; ++i){
+                    for(int i=0; i<numberOfPdfVariations; ++i){
                         pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
                     }
 
@@ -394,13 +397,23 @@ void FourTop:: analyze() {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
-                } else if (uncID == shapeUncId::JER) {
-                    upClass = selection->classifyUncertainty(shapeUncId::JER, true);
+                } else if (uncID >= shapeUncId::JER_1p93) {
+                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
 
-                    downClass = selection->classifyUncertainty(shapeUncId::JER, false);
+                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false);
+                    fillVecDown = selection->fillVector();
+                    singleEntriesDown = selection->singleFillEntries();
+                    fillVec2DDown = selection->fillVector2D();
+                } /*else if (uncID == shapeUncId::JER_2p5) {
+                    upClass = selection->classifyUncertainty(shapeUncId::JER_2p5, true);
+                    fillVecUp = selection->fillVector();
+                    singleEntriesUp = selection->singleFillEntries();
+                    fillVec2DUp = selection->fillVector2D();
+
+                    downClass = selection->classifyUncertainty(shapeUncId::JER_2p5, false);
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
@@ -414,9 +427,9 @@ void FourTop:: analyze() {
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
-                }
+                }*/
 
-                if (uncID < shapeUncId::JER) {
+                if (uncID < shapeUncId::JER_1p93) {
                     uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
                     uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
                     uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);

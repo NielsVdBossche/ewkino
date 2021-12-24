@@ -18,6 +18,16 @@ void ChannelManager::newSample(std::string& uniqueName) {
     }
 }
 
+void ChannelManager::newProcess(std::string& processName, TFile* outfile) {
+    unsigned currClass = eventClass::crz;
+
+    while (currClass <= eventClass::fourlep) {
+        channelMap[eventClass(currClass)]->newProcess(processName, outfile);
+        currClass++;
+    }
+}
+
+
 void ChannelManager::writeCurrentHistograms() {
     unsigned currClass = eventClass::crz;
 

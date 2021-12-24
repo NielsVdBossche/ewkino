@@ -22,6 +22,7 @@ class ChannelManager
         //void fillUncertainty();
 
         void newSample(std::string& uniqueName);
+        void newProcess(std::string& processName, TFile* outfile);
         void addChannel(eventClass channel, HistogramManager* histograms);
         void writeCurrentHistograms();
         void writeNonpromptHistograms();

@@ -5,7 +5,8 @@ UncertaintyWrapper::UncertaintyWrapper(HistogramManager* histograms) {
     unsigned id = 0;
 
     while (id != shapeUncId::end) {
-        uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), histograms);
+        if (id != shapeUncId::qcdScale || id != shapeUncId::pdfShapeVar) uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), histograms);
+        else uncHistMap[shapeUncId(id)] = new UncertaintyEnvelope(translateUnc, shapeUncId(id), histograms);
         id++;
     }
 }
@@ -26,10 +27,28 @@ void UncertaintyWrapper::newSample(std::string& uniqueSampleName) {
     unsigned id = 0;
 
     while (id != shapeUncId::end) {
+        if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
+            id++;
+            continue;
+        }
         uncHistMap[shapeUncId(id)]->newSample(uniqueSampleName);
         id++;
     }
 }
+
+void UncertaintyWrapper::newProcess(std::string& uniqueProcessName, TFile* outfile) {
+    unsigned id = 0;
+    while (id != shapeUncId::end) {
+        if (id != shapeUncId::qcdScale || id != shapeUncId::pdfShapeVar) {
+            id++;
+            continue;
+        }
+        UncertaintyEnvelope* unc = static_cast<UncertaintyEnvelope*>(uncHistMap[shapeUncId(id)]);
+        unc->newProcess(uniqueProcessName, outfile);
+        id++;
+    }
+}
+
 
 void UncertaintyWrapper::writeCurrentHistograms() {
     unsigned id = 0;
@@ -86,11 +105,14 @@ void UncertaintyWrapper::fillUpOrDown2DHistograms(shapeUncId id, std::vector<std
 }
 
 void UncertaintyWrapper::fillEnvelope(shapeUncId id, std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt) {
-    uncHistMap[id]->fillEnvelope(fillVec, weight, nonPrompt);
+    UncertaintyEnvelope* unc = static_cast<UncertaintyEnvelope*>(uncHistMap[id]);
+    unc->fillEnvelope(fillVec, weight, nonPrompt);
 }
 void UncertaintyWrapper::fillEnvelopeSingles(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, bool nonPrompt) {
-    uncHistMap[id]->fillEnvelopeSingles(fillVec, weight, nonPrompt );
+    UncertaintyEnvelope* unc = static_cast<UncertaintyEnvelope*>(uncHistMap[id]);
+    unc->fillEnvelopeSingles(fillVec, weight, nonPrompt );
 }
 void UncertaintyWrapper::fillEnvelope2Ds(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, bool nonPrompt) {
-    uncHistMap[id]->fillEnvelope2Ds(fillVec, weight, nonPrompt );
+    UncertaintyEnvelope* unc = static_cast<UncertaintyEnvelope*>(uncHistMap[id]);
+    unc->fillEnvelope2Ds(fillVec, weight, nonPrompt );
 }
