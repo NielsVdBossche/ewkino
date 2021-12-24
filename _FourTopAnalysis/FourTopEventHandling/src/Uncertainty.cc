@@ -125,6 +125,7 @@ void Uncertainty::fillEnvelope2Ds(std::vector<std::pair<double, double>>& fillVe
 
 void Uncertainty::finalizeEnvelope(bool nonPrompt) {
     // nominal histograms should be fixed
+    return;
     std::vector<std::shared_ptr<TH1D>>* upHistograms = upHists->getHistograms(nonPrompt);
     std::vector<std::shared_ptr<TH1D>>* downHistograms = downHists->getHistograms(nonPrompt);
 
