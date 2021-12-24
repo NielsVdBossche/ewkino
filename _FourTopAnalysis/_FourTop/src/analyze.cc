@@ -160,29 +160,13 @@ void FourTop:: analyze() {
             }
 
             numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
-            //double qcdScalesMinXSecRatio = 1.;
-            //double qcdScalesMaxXSecRatio = 1.;
-            //std::vector< double > qcdScalesXSecRatios;
-            //bool hasValidQcds = false;
-            //if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-            //    hasValidQcds = true;
-            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
-            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
-            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
-            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
-            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
-            //    qcdScalesXSecRatios.push_back( xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
-            //    // note: order doesnt matter here as it is only used for min and max calculation
-            //    qcdScalesMinXSecRatio = *std::min_element( qcdScalesXSecRatios.begin(), 
-            //                        qcdScalesXSecRatios.end() );
-            //    qcdScalesMaxXSecRatio = *std::max_element( qcdScalesXSecRatios.begin(), 
-            //                        qcdScalesXSecRatios.end() );
-            //}
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
             delete currentEvent;
+
+            std::cout << "actually in event loop" << std::endl;
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
@@ -334,6 +318,9 @@ void FourTop:: analyze() {
             // TODO: Systematics
             if (currentEvent->isData()) continue;
 
+            std::cout << "uncertainty time" << std::endl;
+
+
             //// Start filling histograms
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
@@ -359,6 +346,8 @@ void FourTop:: analyze() {
                     weightUp = reweighter[ id ]->weightUp( *currentEvent ) * weightNominalInv;
                     weightDown = reweighter[ id ]->weightDown( *currentEvent ) * weightNominalInv;
                 } else if (uncID == shapeUncId::qcdScale) {
+                    uncID++;
+                    continue;
                     std::vector<double> qcdvariations;
                     if (hasValidQcds) {
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
@@ -375,6 +364,8 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelopeSingles(shapeUncId::qcdScale, singleEntries, qcdvariations, nonPrompt);
                     uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
                 } else if (uncID == shapeUncId::pdfShapeVar) {
+                    uncID++;
+                    continue;
                     std::vector<double> pdfVariations;
 
                     for(unsigned i=0; i<numberOfPdfVariations; ++i){
@@ -448,6 +439,9 @@ void FourTop:: analyze() {
         // Processes were named in samplelist. Should use this to make directory for process and subdir for sample
 
         // Might interface with Stacker to create desired output plots as well... Or at least already have the stacked process ready instead of individual components. Then a "getDirectory" in stacker could be handy to see if it exists.
+        std::cout << "output" << std::endl;
+        
+        
         outfile->cd();
         outfile->cd("Nominal");
         const char* processName = treeReader->currentSample().processName().c_str();
