@@ -9,9 +9,9 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
     std::vector<Double_t>* dataVector = nullptr;
     if (config == BDT_DL || config == NN_DL) {
-        dataVector = new std::vector<Double_t>(19);
+        dataVector = new std::vector<Double_t>(34);
     } else if (config == BDT_ML || config == NN_ML) {
-        dataVector = new std::vector<Double_t>(16);
+        dataVector = new std::vector<Double_t>(34);
     }
     /*
     if ( config == BDT_DL || config == NN_DL || config == BDT_ML || config == NN_ML) {
@@ -288,13 +288,6 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
 
             for (int i=0; i < newClassElement->GetEntries(); i++) {
                 newClassElement->GetEntry(i);
-
-                std::vector<Double_t> variables = *vars.second;
-                variables.erase(variables.begin()+20);
-                variables.erase(variables.begin()+14);
-                variables.erase(variables.begin()+3);
-                variables.erase(variables.begin()+2);
-                variables.erase(variables.begin()+1);
 
                 float rnd = r->Rndm();
                 if (rnd < ptrain) {
