@@ -5,8 +5,13 @@ UncertaintyWrapper::UncertaintyWrapper(HistogramManager* histograms) {
     unsigned id = 0;
 
     while (id != shapeUncId::end) {
-        if (id != shapeUncId::qcdScale || id != shapeUncId::pdfShapeVar) uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), histograms);
-        else uncHistMap[shapeUncId(id)] = new UncertaintyEnvelope(translateUnc, shapeUncId(id), histograms);
+        if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
+            std::cout << "envelope " << id << std::endl;
+            uncHistMap[shapeUncId(id)] = new UncertaintyEnvelope(translateUnc, shapeUncId(id), histograms);
+        } else {
+            std::cout << "current uncertainty " << id << std::endl;
+            uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), histograms);
+        }
         id++;
     }
 }
@@ -39,12 +44,10 @@ void UncertaintyWrapper::newSample(std::string& uniqueSampleName) {
 void UncertaintyWrapper::newProcess(std::string& uniqueProcessName, TFile* outfile) {
     unsigned id = 0;
     while (id != shapeUncId::end) {
-        if (id != shapeUncId::qcdScale || id != shapeUncId::pdfShapeVar) {
-            id++;
-            continue;
+        if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
+            UncertaintyEnvelope* unc = static_cast<UncertaintyEnvelope*>(uncHistMap[shapeUncId(id)]);
+            unc->newProcess(uniqueProcessName, outfile);
         }
-        UncertaintyEnvelope* unc = static_cast<UncertaintyEnvelope*>(uncHistMap[shapeUncId(id)]);
-        unc->newProcess(uniqueProcessName, outfile);
         id++;
     }
 }

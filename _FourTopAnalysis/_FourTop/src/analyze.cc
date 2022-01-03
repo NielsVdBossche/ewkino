@@ -138,7 +138,7 @@ void FourTop:: analyze() {
         CRWManager->newSample(uniqueName);
         CROManager->newSample(uniqueName);
         mgrAll->newSample(uniqueName);
-
+        
         std::string currProcName = sampleVec[sampleIndex].processName();
         mgrAll->newProcess(currProcName, outfile);
 
