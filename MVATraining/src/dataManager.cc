@@ -9,9 +9,9 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
     std::vector<Double_t>* dataVector = nullptr;
     if (config == BDT_DL || config == NN_DL) {
-        dataVector = new std::vector<Double_t>(23);
+        dataVector = new std::vector<Double_t>(24);
     } else if (config == BDT_ML || config == NN_ML) {
-        dataVector = new std::vector<Double_t>(26);
+        dataVector = new std::vector<Double_t>(28);
     }
     /*
     if ( config == BDT_DL || config == NN_DL || config == BDT_ML || config == NN_ML) {
@@ -85,6 +85,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("massBestTop",      &dataVector->at(21));
         //chain->SetBranchAddress("massBestTopW",     &dataVector->at(27));
         chain->SetBranchAddress("massSecTop",       &dataVector->at(22));
+        chain->SetBranchAddress("MET",              &dataVector->at(23));
         //chain->SetBranchAddress("massSecTopW",      &dataVector->at(29));
     }
 
@@ -122,6 +123,8 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("massBestTop",      &dataVector->at(24));
         //chain->SetBranchAddress("massBestTopW",     &dataVector->at(28));
         chain->SetBranchAddress("massSecTop",       &dataVector->at(25));
+        chain->SetBranchAddress("MET",              &dataVector->at(26));
+        chain->SetBranchAddress("pt_lep_three",     &dataVector->at(27));
         //chain->SetBranchAddress("massSecTopW",      &dataVector->at(30));
     }
 
@@ -165,6 +168,7 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
         //dataloader->AddVariable("massBestTopW",   'F');
         dataloader->AddVariable("massSecTop",     'F');
         //dataloader->AddVariable("massSecTopW",    'F');
+        dataloader->AddVariable("MET",            'F');
     }
 
     if (config == BDT_ML || config == NN_ML) {    
@@ -179,12 +183,12 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
         dataloader->AddVariable("mToPt", 'F');
         //dataloader->AddVariable("min_dr_lep_b", 'F');
         dataloader->AddVariable("sec_min_dr_lep_b", 'F');
-        dataloader->AddVariable("pt_jet_one", 'F');
-        dataloader->AddVariable("pt_jet_four", 'F');
-        dataloader->AddVariable("pt_jet_five", 'F');
-        dataloader->AddVariable("pt_jet_six", 'F');
-        dataloader->AddVariable("pt_lep_one", 'F');
-        dataloader->AddVariable("pt_lep_two", 'F');
+        dataloader->AddVariable("pt_jet_one",     'F');
+        dataloader->AddVariable("pt_jet_four",    'F');
+        dataloader->AddVariable("pt_jet_five",    'F');
+        dataloader->AddVariable("pt_jet_six",     'F');
+        dataloader->AddVariable("pt_lep_one",     'F');
+        dataloader->AddVariable("pt_lep_two",     'F');
         dataloader->AddVariable("bTagLead",       'F');
         dataloader->AddVariable("bTagSub",        'F');
         dataloader->AddVariable("bTagThird",      'F');
@@ -202,6 +206,8 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
         //dataloader->AddVariable("massBestTopW",   'F');
         dataloader->AddVariable("massSecTop",     'F');
         //dataloader->AddVariable("massSecTopW",    'F');
+        dataloader->AddVariable("MET",            'F');
+        dataloader->AddVariable("pt_lep_three",   'F');
     }
 }
 
