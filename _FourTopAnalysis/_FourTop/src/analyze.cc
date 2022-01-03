@@ -344,8 +344,8 @@ void FourTop:: analyze() {
                     weightUp = reweighter[ id ]->weightUp( *currentEvent ) * weightNominalInv;
                     weightDown = reweighter[ id ]->weightDown( *currentEvent ) * weightNominalInv;
                 } else if (uncID == shapeUncId::qcdScale) {
-                    uncID++;
-                    continue;
+                    //uncID++;
+                    //continue;
                     std::vector<double> qcdvariations;
                     if (hasValidQcds) {
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
@@ -398,6 +398,7 @@ void FourTop:: analyze() {
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                 } else if (uncID >= shapeUncId::JER_1p93) {
+                    // JER and JEC
                     upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
