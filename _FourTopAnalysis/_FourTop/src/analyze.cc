@@ -496,6 +496,8 @@ void FourTop:: analyze() {
 
         mgrAll->writeCurrentHistograms();
     }
+    std::string anotherName = "something";
+    mgrAll->newSample(anotherName); // workaround so that we would print histograms of last process
 
     // Don't forget non-prompt contributions
 

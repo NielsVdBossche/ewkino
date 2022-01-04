@@ -54,7 +54,7 @@ void UncertaintyEnvelope::fillEnvelope2Ds(std::vector<std::pair<double, double>>
 
 void UncertaintyEnvelope::finalizeEnvelope(bool nonPrompt) {
     // nominal histograms should be fixed
-    return;
+    if (getID() == shapeUncId::pdfShapeVar) return;
     std::vector<std::shared_ptr<TH1D>>* upHistograms = getUpHists()->getHistograms(nonPrompt);
     std::vector<std::shared_ptr<TH1D>>* downHistograms = getDownHists()->getHistograms(nonPrompt);
 
@@ -83,10 +83,14 @@ void UncertaintyEnvelope::writeCurrentHistogramsProcess(TFile* outfile) {
     finalizeEnvelope(false);
     outfile->cd("Uncertainties");
     gDirectory->cd(process.c_str());
-    gDirectory->mkdir(getName().c_str());
-    gDirectory->cd(getName().c_str());
-    gDirectory->mkdir("Up");
-    gDirectory->mkdir("Down");
+    if (! gDirectory->GetDirectory(getName().c_str())) {
+        gDirectory->mkdir(getName().c_str());
+        gDirectory->cd(getName().c_str());
+        gDirectory->mkdir("Up");
+        gDirectory->mkdir("Down");
+    } else {
+        gDirectory->cd(getName().c_str());
+    }
 
     Uncertainty::writeCurrentHistograms();
 }
