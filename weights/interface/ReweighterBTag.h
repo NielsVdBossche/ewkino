@@ -15,6 +15,7 @@
 #include "../../Tools/interface/histogramTools.h"
 #include "../../Tools/interface/stringTools.h"
 
+BTagEntry::JetFlavor jetFlavorEntry( const Jet& jet );
 
 class ReweighterBTag : public Reweighter {
 

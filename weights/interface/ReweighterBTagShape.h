@@ -17,12 +17,12 @@ class ReweighterBTagShape: public Reweighter{
 
     public:
 	
-	ReweighterBTagShape(	const std::string& weightDirectory,
-				const std::string& sfFilePath,
-                                const std::string& flavor,
-				const std::string& bTagAlgo,
-                                const std::vector<std::string>& variations,
-                                const std::vector<Sample>& samples);
+	ReweighterBTagShape(const std::string& weightDirectory,
+						const std::string& sfFilePath,
+						const std::string& flavor,
+						const std::string& bTagAlgo,
+						const std::vector<std::string>& variations,
+						const std::vector<Sample>& samples);
 	void initialize( const std::vector<Sample>& samples, long unsigned numberOfEntries=0 );
 
 	bool hasVariation( const std::string& variation ) const;
@@ -45,7 +45,7 @@ class ReweighterBTagShape: public Reweighter{
 	std::vector<std::string> availableSystematics() const{ return _systematics; }
 	// following functions are needed for correct inheritance, but meaningless
 	double weightUp( const Event& ) const{ return 0.; } 
-        double weightDown( const Event& ) const{ return 0.; } 
+    double weightDown( const Event& ) const{ return 0.; } 
 
     private:
 

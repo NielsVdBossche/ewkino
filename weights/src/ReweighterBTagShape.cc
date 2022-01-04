@@ -13,6 +13,7 @@ This method corresponds to "1d", whereas ReweighterBTag corresponds to "1a".
 
 
 #include "../interface/ReweighterBTagShape.h"
+#include "../interface/ReweighterBTag.h"
 
 
 /// constructor ///

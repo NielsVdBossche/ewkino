@@ -13,6 +13,10 @@
 #include "../interface/ReweighterPileup.h"
 #include "../interface/ConcreteReweighterBTag.h"
 #include "../interface/ReweighterPrefire.h"
+#include "../interface/ReweighterEmpty.h"
+#include "../interface/ReweighterBTagShape.h"
+
+
 
 
 // --------------------------------------
@@ -306,5 +310,40 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
     */
 
+    
+    
+    // make the b-tag shape reweighter
+    // step 1: set correct csv file
+    std::string bTagSFFileName;
+
+    if (year == "2016PreVFP") {
+        bTagSFFileName = "";
+    } else if( year == "2016PostVFP" ){
+        bTagSFFileName= "";
+    } else if( year == "2017" ){
+        bTagSFFileName = "DeepJet_106XUL17SF_V2p1.csv";
+    } else {
+        bTagSFFileName = "DeepJet_106XUL18SF_V1p1.csv";
+    }
+
+    if (year != "2016PreVFP" || year != "2016PostVFP") {
+        std::string weightDirectory = "../../weights";
+        std::string sfFilePath = "weightFiles/bTagSF/"+bTagSFFileName;
+        // step 2: set other parameters
+        std::string flavor = "all";
+        std::string bTagAlgo = "deepFlavor";
+        std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
+                                            "lfstats1","lfstats2","cferr1","cferr2" };
+        // step 3: make the reweighter
+        std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(
+            weightDirectory, sfFilePath, flavor, bTagAlgo, variations, samples );
+        reweighterBTagShape->initialize(samples);
+
+        combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
+    } else {
+        combinedReweighter.addReweighter( "bTag_shape", std::make_shared< ReweighterEmpty >() );
+    }
+
     return combinedReweighter;
+
 }
