@@ -56,25 +56,26 @@ void UncertaintyEnvelope::fillEnvelope2Ds(std::vector<std::pair<double, double>>
 
 void UncertaintyEnvelope::finalizeEnvelope(bool nonPrompt) {
     // nominal histograms should be fixed
-    if (getID() == shapeUncId::pdfShapeVar) return;
     std::vector<std::shared_ptr<TH1D>>* upHistograms = getUpHists()->getHistograms(nonPrompt);
     std::vector<std::shared_ptr<TH1D>>* downHistograms = getDownHists()->getHistograms(nonPrompt);
 
-    for (unsigned i = 1; i < upHistograms->size(); i++) {
+    for (unsigned i = 0; i < upHistograms->size(); i++) {
         // loop all individual histograms
         for (auto hists : envelopeHists) {
+
             // loop all possible up and down variations
             std::vector<std::shared_ptr<TH1D>>* currentVariation = hists->getHistograms(nonPrompt);
             std::shared_ptr<TH1D> currentHist = currentVariation->at(i);
 
-            for(int j=1; j < currentHist->GetNbinsX()+1; ++i){
-                // for each up and down variation, we fix the content
+            for(int j=1; j < currentHist->GetNbinsX()+1; j++){
 
-                if (currentHist->GetBinContent(j) > upHistograms->at(j)->GetBinContent(j) ){
-                    upHistograms->at(j)->SetBinContent(j, currentHist->GetBinContent(j));
-                }
-                if (currentHist->GetBinContent(j) < downHistograms->at(j)->GetBinContent(j) ){
-                    downHistograms->at(j)->SetBinContent(j, currentHist->GetBinContent(j));
+                // for each up and down variation, we fix the content
+                double bincontentCurrent = currentHist->GetBinContent(j);
+
+                if (bincontentCurrent > upHistograms->at(i)->GetBinContent(j) ){
+                    upHistograms->at(i)->SetBinContent(j, bincontentCurrent);
+                } else if (bincontentCurrent < downHistograms->at(i)->GetBinContent(j) ){
+                    downHistograms->at(i)->SetBinContent(j, bincontentCurrent);
                 }
             }
         }

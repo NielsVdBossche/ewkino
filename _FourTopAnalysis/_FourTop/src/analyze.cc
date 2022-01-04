@@ -344,8 +344,6 @@ void FourTop:: analyze() {
                     weightUp = reweighter[ id ]->weightUp( *currentEvent ) * weightNominalInv;
                     weightDown = reweighter[ id ]->weightDown( *currentEvent ) * weightNominalInv;
                 } else if (uncID == shapeUncId::qcdScale) {
-                    //uncID++;
-                    //continue;
                     std::vector<double> qcdvariations;
                     if (hasValidQcds) {
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
@@ -362,8 +360,6 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelopeSingles(shapeUncId::qcdScale, singleEntries, qcdvariations, nonPrompt);
                     uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
                 } else if (uncID == shapeUncId::pdfShapeVar) {
-                    uncID++;
-                    continue;
                     std::vector<double> pdfVariations;
 
                     for(int i=0; i<numberOfPdfVariations; ++i){
@@ -497,7 +493,7 @@ void FourTop:: analyze() {
         mgrAll->writeCurrentHistograms();
     }
     std::string anotherName = "something";
-    mgrAll->newSample(anotherName); // workaround so that we would print histograms of last process
+    mgrAll->newProcess(anotherName, outfile); // workaround so that we would print histograms of last process
 
     // Don't forget non-prompt contributions
 
