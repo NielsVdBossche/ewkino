@@ -54,6 +54,8 @@ void Uncertainty::writeNonpromptHistograms() {
 }
 
 void Uncertainty::writeSubHistograms(bool nonPrompt) {
+    gDirectory->cd("..");
+
     for (auto it : *upSubMap) {
         std::string uncName = it.first.c_str();
         HistogramManager* localUpHists = upSubMap->at(uncName);
@@ -81,7 +83,10 @@ void Uncertainty::writeSubHistograms(bool nonPrompt) {
             localDownHists->writeCurrentHistograms();
             gDirectory->cd("..");
         }
+        gDirectory->cd("..");
     }
+
+    gDirectory->cd(name.c_str());
 }
 
 
