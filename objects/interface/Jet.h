@@ -50,6 +50,11 @@ class Jet : public PhysicsObject{
         Jet JetJERDown() const;
         Jet JetJERUp() const;
 
+        Jet JetJER_1p93_Down() const;
+        Jet JetJER_1p93_Up() const;
+        Jet JetJER_1p93_To_2p5_Down() const;
+        Jet JetJER_1p93_To_2p5_Up() const;
+
 	// create new Jet with JEC varied within uncertainties, split per source
 	Jet JetJECDown( const std::string source ) const;
 	Jet JetJECUp( const std::string source ) const;

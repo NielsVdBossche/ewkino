@@ -11,6 +11,12 @@ class GeneratorInfo{
         GeneratorInfo( const TreeReader& );
 
         unsigned numberOfLheWeights() const{ return _numberOfLheWeights; }
+
+        unsigned firstScaleIndex() const{ return _firstScaleIndex; }
+        unsigned numberOfScaleVariations() const{ return _numberOfScaleVariations; }
+        unsigned firstPdfIndex() const{ return _firstPdfIndex; }
+        unsigned numberOfPdfVariations() const{ return _numberOfPdfVariations; }
+
         double relativeWeightScaleVar( const unsigned scaleIndex ) const;
         double relativeWeight_MuR_1_MuF_1() const{ return relativeWeightScaleVar( 0 ); }
         double relativeWeight_MuR_1_MuF_2() const{ return relativeWeightScaleVar( 1 ); }
@@ -65,6 +71,11 @@ class GeneratorInfo{
         unsigned _zgEventType;
         double _partonLevelHT;
         float _numberOfTrueInteractions;
+
+        unsigned _firstScaleIndex;
+        unsigned _numberOfScaleVariations;
+        unsigned _firstPdfIndex;
+        unsigned _numberOfPdfVariations;
 
         std::shared_ptr< GenMet > _genMetPtr;
 };

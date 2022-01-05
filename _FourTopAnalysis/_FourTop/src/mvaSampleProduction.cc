@@ -7,6 +7,8 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     tree->Branch("N_b",             &n_bjets_f,     "N_b/D");
     tree->Branch("N_b_tight",       &n_b_tight,     "N_b_tight/D");
     tree->Branch("N_b_loose",       &n_b_loose,     "N_b_loose/D");
+    tree->Branch("MET",             &met,           "MET/D");
+
     tree->Branch("dr_bJets",        &deltaRBjets,   "dr_bJets/D");
 
     tree->Branch("bTagLead",        &bTagLead,      "bTagLead/D");

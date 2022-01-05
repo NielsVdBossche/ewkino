@@ -130,6 +130,19 @@ JetCollection JetCollection::JERUpCollection() const{
     return buildVariedCollection( &Jet::JetJERUp );
 }
 
+JetCollection JetCollection::JER_1p93_DownCollection() const {
+    return buildVariedCollection( &Jet::JetJER_1p93_Down );
+}
+JetCollection JetCollection::JER_1p93_UpCollection() const {
+    return buildVariedCollection( &Jet::JetJER_1p93_Up );
+}
+JetCollection JetCollection::JER_1p93_To_2p5_DownCollection() const {
+    return buildVariedCollection( &Jet::JetJER_1p93_To_2p5_Down );
+}
+JetCollection JetCollection::JER_1p93_To_2p5_UpCollection() const {
+    return buildVariedCollection( &Jet::JetJER_1p93_To_2p5_Up );
+}
+
 JetCollection JetCollection::JECUpCollection( std::string source ) const{
     return buildVariedCollection( &Jet::JetJECUp, source );
 }

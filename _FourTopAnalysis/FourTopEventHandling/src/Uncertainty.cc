@@ -1,9 +1,9 @@
 #include "../interface/Uncertainty.h"
 
-Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms) {
-    std::string addFlag = translateUnc[id];
-    std::string upFlag = addFlag + "_Up";
-    std::string downFlag = addFlag + "_Down";
+Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms) : id(id) {
+    name = translateUnc[id];
+    std::string upFlag = name + "_Up";
+    std::string downFlag = name + "_Down";
 
     upHists = new HistogramManager(histograms, upFlag);
     downHists = new HistogramManager(histograms, downFlag);
@@ -24,7 +24,6 @@ void Uncertainty::fillSingleHistograms(std::vector<std::pair<int, double>>& fill
         upHists->fillSingleHistogram(it.first, it.second, weightUp, nonPrompt);
         downHists->fillSingleHistogram(it.first, it.second, weightDown, nonPrompt);
     }
-
 }
 
 void Uncertainty::fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
@@ -33,7 +32,6 @@ void Uncertainty::fill2DHistograms(std::vector<std::pair<double, double>>& fillV
 }
 
 void Uncertainty::writeCurrentHistograms() {
-
     gDirectory->cd("Up");
     upHists->writeCurrentHistograms();
     gDirectory->cd("../Down");
@@ -47,4 +45,30 @@ void Uncertainty::writeNonpromptHistograms() {
     gDirectory->cd("../Down");
     downHists->writeNonpromptHistograms();
     gDirectory->cd("..");
+}
+
+void Uncertainty::fillUpOrDownHistograms(std::vector<double>& fillVec, double weight, bool up, bool nonPrompt) {
+    if (up) {
+        upHists->fillHistograms(fillVec, weight, nonPrompt);
+    } else {
+        downHists->fillHistograms(fillVec, weight, nonPrompt);
+    } 
+}
+
+void Uncertainty::fillUpOrDownSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weight, bool up, bool nonPrompt) {
+    for (auto it : fillVec) {
+        if (up) {
+            upHists->fillSingleHistogram(it.first, it.second, weight, nonPrompt);
+        } else {
+            downHists->fillSingleHistogram(it.first, it.second, weight, nonPrompt);
+        }
+    }
+}
+
+void Uncertainty::fillUpOrDown2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weight, bool up, bool nonPrompt) {
+    if (up) {
+        upHists->fill2DHistograms(fillVec, weight, nonPrompt);
+    } else {
+        downHists->fill2DHistograms(fillVec, weight, nonPrompt);
+    } 
 }

@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   searchMVA.sh
+
+log         =   /user/nivanden/condor/logs/searchMVA_$(ClusterId).log
+error       =   /user/nivanden/condor/error/searchMVA_$(ClusterId).err
+output      =   /user/nivanden/condor/output/searchMVA_$(ClusterId).out
+
+queue 1 arguments in DL_tree DL_BDT, ML_tree ML_BDT

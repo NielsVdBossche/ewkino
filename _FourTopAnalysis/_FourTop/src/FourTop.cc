@@ -99,4 +99,7 @@ void FourTop::createHistInfoVec() {
 void FourTop::createMVAHandlers() {
     mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection);
     mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection);
+
+    selection->setDLMVA(mva_DL);
+    selection->setMLMVA(mva_ML);
 }

@@ -43,7 +43,7 @@ class FourTop {
         EventFourT* selection;
 
         // BDT Variables
-        Double_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose;
+        Double_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose, met;
         Double_t n_b_tight, dRleps, aziAngle, ht;
         Double_t massToPt;
         Double_t min_dr_lep_b, sec_min_dr_lep_b;

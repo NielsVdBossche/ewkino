@@ -49,7 +49,8 @@ int main(int argc, char const *argv[]) {
 
         mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 0.10, 20, true);
 
-        if (searchSetup == "search") factory->OptimizeAllMethods("ROCIntegral","FitGA");
+        if (searchSetup == "search") mvaSetupManager::searchBDT(factory, data, setup);
+        //factory->OptimizeAllMethods("ROCIntegral","FitGA");
         
     } else {
         mvaSetupManager::addNN(factory, data, setup);

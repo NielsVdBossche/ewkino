@@ -95,7 +95,7 @@ void FourTop:: analyze() {
     CROManager->extendHistInfo(mva_DL->createHistograms("_CRO", true));
     CROManager->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
     croPosMVA += mva_DL->getMaxClass();
-
+    
     mgrAll->addChannel(eventClass::ssdl, DLManager);
     mgrAll->addChannel(eventClass::trilep, TriLManager);
     mgrAll->addChannel(eventClass::fourlep, FourLManager);
@@ -103,15 +103,25 @@ void FourTop:: analyze() {
     mgrAll->addChannel(eventClass::crw, CRWManager);
     mgrAll->addChannel(eventClass::cro, CROManager);
 
+    std::map<eventClass, int> offsets;
+    offsets[eventClass::cro] = croPosMVA;
+    offsets[eventClass::crw] = crwPosMVA;
+    offsets[eventClass::crz] = crzPosMVA;
+    offsets[eventClass::ssdl] = dlPosMVA;
+    offsets[eventClass::trilep] = mlPosMVA;
+    offsets[eventClass::fourlep] = fourlPosMVA;
+    selection->setOffsets(offsets);
+
     std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUncMap();
 
     std::cout << "event loop" << std::endl;
-    currentEvent = new Event();
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
+        currentEvent = treeReader->buildEventPtr(0);
+
         std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
@@ -128,20 +138,34 @@ void FourTop:: analyze() {
         CRWManager->newSample(uniqueName);
         CROManager->newSample(uniqueName);
         mgrAll->newSample(uniqueName);
-        // check if TTbar or TTGamma sample
-        ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
-
-        xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
+        
+        std::string currProcName = sampleVec[sampleIndex].processName();
+        mgrAll->newProcess(currProcName, outfile);
 
         int numberOfPSVariations = 0;
-        bool hasValidPSs = false; // global switch to use later on in the event loop
-        if(!treeReader->isData()){
+        int numberOfPdfVariations = 0;
+        bool hasValidQcds = false;
+        bool hasValidPSs = false;
+        bool hasValidPdfs = false;
+        if (! treeReader->isData()) {
+            // check if TTbar or TTGamma sample
+            ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+
+            xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
+
             std::cout << "finding available PS scale variations...\n";
             Event event = treeReader->buildEvent(0);
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
             if(numberOfPSVariations==14) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
-        } 
+
+            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
+                hasValidQcds = true;
+            }
+            if(numberOfPdfVariations>=100){
+	            hasValidPdfs = true;
+            }
+        }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -149,6 +173,7 @@ void FourTop:: analyze() {
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
+
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
@@ -158,12 +183,24 @@ void FourTop:: analyze() {
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
+            if (! treeReader->isData()) {
+                numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
+                    hasValidQcds = true;
+                } else {
+                    hasValidQcds = false;
+                }
+
+                if (numberOfPdfVariations>=100){
+                    hasValidPdfs = true;
+                } else {
+                    hasValidPdfs = false;
+                }
+            }
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
-
                 continue;
-            } 
-            
+            }
             selection->classifyEvent();
             // TEMP! Remove for full stuff
             if (selection->getCurrentClass() == eventClass::fail) continue;
@@ -301,6 +338,15 @@ void FourTop:: analyze() {
             // loop uncertainties
             UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
 
+            std::vector<double> fillVecUp = fillVec;
+            std::vector<double> fillVecDown = fillVec;
+            std::vector<std::pair<int, double>> singleEntriesUp = singleEntries;
+            std::vector<std::pair<int, double>> singleEntriesDown = singleEntries;
+            std::vector<std::pair<double, double>> fillVec2DUp = fillVec2D;
+            std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
+            eventClass upClass = eventClass::fail;
+            eventClass downClass = eventClass::fail;
+
             unsigned uncID = 0;
             while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
                 double weightUp = 1.;
@@ -312,8 +358,43 @@ void FourTop:: analyze() {
                     double weightNominalInv = 1. / reweighter[ id ]->weight( *currentEvent );
                     weightUp = reweighter[ id ]->weightUp( *currentEvent ) * weightNominalInv;
                     weightDown = reweighter[ id ]->weightDown( *currentEvent ) * weightNominalInv;
-                }
-                if (uncID == shapeUncId::isrShape && hasValidPSs) {
+                } else if (uncID == shapeUncId::qcdScale) {
+                    std::vector<double> qcdvariations;
+                    if (hasValidQcds) {
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2() / xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2() / xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
+                    } else {
+                        qcdvariations = {weight, weight, weight, weight, weight, weight};
+                    }
+
+                    uncWrapper->fillEnvelope(shapeUncId::qcdScale, fillVec, qcdvariations, nonPrompt);
+                    uncWrapper->fillEnvelopeSingles(shapeUncId::qcdScale, singleEntries, qcdvariations, nonPrompt);
+                    uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
+                } else if (uncID == shapeUncId::pdfShapeVar) {
+                    std::vector<double> pdfVariations;
+                    if (hasValidPdfs && xsecs.get()->numberOfLheVariations() > 9) {
+                        int max = 100;
+                        if (numberOfPdfVariations < max) {
+                            max = numberOfPdfVariations;
+                        }
+                        for(int i=0; i<max; ++i){
+                            pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+                        }
+                    } else {
+                        for (unsigned i = pdfVariations.size(); i<100; i++) {
+                            pdfVariations.push_back(weight);
+                        }
+                    }
+
+                    uncWrapper->fillEnvelope(shapeUncId::pdfShapeVar, fillVec, pdfVariations, nonPrompt);
+                    uncWrapper->fillEnvelopeSingles(shapeUncId::pdfShapeVar, singleEntries, pdfVariations, nonPrompt);
+                    uncWrapper->fillEnvelope2Ds(shapeUncId::pdfShapeVar, fillVec2D, pdfVariations, nonPrompt);
+
+                } else if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
                 } else if (uncID == shapeUncId::isrNorm && hasValidPSs) {
@@ -330,11 +411,48 @@ void FourTop:: analyze() {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
+                } else if (uncID >= shapeUncId::JER_1p93) {
+                    // JER and JEC
+                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
+                    fillVecUp = selection->fillVector();
+                    singleEntriesUp = selection->singleFillEntries();
+                    fillVec2DUp = selection->fillVector2D();
+
+                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false);
+                    fillVecDown = selection->fillVector();
+                    singleEntriesDown = selection->singleFillEntries();
+                    fillVec2DDown = selection->fillVector2D();
+                } /*else if (uncID == shapeUncId::JER_2p5) {
+                    upClass = selection->classifyUncertainty(shapeUncId::JER_2p5, true);
+                    fillVecUp = selection->fillVector();
+                    singleEntriesUp = selection->singleFillEntries();
+                    fillVec2DUp = selection->fillVector2D();
+
+                    downClass = selection->classifyUncertainty(shapeUncId::JER_2p5, false);
+                    fillVecDown = selection->fillVector();
+                    singleEntriesDown = selection->singleFillEntries();
+                    fillVec2DDown = selection->fillVector2D();
+                } else if (uncID == shapeUncId::JEC) {
+                    upClass = selection->classifyUncertainty(shapeUncId::JEC, true);
+                    fillVecUp = selection->fillVector();
+                    singleEntriesUp = selection->singleFillEntries();
+                    fillVec2DUp = selection->fillVector2D();
+
+                    downClass = selection->classifyUncertainty(shapeUncId::JEC, false);
+                    fillVecDown = selection->fillVector();
+                    singleEntriesDown = selection->singleFillEntries();
+                    fillVec2DDown = selection->fillVector2D();
+                }*/
+
+                if (uncID < shapeUncId::JER_1p93) {
+                    uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
+                    uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
+                    uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                } else {
+                    mgrAll->fillUpHistograms(upClass, shapeUncId(uncID), fillVecUp, singleEntriesUp, fillVec2DUp, weight, nonPrompt);
+                    mgrAll->fillDownHistograms(downClass, shapeUncId(uncID), fillVecDown, singleEntriesDown, fillVec2DDown, weight, nonPrompt);
                 }
 
-                uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
-                uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
-                uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
                 uncID = uncID + 1;
             }
 
@@ -344,6 +462,9 @@ void FourTop:: analyze() {
         // Processes were named in samplelist. Should use this to make directory for process and subdir for sample
 
         // Might interface with Stacker to create desired output plots as well... Or at least already have the stacked process ready instead of individual components. Then a "getDirectory" in stacker could be handy to see if it exists.
+        std::cout << "output" << std::endl;
+        
+        
         outfile->cd();
         outfile->cd("Nominal");
         const char* processName = treeReader->currentSample().processName().c_str();
@@ -375,6 +496,8 @@ void FourTop:: analyze() {
         gDirectory->mkdir("analytics");
         gDirectory->cd("analytics");
 
+        std::cout << "writing uncertainties" << std::endl;
+
         outfile->cd();
         outfile->cd("Uncertainties");
         const char* processNameNew = treeReader->currentSample().processName().c_str();
@@ -387,6 +510,8 @@ void FourTop:: analyze() {
 
         mgrAll->writeCurrentHistograms();
     }
+    std::string anotherName = "something";
+    mgrAll->newProcess(anotherName, outfile); // workaround so that we would print histograms of last process
 
     // Don't forget non-prompt contributions
 
