@@ -162,9 +162,6 @@ void FourTop:: analyze() {
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
                 hasValidQcds = true;
             }
-
-            numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
-
             if(numberOfPdfVariations>=100){
 	            hasValidPdfs = true;
             }
@@ -186,11 +183,24 @@ void FourTop:: analyze() {
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
+            if (! treeReader->isData()) {
+                numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
+                    hasValidQcds = true;
+                } else {
+                    hasValidQcds = false;
+                }
+
+                if (numberOfPdfVariations>=100){
+                    hasValidPdfs = true;
+                } else {
+                    hasValidPdfs = false;
+                }
+            }
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
                 continue;
             }
-            
             selection->classifyEvent();
             // TEMP! Remove for full stuff
             if (selection->getCurrentClass() == eventClass::fail) continue;
@@ -366,13 +376,15 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
                 } else if (uncID == shapeUncId::pdfShapeVar) {
                     std::vector<double> pdfVariations;
-                    if (hasValidPdfs) {
-                        for(int i=0; i<numberOfPdfVariations; ++i){
+                    if (hasValidPdfs && xsecs.get()->numberOfLheVariations() > 9) {
+                        int max = 100;
+                        if (numberOfPdfVariations < max) {
+                            max = numberOfPdfVariations;
+                        }
+                        for(int i=0; i<max; ++i){
                             pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
                         }
-                    }
-
-                    if (numberOfPdfVariations < 100) {
+                    } else {
                         for (unsigned i = pdfVariations.size(); i<100; i++) {
                             pdfVariations.push_back(weight);
                         }
