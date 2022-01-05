@@ -12,6 +12,11 @@ void FourTop:: analyze() {
     std::cout << "building reweighter" << std::endl;
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
+
+    //std::vector<std::string> bTagShapeSystematics;
+    //if (yearString == "2017" || yearString == "2018") {
+    //    bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+    //}
     
     // Histogram creation
     std::string channelDL = "DL";
@@ -147,6 +152,8 @@ void FourTop:: analyze() {
         bool hasValidQcds = false;
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
+        bool considerBTagShape = false;
+        std::vector<std::string> bTagShapeSystematics;
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
@@ -164,6 +171,13 @@ void FourTop:: analyze() {
             }
             if(numberOfPdfVariations>=100){
 	            hasValidPdfs = true;
+            }
+
+            if (treeReader->is2017() || treeReader->is2018()) {
+                considerBTagShape = true;
+                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+
+                mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
         }
 
@@ -394,6 +408,19 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelopeSingles(shapeUncId::pdfShapeVar, singleEntries, pdfVariations, nonPrompt);
                     uncWrapper->fillEnvelope2Ds(shapeUncId::pdfShapeVar, fillVec2D, pdfVariations, nonPrompt);
 
+                } else if (uncID == shapeUncId::bTagShape && considerBTagShape) {
+                    double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
+                    for(std::string btagsys : bTagShapeSystematics){
+                        weightUp = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys );
+                        weightDown = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys );
+
+                        uncWrapper->fillSubUncertainty(shapeUncId(uncID), btagsys, fillVec, weight * weightUp, weight * weightDown, nonPrompt);
+                        uncWrapper->fillSubSingleHistograms(shapeUncId(uncID), btagsys, singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
+                        uncWrapper->fillSub2DHistograms(shapeUncId(uncID), btagsys, fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                    }
+
+                    weightUp = 1.;
+                    weightDown = 1.;
                 } else if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
@@ -413,6 +440,14 @@ void FourTop:: analyze() {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                 } else if (uncID >= shapeUncId::JER_1p93) {
                     // JER and JEC
+
+                    if( uncID == shapeUncId::JEC && considerBTagShape ) {
+                        weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                        weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                    }
+
                     upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
@@ -422,27 +457,7 @@ void FourTop:: analyze() {
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
-                } /*else if (uncID == shapeUncId::JER_2p5) {
-                    upClass = selection->classifyUncertainty(shapeUncId::JER_2p5, true);
-                    fillVecUp = selection->fillVector();
-                    singleEntriesUp = selection->singleFillEntries();
-                    fillVec2DUp = selection->fillVector2D();
-
-                    downClass = selection->classifyUncertainty(shapeUncId::JER_2p5, false);
-                    fillVecDown = selection->fillVector();
-                    singleEntriesDown = selection->singleFillEntries();
-                    fillVec2DDown = selection->fillVector2D();
-                } else if (uncID == shapeUncId::JEC) {
-                    upClass = selection->classifyUncertainty(shapeUncId::JEC, true);
-                    fillVecUp = selection->fillVector();
-                    singleEntriesUp = selection->singleFillEntries();
-                    fillVec2DUp = selection->fillVector2D();
-
-                    downClass = selection->classifyUncertainty(shapeUncId::JEC, false);
-                    fillVecDown = selection->fillVector();
-                    singleEntriesDown = selection->singleFillEntries();
-                    fillVec2DDown = selection->fillVector2D();
-                }*/
+                }
 
                 if (uncID < shapeUncId::JER_1p93) {
                     uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);

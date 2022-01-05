@@ -5,6 +5,8 @@ Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeU
     std::string upFlag = name + "_Up";
     std::string downFlag = name + "_Down";
 
+    bareHists = histograms;
+
     upHists = new HistogramManager(histograms, upFlag);
     downHists = new HistogramManager(histograms, downFlag);
 }
@@ -37,6 +39,8 @@ void Uncertainty::writeCurrentHistograms() {
     gDirectory->cd("../Down");
     downHists->writeCurrentHistograms();
     gDirectory->cd("..");
+
+    if (upSubMap != nullptr) writeSubHistograms(false);
 }
 
 void Uncertainty::writeNonpromptHistograms() {
@@ -45,7 +49,41 @@ void Uncertainty::writeNonpromptHistograms() {
     gDirectory->cd("../Down");
     downHists->writeNonpromptHistograms();
     gDirectory->cd("..");
+
+    if (upSubMap != nullptr) writeSubHistograms(true);
 }
+
+void Uncertainty::writeSubHistograms(bool nonPrompt) {
+    for (auto it : *upSubMap) {
+        std::string uncName = it.first.c_str();
+        HistogramManager* localUpHists = upSubMap->at(uncName);
+        HistogramManager* localDownHists = downSubMap->at(uncName);
+
+        if (! gDirectory->GetDirectory(uncName.c_str())) {
+            gDirectory->mkdir(uncName.c_str());
+            gDirectory->cd(uncName.c_str());
+            gDirectory->mkdir("Up");
+            gDirectory->mkdir("Down");
+        } else {
+            gDirectory->cd(uncName.c_str());
+        }
+
+        if (nonPrompt) {
+            gDirectory->cd("Up");
+            localUpHists->writeNonpromptHistograms();    
+            gDirectory->cd("../Down");
+            localDownHists->writeNonpromptHistograms();
+            gDirectory->cd("..");
+        } else {
+            gDirectory->cd("Up");
+            localUpHists->writeCurrentHistograms();
+            gDirectory->cd("../Down");
+            localDownHists->writeCurrentHistograms();
+            gDirectory->cd("..");
+        }
+    }
+}
+
 
 void Uncertainty::fillUpOrDownHistograms(std::vector<double>& fillVec, double weight, bool up, bool nonPrompt) {
     if (up) {
@@ -71,4 +109,42 @@ void Uncertainty::fillUpOrDown2DHistograms(std::vector<std::pair<double, double>
     } else {
         downHists->fill2DHistograms(fillVec, weight, nonPrompt);
     } 
+}
+
+void Uncertainty::addSubUncertainties(std::vector<std::string>& subUnc) {
+    upSubMap = new std::map<std::string, HistogramManager*>();
+    downSubMap = new std::map<std::string, HistogramManager*>();
+    for (unsigned i=0; i < subUnc.size(); i++) {
+        std::string upFlag = name + "_Up";
+        std::string downFlag = name + "_Down";
+
+        (*upSubMap)[subUnc[i]] = new HistogramManager(bareHists, upFlag);
+        (*downSubMap)[subUnc[i]] = new HistogramManager(bareHists, downFlag);
+    }
+}
+
+void Uncertainty::fillSubHistograms(std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    HistogramManager* localUpHists = upSubMap->at(subUnc);
+    HistogramManager* localDownHists = downSubMap->at(subUnc);
+    
+    localUpHists->fillHistograms(fillVec, weightUp, nonPrompt);
+    localDownHists->fillHistograms(fillVec, weightDown, nonPrompt);
+}
+
+void Uncertainty::fillSubSingleHistograms(std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    HistogramManager* localUpHists = upSubMap->at(subUnc);
+    HistogramManager* localDownHists = downSubMap->at(subUnc);
+    
+    for (auto it : fillVec) {
+        localUpHists->fillSingleHistogram(it.first, it.second, weightUp, nonPrompt);
+        localDownHists->fillSingleHistogram(it.first, it.second, weightDown, nonPrompt);
+    }
+}
+
+void Uncertainty::fillSub2DHistograms(std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    HistogramManager* localUpHists = upSubMap->at(subUnc);
+    HistogramManager* localDownHists = downSubMap->at(subUnc);
+    
+    localUpHists->fill2DHistograms(fillVec, weightUp, nonPrompt);
+    localDownHists->fill2DHistograms(fillVec, weightDown, nonPrompt);
 }

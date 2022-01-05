@@ -26,6 +26,7 @@
 
 #include "../../../weights/interface/CombinedReweighter.h"
 #include "../../../weights/interface/ConcreteReweighterFactory.h"
+#include "../../../weights/interface/ReweighterBTagShape.h"
 
 class FourTop {
     private:

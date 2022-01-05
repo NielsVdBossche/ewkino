@@ -60,3 +60,11 @@ void ChannelManager::fillDownHistograms(eventClass ev, shapeUncId id, std::vecto
     channelMap[ev]->fillUpOrDown2DHistograms(id, fill2d, weight, false, nonprompt);
 }
 
+void ChannelManager::addSubUncertainties(shapeUncId id, std::vector<std::string>& subUnc) {
+    unsigned currClass = eventClass::crz;
+
+    while (currClass <= eventClass::fourlep) {
+        channelMap[eventClass(currClass)]->addSubUncertainties(id, subUnc);
+        currClass++;
+    }
+}
