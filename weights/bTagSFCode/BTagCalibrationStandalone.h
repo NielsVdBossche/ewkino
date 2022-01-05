@@ -1,4 +1,4 @@
-
+// TODO: update to new version with different naming convention
 #ifndef BTagEntry_H
 #define BTagEntry_H
 
