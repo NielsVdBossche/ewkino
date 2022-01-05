@@ -146,6 +146,7 @@ void FourTop:: analyze() {
         int numberOfPdfVariations = 0;
         bool hasValidQcds = false;
         bool hasValidPSs = false;
+        bool hasValidPdfs = false;
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
@@ -163,6 +164,10 @@ void FourTop:: analyze() {
             }
 
             numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+
+            if(numberOfPdfVariations>=100){
+	            hasValidPdfs = true;
+            }
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
@@ -361,9 +366,10 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
                 } else if (uncID == shapeUncId::pdfShapeVar) {
                     std::vector<double> pdfVariations;
-
-                    for(int i=0; i<numberOfPdfVariations; ++i){
-                        pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+                    if (hasValidPdfs) {
+                        for(int i=0; i<numberOfPdfVariations; ++i){
+                            pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+                        }
                     }
 
                     if (numberOfPdfVariations < 100) {
