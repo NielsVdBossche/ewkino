@@ -14,6 +14,15 @@ Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeU
 void Uncertainty::newSample(std::string& uniqueName) {
     upHists->newSample(uniqueName);
     downHists->newSample(uniqueName);
+
+    if (upSubMap != nullptr) {
+        for (auto it : *upSubMap) {
+            it.second->newSample(uniqueName);
+        }
+        for (auto it : *downSubMap) {
+            it.second->newSample(uniqueName);
+        }
+    }
 }
 
 void Uncertainty::fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt) {

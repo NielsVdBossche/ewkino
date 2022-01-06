@@ -130,23 +130,6 @@ void FourTop:: analyze() {
         std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
-        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
-        DLManager->newSample(uniqueName);
-        DLManager_pp->newSample(uniqueName);
-        DLManager_nn->newSample(uniqueName);
-        DLManager_ee->newSample(uniqueName);
-        DLManager_em->newSample(uniqueName);
-        DLManager_mm->newSample(uniqueName);
-        TriLManager->newSample(uniqueName);
-        FourLManager->newSample(uniqueName);
-        CRZManager->newSample(uniqueName);
-        CRWManager->newSample(uniqueName);
-        CROManager->newSample(uniqueName);
-        mgrAll->newSample(uniqueName);
-        
-        std::string currProcName = sampleVec[sampleIndex].processName();
-        mgrAll->newProcess(currProcName, outfile);
-
         int numberOfPSVariations = 0;
         int numberOfPdfVariations = 0;
         bool hasValidQcds = false;
@@ -173,13 +156,32 @@ void FourTop:: analyze() {
 	            hasValidPdfs = true;
             }
 
-            if (treeReader->is2017() || treeReader->is2018()) {
+            if (sampleIndex == 0 && (treeReader->is2017() || treeReader->is2018())) {
                 considerBTagShape = true;
-                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+                bTagShapeSystematics = {"jes","hf","lf","hfstats1","hfstats2",
+                                            "lfstats1","lfstats2","cferr1","cferr2" };
+                                            //dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
 
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
         }
+        
+        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
+        DLManager->newSample(uniqueName);
+        DLManager_pp->newSample(uniqueName);
+        DLManager_nn->newSample(uniqueName);
+        DLManager_ee->newSample(uniqueName);
+        DLManager_em->newSample(uniqueName);
+        DLManager_mm->newSample(uniqueName);
+        TriLManager->newSample(uniqueName);
+        FourLManager->newSample(uniqueName);
+        CRZManager->newSample(uniqueName);
+        CRWManager->newSample(uniqueName);
+        CROManager->newSample(uniqueName);
+        mgrAll->newSample(uniqueName);
+        
+        std::string currProcName = sampleVec[sampleIndex].processName();
+        mgrAll->newProcess(currProcName, outfile);
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
