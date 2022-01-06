@@ -213,10 +213,10 @@ void ReweighterBTagShape::setNormFactors( const Sample& sample,
     std::cout << "setting norm factors" << std::endl;
 
     std::string sampleName = sample.fileName();
-    //if( _normFactors.find(sampleName)==_normFactors.end() ){
-	//throw std::invalid_argument(std::string("ERROR: ")
-	//    + "ReweighterBTagShape was not initialized for this sample!");
-    //}
+    if( _normFactors.find(sampleName)==_normFactors.end() ){
+	throw std::invalid_argument(std::string("ERROR: ")
+	    + "ReweighterBTagShape was not initialized for this sample!");
+    }
 
     _normFactors[sampleName] = normFactors;
     std::cout << "done setting norm factors" << std::endl;
@@ -410,10 +410,7 @@ std::map< int, double > ReweighterBTagShape::calcAverageOfWeights( const Sample&
         event.jetCollection().selectGoodJets();
 
         // determine (nominal) b-tag reweighting and number of jets
-        double btagreweight = 1.;
-        for( const auto& jetPtr: event.jetCollection().goodJetCollection() ){ 
-            btagreweight *= this->weight( *jetPtr, "central" );
-        }
+        double btagreweight = this->weight(event);
         int njets = event.jetCollection().goodJetCollection().size();	
 
             // add it to the map
