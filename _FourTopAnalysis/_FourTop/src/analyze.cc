@@ -408,19 +408,21 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelopeSingles(shapeUncId::pdfShapeVar, singleEntries, pdfVariations, nonPrompt);
                     uncWrapper->fillEnvelope2Ds(shapeUncId::pdfShapeVar, fillVec2D, pdfVariations, nonPrompt);
 
-                } else if (uncID == shapeUncId::bTagShape && considerBTagShape) {
-                    double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
-                    for(std::string btagsys : bTagShapeSystematics){
-                        weightUp = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys );
-                        weightDown = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys );
+                } else if (uncID == shapeUncId::bTagShape) {
+                    if (considerBTagShape) {
+                        double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
+                        for(std::string btagsys : bTagShapeSystematics){
+                            weightUp = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys );
+                            weightDown = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys );
 
-                        uncWrapper->fillSubUncertainty(shapeUncId(uncID), btagsys, fillVec, weight * weightUp, weight * weightDown, nonPrompt);
-                        uncWrapper->fillSubSingleHistograms(shapeUncId(uncID), btagsys, singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
-                        uncWrapper->fillSub2DHistograms(shapeUncId(uncID), btagsys, fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                            uncWrapper->fillSubUncertainty(shapeUncId(uncID), btagsys, fillVec, weight * weightUp, weight * weightDown, nonPrompt);
+                            uncWrapper->fillSubSingleHistograms(shapeUncId(uncID), btagsys, singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
+                            uncWrapper->fillSub2DHistograms(shapeUncId(uncID), btagsys, fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                        }
+
+                        weightUp = 1.;
+                        weightDown = 1.;
                     }
-
-                    weightUp = 1.;
-                    weightDown = 1.;
                 } else if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();

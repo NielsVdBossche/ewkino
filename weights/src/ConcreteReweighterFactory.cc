@@ -317,17 +317,17 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     std::string bTagSFFileName;
 
     if (year == "2016PreVFP") {
-        bTagSFFileName = "";
+        bTagSFFileName = "DeepJet_106XUL16preVFPSF_v1.csv";
     } else if( year == "2016PostVFP" ){
-        bTagSFFileName= "";
+        bTagSFFileName= "DeepJet_106XUL16postVFPSF_v2.csv";
     } else if( year == "2017" ){
         bTagSFFileName = "DeepJet_106XUL17SF_V2p1.csv";
     } else {
         bTagSFFileName = "DeepJet_106XUL18SF_V1p1.csv";
     }
 
-    if (year != "2016PreVFP" || year != "2016PostVFP") {
-        std::string weightDirectory = "../../weights";
+    if (year == "2017" || year == "2018") {
+        //std::string weightDirectory = stringTools::formatDirectoryName( weightDirectory );
         std::string sfFilePath = "weightFiles/bTagSF/"+bTagSFFileName;
         // step 2: set other parameters
         std::string flavor = "all";
@@ -335,9 +335,8 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
         std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
                                             "lfstats1","lfstats2","cferr1","cferr2" };
         // step 3: make the reweighter
-        std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(
-            weightDirectory, sfFilePath, flavor, bTagAlgo, variations, samples );
-        reweighterBTagShape->initialize(samples);
+        std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
+        reweighterBTagShape->initialize(samples, 0);
 
         combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
     } else {

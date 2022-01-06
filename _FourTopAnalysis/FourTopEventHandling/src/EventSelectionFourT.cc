@@ -82,7 +82,7 @@ bool EventFourT::passBaselineEventSelection() {
 
     //if (event->met().pt() < 25) return false;
 
-    if (ht < 300) return false;
+    if (n_lep < 4 && ht < 300) return false;
 
     return true;
 }

@@ -120,8 +120,8 @@ void Uncertainty::addSubUncertainties(std::vector<std::string>& subUnc) {
     upSubMap = new std::map<std::string, HistogramManager*>();
     downSubMap = new std::map<std::string, HistogramManager*>();
     for (unsigned i=0; i < subUnc.size(); i++) {
-        std::string upFlag = name + "_Up";
-        std::string downFlag = name + "_Down";
+        std::string upFlag = name + subUnc[i] + "_Up";
+        std::string downFlag = name + subUnc[i] + "_Down";
 
         (*upSubMap)[subUnc[i]] = new HistogramManager(bareHists, upFlag);
         (*downSubMap)[subUnc[i]] = new HistogramManager(bareHists, downFlag);
