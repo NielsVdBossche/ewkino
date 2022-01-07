@@ -27,7 +27,11 @@ std::vector< HistInfo > makeDistributionInfoDefault(){
 
 	HistInfo( "nJets", "number of jets", 8, 0, 8 ),
 	HistInfo( "nBJets", "number of b-jets (medium deepFlavour)", 4, 0, 4 ),
-	HistInfo( "nVertex", "number of vertices", 10, 0, 70 )
+	HistInfo( "nVertex", "number of vertices", 10, 0, 70 ),
+
+	HistInfo( "nLightNonPrompt", "number of nonprompt with light origin", 4, 0, 4 ),
+	HistInfo( "nCFlavorNonPrompt", "number of nonprompt with c-hadron origin", 4, 0, 4 ),
+	HistInfo( "nBFlavorNonPrompt", "number of nonprompt with b-hadron origin", 4, 0, 4 )
     };
     return histInfoVec;
 }
@@ -115,16 +119,31 @@ double fakeRateWeight( const Event& event, const std::shared_ptr< TH2D >& frMap_
     return weight;
 }
 
+std::tuple<int,int,int> eventOriginFlavour( const Event& event ){
+    // retrieve flavour composition of nonprompt leptons
+    unsigned nlight = 0;
+    unsigned ncflavor = 0;
+    unsigned nbflavor = 0;
+    for( auto& leptonPtr : event.lightLeptonCollection() ){
+        if( !leptonPtr->isPrompt() ){
+	    if( leptonPtr->provenanceCompressed()==1 ) nbflavor++;
+	    else if( leptonPtr->provenanceCompressed()==2 ) ncflavor++;
+	    else nlight++;
+	}
+    }
+    return std::make_tuple<int,int,int>(nlight,ncflavor,nbflavor);
+}
+
 int main( int argc, char* argv[] ){
 
     std::cerr << "###starting###" << std::endl;
     
     // check command line arguments
     std::vector< std::string > argvStr( &argv[0], &argv[0] + argc );
-    if( !(argvStr.size() == 8) ){
-        std::cerr<<"found "<<argc - 1<<" command line args, while 7 are needed."<<std::endl;
+    if( !(argvStr.size() == 9) ){
+        std::cerr<<"found "<<argc - 1<<" command line args, while 8 are needed."<<std::endl;
         std::cerr<<"usage: ./closureTest_MC isMCFR use_mT process year flavour";
-	std::cerr<<" sampleDirectory sampleList"<<std::endl;
+	std::cerr<<" sampleDirectory sampleList isTestRun"<<std::endl;
         return 1;
     }
     
@@ -136,6 +155,7 @@ int main( int argc, char* argv[] ){
     std::string flavor = argvStr[5];
     std::string sampleDirectory = argvStr[6];
     std::string sampleListFile = argvStr[7];
+    const bool isTestRun = (argvStr[8]=="True" or argvStr[8]=="true");
     if( flavor!="electron" && flavor!="muon" ){ flavor=""; }
     setTDRStyle();
 
@@ -159,6 +179,8 @@ int main( int argc, char* argv[] ){
         observedHists.push_back( histInfo.makeHist( histInfo.name()+ "_observed_"+process+"_"+year) );
         predictedHists.push_back( histInfo.makeHist( histInfo.name()+"_predicted_"+process+"_"+year) );
     }
+
+    
     
     // read fake-rate map corresponding to this year and flavor 
     std::shared_ptr< TH2D > fakeRateMap_muon = readFRMap( "muon", year, isMCFR, use_mT );
@@ -168,36 +190,49 @@ int main( int argc, char* argv[] ){
     TreeReader treeReader( sampleListFile, sampleDirectory );
 
     unsigned numberOfSamples = treeReader.numberOfSamples();
-    for (unsigned i = 0; i < numberOfSamples; ++i) {
-        std::cout << "start processing sample n. " << i + 1 << " of " << numberOfSamples << std::endl;
+    if( isTestRun ) numberOfSamples = 1;
+    for( unsigned i = 0; i < numberOfSamples; ++i ){
+	std::cout<<"start processing sample n. "<<i+1<<" of "<<numberOfSamples<<std::endl;
         treeReader.initSample();
 
-        long unsigned numberOfEntries = treeReader.numberOfEntries();
-        //long unsigned numberOfEntries = 1000; // temp for testing
-        std::cout << "starting event loop for " << numberOfEntries << " events" << std::endl;
-        for (long unsigned entry = 0; entry < numberOfEntries; ++entry) {
-            Event event = treeReader.buildEvent(entry);
+	long unsigned numberOfEntries = treeReader.numberOfEntries();
+	if( isTestRun ) numberOfEntries = 500000;
+        std::cout<<"starting event loop for "<<numberOfEntries<<" events"<<std::endl;
+	for( long unsigned entry = 0; entry < numberOfEntries; ++entry ){
+            Event event = treeReader.buildEvent( entry );
 
             // apply event selection
-            if (!passClosureTestEventSelection(event, onlyMuonFakes, onlyElectronFakes)) continue;
+            if( !passClosureTestEventSelection( event, onlyMuonFakes, onlyElectronFakes ) ) continue;
+	    LightLeptonCollection lightLeptons = event.lightLeptonCollection();
 
-            LightLeptonCollection lightLeptons = event.lightLeptonCollection();
-
-            //compute plotting variables
-            std::vector<double> variables = {
-                lightLeptons[0].pt(), lightLeptons[1].pt(),
-                lightLeptons[0].absEta(), lightLeptons[1].absEta(),
-
-                static_cast<double>(lightLeptons.size()),
+	    // fill variables
+            double mll = 0, mtW = 0;
+            if( event.hasOSSFLightLeptonPair() ){
+                mll = event.bestZBosonCandidateMass();
+                mtW = event.mtW();
+            } else{
+                mll = ( lightLeptons[0] + lightLeptons[1] ).mass();
+                mtW = mt( lightLeptons[2], event.met() );
+            }
+            //compute plotting variables 
+	    std::tuple<int,int,int> temp = eventOriginFlavour( event );
+            std::vector< double > variables = { 
+		lightLeptons[0].pt(), lightLeptons[1].pt(), lightLeptons[2].pt(),
+                lightLeptons[0].absEta(), lightLeptons[1].absEta(), lightLeptons[2].absEta(),
                 event.metPt(),
                 lightLeptons.scalarPtSum() + event.metPt(),
                 event.HT(),
+                lightLeptons.mass(),
+                mt( lightLeptons.objectSum(), event.met() ),
+                static_cast< double >( event.numberOfJets() ),
+                static_cast< double >( event.numberOfMediumBTaggedJets() ),
+                static_cast< double >( event.numberOfVertices() ),
+		static_cast< double >( std::get<0>(temp) ),
+		static_cast< double >( std::get<1>(temp) ),
+		static_cast< double >( std::get<2>(temp) )
+            };
 
-                static_cast<double>(event.numberOfJets()),
-                static_cast<double>(event.numberOfMediumBTaggedJets()),
-                static_cast<double>(event.numberOfVertices())};
-
-            // event is 'observed' if all leptons are tight
+            // event is 'observed' if all leptons are tight 
             bool isObserved = true;
             double weight = event.weight();
             for (const auto &leptonPtr : lightLeptons)
