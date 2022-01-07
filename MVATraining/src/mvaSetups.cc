@@ -50,12 +50,12 @@ void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* datalo
     int nTrees[] = {200, 500, 1000, 2000};
     int depths[] = {2, 3, 4, 5};
     double shrinkages[] = {0.1, 0.5, 1., 2.};
-    int cuts[] = {20, 50, 100};
+    int cuts[] = {20, 50};
 
     for (int i=0; i < 4; i++) { // trees
         for (int j=0; j < 4; j++) { //depth
             for (int k=0; k < 4; k++) { // shrink
-                for (int l=0; l < 3; l++) { // cuts
+                for (int l=0; l < 2; l++) { // cuts
                     addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
                     //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], true);
                 }
