@@ -66,9 +66,9 @@ void Uncertainty::writeSubHistograms(bool nonPrompt) {
     gDirectory->cd("..");
 
     for (auto it : *upSubMap) {
-        std::string uncName = it.first.c_str();
-        HistogramManager* localUpHists = upSubMap->at(uncName);
-        HistogramManager* localDownHists = downSubMap->at(uncName);
+        std::string uncName = name + it.first;
+        HistogramManager* localUpHists = upSubMap->at(it.first);
+        HistogramManager* localDownHists = downSubMap->at(it.first);
 
         if (! gDirectory->GetDirectory(uncName.c_str())) {
             gDirectory->mkdir(uncName.c_str());
@@ -129,8 +129,8 @@ void Uncertainty::addSubUncertainties(std::vector<std::string>& subUnc) {
     upSubMap = new std::map<std::string, HistogramManager*>();
     downSubMap = new std::map<std::string, HistogramManager*>();
     for (unsigned i=0; i < subUnc.size(); i++) {
-        std::string upFlag = name + subUnc[i] + "_Up";
-        std::string downFlag = name + subUnc[i] + "_Down";
+        std::string upFlag = name + "_" + subUnc[i] + "_Up";
+        std::string downFlag = name + "_" + subUnc[i] + "_Down";
 
         (*upSubMap)[subUnc[i]] = new HistogramManager(bareHists, upFlag);
         (*downSubMap)[subUnc[i]] = new HistogramManager(bareHists, downFlag);
@@ -140,6 +140,8 @@ void Uncertainty::addSubUncertainties(std::vector<std::string>& subUnc) {
 void Uncertainty::fillSubHistograms(std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
     HistogramManager* localUpHists = upSubMap->at(subUnc);
     HistogramManager* localDownHists = downSubMap->at(subUnc);
+
+    std::cout << "filling subhistograms" << std::endl;
     
     localUpHists->fillHistograms(fillVec, weightUp, nonPrompt);
     localDownHists->fillHistograms(fillVec, weightDown, nonPrompt);

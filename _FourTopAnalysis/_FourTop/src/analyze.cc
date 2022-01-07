@@ -158,9 +158,7 @@ void FourTop:: analyze() {
 
             if (sampleIndex == 0 && (treeReader->is2017() || treeReader->is2018())) {
                 considerBTagShape = true;
-                bTagShapeSystematics = {"jes","hf","lf","hfstats1","hfstats2",
-                                            "lfstats1","lfstats2","cferr1","cferr2" };
-                                            //dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
 
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
@@ -414,9 +412,10 @@ void FourTop:: analyze() {
                     if (considerBTagShape) {
                         double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
                         for(std::string btagsys : bTagShapeSystematics){
-                            weightUp = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys );
-                            weightDown = 1. / nombweight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys );
-
+                            std::cout << btagsys << "\t";
+                            weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
+                            weightDown = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
+                            std::cout << weightUp << "\t" << weightDown << std::endl;
                             uncWrapper->fillSubUncertainty(shapeUncId(uncID), btagsys, fillVec, weight * weightUp, weight * weightDown, nonPrompt);
                             uncWrapper->fillSubSingleHistograms(shapeUncId(uncID), btagsys, singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
                             uncWrapper->fillSub2DHistograms(shapeUncId(uncID), btagsys, fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
@@ -468,8 +467,8 @@ void FourTop:: analyze() {
                     uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
                     uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
                 } else {
-                    mgrAll->fillUpHistograms(upClass, shapeUncId(uncID), fillVecUp, singleEntriesUp, fillVec2DUp, weight, nonPrompt);
-                    mgrAll->fillDownHistograms(downClass, shapeUncId(uncID), fillVecDown, singleEntriesDown, fillVec2DDown, weight, nonPrompt);
+                    mgrAll->fillUpHistograms(upClass, shapeUncId(uncID), fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp, nonPrompt);
+                    mgrAll->fillDownHistograms(downClass, shapeUncId(uncID), fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown, nonPrompt);
                 }
 
                 uncID = uncID + 1;
