@@ -13,9 +13,8 @@ void FourTop:: analyze() {
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
 
-    //std::vector<std::string> bTagShapeSystematics;
     //if (yearString == "2017" || yearString == "2018") {
-    //    bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+    //    const ReweighterBTagShape* btagReweighter = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"]);
     //}
     
     // Histogram creation
@@ -137,6 +136,7 @@ void FourTop:: analyze() {
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
         std::vector<std::string> bTagShapeSystematics;
+        
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
@@ -156,10 +156,10 @@ void FourTop:: analyze() {
 	            hasValidPdfs = true;
             }
 
-            if (sampleIndex == 0 && (treeReader->is2017() || treeReader->is2018())) {
-                considerBTagShape = true;
+            considerBTagShape = true;
+            
+            if (sampleIndex == 0) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
-
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
         }
@@ -412,10 +412,9 @@ void FourTop:: analyze() {
                     if (considerBTagShape) {
                         double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
                         for(std::string btagsys : bTagShapeSystematics){
-                            std::cout << btagsys << "\t";
                             weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
                             weightDown = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
-                            std::cout << weightUp << "\t" << weightDown << std::endl;
+
                             uncWrapper->fillSubUncertainty(shapeUncId(uncID), btagsys, fillVec, weight * weightUp, weight * weightDown, nonPrompt);
                             uncWrapper->fillSubSingleHistograms(shapeUncId(uncID), btagsys, singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
                             uncWrapper->fillSub2DHistograms(shapeUncId(uncID), btagsys, fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);

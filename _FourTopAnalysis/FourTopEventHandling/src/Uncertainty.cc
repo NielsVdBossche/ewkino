@@ -66,7 +66,7 @@ void Uncertainty::writeSubHistograms(bool nonPrompt) {
     gDirectory->cd("..");
 
     for (auto it : *upSubMap) {
-        std::string uncName = name + it.first;
+        std::string uncName = name + "_" + it.first;
         HistogramManager* localUpHists = upSubMap->at(it.first);
         HistogramManager* localDownHists = downSubMap->at(it.first);
 
@@ -140,8 +140,6 @@ void Uncertainty::addSubUncertainties(std::vector<std::string>& subUnc) {
 void Uncertainty::fillSubHistograms(std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
     HistogramManager* localUpHists = upSubMap->at(subUnc);
     HistogramManager* localDownHists = downSubMap->at(subUnc);
-
-    std::cout << "filling subhistograms" << std::endl;
     
     localUpHists->fillHistograms(fillVec, weightUp, nonPrompt);
     localDownHists->fillHistograms(fillVec, weightDown, nonPrompt);

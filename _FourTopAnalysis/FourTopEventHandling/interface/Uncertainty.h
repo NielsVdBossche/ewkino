@@ -10,6 +10,7 @@ enum shapeUncId {
     muonIDSys,
     EleIDStat,
     EleIDSys,
+    prefire,
     pileup,
     electronReco,
     qcdScale,
