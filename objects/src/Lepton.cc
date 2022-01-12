@@ -19,7 +19,8 @@ Lepton::Lepton( const TreeReader& treeReader, const unsigned leptonIndex, Lepton
     _sip3d( treeReader._3dIPSig[leptonIndex] ),
     generatorInfo( treeReader.isMC() ? new LeptonGeneratorInfo( treeReader, leptonIndex ) : nullptr ),
     selector( leptonSelector ),
-    _uncorrectedPt( pt() )
+    _uncorrectedPt( pt() ),
+    _uncorrectedE( energy() )
     {}
 
 
@@ -37,7 +38,8 @@ Lepton::Lepton( const Lepton& rhs, LeptonSelector* leptonSelector ) :
 
     //make sure to copy "isConeCorrected" so a cone-correction can not be re-applied even after copying a lepton
     isConeCorrected( rhs.isConeCorrected ),
-    _uncorrectedPt( rhs._uncorrectedPt )
+    _uncorrectedPt( rhs._uncorrectedPt ),
+    _uncorrectedE( rhs._uncorrectedE )
     {}
 
 
@@ -54,7 +56,8 @@ Lepton::Lepton( Lepton&& rhs, LeptonSelector* leptonSelector ) noexcept :
 
     //make sure to copy "isConeCorrected" so a cone-correction can not be re-applied even after copying a lepton
     isConeCorrected( rhs.isConeCorrected ),
-    _uncorrectedPt( rhs._uncorrectedPt )
+    _uncorrectedPt( rhs._uncorrectedPt ),
+    _uncorrectedE( rhs._uncorrectedE )
 {
     rhs.generatorInfo = nullptr;
 }
@@ -77,6 +80,7 @@ void Lepton::copyNonPointerAttributes( const Lepton& rhs ){
     //make sure to copy "isConeCorrected" so a cone-correction can not be re-applied even after copying a lepton
     isConeCorrected = rhs.isConeCorrected;
     _uncorrectedPt = rhs._uncorrectedPt;
+    _uncorrectedE = rhs._uncorrectedE;
 }
 
 

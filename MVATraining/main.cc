@@ -36,7 +36,7 @@ int main(int argc, char const *argv[]) {
 
     TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf);
 
-    TFile* outfile = new TFile(("Classifiers/FourTopClassification_" + setup + ".root").c_str() ,"RECREATE");
+    TFile* outfile = new TFile(("Classifiers/FourTopClassification_Temp_" + setup + ".root").c_str() ,"RECREATE");
     TMVA::Factory* factory = mvaSetupManager::buildFactory(conf, outfile);
 
     // class manages a dataloader and a factory, as well as settings for the mva's
@@ -49,7 +49,8 @@ int main(int argc, char const *argv[]) {
 
         mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 0.10, 20, true);
 
-        if (searchSetup == "search") factory->OptimizeAllMethods("ROCIntegral","FitGA");
+        if (searchSetup == "search") mvaSetupManager::searchBDT(factory, data, setup);
+        //factory->OptimizeAllMethods("ROCIntegral","FitGA");
         
     } else {
         mvaSetupManager::addNN(factory, data, setup);

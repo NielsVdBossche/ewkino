@@ -195,6 +195,34 @@ Jet Jet::JetJERUp() const{
     return variedJet( _pt_JERUp );
 }
 
+Jet Jet::JetJER_1p93_Down() const {
+    double newPt = pt();
+    if (absEta() <= 1.93) newPt = _pt_JERDown;
+
+    return variedJet( newPt );
+}
+
+Jet Jet::JetJER_1p93_Up() const {
+    double newPt = pt();
+    if (absEta() <= 1.93) newPt = _pt_JERUp;
+
+    return variedJet( newPt );
+}
+
+Jet Jet::JetJER_1p93_To_2p5_Down() const {
+    double newPt = pt();
+    if (absEta() > 1.93 && absEta() <= 2.5) newPt = _pt_JERDown;
+
+    return variedJet( newPt );
+}
+
+Jet Jet::JetJER_1p93_To_2p5_Up() const {
+    double newPt = pt();
+    if (absEta() > 1.93 && absEta() <= 2.5) newPt = _pt_JERUp;
+    
+    return variedJet( newPt );
+}
+
 
 Jet Jet::JetJECDown( const std::string source ) const{
     // note: this function checks both all and grouped variations,

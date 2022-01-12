@@ -163,6 +163,13 @@ void analysisTools::checkYearString( const std::string& yearString ){
     }
 }
 
+bool analysisTools::checkYearStringNoErr( const std::string& yearString ){
+    if( !( yearString == "2016PreVFP" || yearString == "2016PostVFP" || yearString == "2017" || yearString == "2018" || yearString == "2016" || yearString == "Combi") ){
+        return false;
+    }
+    return true;
+}
+
 
 bool analysisTools::sampleIsSusy( const std::string& filePath ){
     return ( stringTools::stringContains( filePath, "SMS-T")

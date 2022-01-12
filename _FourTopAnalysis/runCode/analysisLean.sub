@@ -1,8 +1,8 @@
 universe    =   vanilla
 executable  =   analysisLean.sh
 
-log         =   /user/nivanden/condor/logs/AnalysisLean_$(ClusterId).log
-error       =   /user/nivanden/condor/error/AnalysisLean_$(ClusterId).err
-output      =   /user/nivanden/condor/output/AnalysisLean_$(ClusterId).out
+log         =   /user/nivanden/condor/logs/AnalysisLean_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/AnalysisLean_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/AnalysisLean_$(ClusterId)_$(Process).out
 
-queue
+queue 1 arguments in 2016PreVFP.txt, 2016PostVFP.txt, 2017.txt, 2018.txt

@@ -31,9 +31,9 @@ void MVAHandler_4T::initReader() {
     }
 
     reader->AddVariable("N_jets", &n_jets_f);
-    //reader->AddVariable("N_b", &n_bjets_f);
-    //reader->AddVariable("N_b_tight", &n_b_tight);
-    //reader->AddVariable("N_b_loose", &n_b_loose);
+    reader->AddVariable("N_b", &n_bjets_f);
+    reader->AddVariable("N_b_tight", &n_b_tight);
+    reader->AddVariable("N_b_loose", &n_b_loose);
     reader->AddVariable("dr_bJets", &deltaRBjets);
     reader->AddVariable("dr_leps", &dRleps);
     reader->AddVariable("aziAngle", &aziAngle);
@@ -44,25 +44,30 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("pt_jet_one", &ptJetOne);
     reader->AddVariable("pt_jet_four", &ptJetFour);
     reader->AddVariable("pt_jet_five", &ptJetFive);
-    //reader->AddVariable("pt_jet_six", &ptJetSix);
+    reader->AddVariable("pt_jet_six", &ptJetSix);
     reader->AddVariable("pt_lep_one", &ptLepOne);
     reader->AddVariable("pt_lep_two", &ptLepTwo);
 
     reader->AddVariable("bTagLead",        &bTagLead);
     reader->AddVariable("bTagSub",         &bTagSub);
     reader->AddVariable("bTagThird",       &bTagThird);
-    //reader->AddVariable("bTagFourth",      &bTagFourth);
+    reader->AddVariable("bTagFourth",      &bTagFourth);
     reader->AddVariable("bTagPtLead",      &bTagPtLead);
     reader->AddVariable("bTagPtSub",       &bTagPtSub);
     reader->AddVariable("bTagPtThird",     &bTagPtThird);
     reader->AddVariable("bTagPtFourth",    &bTagPtFourth);
+    reader->AddVariable("m2ll",            &m2ll);
+    reader->AddVariable("m2bb",            &m2bb);
+    reader->AddVariable("m2lblb",          &m2lblb);
+    reader->AddVariable("mtLeadLepMET",    &mtLeadLepMET);
+    reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
     reader->AddVariable("massBestTop",     &massBestTop);
     reader->AddVariable("massBestTopW",    &massBestTopW);
     reader->AddVariable("massSecTop",      &massSecTop);
     reader->AddVariable("massSecTopW",     &massSecTopW);
-    reader->AddVariable("m2ll",            &m2ll);
-    reader->AddVariable("mtLeadLepMET",    &mtLeadLepMET);
-    reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
+
+    if (!isML) {
+    }
 
     if (isML) {
         reader->AddVariable("pt_lep_three", &ptLepThree);
@@ -253,8 +258,8 @@ void MVAHandler_4T::fillVariables() {
     }
 
     //massToPt         =  currentEvent;
-    min_dr_lep_b     =  mindR_Bjet_lep[0];
-    sec_min_dr_lep_b =  mindR_Bjet_lep[1];
+    min_dr_lep_b     =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[0] : 5.);
+    sec_min_dr_lep_b =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.);
 
     jetCol->sortByPt();
     ptJetOne         =  jetCol->at(0)->pt();
@@ -267,7 +272,7 @@ void MVAHandler_4T::fillVariables() {
     ptLepTwo         =  lightLeps->at(1)->pt();
 
     if (isML) {
-        ptLepThree   =  lightLeps->at(2)->pt();
+        ptLepThree   =  (selection->numberOfLeps() > 2 ? lightLeps->at(2)->pt() : 0.);
     }
 
     bTagPtLead = (jetCol->size() > 0 ? jetCol->at(0)->deepFlavor() : -1.);
@@ -293,6 +298,9 @@ void MVAHandler_4T::fillVariables() {
     mtLeadLepMET = mt(*lightLeps->at(0), selection->getEvent()->met());
     mtSubLeadLepMET = mt(*lightLeps->at(1), selection->getEvent()->met());
     m2ll = mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selection->getEvent()->met());
+
+    m2bb = (n_bjets_f >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
+    m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
 }
 
 std::pair<MVAClasses, double> MVAHandler_4T::getClassAndScore() {

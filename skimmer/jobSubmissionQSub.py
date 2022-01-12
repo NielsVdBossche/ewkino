@@ -1,3 +1,8 @@
+### WARNING:
+### This functionality has been superseded by that in jobSubmission/qsubTools.py
+### which should be equivalent to here but better structured and with small updates.
+### This file is kept only for backward compatibility.
+
 
 #include python library classes
 import subprocess
@@ -39,7 +44,7 @@ def initializeJobScript( script, cmssw_version = 'CMSSW_10_2_22' ):
    	#TO DO : make code to extract CMSSW directory in a general way
     #this is already available in DeepLearning repository, submodule would be a good solution 
     script.write('source /cvmfs/cms.cern.ch/cmsset_default.sh\n')
-    script.write('cd /user/nivanden/{}/src\n'.format( cmssw_version ) )
+    script.write('cd ~/{}/src\n'.format( cmssw_version ) )
     script.write('eval `scram runtime -sh`\n')
     working_directory = os.path.abspath( os.getcwd() )
     script.write('cd {}\n'.format( working_directory ) )

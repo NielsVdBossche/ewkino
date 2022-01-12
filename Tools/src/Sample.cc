@@ -25,6 +25,12 @@ Sample::Sample( const std::string& line, const std::string& sampleDirectory ) :
     std::istringstream stream(line);
     stream >> _processName >> _fileName >> xSecString;
 
+    std::string pathToFile = _directory + _fileName;
+
+    std::pair< std::string, std::string > directoryAndFileName = stringTools::splitDirectoryFileName( pathToFile );
+    _directory = directoryAndFileName.first;
+    _fileName = directoryAndFileName.second;
+    
     //if Xsection is not specified it is zero
     _xSec = ( xSecString == "" ? 0 : std::stod( xSecString ) );
 

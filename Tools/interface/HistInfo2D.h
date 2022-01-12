@@ -19,6 +19,15 @@ class HistInfo_2D : public HistInfo {
     public:
         HistInfo_2D() {HistInfo();};
 
+        HistInfo_2D(const HistInfo_2D& h1) : HistInfo(h1) {
+            yLabel = h1.yLabel;
+            nYBins = h1.nYBins;
+            yMin = h1.yMin;
+            yMax = h1.yMax;
+            maxYBinC = h1.maxYBinC;
+            yBinWidth = h1.yBinWidth;
+        }
+
         HistInfo_2D(const std::string& name, const std::string& x, unsigned xbins, double xmin, double xmax, const std::string& y, unsigned ybins, double ymin, double ymax) :
             HistInfo(name, x, xbins, xmin, xmax), yLabel(y), nYBins(ybins), yMin(ymin), yMax(ymax)
         {

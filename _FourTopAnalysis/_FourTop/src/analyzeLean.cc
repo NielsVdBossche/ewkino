@@ -73,19 +73,6 @@ void FourTop:: analyzeLean() {
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
-            // apply baseline selection
-            // Adapted to work with increased nonprompt yields
-            //if (selection->numberOfLeps() < 2) continue; // atm we check our tight leps here, for nonprompt est, this becomes FO
-            //if (selection->numberOfLeps() == 2 && selection->getMediumLepCol()->hasOSPair()) continue;
-//
-            //if (selection->numberOfJets() < 2 || selection->numberOfMediumBJets() < 1) continue;
-            //if (selection->getJetCol()->scalarPtSum() < 100) continue;
-//
-            //if (selection->numberOfLeps() == 3 && selection->getJetCol()->scalarPtSum() < 200) continue;
-            //if (selection->numberOfLeps() == 2 && selection->getJetCol()->scalarPtSum() < 300) continue;
-            //if (selection->numberOfLeps() < 4 && selection->numberOfJets() < 3) continue;
-            //if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 4) continue;
-
             if (! selection->passLeanSelection()) continue;
 
             // Apply scale factors

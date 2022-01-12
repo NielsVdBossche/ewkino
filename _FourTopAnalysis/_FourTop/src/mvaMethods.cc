@@ -21,7 +21,8 @@ void FourTop::fillMVAVariables(bool isML) {
     dRleps           =  deltaR(*lightLeps->at(0), *lightLeps->at(1));
     aziAngle         =  deltaPhi(*lightLeps->at(0), *lightLeps->at(1));
     ht               =  selection->getJetCol()->scalarPtSum();
-
+    met = selection->getMET();
+    
     JetCollection* jetCol = selection->getJetCol();
     massToPt = 0.;
     for (JetCollection::iterator jetIt = jetCol->begin(); jetIt != jetCol->end(); jetIt++) {

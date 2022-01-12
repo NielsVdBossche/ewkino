@@ -10,18 +10,12 @@
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
 
-#include "EventFourT.h"
 #include "MVAHandler.h"
 #include "Uncertainty.h"
+#include "UncertaintyEnvelope.h"
 
-#include "../../../TreeReader/interface/TreeReader.h"
-#include "../../additionalTools/interface/histHelper.h"
-
-// Next should be flat uncertainty (map or somthing)
-
-// Lastly something to keep track of correlations
-
-// Functions to build datacards as well
+#include "../../additionalTools/interface/HistogramManager.h"
+//#include "../../additionalTools/interface/histHelper.h"
 
 class UncertaintyWrapper {
     private:
@@ -40,47 +34,39 @@ class UncertaintyWrapper {
         // this function is then applied by the uncertainty object i guess.
         // OR a base object for the LL with a dedicated subclass which is actually used in the linking, but this might get complicated fast
         
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_DL;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_DL;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_ML;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_ML;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRZ;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRZ;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRW;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRW;
-//
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncDown_CRO;
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* histogramsUncUp_CRO;
+        std::map<shapeUncId, Uncertainty*> uncHistMap;
+        std::map<shapeUncId, std::string> translateUnc = { {muonIDSys, "muonIDSyst"}, {muonIDStat, "muonIDStat"}, {EleIDSys, "electronIDSyst"}, {EleIDStat, "electronIDStat"}, {prefire, "prefire"},
+                                                           {pileup, "pileup"}, {electronReco, "electronReco"}, {qcdScale, "qcdScale"}, {pdfShapeVar, "pdfShapeVar"}, {bTagShape, "bTagShape"},
+                                                           {isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, {fsrNorm, "fsrNorm"}, {JER_1p93, "JER_1p93"}, {JER_2p5, "JER_2p5"}, {JEC, "JEC"} };
 
-        Uncertainty *unc_dl, *unc_3l, *unc_4l, *unc_crw, *unc_crz, *unc_cro;
-
-        //std::vector<HistInfo>* histogramsUnc_info_DL;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_ML;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_CRZ;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_CRW;
-//
-        //std::vector<HistInfo>* histogramsUnc_info_CRO;
-
-        EventFourT* selection;
-        TreeReader* treeReader;
     public:
-        UncertaintyWrapper(EventFourT* selection, TreeReader* reader);
+        UncertaintyWrapper(HistogramManager* histograms);
 
-        //void initDL(std::vector<HistInfo>* dlInfo);
-        //void initML(std::vector<HistInfo>* mlInfo);
-        //void initCRZ(std::vector<HistInfo>* crzInfo);
-        //void initCRW(std::vector<HistInfo>* crwInfo);
-        //void initCRO(std::vector<HistInfo>* croInfo);
+        Uncertainty* getUncertainty(shapeUncId id) {return uncHistMap[id];}
+        std::map<shapeUncId, std::string> getTranslateUncMap() {return translateUnc;}
 
-        //std::map<shapeUncertaintyIdentifier, std::vector< std::vector<std::shared_ptr<TH1D>>>>* uncertaintyHistogramInit(std::vector<HistInfo>* info, bool up);
+        void fillUncertainty(shapeUncId id, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSingleHistograms(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fill2DHistograms(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
 
+        void fillUpOrDownUncertainty(shapeUncId id, std::vector<double>& fillVec, double weightUp, bool up, bool nonPrompt);
+        void fillUpOrDownSingleHistograms(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, double weightUp, bool up, bool nonPrompt);
+        void fillUpOrDown2DHistograms(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, double weightUp, bool up, bool nonPrompt);
+
+        void newSample(std::string& uniqueSampleName);
+        void newProcess(std::string& uniqueProcessName, TFile* outfile);
+        void writeCurrentHistograms();
+        void writeNonpromptHistograms();
+
+        void fillEnvelope(shapeUncId id, std::vector<double>& fillVec, std::vector<double> weight, bool nonPrompt);
+        void fillEnvelopeSingles(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
+        void fillEnvelope2Ds(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
         // all other required functions
+        void addSubUncertainties(shapeUncId id, std::vector<std::string>& subUnc);
+
+        void fillSubUncertainty(shapeUncId id, std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSubSingleHistograms(shapeUncId id, std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSub2DHistograms(shapeUncId id, std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
 };
 
 

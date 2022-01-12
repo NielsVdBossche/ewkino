@@ -5,7 +5,7 @@ TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* out
 
     analysType += "Multiclass";
 
-    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification", outputFile, analysType.c_str());
+    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_Temp", outputFile, analysType.c_str());
 
     return factory;
 }
@@ -47,15 +47,15 @@ void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader
 
 void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
     bool baggedBoost = false;
-    int nTrees[] = {200, 500, 1000, 1500, 2000};
+    int nTrees[] = {200, 500, 1000, 2000};
     int depths[] = {2, 3, 4, 5};
-    double shrinkages[] = {0.1, 0.5, 1., 2.};
-    int cuts[] = {20, 50, 100, 200};
+    double shrinkages[] = {0.1, 0.5, 1.};
+    int cuts[] = {20, 50};
 
-    for (int i=0; i < 5; i++) { // trees
+    for (int i=0; i < 4; i++) { // trees
         for (int j=0; j < 4; j++) { //depth
-            for (int k=0; k < 4; k++) { // shrink
-                for (int l=0; l < 4; l++) { // cuts
+            for (int k=0; k < 3; k++) { // shrink
+                for (int l=0; l < 2; l++) { // cuts
                     addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
                     //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], true);
                 }

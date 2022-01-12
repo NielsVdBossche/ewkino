@@ -54,9 +54,9 @@ void FourTop::cutFlow() {
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
 
             if (entry != 0) {
-                if (selection->numberOfLooseLeps() == 2) dlSteps = steps;
-                else if (selection->numberOfLooseLeps() == 3) trilepSteps = steps;
-                else if (selection->numberOfLooseLeps() == 4) fourlepSteps = steps;
+                if (selection->numberOfLeps() == 2) dlSteps = steps;
+                else if (selection->numberOfLeps() == 3) trilepSteps = steps;
+                else if (selection->numberOfLeps() == 4) fourlepSteps = steps;
 
                 for (int i = 0; i < dlSteps; i++) {
                     dlHist->Fill(i, weight);

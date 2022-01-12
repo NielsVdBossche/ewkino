@@ -3,8 +3,6 @@
 //include c++ library classes 
 #include <stdexcept>
 
-
-
 GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     _numberOfLheWeights( treeReader._nLheWeights ),
     _numberOfPsWeights( treeReader._nPsWeights ),
@@ -37,6 +35,11 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
         _prefireWeightDown = 1.;
         _prefireWeightUp = 1.;
     }
+
+    _firstScaleIndex = 0;
+    _numberOfScaleVariations = std::min( treeReader._nLheWeights, unsigned(9) );
+    _firstPdfIndex = 9;
+    _numberOfPdfVariations = std::min( std::max( treeReader._nLheWeights, unsigned(9) ) - 9, unsigned(100)); 
 }
 
 

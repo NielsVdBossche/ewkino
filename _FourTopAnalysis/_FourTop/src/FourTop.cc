@@ -30,8 +30,18 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 outputFileName += "EnlargedNonprompt_";
             }
         }
+
+        if (argvString[1] != "allSamples.txt") {
+            std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
+            if (! analysisTools::checkYearStringNoErr( newYearString )) {
+                newYearString = "2018";
+            }
+            setYearString(newYearString);
+        }
+
+        //outputFileName += yearString + "_";
         
-        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << ".root";
+        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << yearString << ".root";
 
         outputFileName += oss.str();
 
@@ -89,4 +99,7 @@ void FourTop::createHistInfoVec() {
 void FourTop::createMVAHandlers() {
     mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection);
     mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection);
+
+    selection->setDLMVA(mva_DL);
+    selection->setMLMVA(mva_ML);
 }

@@ -11,13 +11,21 @@
 
 #include "../../../constants/particleMasses.h"
 #include "../../TopQuarkReconstruction/interface/TopReconstructionNew.h"
+#include "Uncertainty.h"
+//#include "MVAHandler.h"
 
 class TopReconstructionNew;
+class MVAHandler_4T;
+///enum shapeUncId;
 
 enum eventClass {
-    SSDL=2,
-    TriLep=3,
-    FourLep=4
+    fail,
+    crz,
+    cro,
+    crw,
+    ssdl,
+    trilep,
+    fourlep
 };
 
 class EventFourT {
@@ -28,10 +36,11 @@ class EventFourT {
         LeptonCollection* foLeps;
         LeptonCollection* mediumLeps;
 
-
         // These should only be used to increase nonprompt yield. Should be triggered by other functions and only done when ttbar sample used
         // Additionally, the event selection based on these should take into account the full event selection but allow one of the leptons to be loose
         LeptonCollection* altLeps; 
+
+        eventClass currentClass = fail;
 
         JetCollection* jets;
         JetCollection* bTagJets;
@@ -44,10 +53,18 @@ class EventFourT {
         TopReconstructionNew* topReco;
         std::vector<double> scoresMVA;
         
+        MVAHandler_4T* dl_MVA, *ml_MVA;
+
+        std::map<eventClass, int> offsets;
+
     public:
 
         EventFourT();
         ~EventFourT() {cleanSelection();};
+
+        void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}
+        void setMLMVA(MVAHandler_4T* ml_new) {ml_MVA = ml_new;}
+        void setOffsets(std::map<eventClass, int> newOffsets) {offsets = newOffsets;}
 
         void cleanSelection();
         void addNewEvent(Event* newEvent);
@@ -72,6 +89,7 @@ class EventFourT {
         int numberOfLeps() const {return nLep;}
         double getHT() const {return ht;}
         double getMET() const {return met;}
+        eventClass getCurrentClass() const {return currentClass;}
         bool isEventNormalSelected() const {return isNormalSelected;}
 
         void objectSelection();
@@ -80,9 +98,16 @@ class EventFourT {
         bool passLeanSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
+        void classifyEvent();
 
         bool leptonsArePrompt();
         bool leptonsAreTight();
+
+        eventClass classifyUncertainty(shapeUncId id, bool up);
+        std::vector<double> fillVector();
+        std::vector<std::pair<int, double>> singleFillEntries();
+        std::vector<std::pair<double, double>> fillVector2D();
+
 
         // altLep event selection and activation functions
         bool passBaselineEventSelectionWithAltLeptons();
