@@ -309,7 +309,7 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
         //readChainToLoader(newClass, classNameAlt, dataloader, vars);
     }
     
-    dataloader->PrepareTrainingAndTestTree("","","SplitMode=Random:NormMode=NumEvents:!V");
+    dataloader->PrepareTrainingAndTestTree("","","SplitMode=Random:NormMode=EqualNumEvents:!V");
 
     return dataloader;
 }
