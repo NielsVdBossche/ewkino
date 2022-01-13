@@ -172,7 +172,7 @@ CombinedReweighter EwkinoReweighterFactory::buildReweighter(
 }
 
 
-CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string& weightDirectory, const std::string& year, const std::vector< Sample >& samples ) const{
+CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string& weightDirectory, const std::string& year, const std::vector< Sample >& samples ) const {
 
     analysisTools::checkYearString( year );
 
