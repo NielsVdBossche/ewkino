@@ -10,7 +10,7 @@ from jobSubmission.condorTools import submitScriptAsCondorJob, initJobScript, su
 
 flavours = ['muon']
 years = ['2016']
-samplelistdirectory = os.path.abspath('sampleListsNew')
+samplelistdirectory = os.path.abspath('sampleListsPreUL')
 # (see also below in loop to set the correct sample list name per flavour/year!)
 sampledirectory = '/pnfs/iihe/cms/store/user/llambrec/ntuples_fakerate'
 

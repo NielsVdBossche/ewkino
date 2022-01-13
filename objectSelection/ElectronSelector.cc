@@ -50,6 +50,9 @@ bool ElectronSelector::isLooseBase() const{
     return true;
 }
 
+bool ElectronSelector::isLoose2016() const{ 
+    return true;
+}
 
 bool ElectronSelector::isLoose2016PreVFP() const{ 
     return true;
@@ -112,6 +115,25 @@ bool ElectronSelector::isFOBase() const{
     return true;
 }
 
+bool ElectronSelector::isFO2016() const{
+    if( electronMVAValue(electronPtr) < electronMVACut() ){
+	// modification attempt:
+	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
+        //    electronPtr->uncorrectedPt()) ) return false;
+	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
+	// Tu Thong's original FO ID:
+        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.05,
+	    electronPtr->uncorrectedPt()) ) return false;
+        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
+    }
+    return true;
+}
+
+
+
 bool ElectronSelector::isFO2016PreVFP() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
 	// modification attempt:
@@ -130,7 +152,7 @@ bool ElectronSelector::isFO2016PreVFP() const{
 }
 
 
-bool ElectronSelector::isFO2016PostVFP() const{
+bool ElectronSelector::isFO2016PostVFP() const {
     if( electronMVAValue(electronPtr) < electronMVACut() ){
 	// modification attempt:
 	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
@@ -193,6 +215,9 @@ bool ElectronSelector::isTightBase() const{
     return true;
 }
 
+bool ElectronSelector::isTight2016() const{
+    return true;
+}
 
 bool ElectronSelector::isTight2016PreVFP() const{
     return true;
