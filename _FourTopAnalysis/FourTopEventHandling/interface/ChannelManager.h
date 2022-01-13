@@ -26,6 +26,8 @@ class ChannelManager
         void addChannel(eventClass channel, HistogramManager* histograms);
         void writeCurrentHistograms();
         void writeNonpromptHistograms();
+
+        void addSubUncertainties(shapeUncId id, std::vector<std::string>& subUnc);
 };
 
 #endif

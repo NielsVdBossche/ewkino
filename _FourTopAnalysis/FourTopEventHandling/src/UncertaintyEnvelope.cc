@@ -24,7 +24,7 @@ void UncertaintyEnvelope::newProcess(std::string& newProcess, TFile* outfile) {
 
     if (process != "") writeCurrentHistogramsProcess(outfile);
 
-    std::cout << "New process!" << std::endl;
+    //std::cout << "New process!" << std::endl;
 
     getUpHists()->newSample(newProcess);
     getDownHists()->newSample(newProcess);

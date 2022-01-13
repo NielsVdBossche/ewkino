@@ -82,7 +82,7 @@ bool EventFourT::passBaselineEventSelection() {
 
     //if (event->met().pt() < 25) return false;
 
-    if (ht < 300) return false;
+    if (n_lep < 4 && ht < 300) return false;
 
     return true;
 }
@@ -135,7 +135,7 @@ bool EventFourT::passLeanSelection() {
     if (nLep == 2 && mediumLeps->hasOSPair()) return false;
 
     if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
-    if (met < 25) return false;
+    //if (met < 25) return false;
 
     if (nJets < 2 || nMediumB < 1) return false;
     if (ht < 100) return false;

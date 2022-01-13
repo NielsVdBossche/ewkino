@@ -7,6 +7,8 @@
 //include other parts of framework
 #include "../../Tools/interface/analysisTools.h"
 #include "../../Tools/interface/stringTools.h"
+#include "../../Tools/interface/systemTools.h"
+
 #include "../interface/ConcreteLeptonReweighter.h"
 #include "../interface/ConcreteReweighterLeptons.h"
 #include "../interface/ConcreteSelection.h"
@@ -270,79 +272,35 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     combinedReweighter.addReweighter( "electronIDSyst", std::make_shared<ReweighterElectronsID>(electronIDReweighter_syst) );
     ElectronIDReweighter electronIDReweighter_stat( electronSFHist_stat, new TightSelector );
     combinedReweighter.addReweighter( "electronIDStat", std::make_shared<ReweighterElectronsID>(electronIDReweighter_stat) );
-
-    
-    /*
-    //make b-tagging Reweighter 
-    const std::string& bTagWP = "tight";
-
-    //read MC b-tagging efficiency histograms
-    // moet dit?
-    
-    const std::string& leptonCleaning = "looseLeptonCleaned";
-    TFile* bTagEffMCFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/bTagEff/bTagEff_" + leptonCleaning + "_" + year + ".root" ).c_str() );
-    std::shared_ptr< TH2 > bTagEffMCHist_udsg( dynamic_cast< TH2* >( bTagEffMCFile->Get( ( "bTagEff_" + bTagWP + "_udsg" ).c_str() ) ) );
-    bTagEffMCHist_udsg->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > bTagEffMCHist_c( dynamic_cast< TH2* >( bTagEffMCFile->Get( ( "bTagEff_" + bTagWP + "_charm" ).c_str() ) ) );
-    bTagEffMCHist_c->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > bTagEffMCHist_b( dynamic_cast< TH2* >( bTagEffMCFile->Get( ( "bTagEff_" + bTagWP + "_beauty" ).c_str() ) ) );
-    bTagEffMCHist_b->SetDirectory( gROOT );
-    bTagEffMCFile->Close();
-    
-
-    //path of b-tagging SF 
-    std::string bTagSFFileName;
-    if (year == "2016PreVFP") {
-        bTagSFFileName = "";
-    } else if( year == "2016PostVFP" ){
-        bTagSFFileName= "DeepJet_106XUL16SF.csv";
-    } else if( year == "2017" ){
-        bTagSFFileName = "DeepJet_106XUL17SF_V2p1.csv";
-    } else {
-        bTagSFFileName = "DeepJet_106XUL18SF_V1p1.csv";
-    }
-    std::string bTagSFPath = "weightFiles/bTagSF/" + bTagSFFileName;
-
-    combinedReweighter.addReweighter( "bTag_heavy", std::make_shared< ReweighterBTagHeavyFlavorDeepCSV >( weightDirectory, bTagSFPath, bTagWP, bTagEffMCHist_c, bTagEffMCHist_b ) );
-    combinedReweighter.addReweighter( "bTag_light", std::make_shared< ReweighterBTagLightFlavorDeepCSV >( weightDirectory, bTagSFPath, bTagWP, bTagEffMCHist_udsg ) );
-
-    //make prefire Reweighter
-    combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
-    */
-
-    
     
     // make the b-tag shape reweighter
     // step 1: set correct csv file
     std::string bTagSFFileName;
 
     if (year == "2016PreVFP") {
-        bTagSFFileName = "";
+        bTagSFFileName = "DeepJet_2016LegacySF_V1.csv";
     } else if( year == "2016PostVFP" ){
-        bTagSFFileName= "";
+        bTagSFFileName= "DeepJet_2016LegacySF_V1.csv";
     } else if( year == "2017" ){
         bTagSFFileName = "DeepJet_106XUL17SF_V2p1.csv";
     } else {
         bTagSFFileName = "DeepJet_106XUL18SF_V1p1.csv";
     }
 
-    if (year != "2016PreVFP" || year != "2016PostVFP") {
-        std::string weightDirectory = "../../weights";
-        std::string sfFilePath = "weightFiles/bTagSF/"+bTagSFFileName;
-        // step 2: set other parameters
-        std::string flavor = "all";
-        std::string bTagAlgo = "deepFlavor";
-        std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
-                                            "lfstats1","lfstats2","cferr1","cferr2" };
-        // step 3: make the reweighter
-        std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(
-            weightDirectory, sfFilePath, flavor, bTagAlgo, variations, samples );
-        reweighterBTagShape->initialize(samples);
+    //std::string weightDirectory = stringTools::formatDirectoryName( weightDirectory );
+    std::string sfFilePath = "weightFiles/bTagSF/"+bTagSFFileName;
+    // step 2: set other parameters
+    std::string flavor = "all";
+    std::string bTagAlgo = "deepFlavor";
+    std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
+                                        "lfstats1","lfstats2","cferr1","cferr2" };
+    // step 3: make the reweighter
+    std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
+    reweighterBTagShape->initialize(samples, 0);
 
-        combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
-    } else {
-        combinedReweighter.addReweighter( "bTag_shape", std::make_shared< ReweighterEmpty >() );
-    }
+    combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
+
+    combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
 
     return combinedReweighter;
 

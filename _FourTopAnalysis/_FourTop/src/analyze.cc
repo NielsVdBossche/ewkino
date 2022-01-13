@@ -12,6 +12,10 @@ void FourTop:: analyze() {
     std::cout << "building reweighter" << std::endl;
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
+
+    //if (yearString == "2017" || yearString == "2018") {
+    //    const ReweighterBTagShape* btagReweighter = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"]);
+    //}
     
     // Histogram creation
     std::string channelDL = "DL";
@@ -125,28 +129,14 @@ void FourTop:: analyze() {
         std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
-        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
-        DLManager->newSample(uniqueName);
-        DLManager_pp->newSample(uniqueName);
-        DLManager_nn->newSample(uniqueName);
-        DLManager_ee->newSample(uniqueName);
-        DLManager_em->newSample(uniqueName);
-        DLManager_mm->newSample(uniqueName);
-        TriLManager->newSample(uniqueName);
-        FourLManager->newSample(uniqueName);
-        CRZManager->newSample(uniqueName);
-        CRWManager->newSample(uniqueName);
-        CROManager->newSample(uniqueName);
-        mgrAll->newSample(uniqueName);
-        
-        std::string currProcName = sampleVec[sampleIndex].processName();
-        mgrAll->newProcess(currProcName, outfile);
-
         int numberOfPSVariations = 0;
         int numberOfPdfVariations = 0;
         bool hasValidQcds = false;
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
+        bool considerBTagShape = false;
+        std::vector<std::string> bTagShapeSystematics;
+        
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
@@ -165,7 +155,31 @@ void FourTop:: analyze() {
             if(numberOfPdfVariations>=100){
 	            hasValidPdfs = true;
             }
+
+            considerBTagShape = true;
+            
+            if (sampleIndex == 0) {
+                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+                mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
+            }
         }
+        
+        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
+        DLManager->newSample(uniqueName);
+        DLManager_pp->newSample(uniqueName);
+        DLManager_nn->newSample(uniqueName);
+        DLManager_ee->newSample(uniqueName);
+        DLManager_em->newSample(uniqueName);
+        DLManager_mm->newSample(uniqueName);
+        TriLManager->newSample(uniqueName);
+        FourLManager->newSample(uniqueName);
+        CRZManager->newSample(uniqueName);
+        CRWManager->newSample(uniqueName);
+        CROManager->newSample(uniqueName);
+        mgrAll->newSample(uniqueName);
+        
+        std::string currProcName = sampleVec[sampleIndex].processName();
+        mgrAll->newProcess(currProcName, outfile);
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -394,6 +408,21 @@ void FourTop:: analyze() {
                     uncWrapper->fillEnvelopeSingles(shapeUncId::pdfShapeVar, singleEntries, pdfVariations, nonPrompt);
                     uncWrapper->fillEnvelope2Ds(shapeUncId::pdfShapeVar, fillVec2D, pdfVariations, nonPrompt);
 
+                } else if (uncID == shapeUncId::bTagShape) {
+                    if (considerBTagShape) {
+                        double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
+                        for(std::string btagsys : bTagShapeSystematics){
+                            weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
+                            weightDown = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
+
+                            uncWrapper->fillSubUncertainty(shapeUncId(uncID), btagsys, fillVec, weight * weightUp, weight * weightDown, nonPrompt);
+                            uncWrapper->fillSubSingleHistograms(shapeUncId(uncID), btagsys, singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
+                            uncWrapper->fillSub2DHistograms(shapeUncId(uncID), btagsys, fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                        }
+
+                        weightUp = 1.;
+                        weightDown = 1.;
+                    }
                 } else if (uncID == shapeUncId::isrShape && hasValidPSs) {
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
@@ -413,6 +442,14 @@ void FourTop:: analyze() {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                 } else if (uncID >= shapeUncId::JER_1p93) {
                     // JER and JEC
+
+                    if( uncID == shapeUncId::JEC && considerBTagShape ) {
+                        //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                        //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                    }
+
                     upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
@@ -422,35 +459,15 @@ void FourTop:: analyze() {
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
-                } /*else if (uncID == shapeUncId::JER_2p5) {
-                    upClass = selection->classifyUncertainty(shapeUncId::JER_2p5, true);
-                    fillVecUp = selection->fillVector();
-                    singleEntriesUp = selection->singleFillEntries();
-                    fillVec2DUp = selection->fillVector2D();
-
-                    downClass = selection->classifyUncertainty(shapeUncId::JER_2p5, false);
-                    fillVecDown = selection->fillVector();
-                    singleEntriesDown = selection->singleFillEntries();
-                    fillVec2DDown = selection->fillVector2D();
-                } else if (uncID == shapeUncId::JEC) {
-                    upClass = selection->classifyUncertainty(shapeUncId::JEC, true);
-                    fillVecUp = selection->fillVector();
-                    singleEntriesUp = selection->singleFillEntries();
-                    fillVec2DUp = selection->fillVector2D();
-
-                    downClass = selection->classifyUncertainty(shapeUncId::JEC, false);
-                    fillVecDown = selection->fillVector();
-                    singleEntriesDown = selection->singleFillEntries();
-                    fillVec2DDown = selection->fillVector2D();
-                }*/
+                }
 
                 if (uncID < shapeUncId::JER_1p93) {
                     uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
                     uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
                     uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
                 } else {
-                    mgrAll->fillUpHistograms(upClass, shapeUncId(uncID), fillVecUp, singleEntriesUp, fillVec2DUp, weight, nonPrompt);
-                    mgrAll->fillDownHistograms(downClass, shapeUncId(uncID), fillVecDown, singleEntriesDown, fillVec2DDown, weight, nonPrompt);
+                    mgrAll->fillUpHistograms(upClass, shapeUncId(uncID), fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp, nonPrompt);
+                    mgrAll->fillDownHistograms(downClass, shapeUncId(uncID), fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown, nonPrompt);
                 }
 
                 uncID = uncID + 1;

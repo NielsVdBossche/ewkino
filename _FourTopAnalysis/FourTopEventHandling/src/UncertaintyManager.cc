@@ -123,3 +123,19 @@ void UncertaintyWrapper::fillEnvelope2Ds(shapeUncId id, std::vector<std::pair<do
     UncertaintyEnvelope* unc = static_cast<UncertaintyEnvelope*>(uncHistMap[id]);
     unc->fillEnvelope2Ds(fillVec, weight, nonPrompt );
 }
+
+void UncertaintyWrapper::addSubUncertainties(shapeUncId id, std::vector<std::string>& subUnc) {
+    uncHistMap[id]->addSubUncertainties(subUnc);
+}
+
+void UncertaintyWrapper::fillSubUncertainty(shapeUncId id, std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    uncHistMap[id]->fillSubHistograms(subUnc, fillVec, weightUp, weightDown, nonPrompt);
+}
+
+void UncertaintyWrapper::fillSubSingleHistograms(shapeUncId id, std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    uncHistMap[id]->fillSubSingleHistograms(subUnc, fillVec, weightUp, weightDown, nonPrompt);
+}
+
+void UncertaintyWrapper::fillSub2DHistograms(shapeUncId id, std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt) {
+    uncHistMap[id]->fillSub2DHistograms(subUnc, fillVec, weightUp, weightDown, nonPrompt);
+}

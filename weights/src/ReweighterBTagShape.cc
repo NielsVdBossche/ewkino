@@ -212,12 +212,17 @@ void ReweighterBTagShape::setNormFactors( const Sample& sample,
     // - normFactors: a map of jet multiplicity to averages-of-weights
     //                note: it is initialized to {0: 1.} in the constructor,
     //		      which implies the normalization factor will be 1 for each event.
+
+    std::cout << "setting norm factors" << std::endl;
+
     std::string sampleName = sample.fileName();
     if( _normFactors.find(sampleName)==_normFactors.end() ){
 	throw std::invalid_argument(std::string("ERROR: ")
 	    + "ReweighterBTagShape was not initialized for this sample!");
     }
+
     _normFactors[sampleName] = normFactors;
+    std::cout << "done setting norm factors" << std::endl;
 }
 
 double ReweighterBTagShape::getNormFactor( const Event& event, 
@@ -421,19 +426,19 @@ std::map< int, double > ReweighterBTagShape::calcAverageOfWeights( const Sample&
         event.jetCollection().selectGoodJets();
 
         // determine (nominal) b-tag reweighting and number of jets
-        double btagreweight = this->weight( event );
-	int njets = event.jetCollection().goodJetCollection().size();	
+        double btagreweight = this->weight(event);
+        int njets = event.jetCollection().goodJetCollection().size();	
 
-        // add it to the map
-	if(averageOfWeights.find(njets)==averageOfWeights.end()){ 
-	    averageOfWeights[njets] = btagreweight;
-	    nEntries[njets] = 1;
-	}
-	else{
-	    averageOfWeights[njets] += btagreweight;
-	    nEntries[njets] += 1;
-	}
-    } 
+            // add it to the map
+        if(averageOfWeights.find(njets)==averageOfWeights.end()){ 
+            averageOfWeights[njets] = btagreweight;
+            nEntries[njets] = 1;
+        }
+        else{
+            averageOfWeights[njets] += btagreweight;
+            nEntries[njets] += 1;
+        }
+    }
 
     // divide sum by number to get average
     for( std::map<int,double>::iterator it = averageOfWeights.begin(); 
@@ -441,5 +446,6 @@ std::map< int, double > ReweighterBTagShape::calcAverageOfWeights( const Sample&
 	averageOfWeights[it->first] = it->second / nEntries[it->first];
     }
 
+    std::cout << "done with event loop" << std::endl;
     return averageOfWeights;
 }

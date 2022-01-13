@@ -35,9 +35,9 @@ class UncertaintyWrapper {
         // OR a base object for the LL with a dedicated subclass which is actually used in the linking, but this might get complicated fast
         
         std::map<shapeUncId, Uncertainty*> uncHistMap;
-        std::map<shapeUncId, std::string> translateUnc = { {muonIDSys, "muonIDSyst"}, {muonIDStat, "muonIDStat"}, {EleIDSys, "electronIDSyst"}, {EleIDStat, "electronIDStat"},
-                                                           {pileup, "pileup"}, {electronReco, "electronReco"}, {qcdScale, "qcdScale"}, {pdfShapeVar, "pdfShapeVar"}, {isrShape, "isrShape"}, 
-                                                           {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, {fsrNorm, "fsrNorm"}, {JER_1p93, "JER_1p93"}, {JER_2p5, "JER_2p5"}, {JEC, "JEC"} };
+        std::map<shapeUncId, std::string> translateUnc = { {muonIDSys, "muonIDSyst"}, {muonIDStat, "muonIDStat"}, {EleIDSys, "electronIDSyst"}, {EleIDStat, "electronIDStat"}, {prefire, "prefire"},
+                                                           {pileup, "pileup"}, {electronReco, "electronReco"}, {qcdScale, "qcdScale"}, {pdfShapeVar, "pdfShapeVar"}, {bTagShape, "bTagShape"},
+                                                           {isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, {fsrNorm, "fsrNorm"}, {JER_1p93, "JER_1p93"}, {JER_2p5, "JER_2p5"}, {JEC, "JEC"} };
 
     public:
         UncertaintyWrapper(HistogramManager* histograms);
@@ -62,6 +62,11 @@ class UncertaintyWrapper {
         void fillEnvelopeSingles(shapeUncId id, std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
         void fillEnvelope2Ds(shapeUncId id, std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, bool nonPrompt);
         // all other required functions
+        void addSubUncertainties(shapeUncId id, std::vector<std::string>& subUnc);
+
+        void fillSubUncertainty(shapeUncId id, std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSubSingleHistograms(shapeUncId id, std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSub2DHistograms(shapeUncId id, std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
 };
 
 

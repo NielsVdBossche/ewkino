@@ -10,10 +10,12 @@ enum shapeUncId {
     muonIDSys,
     EleIDStat,
     EleIDSys,
+    prefire,
     pileup,
     electronReco,
     qcdScale,
     pdfShapeVar,
+    bTagShape,
     isrShape,
     isrNorm,
     fsrShape,
@@ -34,9 +36,12 @@ class Uncertainty {
 
         // pair of weight up and down
         // naming of the histograms is here perhaps the hardest thing
+        HistogramManager* bareHists;
         HistogramManager* upHists;
         HistogramManager* downHists;
 
+        std::map<std::string, HistogramManager*>* upSubMap = nullptr;
+        std::map<std::string, HistogramManager*>* downSubMap = nullptr;
     public:
         Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramManager* histograms);
         virtual ~Uncertainty() {};
@@ -59,6 +64,14 @@ class Uncertainty {
         std::string getName() const {return name;}
         HistogramManager* getUpHists() {return upHists;}
         HistogramManager* getDownHists() {return downHists;}
+
+        void addSubUncertainties(std::vector<std::string>& subUnc);
+
+        void fillSubHistograms(std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSubSingleHistograms(std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+        void fillSub2DHistograms(std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, bool nonPrompt);
+
+        void writeSubHistograms(bool nonPrompt);
 };
 
 #endif
