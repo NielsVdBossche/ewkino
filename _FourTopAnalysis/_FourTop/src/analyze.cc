@@ -121,6 +121,7 @@ void FourTop:: analyze() {
     std::cout << "event loop" << std::endl;
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
+    std::vector<std::string> bTagShapeSystematics;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -135,7 +136,6 @@ void FourTop:: analyze() {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        std::vector<std::string> bTagShapeSystematics;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
