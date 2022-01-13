@@ -32,18 +32,18 @@ class GeneratorInfo{
 
         unsigned numberOfPsWeights() const{ return _numberOfPsWeights; }
         double relativeWeightPsVar( const unsigned psIndex ) const;
+        double relativeWeight_FSR_InverseSqrt2() const{ return relativeWeightPsVar( 2 ); }
+        double relativeWeight_FSR_Sqrt2() const{ return relativeWeightPsVar( 3 ); }
+        double relativeWeight_FSR_0p5() const{ return relativeWeightPsVar( 4 ); }
+        double relativeWeight_FSR_2() const{ return relativeWeightPsVar( 5 ); }
+        double relativeWeight_FSR_0p25() const{ return relativeWeightPsVar( 6 ); }
+        double relativeWeight_FSR_4() const{ return relativeWeightPsVar( 7 ); }
         double relativeWeight_ISR_InverseSqrt2() const{ return relativeWeightPsVar( 2 ); }
-        double relativeWeight_FSR_InverseSqrt2() const{ return relativeWeightPsVar( 3 ); }
         double relativeWeight_ISR_Sqrt2() const{ return relativeWeightPsVar( 4 ); }
-        double relativeWeight_FSR_Sqrt2() const{ return relativeWeightPsVar( 5 ); }
         double relativeWeight_ISR_0p5() const{ return relativeWeightPsVar( 6 ); }
-        double relativeWeight_FSR_0p5() const{ return relativeWeightPsVar( 7 ); }
         double relativeWeight_ISR_2() const{ return relativeWeightPsVar( 8 ); }
-        double relativeWeight_FSR_2() const{ return relativeWeightPsVar( 9 ); }
         double relativeWeight_ISR_0p25() const{ return relativeWeightPsVar( 10 ); }
-        double relativeWeight_FSR_0p25() const{ return relativeWeightPsVar( 11 ); }
         double relativeWeight_ISR_4() const{ return relativeWeightPsVar( 12 ); }
-        double relativeWeight_FSR_4() const{ return relativeWeightPsVar( 13 ); }
 
         unsigned ttgEventType() const{ return _ttgEventType; }
         unsigned zgEventType() const{ return _zgEventType; }
