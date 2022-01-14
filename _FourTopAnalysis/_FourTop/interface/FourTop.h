@@ -68,6 +68,7 @@ class FourTop {
         // Prepare 
         void createHistInfoVec();
         void createMVAHandlers();
+        void createBTaggingNormFactors(ReweighterBTagShape* reweighter);
 
         // Event selection components
         void setYearString(std::string year) {yearString = year;}
@@ -76,7 +77,7 @@ class FourTop {
         // Main loop functions
         void analyze();
         void analyzeLean();
-        void cutFlow();
+        void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();
 
         void linkMVAVariables(TTree* tree, bool isML);

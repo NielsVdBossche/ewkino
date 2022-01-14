@@ -13,6 +13,8 @@ void FourTop:: analyze() {
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
 
+    //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
+
     //if (yearString == "2017" || yearString == "2018") {
     //    const ReweighterBTagShape* btagReweighter = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"]);
     //}

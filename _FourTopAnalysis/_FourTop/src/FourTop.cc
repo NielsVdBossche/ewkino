@@ -103,3 +103,7 @@ void FourTop::createMVAHandlers() {
     selection->setDLMVA(mva_DL);
     selection->setMLMVA(mva_ML);
 }
+
+void FourTop::createBTaggingNormFactors(ReweighterBTagShape* reweighter) {
+    
+}

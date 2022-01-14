@@ -1,4 +1,6 @@
-#include "../interface/FourTop.h"
+#include "../_FourTop/interface/FourTop.h"
+#include "../../GenLevelStudies/interface/GenLeptonCollection.h"
+#include "../../plotting/tdrStyle.h"
 
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
@@ -10,7 +12,15 @@ std::vector<HistInfo>* getCutflowHist(std::string flag) {
     return histInfoVec;
 }
 
-void FourTop::cutFlow() {
+bool selectLeptonsPt(const Lepton& lepton) {
+    return (lepton.pt() > 10);
+}
+
+bool selectLeptonsMVA(const LightLepton& lepton) {
+    return (lepton.leptonMVATOP() > 0.40);
+}
+
+void FourTop::cutFlow(std::string& sortingMode) {
 
     std::string channelDL = "DL";
     std::vector<HistInfo>* infoDL = getCutflowHist(channelDL);
@@ -28,6 +38,11 @@ void FourTop::cutFlow() {
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
 
+    bool sortOnGenerator = false;
+    if (sortingMode == "GeneratorInfo") {
+        sortOnGenerator = true;
+    }
+
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
@@ -37,7 +52,7 @@ void FourTop::cutFlow() {
         DLManager->newSample(uniqueName);
         TriLManager->newSample(uniqueName);
         FourLManager->newSample(uniqueName);
-        // check if TTbar or TTGamma sample
+
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
 
         std::shared_ptr<TH1D> dlHist = DLManager->getHistograms(false)->at(0);
@@ -51,79 +66,100 @@ void FourTop::cutFlow() {
         double weight = 0;
 
         int steps = 0;
+
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-
-            if (entry != 0) {
-                if (selection->numberOfLeps() == 2) dlSteps = steps;
-                else if (selection->numberOfLeps() == 3) trilepSteps = steps;
-                else if (selection->numberOfLeps() == 4) fourlepSteps = steps;
-
-                for (int i = 0; i < dlSteps; i++) {
-                    dlHist->Fill(i, weight);
-                }
-                for (int i = 0; i < trilepSteps; i++) {
-                    trilepHist->Fill(i, weight);
-                }
-                for (int i = 0; i < fourlepSteps; i++) {
-                    fourlepHist->Fill(i, weight);
-                }
-            }
-
-            dlSteps = 0;
-            trilepSteps = 0;
-            fourlepSteps = 0;
-
-            steps = 0;
             delete currentEvent;
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
-            
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+
+            currentEvent->removeTaus();
+            currentEvent->cleanElectronsFromLooseMuons();
+            currentEvent->cleanJetsFromLooseLeptons();
+            currentEvent->selectGoodJets();
             
-            selection->addNewEvent(currentEvent);
+            LeptonCollection tightLeps = currentEvent->TightLeptonCollection();
+            tightLeps.sortByPt();
+
+            std::shared_ptr<TH1D> currentHist;
+            
+            bool sameCharge = false;
+            int nLeps = currentEvent->numberOfTightLeptons();
+            if (sortOnGenerator) {
+                GenLeptonCollection* genLeptons = new GenLeptonCollection(*treeReader);
+                genLeptons->selectLightLeptons();
+                nLeps = genLeptons->size();
+                sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
+            }
+            
+            if (nLeps < 2) continue;
+
+            if (! sortOnGenerator) {
+                sameCharge = tightLeps[0].charge() == tightLeps[1].charge();
+            }
+
+            if (nLeps == 2 && sameCharge) {
+                currentHist = dlHist;
+            } else if (nLeps == 3) {
+                currentHist = trilepHist;
+            } else if (nLeps == 4) {
+                currentHist = fourlepHist;
+            } else {
+                continue;
+            }
+
             weight = currentEvent->weight();
 
-            if (selection->numberOfLooseLeps() < 2) continue;
-            if (selection->numberOfLooseLeps() == 2 && selection->getLooseLepCol()->hasOSPair()) continue;
+            currentHist->Fill(0., weight);
 
-            steps++;
+            if (currentEvent->numberOfLooseLeptons() < 2) continue;
+            if (currentEvent->numberOfLooseLeptons() == 2 && currentEvent->looseLeptonCollection().hasOSPair()) continue;
 
-            if (selection->numberOfLeps() < 2) continue;
-            if (selection->numberOfLeps() == 2 && selection->getMediumLepCol()->hasOSPair()) continue;
+            currentHist->Fill(1., weight);
 
-            steps++;
+            currentEvent->selectLooseLeptons();
 
-            if (selection->getMediumLepCol()->at(0)->pt() < 25 || selection->getMediumLepCol()->at(1)->pt() < 20) continue;
+            LeptonCollection looseLeps = currentEvent->looseLeptonCollection();
+            looseLeps.selectObjects(selectLeptonsPt);
+            if (looseLeps.size() < 2 || (looseLeps.size() == 2 && looseLeps.hasOSPair())) continue;
+            currentHist->Fill(2., weight);
+
+            LightLeptonCollection lightLeps = currentEvent->lightLeptonCollection();
+            lightLeps.selectObjects(selectLeptonsMVA);
+            if (lightLeps.size() < 2 || (lightLeps.size() == 2 && lightLeps[0].charge() != lightLeps[1].charge())) continue;
+            currentHist->Fill(3., weight);
+
+            currentEvent->selectTightLeptons();
+
+            if (currentEvent->numberOfTightLeptons() < 2) continue;
+            if (currentEvent->numberOfTightLeptons() == 2 && currentEvent->hasOSLeptonPair()) continue;
+
+            currentHist->Fill(4., weight);
+            currentEvent->sortLeptonsByPt();
+
+            if (currentEvent->lepton(0).pt() < 25 || currentEvent->lepton(1).pt() < 20) continue;
             
-            steps++;
+            currentHist->Fill(5., weight);
 
             // Remove mass resonances
-            if (! selection->passLowMassVeto()) {
-                continue;
-            }
-            steps++;
+            selection->addNewEvent(currentEvent);
+            if (! selection->passLowMassVeto()) continue;
+
+            currentHist->Fill(6., weight);
             
-            if (! selection->passZBosonVeto()) {
-                continue;
-            }
-            steps++;
+            if (! selection->passZBosonVeto()) continue;
+            currentHist->Fill(7., weight);
+
 
             if (selection->numberOfJets() < 4) continue;
-            steps++;
+            currentHist->Fill(8., weight);
 
             if (selection->numberOfMediumBJets() < 2) continue;
-            steps++; 
+            currentHist->Fill(9., weight);
 
             if (selection->getHT() < 300) continue;
-            steps++;
-
-            if (selection->getMET() < 25) continue;
-            steps++;
-
-            if (selection->numberOfLeps() <= 3) steps++;
-            if (selection->numberOfLeps() == 2) steps++;
-
+            currentHist->Fill(10., weight);
         }
         
         // Output management: save histograms to a ROOT file.
@@ -161,4 +197,21 @@ void FourTop::cutFlow() {
     FourLManager->writeNonpromptHistograms();
 
     outfile->Close();
+}
+
+int main(int argc, char* argv[]) {
+    setTDRStyle();
+
+    if (argc < 3) {
+        std::cout << "Two argument required: <sampleList.txt> <GeneratorInfo available>" << std::endl;
+    }
+    // zet makkelijk te verwerken string op
+    std::vector< std::string > argvStr( &argv[0], &argv[0] + argc );
+
+    // Settings splitsen if necessary
+
+    // main func call
+    FourTop analysisObject("Cutflow", argvStr, 0);
+
+    analysisObject.cutFlow(argvStr[2]);
 }
