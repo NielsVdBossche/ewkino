@@ -85,7 +85,9 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 GenLeptonCollection* genLeptons = new GenLeptonCollection(*treeReader);
                 genLeptons->selectLightLeptons();
                 nLeps = genLeptons->size();
-                sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
+                if (nLeps == 2) {
+                    sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
+                }
             }
             
             if (nLeps < 2) continue;
