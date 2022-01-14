@@ -59,13 +59,8 @@ void FourTop::cutFlow(std::string& sortingMode) {
         std::shared_ptr<TH1D> trilepHist = TriLManager->getHistograms(false)->at(0);
         std::shared_ptr<TH1D> fourlepHist = FourLManager->getHistograms(false)->at(0);
         
-        int dlSteps = 0;
-        int trilepSteps = 0;
-        int fourlepSteps = 0;
         // at end of sel, count extra if it flows to other channels (3l and then ssdl?)
         double weight = 0;
-
-        int steps = 0;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             delete currentEvent;

@@ -1,4 +1,5 @@
 universe    =   vanilla
+executable  =   cutflow.sh
 arguments   =   "GeneratorInfo FourTopsOnly.txt"
 
 log         =   /user/nivanden/condor/logs/testExec_$(ClusterId).log
