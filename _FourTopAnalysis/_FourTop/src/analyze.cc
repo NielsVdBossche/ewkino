@@ -446,10 +446,10 @@ void FourTop:: analyze() {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
-                        //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
-                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                        //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
-                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                        weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                        weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
                     }
 
                     upClass = selection->classifyUncertainty(shapeUncId(uncID), true);

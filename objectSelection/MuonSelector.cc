@@ -46,6 +46,9 @@ bool MuonSelector::isLooseBase() const{
     return true;
 }
 
+bool MuonSelector::isLoose2016() const{
+    return true;
+}
 
 bool MuonSelector::isLoose2016PreVFP() const{
     return true;
@@ -101,6 +104,14 @@ bool MuonSelector::isFOBase() const{
     return true;
 }
 
+bool MuonSelector::isFO2016() const{
+    if( muonMVAValue(muonPtr) <= muonMVACut() ){
+        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.02, 40., 0.015, 
+		muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->ptRatio() <= 0.45 ) return false;
+    }
+    return true;
+}
 
 bool MuonSelector::isFO2016PreVFP() const{
     if( muonMVAValue(muonPtr) <= muonMVACut() ){
@@ -153,6 +164,10 @@ bool MuonSelector::isTightBase() const{
     return true;
 }
 
+
+bool MuonSelector::isTight2016() const{
+    return true;
+}
 
 bool MuonSelector::isTight2016PreVFP() const{
     return true;
