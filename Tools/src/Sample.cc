@@ -37,7 +37,7 @@ Sample::Sample( const std::string& line, const std::string& sampleDirectory ) :
     setIsData();
 
     // set the correct year for this sample
-    _is2016 = analysisTools::fileIs2016( _fileName );
+    _is2016 = false; //analysisTools::fileIs2016( _fileName );
     _is2016PreVFP = analysisTools::fileIs2016PreVFP( _fileName );
     _is2016PostVFP = analysisTools::fileIs2016PostVFP( _fileName );
     _is2017 = analysisTools::fileIs2017( _fileName );

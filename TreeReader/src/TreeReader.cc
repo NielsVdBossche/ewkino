@@ -372,8 +372,8 @@ void TreeReader::initSample( const Sample& samp ){
 
         //event weights set with lumi depending on sample's era 
         double dataLumi;
-        if( is2016() ){ dataLumi = lumi::lumi2016; } 
-        else if( is2016PreVFP() ){ dataLumi = lumi::lumi2016PreVFP; }
+        //if( is2016() ){ dataLumi = lumi::lumi2016; } 
+        if( is2016PreVFP() ){ dataLumi = lumi::lumi2016PreVFP; }
         else if( is2016PostVFP() ){ dataLumi = lumi::lumi2016PostVFP; }
         else if( is2017() ){ dataLumi = lumi::lumi2017; } 
         else { dataLumi = lumi::lumi2018; }
