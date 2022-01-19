@@ -1,8 +1,8 @@
 universe    =   vanilla
 executable  =   generateTrainingSamples.sh
 
-log         =   /user/nivanden/condor/logs/trainSampleProd_$(ClusterId).log
-error       =   /user/nivanden/condor/error/trainSampleProd_$(ClusterId).err
-output      =   /user/nivanden/condor/output/trainSampleProd_$(ClusterId).out
+log         =   /user/nivanden/condor/logs/trainSampleProd_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainSampleProd_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainSampleProd_$(ClusterId)_$(Process).out
 
 queue 1 arguments in PreVFP, PostVFP, 17, 18
