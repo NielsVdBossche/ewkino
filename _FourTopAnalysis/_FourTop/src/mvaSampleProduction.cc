@@ -97,8 +97,8 @@ void FourTop::createMVATrainingSamples() {
                 continue;
             }
 
-            double weight = currentEvent->weight();
-            weight *= reweighter.totalWeight( *currentEvent );
+            mvaWeight = currentEvent->weight();
+            mvaWeight *= reweighter.totalWeight( *currentEvent );
             
             if (selection->passLeanSelection()) {
                 if (selection->numberOfLeps() == 2) {
