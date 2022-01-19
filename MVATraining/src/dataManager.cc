@@ -5,7 +5,9 @@
 
 std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree* chain, mvaConfiguration config) {
     Double_t* weight = new Double_t;
-    *weight = 1.; // unless changed elsewhere
+    //*weight = 1.; // unless changed elsewhere
+    chain->SetBranchAddress("weight", weight);
+
 
     std::vector<Double_t>* dataVector = nullptr;
     if (config == BDT_DL || config == NN_DL) {
