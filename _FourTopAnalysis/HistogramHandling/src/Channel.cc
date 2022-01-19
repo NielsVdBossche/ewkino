@@ -269,6 +269,34 @@ void Channel::newSample(std::string& uniqueSampleName) {
     }
 }
 
-void Channel::writeHistograms() {
+void Channel::writeNominalHistograms(unsigned subProc) {
+    nominalHistograms->writeHistograms(subProc);
+}
+
+void Channel::writeUncertaintyHistograms(unsigned subProc) {
+    unsigned id = 0;
+
+    while (id != shapeUncId::end) {
+        if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
+            id++;
+            continue;
+        }
+        std::string uncName = translateUnc[shapeUncId(id)];
+        if (! gDirectory->GetDirectory(uncName.c_str())) {
+            gDirectory->mkdir(uncName.c_str());
+            gDirectory->cd(uncName.c_str());
+            gDirectory->mkdir("Up");
+            gDirectory->mkdir("Down");
+        } else {
+            gDirectory->cd(uncName.c_str());
+        }
+        
+        uncHistMap[shapeUncId(id)]->writeHistograms(subProc);
+        gDirectory->cd("..");
+        id++;
+    }
+}
+
+void Channel::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
 
 }

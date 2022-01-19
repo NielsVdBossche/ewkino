@@ -1,14 +1,12 @@
 #include "../interface/HistogramSet.h"
 
 void HistogramSet::newSample(std::string& uniqueSampleName) {
-    for (auto it : processHist) {
-        it->newSample(uniqueSampleName);
+    for (unsigned i=0; i<processHist.size(); i++) {
+        std::string uniqueName = uniqueSampleName + "_" + processHistName[i];
+        processHist[i]->newSample(uniqueName);
     }
 }
 
-void HistogramSet::writeHistograms() {
-    for (unsigned i; i < processHistName.size(); i++) {
-        // TODO: folder stuff
-        processHist[i]->writeHistograms();
-    }
+void HistogramSet::writeHistograms(unsigned subProc) {
+    processHist[subProc]->writeHistograms();
 }

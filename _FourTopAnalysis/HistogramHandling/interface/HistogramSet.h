@@ -11,7 +11,12 @@ class HistogramSet {
         std::vector<std::string> processHistName;
     public:
         HistogramSet(std::string addFlag);
+        HistogramSet(HistogramSet* copy, std::string& name);
+
         ~HistogramSet();
+
+        std::vector<std::shared_ptr<TH1D>>* getHistograms(unsigned subProc) {return processHist[subProc]->getHistograms();};
+        std::vector<std::string>& getProcessNames() {return processHistName;}
 
         void addSubProcesses(std::vector<std::string>& processNames);
         void changeSubProcessTitle(unsigned index, std::string& newTitle);
@@ -23,7 +28,7 @@ class HistogramSet {
         void fillSingle2DHistograms(unsigned subProcess, std::vector<size_t, std::pair<double, double>>& fillVec, double eventWeight);
 
         void newSample(std::string& uniqueSampleName);
-        void writeHistograms();
+        void writeHistograms(unsigned subProc);
 };
 
 #endif

@@ -23,8 +23,6 @@ public:
 
     void writeCurrentHistogramsProcess(TFile* outfile);
     void writeCurrentHistograms() {};
-    void writeNonpromptHistograms();
-
 };
 
 #endif

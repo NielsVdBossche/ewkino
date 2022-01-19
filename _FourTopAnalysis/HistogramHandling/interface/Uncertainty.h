@@ -52,7 +52,6 @@ class Uncertainty {
         void fillUpOrDownSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weight, bool up, unsigned subProc);
         void fillUpOrDown2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weight, bool up, unsigned subProc);
 
-        virtual void writeHistograms();
 
         shapeUncId getID() const {return id;}
         std::string getName() const {return name;}
@@ -65,7 +64,8 @@ class Uncertainty {
         void fillSubSingleHistograms(std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
         void fillSub2DHistograms(std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
 
-        void writeSubHistograms();
+        virtual void writeHistograms(unsigned subProc);
+        void writeSubHistograms(unsigned subProc);
 };
 
 #endif

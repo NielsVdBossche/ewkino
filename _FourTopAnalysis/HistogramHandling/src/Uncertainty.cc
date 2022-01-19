@@ -40,17 +40,17 @@ void Uncertainty::fill2DHistograms(std::vector<std::pair<double, double>>& fillV
     downHists->fill2DHistograms(subProc, fillVec, weightDown);
 }
 
-void Uncertainty::writeHistograms() {
+void Uncertainty::writeHistograms(unsigned subProc) {
     gDirectory->cd("Up");
-    upHists->writeHistograms();
+    upHists->writeHistograms(subProc);
     gDirectory->cd("../Down");
-    downHists->writeHistograms();
+    downHists->writeHistograms(subProc);
     gDirectory->cd("..");
 
-    if (upSubMap != nullptr) writeSubHistograms();
+    if (upSubMap != nullptr) writeSubHistograms(subProc);
 }
 
-void Uncertainty::writeSubHistograms() {
+void Uncertainty::writeSubHistograms(unsigned subProc) {
     gDirectory->cd("..");
 
     for (auto it : *upSubMap) {
@@ -67,19 +67,12 @@ void Uncertainty::writeSubHistograms() {
             gDirectory->cd(uncName.c_str());
         }
 
-        if (nonPrompt) {
-            gDirectory->cd("Up");
-            localUpHists->writeNonpromptHistograms();    
-            gDirectory->cd("../Down");
-            localDownHists->writeNonpromptHistograms();
-            gDirectory->cd("..");
-        } else {
-            gDirectory->cd("Up");
-            localUpHists->writeCurrentHistograms();
-            gDirectory->cd("../Down");
-            localDownHists->writeCurrentHistograms();
-            gDirectory->cd("..");
-        }
+        gDirectory->cd("Up");
+        localUpHists->writeHistograms(subProc);
+        gDirectory->cd("../Down");
+        localDownHists->writeHistograms(subProc);
+        gDirectory->cd("..");
+        
         gDirectory->cd("..");
     }
 

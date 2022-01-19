@@ -29,6 +29,7 @@ class Channel {
         Channel(std::string channel, std::vector<HistInfo>* histInfo);
         ~Channel();
 
+        // initialization functions
         void addSubChannels(std::vector<std::string>& subchannels);
 
         void updateHistInfo(std::vector<HistInfo>* extraInfo);
@@ -39,6 +40,13 @@ class Channel {
         void subDivisions(std::vector<std::string>& divs);
         void changeProcessTitle(unsigned index, std::string& newTitle);
 
+        // histogram management
+        void newSample(std::string& uniqueSampleName);
+        void writeNominalHistograms(unsigned subProc);
+        void writeUncertaintyHistograms(unsigned subProc);
+        void writeUncertaintyEnvelopeHistograms(unsigned subProc);
+
+        // series of filling functions
         void fillHistograms(unsigned subProc, std::vector<double>& fillVec, double eventWeight);
         void fillSingleHistograms(unsigned subProc, std::vector<std::pair<int, double>>& fillVec, double eventWeight);
         void fill2DHistograms(unsigned subProc, std::vector<std::pair<double, double>>& fillVec, double eventWeight);
@@ -81,9 +89,6 @@ class Channel {
         void fillAllSubUncertainty(std::vector<std::string>& subs, shapeUncId id,  unsigned subProc, std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown);
         void fillAllSingleSubUncertainty(std::vector<std::string>& subs, shapeUncId id,  unsigned subProc, std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown);
         void fillAll2DSubUncertainty(std::vector<std::string>& subs, shapeUncId id,  unsigned subProc, std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown);
-
-        void newSample(std::string& uniqueSampleName);
-        void writeHistograms();
 
 };
 
