@@ -5,4 +5,4 @@ log         =   /user/nivanden/condor/logs/trainSampleProd_$(ClusterId).log
 error       =   /user/nivanden/condor/error/trainSampleProd_$(ClusterId).err
 output      =   /user/nivanden/condor/output/trainSampleProd_$(ClusterId).out
 
-queue
+queue 1 arguments in PreVFP, PostVFP, 17, 18
