@@ -61,6 +61,18 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         if (mode == 1) {
             createMVAHandlers();
         }
+    } else {
+        Sample samp = treeReader->sampleVector()[0];
+
+        if (samp.is2018()) {
+            yearString = "2018";
+        } else if (samp.is2017()) {
+            yearString = "2017";
+        } else if (samp.is2016PostVFP()) {
+            yearString = "2016PostVFP";
+        } else {
+            yearString = "2016PreVFP";
+        }
     }
 }
 

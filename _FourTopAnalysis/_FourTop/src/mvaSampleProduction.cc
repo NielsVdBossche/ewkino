@@ -3,6 +3,7 @@
 void FourTop::linkMVAVariables(TTree* tree, bool isML) {
 
     //std::vector<double>* variableVector = selection->;
+    tree->Branch("weight",          &mvaWeight,     "weight/D");
     tree->Branch("N_jets",          &n_jets_f,      "N_jets/D");
     tree->Branch("N_b",             &n_bjets_f,     "N_b/D");
     tree->Branch("N_b_tight",       &n_b_tight,     "N_b_tight/D");
@@ -54,6 +55,10 @@ void FourTop::createMVATrainingSamples() {
     infuseNonPrompt = true;
     currentEvent = new Event();
 
+    std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
+    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
+
+
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
 
@@ -91,6 +96,9 @@ void FourTop::createMVATrainingSamples() {
             } else if (! selection->passZBosonVeto()) {
                 continue;
             }
+
+            double weight = currentEvent->weight();
+            weight *= reweighter.totalWeight( *currentEvent );
             
             if (selection->passLeanSelection()) {
                 if (selection->numberOfLeps() == 2) {
