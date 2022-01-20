@@ -14,7 +14,8 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
     }
 
     for (int i=0; i < variations; i++) {
-        std::string otherName = getName() + std::to_string(i);
+        std::string otherName = getName() + "_" + std::to_string(i);
+        std::cout << otherName << std::endl;
         envelopeHists.push_back(new HistogramSet(histograms, otherName));
     }
 }
@@ -22,18 +23,22 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
 void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess) {
     if (process == newProcess) return;
 
-    if (process != "") writeHistogramsEnvelope(index);
+    if (process != "") {
+        writeHistogramsEnvelope(index);
+    }
 
     //std::cout << "New process!" << std::endl;
 
+    std::string empty = "";
     getUpHists()->changeProcess(index, newProcess);
-    getUpHists()->newSample(newProcess);
+    getUpHists()->newSample(empty);
     getDownHists()->changeProcess(index, newProcess);
-    getUpHists()->newSample(newProcess);
+    getDownHists()->newSample(empty);
+
     process = newProcess;
     for (unsigned i=0; i < envelopeHists.size(); i++) {
         envelopeHists[i]->changeProcess(index, newProcess);
-        envelopeHists[i]->newSample(newProcess);
+        envelopeHists[i]->newSample(empty);
     }
 }
 

@@ -96,7 +96,8 @@ void FourTop:: analyze() {
             considerBTagShape = true;
             
             if (sampleIndex == 0) {
-                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+                bTagShapeSystematics =  {"jes","hf","lf","hfstats1","hfstats2",
+                                        "lfstats1","lfstats2","cferr1","cferr2" };//dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
         }
@@ -286,6 +287,8 @@ void FourTop:: analyze() {
                 double weightUp = 1.;
                 double weightDown = 1.;
 
+                //std::cout << uncID << std::endl;
+
                 if (uncID <= shapeUncId::pileup) {
                     // all uncertainties with simple reweighting
                     std::string id = uncTranslateMap[shapeUncId(uncID)];
@@ -330,10 +333,10 @@ void FourTop:: analyze() {
 
                 } else if (uncID == shapeUncId::bTagShape) {
                     if (considerBTagShape) {
-                        double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
+                        double nombweight = 1.; //reweighter["bTag_shape"]->weight( *currentEvent );
                         for(std::string btagsys : bTagShapeSystematics){
-                            weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
-                            weightDown = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
+                            weightUp = 1.; //* dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
+                            weightDown = 1.; //* dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
 
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
@@ -364,10 +367,10 @@ void FourTop:: analyze() {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
-                        weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
-                                            / reweighter["bTag_shape"]->weight( *currentEvent );
-                        weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
-                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                        //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                        //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
                     }
 
                     upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
@@ -408,8 +411,8 @@ void FourTop:: analyze() {
 
         mgrAll->writeNominalHistograms(outdir);
 
-        gDirectory->mkdir("analytics");
-        gDirectory->cd("analytics");
+        //gDirectory->mkdir("analytics");
+        //gDirectory->cd("analytics");
 
         std::cout << "writing uncertainties" << std::endl;
 

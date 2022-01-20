@@ -25,6 +25,19 @@ std::vector<HistInfo> Channel::hardCopyInfoVector(std::vector<HistInfo>* infoVec
     return newInfoVec;
 }
 
+std::vector<HistInfo_2D> Channel::hardCopy2DInfoVector(std::vector<HistInfo_2D>* infoVec) {
+    std::vector<HistInfo_2D> newInfoVec;
+
+    for (unsigned i = 0; i < infoVec->size(); i++) {
+        std::string newName = infoVec->at(i).name() + "_" + SubChannelName;
+        HistInfo_2D hardCopy(infoVec->at(i));
+        hardCopy.setName(newName);
+        newInfoVec.push_back(hardCopy);
+    }
+
+    return newInfoVec;
+}
+
 
 void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
     if (newSubChannels.size() == 0) return;
@@ -39,8 +52,10 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
 void Channel::addSubUncertainties(shapeUncId uncID, std::vector<std::string>& subUnc) {
     uncHistMap[uncID]->addSubUncertainties(subUnc);
 
-    for (auto it : *subChannels) {
-        it.second->addSubUncertainties(uncID, subUnc);
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->addSubUncertainties(uncID, subUnc);
+        }
     }
 }
 
@@ -52,7 +67,7 @@ void Channel::updateHistInfo(std::vector<HistInfo>* extraInfo) {
 }
 
 void Channel::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
-    twoDimInfo = new std::vector<HistInfo_2D>(*new2DInfo);
+    twoDimInfo = new std::vector<HistInfo_2D>(hardCopy2DInfoVector(new2DInfo));
 }
 
 void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
@@ -72,8 +87,10 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
         id++;
     }
 
-    for (auto it : *subChannels) {
-        it.second->initializeHistogramStack(divsInitial);
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->initializeHistogramStack(divsInitial);
+        }
     }
 }
 
@@ -84,8 +101,10 @@ void Channel::changeProcess(unsigned index, std::string& newTitle) {
         it.second->changeProcess(index, newTitle);
     }
 
-    for (auto it : *subChannels) {
-        it.second->changeProcess(index, newTitle);
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->changeProcess(index, newTitle);
+        }
     }
 }
 

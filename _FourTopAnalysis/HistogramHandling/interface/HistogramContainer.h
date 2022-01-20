@@ -5,6 +5,8 @@
 #include "../../../Tools/interface/HistInfo2D.h"
 #include "../../additionalTools/interface/histHelper.h"
 
+#include <map>
+
 
 class HistogramContainer {
     private:
