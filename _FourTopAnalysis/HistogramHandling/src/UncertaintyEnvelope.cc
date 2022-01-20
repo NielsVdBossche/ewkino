@@ -19,17 +19,20 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
     }
 }
 
-void UncertaintyEnvelope::newProcess(std::string& newProcess, TFile* outfile) {
+void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess) {
     if (process == newProcess) return;
 
-    if (process != "") writeCurrentHistogramsProcess(outfile);
+    if (process != "") writeHistogramsEnvelope(index);
 
     //std::cout << "New process!" << std::endl;
 
+    getUpHists()->changeProcess(index, newProcess);
     getUpHists()->newSample(newProcess);
-    getDownHists()->newSample(newProcess);
+    getDownHists()->changeProcess(index, newProcess);
+    getUpHists()->newSample(newProcess);
     process = newProcess;
     for (unsigned i=0; i < envelopeHists.size(); i++) {
+        envelopeHists[i]->changeProcess(index, newProcess);
         envelopeHists[i]->newSample(newProcess);
     }
 }
@@ -80,10 +83,9 @@ void UncertaintyEnvelope::finalizeEnvelope(unsigned subProc) {
     }
 }
 
-void UncertaintyEnvelope::writeCurrentHistogramsProcess(TFile* outfile) {
-    /*
-    finalizeEnvelope(false);
-    outfile->cd("Uncertainties");
+void UncertaintyEnvelope::writeHistogramsEnvelope(unsigned processNb) {
+    finalizeEnvelope(processNb);
+    //outfile->cd("Uncertainties");
     gDirectory->cd(process.c_str());
     if (! gDirectory->GetDirectory(getName().c_str())) {
         gDirectory->mkdir(getName().c_str());
@@ -94,8 +96,9 @@ void UncertaintyEnvelope::writeCurrentHistogramsProcess(TFile* outfile) {
         gDirectory->cd(getName().c_str());
     }
 
-    Uncertainty::writeHistograms();
-    */
+    Uncertainty::writeHistograms(processNb);
+
+    gDirectory->cd("../../");
 }
 
 

@@ -1,6 +1,10 @@
 #include "../interface/Channel.h"
 
-Channel::Channel(std::string channel, std::vector<HistInfo>* histInfo) : channel(channel) {
+Channel::Channel(std::string& channel, std::vector<HistInfo>* histInfo) : ChannelName(channel) {
+    oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
+}
+
+Channel::Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo) : ChannelName(channel), SubChannelName(subChannel) {
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }
 
@@ -12,7 +16,7 @@ std::vector<HistInfo> Channel::hardCopyInfoVector(std::vector<HistInfo>* infoVec
     std::vector<HistInfo> newInfoVec;
 
     for (unsigned i = 0; i < infoVec->size(); i++) {
-        std::string newName = infoVec->at(i).name() + "_" + channel;
+        std::string newName = infoVec->at(i).name() + "_" + SubChannelName;
         HistInfo hardCopy(infoVec->at(i));
         hardCopy.setName(newName);
         newInfoVec.push_back(hardCopy);
@@ -27,9 +31,19 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
     subChannels = new std::map<std::string, Channel*>;
 
     for (unsigned i=0; i<newSubChannels.size(); i++) {
-        (*subChannels)[newSubChannels[i]] = new Channel(newSubChannels[i], oneDimInfo);
+        (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo);
+        (*subChannels)[newSubChannels[i]]->set2DHistInfo(twoDimInfo);
     }
 }
+
+void Channel::addSubUncertainties(shapeUncId uncID, std::vector<std::string>& subUnc) {
+    uncHistMap[uncID]->addSubUncertainties(subUnc);
+
+    for (auto it : *subChannels) {
+        it.second->addSubUncertainties(uncID, subUnc);
+    }
+}
+
 
 void Channel::updateHistInfo(std::vector<HistInfo>* extraInfo) {
     std::vector<HistInfo> extraInfoCopy = hardCopyInfoVector(extraInfo);
@@ -38,12 +52,12 @@ void Channel::updateHistInfo(std::vector<HistInfo>* extraInfo) {
 }
 
 void Channel::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
-    
+    twoDimInfo = new std::vector<HistInfo_2D>(*new2DInfo);
 }
 
-void Channel::initializeHistogramStack() {
+void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
     // build uncertainty class objects, histogramsets etc etc
-    nominalHistograms = new HistogramSet("");
+    nominalHistograms = new HistogramSet(divsInitial, "", oneDimInfo, twoDimInfo);
     
     unsigned id = 0;
 
@@ -57,14 +71,22 @@ void Channel::initializeHistogramStack() {
         }
         id++;
     }
+
+    for (auto it : *subChannels) {
+        it.second->initializeHistogramStack(divsInitial);
+    }
 }
 
-void Channel::subDivisions(std::vector<std::string>& divs) {
+void Channel::changeProcess(unsigned index, std::string& newTitle) {
+    nominalHistograms->changeProcess(index, newTitle);
 
-}
+    for (auto it : uncHistMap) {
+        it.second->changeProcess(index, newTitle);
+    }
 
-void Channel::changeProcessTitle(unsigned index, std::string& newTitle) {
-
+    for (auto it : *subChannels) {
+        it.second->changeProcess(index, newTitle);
+    }
 }
 
 void Channel::fillHistograms(unsigned subProc, std::vector<double>& fillVec, double eventWeight) {
@@ -79,7 +101,7 @@ void Channel::fill2DHistograms(unsigned subProc, std::vector<std::pair<double, d
     nominalHistograms->fill2DHistograms(subProc, fillVec, eventWeight);
 }
 
-void Channel::fillSingle2DHistograms(unsigned subProc, std::vector<size_t, std::pair<double, double>>& fillVec, double eventWeight) {
+void Channel::fillSingle2DHistograms(unsigned subProc, std::map<size_t, std::pair<double, double>>& fillVec, double eventWeight) {
     nominalHistograms->fillSingle2DHistograms(subProc, fillVec, eventWeight);
 }
 
@@ -101,7 +123,7 @@ void Channel::fillSubchannel2DHistograms(std::vector<std::string>& subs, unsigne
     }
 }
 
-void Channel::fillSubchannelSingle2DHistograms(std::vector<std::string>& subs, unsigned subProc, std::vector<size_t, std::pair<double, double>>& fillVec, double eventWeight) {
+void Channel::fillSubchannelSingle2DHistograms(std::vector<std::string>& subs, unsigned subProc, std::map<size_t, std::pair<double, double>>& fillVec, double eventWeight) {
     for (auto it : subs) {
         subChannels->at(it)->fillSingle2DHistograms(subProc, fillVec, eventWeight);
     }
@@ -128,7 +150,7 @@ void Channel::fillAll2DHistograms(std::vector<std::string>& subs, unsigned subPr
     }
 }
 
-void Channel::fillAllSingle2DHistograms(std::vector<std::string>& subs, unsigned subProc, std::vector<size_t, std::pair<double, double>>& fillVec, double eventWeight) {
+void Channel::fillAllSingle2DHistograms(std::vector<std::string>& subs, unsigned subProc, std::map<size_t, std::pair<double, double>>& fillVec, double eventWeight) {
     nominalHistograms->fillSingle2DHistograms(subProc, fillVec, eventWeight);
     for (auto it : subs) {
         subChannels->at(it)->fillSingle2DHistograms(subProc, fillVec, eventWeight);
@@ -167,10 +189,6 @@ void Channel::fillAll2DUncertainties(std::vector<std::string>& subs, shapeUncId 
     for (auto it : subs) {
         subChannels->at(it)->fill2DUncertainties(id, subProc, fillVec, weightUp, weightDown);
     }
-}
-
-void Channel::addSubUncertainties(shapeUncId id, std::vector<std::string>& subUnc) {
-    uncHistMap[id]->addSubUncertainties(subUnc);
 }
 
 void Channel::fillEnvelope(shapeUncId id,  unsigned subProc, std::vector<double>& fillVec, std::vector<double> weight) {
@@ -299,4 +317,36 @@ void Channel::writeUncertaintyHistograms(unsigned subProc) {
 
 void Channel::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
 
+}
+
+void Channel::fillUpHistograms(shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillUpOrDownHistograms(fillVec, weight, true, procNumber);
+    uncHistMap[id]->fillUpOrDownSingleHistograms(singleHist, weight, true, procNumber);
+    uncHistMap[id]->fillUpOrDown2DHistograms(twoDimFillVec, weight, true, procNumber);
+}
+
+void Channel::fillDownHistograms(shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillUpOrDownHistograms(fillVec, weight, false, procNumber);
+    uncHistMap[id]->fillUpOrDownSingleHistograms(singleHist, weight, false, procNumber);
+    uncHistMap[id]->fillUpOrDown2DHistograms(twoDimFillVec, weight, false, procNumber);
+}
+
+void Channel::fillAllUpHistograms(std::vector<std::string>& subs, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillUpOrDownHistograms(fillVec, weight, true, procNumber);
+    uncHistMap[id]->fillUpOrDownSingleHistograms(singleHist, weight, true, procNumber);
+    uncHistMap[id]->fillUpOrDown2DHistograms(twoDimFillVec, weight, true, procNumber);
+
+    for (auto it : subs) {
+        subChannels->at(it)->fillUpHistograms(id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
+    }
+}
+
+void Channel::fillAllDownHistograms(std::vector<std::string>& subs, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillUpOrDownHistograms(fillVec, weight, false, procNumber);
+    uncHistMap[id]->fillUpOrDownSingleHistograms(singleHist, weight, false, procNumber);
+    uncHistMap[id]->fillUpOrDown2DHistograms(twoDimFillVec, weight, false, procNumber);
+
+    for (auto it : subs) {
+        subChannels->at(it)->fillDownHistograms(id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
+    }
 }

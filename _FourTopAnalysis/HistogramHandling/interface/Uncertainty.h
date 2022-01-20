@@ -42,6 +42,7 @@ class Uncertainty {
         virtual ~Uncertainty() {};
 
         virtual void newSample(std::string& uniqueName);
+        virtual void changeProcess(unsigned index, std::string& newTitle);
         //virtual void newProcess(std::string& newProcess, TFile* outfile);
 
         void fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc);

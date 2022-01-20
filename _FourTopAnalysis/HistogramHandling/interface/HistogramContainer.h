@@ -15,7 +15,7 @@ class HistogramContainer {
         std::vector<HistInfo_2D>* twoDimInfo = nullptr;
 
     public:
-        HistogramContainer(std::vector<HistInfo>* histInfo);
+        HistogramContainer(std::vector<HistInfo>* oneDim, std::vector<HistInfo_2D>* twoDim);
         ~HistogramContainer();
 
         std::vector<HistInfo>* getHistInfo() {return oneDimInfo;}
@@ -24,13 +24,10 @@ class HistogramContainer {
         std::vector<HistInfo_2D>* get2DHistInfo() {return twoDimInfo;}
         std::vector<std::shared_ptr<TH2D>>* get2DHistograms() {return twoDims;}
 
-        //void updateHistInfo(std::vector<HistInfo>* extraInfo);
-        //void set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo);
-
         void fillHistograms(std::vector<double>& fillVec, double eventWeight);
         void fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double eventWeight);
 
-        void fillSingleHistogram(std::vector<std::pair<int, double>>& fillVec, double eventWeight);
+        void fillSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double eventWeight);
         void fillSingle2DHistograms(std::map<size_t, std::pair<double, double>>& fillVec, double eventWeight);
 
         void newSample(std::string& uniqueSampleName);

@@ -15,14 +15,13 @@ public:
     void finalizeEnvelope(unsigned subProc);
 
     //void newSample(std::string& uniqueName) {};
-    void newProcess(std::string& newProcess, TFile* outfile);
+    virtual void changeProcess(unsigned index, std::string& newProcess);
 
     void fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, unsigned subProc);
     void fillEnvelopeSingles(std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, unsigned subProc);
     void fillEnvelope2Ds(std::vector<std::pair<double, double>>& fillVec, std::vector<double> weight, unsigned subProc);
 
-    void writeCurrentHistogramsProcess(TFile* outfile);
-    void writeCurrentHistograms() {};
+    void writeHistogramsEnvelope(unsigned processNb);
 };
 
 #endif

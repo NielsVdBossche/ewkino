@@ -5,7 +5,7 @@
 #endif
 
 void FourTop:: analyze() {
-    ChannelManager* mgrAll = new ChannelManager();
+    ChannelManager* mgrAll = new ChannelManager(outfile);
     std::shared_ptr< SampleCrossSections > xsecs;
 
     // reweighter creation
@@ -15,99 +15,31 @@ void FourTop:: analyze() {
 
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
 
-    //if (yearString == "2017" || yearString == "2018") {
-    //    const ReweighterBTagShape* btagReweighter = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"]);
-    //}
-    
-    // Histogram creation
-    std::string channelDL = "DL";
-    std::vector<HistInfo>* infoDL = fourTopHists::allHists(channelDL, false, false);
-    HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
-    size_t dlPosMVA = infoDL->size();
-    DLManager->extendHistInfo(mva_DL->createHistograms(""));
-    DLManager->set2DHistInfo(mva_DL->create2DHistograms(""));
+    size_t crzPosMVA = mgrAll->at(eventClass::crz)->getHistInfo()->size() + mva_ML->getMaxClass();
+    size_t croPosMVA = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
+    size_t crwPosMVA = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
+    size_t dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
+    size_t mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
+    size_t fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
 
-    dlPosMVA += mva_DL->getMaxClass();
 
-    // extra histograms
-    channelDL = "DL++";
-    std::vector<HistInfo>* infoDL_pp = fourTopHists::allHists(channelDL, false, false);
-    HistogramManager* DLManager_pp = new HistogramManager(channelDL, infoDL_pp);
-    DLManager_pp->extendHistInfo(mva_DL->createHistograms("++"));
-    DLManager_pp->set2DHistInfo(mva_DL->create2DHistograms("++"));
+    mgrAll->at(eventClass::crz)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
+    mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CRO", true));
+    mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CRW", true));
+    mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
+    mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
+    mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
 
-    channelDL = "DL--";
-    std::vector<HistInfo>* infoDL_nn = fourTopHists::allHists(channelDL, false, false);
-    HistogramManager* DLManager_nn = new HistogramManager(channelDL, infoDL_nn);
-    DLManager_nn->extendHistInfo(mva_DL->createHistograms("--"));
-    DLManager_nn->set2DHistInfo(mva_DL->create2DHistograms("--"));
+    mgrAll->at(eventClass::crz)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
+    mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
+    mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
+    mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
+    mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
+    mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
 
-    channelDL = "DLee";
-    std::vector<HistInfo>* infoDL_ee = fourTopHists::allHists(channelDL, false, false);
-    HistogramManager* DLManager_ee = new HistogramManager(channelDL, infoDL_ee);
-    DLManager_ee->extendHistInfo(mva_DL->createHistograms("ee"));
-    DLManager_ee->set2DHistInfo(mva_DL->create2DHistograms("ee"));
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
 
-    channelDL = "DLem";
-    std::vector<HistInfo>* infoDL_em = fourTopHists::allHists(channelDL, false, false);
-    HistogramManager* DLManager_em = new HistogramManager(channelDL, infoDL_em);
-    DLManager_em->extendHistInfo(mva_DL->createHistograms("em"));
-    DLManager_em->set2DHistInfo(mva_DL->create2DHistograms("em"));
-
-    channelDL = "DLmm";
-    std::vector<HistInfo>* infoDL_mm = fourTopHists::allHists(channelDL, false, false);
-    HistogramManager* DLManager_mm = new HistogramManager(channelDL, infoDL_mm);
-    DLManager_mm->extendHistInfo(mva_DL->createHistograms("mm"));
-    DLManager_mm->set2DHistInfo(mva_DL->create2DHistograms("mm"));
-
-    std::string channel3L = "3L";
-    std::vector<HistInfo>* info3L = fourTopHists::allHists(channel3L, true, false);
-    HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
-    size_t mlPosMVA = info3L->size();
-    TriLManager->extendHistInfo(mva_ML->createHistograms(""));
-    TriLManager->set2DHistInfo(mva_ML->create2DHistograms(""));
-
-    mlPosMVA += mva_ML->getMaxClass();
-
-    std::string channel4L = "4L";
-    std::vector<HistInfo>* info4L = fourTopHists::allHists(channel4L, true, true);
-    HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
-    size_t fourlPosMVA = info4L->size();
-    FourLManager->extendHistInfo(mva_ML->createHistograms("", true));
-    FourLManager->set2DHistInfo(mva_ML->create2DHistograms("", true));
-
-    fourlPosMVA += mva_ML->getMaxClass();
-
-    std::string channelCRZ = "CRZ";
-    std::vector<HistInfo>* infoCRZ = fourTopHists::infoLean(channelCRZ, true);
-    HistogramManager* CRZManager = new HistogramManager(channelCRZ, infoCRZ);
-    size_t crzPosMVA = infoCRZ->size();
-    CRZManager->extendHistInfo(mva_ML->createHistograms("_CRZ", true));
-    CRZManager->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
-    crzPosMVA += mva_ML->getMaxClass();
-
-    std::string channelCRW = "CRW";
-    std::vector<HistInfo>* infoCRW = fourTopHists::infoLean(channelCRW, false);
-    HistogramManager* CRWManager = new HistogramManager(channelCRW, infoCRW);
-    size_t crwPosMVA = infoCRW->size();
-    CRWManager->extendHistInfo(mva_DL->createHistograms("_CRW", true));
-    CRWManager->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
-    crwPosMVA += mva_DL->getMaxClass();
-
-    std::string channelCRO = "CRO";
-    std::vector<HistInfo>* infoCRO = fourTopHists::infoLean(channelCRO, false);
-    HistogramManager* CROManager = new HistogramManager(channelCRO, infoCRO);
-    size_t croPosMVA = infoCRO->size();
-    CROManager->extendHistInfo(mva_DL->createHistograms("_CRO", true));
-    CROManager->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
-    croPosMVA += mva_DL->getMaxClass();
-    
-    mgrAll->addChannel(eventClass::ssdl, DLManager);
-    mgrAll->addChannel(eventClass::trilep, TriLManager);
-    mgrAll->addChannel(eventClass::fourlep, FourLManager);
-    mgrAll->addChannel(eventClass::crz, CRZManager);
-    mgrAll->addChannel(eventClass::crw, CRWManager);
-    mgrAll->addChannel(eventClass::cro, CROManager);
+    mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
 
     std::map<eventClass, int> offsets;
     offsets[eventClass::cro] = croPosMVA;
@@ -118,7 +50,10 @@ void FourTop:: analyze() {
     offsets[eventClass::fourlep] = fourlPosMVA;
     selection->setOffsets(offsets);
 
-    std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUncMap();
+    std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUnc();
+
+    std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
+    mgrAll->initHistogramStacks(processes);
 
     std::cout << "event loop" << std::endl;
 
@@ -165,26 +100,15 @@ void FourTop:: analyze() {
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
         }
+
+        std::string currProcName = sampleVec[sampleIndex].processName();
+        mgrAll->changePrimaryProcess(currProcName);
         
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
-        DLManager->newSample(uniqueName);
-        DLManager_pp->newSample(uniqueName);
-        DLManager_nn->newSample(uniqueName);
-        DLManager_ee->newSample(uniqueName);
-        DLManager_em->newSample(uniqueName);
-        DLManager_mm->newSample(uniqueName);
-        TriLManager->newSample(uniqueName);
-        FourLManager->newSample(uniqueName);
-        CRZManager->newSample(uniqueName);
-        CRWManager->newSample(uniqueName);
-        CROManager->newSample(uniqueName);
         mgrAll->newSample(uniqueName);
-        
-        std::string currProcName = sampleVec[sampleIndex].processName();
-        mgrAll->newProcess(currProcName, outfile);
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            //if (entry > 10000) break;
+            if (entry > 10000) break;
             delete currentEvent;
 
             // Initialize event
@@ -231,11 +155,13 @@ void FourTop:: analyze() {
             std::vector<double> fillVec;
             std::vector<std::pair<double, double>> fillVec2D;
             std::vector<std::pair<int, double>> singleEntries;
-            bool nonPrompt = false;
+            std::vector<std::string> subChannels;
+
+            unsigned processNb = 0;
 
             for (const auto& leptonPtr : *selection->getMediumLepCol()) {
                 if (! leptonPtr->isPrompt()) {
-                    nonPrompt = true;
+                    processNb++;
                     break;
                 }
             }
@@ -252,9 +178,9 @@ void FourTop:: analyze() {
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
                 singleEntries.push_back({crzPosMVA + classAndScore.first, classAndScore.second});
 
-                CRZManager->fillHistograms(fillVec, weight, nonPrompt);
-                CRZManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                CRZManager->fillSingleHistogram(crzPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                mgrAll->at(eventClass::crz)->fillHistograms(processNb, fillVec, weight);
+                mgrAll->at(eventClass::crz)->fill2DHistograms(processNb, fillVec2D, weight);
+                mgrAll->at(eventClass::crz)->fillSingleHistograms(processNb, singleEntries, weight);
 
             } else if (nominalClass == eventClass::crw || nominalClass == eventClass::cro) {
                 std::vector<double> scores = mva_DL->scoreEvent();
@@ -267,14 +193,15 @@ void FourTop:: analyze() {
 
                 if (nominalClass == eventClass::crw) {
                     singleEntries.push_back({crwPosMVA + classAndScore.first, classAndScore.second});
-                    CRWManager->fillHistograms(fillVec, weight, nonPrompt);
-                    CRWManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                    CRWManager->fillSingleHistogram(crwPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                    mgrAll->at(eventClass::crw)->fillHistograms(processNb, fillVec, weight);
+                    mgrAll->at(eventClass::crw)->fill2DHistograms(processNb, fillVec2D, weight);
+                    mgrAll->at(eventClass::crw)->fillSingleHistograms(processNb, singleEntries, weight);
+
                 } else {
                     singleEntries.push_back({croPosMVA + classAndScore.first, classAndScore.second});
-                    CROManager->fillHistograms(fillVec, weight, nonPrompt);
-                    CROManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                    CROManager->fillSingleHistogram(croPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                    mgrAll->at(eventClass::cro)->fillHistograms(processNb, fillVec, weight);
+                    mgrAll->at(eventClass::cro)->fill2DHistograms(processNb, fillVec2D, weight);
+                    mgrAll->at(eventClass::cro)->fillSingleHistograms(processNb, singleEntries, weight);
                 }
 
             } else if (nominalClass == eventClass::ssdl) {   
@@ -289,33 +216,24 @@ void FourTop:: analyze() {
                 std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
                 singleEntries.push_back({dlPosMVA + classAndScore.first, classAndScore.second});
 
-                DLManager->fillHistograms(fillVec, weight, nonPrompt);
-                DLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                DLManager->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
-
                 if (selection->getLepton(0)->charge() > 0) {
-                    DLManager_pp->fillHistograms(fillVec, weight, nonPrompt);
-                    DLManager_pp->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                    DLManager_pp->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                    subChannels.push_back("++");
                 } else {
-                    DLManager_nn->fillHistograms(fillVec, weight, nonPrompt);
-                    DLManager_nn->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                    DLManager_nn->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                    subChannels.push_back("--");
                 }
 
                 if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) {
-                    DLManager_ee->fillHistograms(fillVec, weight, nonPrompt);
-                    DLManager_ee->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                    DLManager_ee->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                    subChannels.push_back("ee");
                 } else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) {
-                    DLManager_mm->fillHistograms(fillVec, weight, nonPrompt);
-                    DLManager_mm->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                    DLManager_mm->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                    subChannels.push_back("mm");
                 } else {
-                    DLManager_em->fillHistograms(fillVec, weight, nonPrompt);
-                    DLManager_em->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                    DLManager_em->fillSingleHistogram(dlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                    subChannels.push_back("em");
                 }
+
+                mgrAll->at(eventClass::ssdl)->fillAllHistograms(subChannels, processNb, fillVec, weight);
+                mgrAll->at(eventClass::ssdl)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
+                mgrAll->at(eventClass::ssdl)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
+
             } else if (nominalClass == eventClass::trilep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
@@ -327,9 +245,9 @@ void FourTop:: analyze() {
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
                 singleEntries.push_back({mlPosMVA + classAndScore.first, classAndScore.second});
 
-                TriLManager->fillHistograms(fillVec, weight, nonPrompt);
-                TriLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                TriLManager->fillSingleHistogram(mlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                mgrAll->at(eventClass::trilep)->fillHistograms(processNb, fillVec, weight);
+                mgrAll->at(eventClass::trilep)->fill2DHistograms(processNb, fillVec2D, weight);
+                mgrAll->at(eventClass::trilep)->fillSingleHistograms(processNb, singleEntries, weight);
             } else if (nominalClass == eventClass::fourlep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
@@ -341,9 +259,9 @@ void FourTop:: analyze() {
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();  
                 singleEntries.push_back({fourlPosMVA + classAndScore.first, classAndScore.second});
                 
-                FourLManager->fillHistograms(fillVec, weight, nonPrompt);
-                FourLManager->fill2DHistograms(fillVec2D, weight, nonPrompt);
-                FourLManager->fillSingleHistogram(fourlPosMVA + classAndScore.first, classAndScore.second, weight, nonPrompt);
+                mgrAll->at(eventClass::fourlep)->fillHistograms(processNb, fillVec, weight);
+                mgrAll->at(eventClass::fourlep)->fill2DHistograms(processNb, fillVec2D, weight);
+                mgrAll->at(eventClass::fourlep)->fillSingleHistograms(processNb, singleEntries, weight);
             }
 
 
@@ -352,7 +270,7 @@ void FourTop:: analyze() {
 
             //// Start filling histograms
             // loop uncertainties
-            UncertaintyWrapper* uncWrapper = mgrAll->getChannelUncertainties(selection->getCurrentClass());
+            Channel* uncWrapper = mgrAll->at(selection->getCurrentClass());
 
             std::vector<double> fillVecUp = fillVec;
             std::vector<double> fillVecDown = fillVec;
@@ -387,9 +305,9 @@ void FourTop:: analyze() {
                         qcdvariations = {weight, weight, weight, weight, weight, weight};
                     }
 
-                    uncWrapper->fillEnvelope(shapeUncId::qcdScale, fillVec, qcdvariations, nonPrompt);
-                    uncWrapper->fillEnvelopeSingles(shapeUncId::qcdScale, singleEntries, qcdvariations, nonPrompt);
-                    uncWrapper->fillEnvelope2Ds(shapeUncId::qcdScale, fillVec2D, qcdvariations, nonPrompt);
+                    uncWrapper->fillAllEnvelope(subChannels, shapeUncId::qcdScale, processNb, fillVec, qcdvariations);
+                    uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::qcdScale, processNb, singleEntries, qcdvariations);
+                    uncWrapper->fillAllEnvelope2Ds(subChannels, shapeUncId::qcdScale, processNb, fillVec2D, qcdvariations);
                 } else if (uncID == shapeUncId::pdfShapeVar) {
                     std::vector<double> pdfVariations;
                     if (hasValidPdfs && xsecs.get()->numberOfLheVariations() > 9) {
@@ -406,9 +324,9 @@ void FourTop:: analyze() {
                         }
                     }
 
-                    uncWrapper->fillEnvelope(shapeUncId::pdfShapeVar, fillVec, pdfVariations, nonPrompt);
-                    uncWrapper->fillEnvelopeSingles(shapeUncId::pdfShapeVar, singleEntries, pdfVariations, nonPrompt);
-                    uncWrapper->fillEnvelope2Ds(shapeUncId::pdfShapeVar, fillVec2D, pdfVariations, nonPrompt);
+                    uncWrapper->fillAllEnvelope(subChannels, shapeUncId::pdfShapeVar, processNb, fillVec, pdfVariations);
+                    uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::pdfShapeVar, processNb, singleEntries, pdfVariations);
+                    uncWrapper->fillAllEnvelope2Ds(subChannels, shapeUncId::pdfShapeVar, processNb, fillVec2D, pdfVariations);
 
                 } else if (uncID == shapeUncId::bTagShape) {
                     if (considerBTagShape) {
@@ -417,9 +335,9 @@ void FourTop:: analyze() {
                             weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
                             weightDown = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
 
-                            uncWrapper->fillSubUncertainty(shapeUncId(uncID), btagsys, fillVec, weight * weightUp, weight * weightDown, nonPrompt);
-                            uncWrapper->fillSubSingleHistograms(shapeUncId(uncID), btagsys, singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
-                            uncWrapper->fillSub2DHistograms(shapeUncId(uncID), btagsys, fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec2D, weight * weightUp, weight * weightDown);
                         }
 
                         weightUp = 1.;
@@ -464,12 +382,12 @@ void FourTop:: analyze() {
                 }
 
                 if (uncID < shapeUncId::JER_1p93) {
-                    uncWrapper->fillUncertainty(shapeUncId(uncID), fillVec, weight * weightUp, weight * weightDown, nonPrompt);
-                    uncWrapper->fillSingleHistograms(shapeUncId(uncID), singleEntries, weight * weightUp, weight * weightDown, nonPrompt);
-                    uncWrapper->fill2DHistograms(shapeUncId(uncID), fillVec2D, weight * weightUp, weight * weightDown, nonPrompt);
+                    uncWrapper->fillAllUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec, weight * weightUp, weight * weightDown);
+                    uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
+                    uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
                 } else {
-                    mgrAll->fillUpHistograms(upClass, shapeUncId(uncID), fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp, nonPrompt);
-                    mgrAll->fillDownHistograms(downClass, shapeUncId(uncID), fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown, nonPrompt);
+                    mgrAll->fillAllUpHistograms(subChannels, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    mgrAll->fillAllDownHistograms(subChannels, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 }
 
                 uncID = uncID + 1;
@@ -483,34 +401,12 @@ void FourTop:: analyze() {
         // Might interface with Stacker to create desired output plots as well... Or at least already have the stacked process ready instead of individual components. Then a "getDirectory" in stacker could be handy to see if it exists.
         std::cout << "output" << std::endl;
         
-        
         outfile->cd();
         outfile->cd("Nominal");
-        const char* processName = treeReader->currentSample().processName().c_str();
-        if (! gDirectory->GetDirectory(processName)) {
-            gDirectory->mkdir(processName);
-        }
-        gDirectory->cd(processName);
-
+    
         std::string outdir = stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(treeReader->currentSample().fileName()));
-        gDirectory->mkdir(outdir.c_str()); // got to switch to gDirectory. Otherwise keeps working as if we're on level of file
-        gDirectory->cd(outdir.c_str());
 
-        // Rewrite this to a dedicated function maybe, or something where we don't have to call sampleIndex each time?
-        //for( size_t dist = 0; dist < histInfoVec_DL->size(); ++dist ) {
-        //    hists_DL->at(sampleIndex)[dist]->Write(TString(histInfoVec_DL->at(dist).name()), TObject::kOverwrite);
-        //}
-        DLManager->writeCurrentHistograms();
-        TriLManager->writeCurrentHistograms();
-        FourLManager->writeCurrentHistograms();
-        CRZManager->writeCurrentHistograms();
-        CRWManager->writeCurrentHistograms();
-        CROManager->writeCurrentHistograms();
-        DLManager_pp->writeCurrentHistograms();
-        DLManager_nn->writeCurrentHistograms();
-        DLManager_ee->writeCurrentHistograms();
-        DLManager_em->writeCurrentHistograms();
-        DLManager_mm->writeCurrentHistograms();
+        mgrAll->writeNominalHistograms(outdir);
 
         gDirectory->mkdir("analytics");
         gDirectory->cd("analytics");
@@ -519,47 +415,11 @@ void FourTop:: analyze() {
 
         outfile->cd();
         outfile->cd("Uncertainties");
-        const char* processNameNew = treeReader->currentSample().processName().c_str();
-        if (! gDirectory->GetDirectory(processNameNew)) {
-            gDirectory->mkdir(processNameNew);
-        }
-        gDirectory->cd(processNameNew);
-        gDirectory->mkdir(outdir.c_str());
-        gDirectory->cd(outdir.c_str());
 
-        mgrAll->writeCurrentHistograms();
+        mgrAll->writeUncertaintyHistograms(outdir);
     }
     std::string anotherName = "something";
-    mgrAll->newProcess(anotherName, outfile); // workaround so that we would print histograms of last process
-
-    // Don't forget non-prompt contributions
-
-    std::cerr << "start printing nonprompt hists" << std::endl;
-    outfile->cd("Nominal");
-    gDirectory->mkdir("nonPrompt");
-    gDirectory->cd("nonPrompt");
-
-    DLManager->writeNonpromptHistograms();
-    TriLManager->writeNonpromptHistograms();
-    FourLManager->writeNonpromptHistograms();
-    CRZManager->writeNonpromptHistograms();
-    CRWManager->writeNonpromptHistograms();
-    CROManager->writeNonpromptHistograms();
-
-    DLManager_pp->writeNonpromptHistograms();
-    DLManager_nn->writeNonpromptHistograms();
-    DLManager_ee->writeNonpromptHistograms();
-    DLManager_em->writeNonpromptHistograms();
-    DLManager_mm->writeNonpromptHistograms();
-
-    std::cerr << "start printing nonprompt uncertainty hists" << std::endl;
-
-    outfile->cd("Uncertainties");
-    gDirectory->mkdir("nonPrompt");
-    gDirectory->cd("nonPrompt");
-    
-    mgrAll->writeNonpromptHistograms();
-
+    mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
 
     outfile->Close();
 }

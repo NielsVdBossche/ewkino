@@ -25,6 +25,21 @@ void Uncertainty::newSample(std::string& uniqueName) {
     }
 }
 
+void Uncertainty::changeProcess(unsigned index, std::string& newTitle) {
+    upHists->changeProcess(index, newTitle);
+    downHists->changeProcess(index, newTitle);
+
+    if (upSubMap != nullptr) {
+        for (auto it : *upSubMap) {
+            it.second->changeProcess(index, newTitle);
+        }
+        for (auto it : *downSubMap) {
+            it.second->changeProcess(index, newTitle);
+        }
+    }
+}
+
+
 void Uncertainty::fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc) {
     upHists->fillHistograms(subProc, fillVec, weightUp);
     downHists->fillHistograms(subProc, fillVec, weightDown);

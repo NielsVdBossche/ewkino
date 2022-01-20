@@ -1,17 +1,8 @@
 #include "../interface/HistogramContainer.h"
 
-HistogramContainer::HistogramContainer(std::vector<HistInfo>* histInfo) : oneDimInfo(histInfo) {
+HistogramContainer::HistogramContainer(std::vector<HistInfo>* oneDim, std::vector<HistInfo_2D>* twoDim) : oneDimInfo(oneDim), twoDimInfo(twoDim) {
 
 }
-/*
-void HistogramContainer::updateHistInfo(std::vector<HistInfo>* extraInfo) {
-    oneDimInfo->insert(oneDimInfo->end(), extraInfo->begin(), extraInfo->end());
-}
-
-void HistogramContainer::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
-    twoDimInfo = new2DInfo;
-}
-*/
 
 void HistogramContainer::fillHistograms(std::vector<double>& fillVec, double eventWeight) {
     // fill hists
@@ -28,7 +19,7 @@ void HistogramContainer::fill2DHistograms(std::vector<std::pair<double, double>>
 }
 
 
-void HistogramContainer::fillSingleHistogram(std::vector<std::pair<int, double>>& fillVec, double eventWeight) {
+void HistogramContainer::fillSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double eventWeight) {
     for (auto it : fillVec) {
         histogram::fillValue(oneDims->at(it.first).get(), it.second, eventWeight);
     }
