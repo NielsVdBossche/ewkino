@@ -141,9 +141,9 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
             }
         }
 
-        for (auto it : normFactors) {
-            std::cout << it.first << "\t" << it.second << std::endl;
-        }
+        //for (auto it : normFactors) {
+        //    //std::cout << it.first << "\t" << it.second << std::endl;
+        //}
 
         reweighter->setNormFactors(samp, normFactors);
     }
@@ -183,6 +183,14 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         // do basic selection
         event.cleanJetsFromFOLeptons();
         event.jetCollection().selectGoodJets();
+        event.removeTaus();
+        event.cleanElectronsFromLooseMuons();
+        event.selectTightLeptons();
+
+        if (event.numberOfLeptons() < 2) continue;
+        if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
+        if (event.numberOfJets() < 3) continue;
+
 
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = reweighter->weight(event);
@@ -203,7 +211,7 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
     for( std::map<int,double>::iterator it = averageOfWeightsOld.begin(); it != averageOfWeightsOld.end(); ++it){
         averageOfWeightsOld[it->first] = it->second / nEntriesOld[it->first];
-        std::cout << it->first << "\t" << averageOfWeightsOld[it->first] << std::endl;
+        //std::cout << it->first << "\t" << averageOfWeights[it->first] << std::endl;
     }
 
     // divide sum by number to get average
