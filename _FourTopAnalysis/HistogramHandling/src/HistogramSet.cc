@@ -34,6 +34,12 @@ void HistogramSet::newSample(std::string& uniqueSampleName) {
     }
 }
 
+void HistogramSet::newSample(std::string& uniqueSampleName, unsigned subProc) {
+    std::string uniqueName = additionalFlags + "_" + uniqueSampleName + "_" + processHistName[subProc];
+    processHist[subProc]->newSample(uniqueName);
+}
+
+
 void HistogramSet::writeHistograms(unsigned subProc) {
     processHist[subProc]->writeHistograms();
 }

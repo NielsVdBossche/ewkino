@@ -119,17 +119,21 @@ void ChannelManager::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
 
 
 void ChannelManager::fillUpHistograms(eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (evClass == eventClass::fail) return;
     mapping[evClass]->fillUpHistograms(id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }
 
 void ChannelManager::fillDownHistograms(eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (evClass == eventClass::fail) return;
     mapping[evClass]->fillDownHistograms(id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }
 
 void ChannelManager::fillAllUpHistograms(std::vector<std::string>& subs, eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (evClass == eventClass::fail) return;
     mapping[evClass]->fillAllUpHistograms(subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }
 
 void ChannelManager::fillAllDownHistograms(std::vector<std::string>& subs, eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (evClass == eventClass::fail) return;
     mapping[evClass]->fillAllDownHistograms(subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }

@@ -96,8 +96,7 @@ void FourTop:: analyze() {
             considerBTagShape = true;
             
             if (sampleIndex == 0) {
-                bTagShapeSystematics =  {"jes","hf","lf","hfstats1","hfstats2",
-                                        "lfstats1","lfstats2","cferr1","cferr2" };//dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
         }
@@ -109,7 +108,7 @@ void FourTop:: analyze() {
         mgrAll->newSample(uniqueName);
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (entry > 10000) break;
+            //if (entry > 10000) break;
             delete currentEvent;
 
             // Initialize event
@@ -286,6 +285,8 @@ void FourTop:: analyze() {
             while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
                 double weightUp = 1.;
                 double weightDown = 1.;
+                std::vector<std::string> subChannelsUp;
+                std::vector<std::string> subChannelsDown;
 
                 //std::cout << uncID << std::endl;
 
@@ -333,10 +334,10 @@ void FourTop:: analyze() {
 
                 } else if (uncID == shapeUncId::bTagShape) {
                     if (considerBTagShape) {
-                        double nombweight = 1.; //reweighter["bTag_shape"]->weight( *currentEvent );
+                        double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
                         for(std::string btagsys : bTagShapeSystematics){
-                            weightUp = 1.; //* dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
-                            weightDown = 1.; //* dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
+                            weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
+                            weightDown = 1.- * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
 
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
@@ -367,10 +368,10 @@ void FourTop:: analyze() {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
-                        //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
-                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                        //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
-                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                        weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                        weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
                     }
 
                     upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
@@ -382,6 +383,24 @@ void FourTop:: analyze() {
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
+
+                    if (upClass == eventClass::ssdl) {
+                        if (selection->getLepton(0)->charge() > 0) subChannelsUp.push_back("++");
+                        else subChannelsUp.push_back("--");
+
+                        if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsUp.push_back("ee");
+                        else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsUp.push_back("mm");
+                        else subChannelsUp.push_back("em");
+                    }
+
+                    if (downClass == eventClass::ssdl) {
+                        if (selection->getLepton(0)->charge() > 0) subChannelsDown.push_back("++");
+                        else subChannelsDown.push_back("--");
+
+                        if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsDown.push_back("ee");
+                        else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsDown.push_back("mm");
+                        else subChannelsDown.push_back("em");
+                    }
                 }
 
                 if (uncID < shapeUncId::JER_1p93) {
@@ -389,8 +408,8 @@ void FourTop:: analyze() {
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
                 } else {
-                    mgrAll->fillAllUpHistograms(subChannels, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                    mgrAll->fillAllDownHistograms(subChannels, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 }
 
                 uncID = uncID + 1;

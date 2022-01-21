@@ -78,10 +78,10 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
 
     while (id != shapeUncId::end) {
         if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
-            std::cout << "envelope " << id << std::endl;
+            //std::cout << "envelope " << id << std::endl;
             uncHistMap[shapeUncId(id)] = new UncertaintyEnvelope(translateUnc, shapeUncId(id), nominalHistograms);
         } else {
-            std::cout << "current uncertainty " << id << std::endl;
+            //std::cout << "current uncertainty " << id << std::endl;
             uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), nominalHistograms);
         }
         id++;

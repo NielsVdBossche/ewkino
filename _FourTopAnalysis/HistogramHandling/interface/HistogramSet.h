@@ -29,6 +29,8 @@ class HistogramSet {
         void fillSingle2DHistograms(unsigned subProcess, std::map<size_t, std::pair<double, double>>& fillVec, double eventWeight);
 
         void newSample(std::string& uniqueSampleName);
+        void newSample(std::string& uniqueSampleName, unsigned subProc);
+
         void writeHistograms(unsigned subProc);
 };
 
