@@ -160,8 +160,15 @@ void FourTop:: analyze() {
             unsigned processNb = 0;
 
             for (const auto& leptonPtr : *selection->getMediumLepCol()) {
+                if (! leptonPtr->isChargeFlip()) {
+                    processNb = 2;
+                    break;
+                }
+            }
+
+            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
                 if (! leptonPtr->isPrompt()) {
-                    processNb++;
+                    processNb = 1;
                     break;
                 }
             }
@@ -337,7 +344,7 @@ void FourTop:: analyze() {
                         double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
                         for(std::string btagsys : bTagShapeSystematics){
                             weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
-                            weightDown = 1.- * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
+                            weightDown = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
 
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
