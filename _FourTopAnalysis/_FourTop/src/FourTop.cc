@@ -141,9 +141,9 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
             }
         }
 
-        for (auto it : normFactors) {
-            std::cout << it.first << "\t" << it.second << std::endl;
-        }
+        //for (auto it : normFactors) {
+        //    //std::cout << it.first << "\t" << it.second << std::endl;
+        //}
 
         reweighter->setNormFactors(samp, normFactors);
     }
@@ -211,7 +211,7 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
     for( std::map<int,double>::iterator it = averageOfWeightsOld.begin(); it != averageOfWeightsOld.end(); ++it){
         averageOfWeightsOld[it->first] = it->second / nEntriesOld[it->first];
-        std::cout << it->first << "\t" << averageOfWeights[it->first] << std::endl;
+        //std::cout << it->first << "\t" << averageOfWeights[it->first] << std::endl;
     }
 
     // divide sum by number to get average
