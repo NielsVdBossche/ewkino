@@ -169,9 +169,6 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     std::shared_ptr<TH1D> averageOfWeights = std::make_shared<TH1D>(("bTagNormFactors" + samp.fileName()).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
     std::shared_ptr<TH1D> nEntries = std::make_shared<TH1D>("nEntries", "nEntries;Jets;Entries", 30, 0, 30);
 
-    std::map< int, double > averageOfWeightsOld;
-    std::map< int, int > nEntriesOld;
-
     // loop over events
     long unsigned availableEntries = tempTree.numberOfEntries();
 
@@ -199,19 +196,6 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         // add it to the map
         averageOfWeights->Fill(njets, btagreweight);
         nEntries->Fill(njets, 1);
-
-        if(averageOfWeightsOld.find(njets)==averageOfWeightsOld.end()) { 
-            averageOfWeightsOld[njets] = btagreweight;
-            nEntriesOld[njets] = 1;
-        } else {
-            averageOfWeightsOld[njets] += btagreweight;
-            nEntriesOld[njets] += 1;
-        }
-    }
-
-    for( std::map<int,double>::iterator it = averageOfWeightsOld.begin(); it != averageOfWeightsOld.end(); ++it){
-        averageOfWeightsOld[it->first] = it->second / nEntriesOld[it->first];
-        //std::cout << it->first << "\t" << averageOfWeights[it->first] << std::endl;
     }
 
     // divide sum by number to get average
