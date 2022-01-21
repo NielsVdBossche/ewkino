@@ -192,7 +192,7 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         averageOfWeights->Fill(njets, btagreweight);
         nEntries->Fill(njets, 1);
 
-        if(averageOfWeights.find(njets)==averageOfWeightsOld.end()) { 
+        if(averageOfWeightsOld.find(njets)==averageOfWeightsOld.end()) { 
             averageOfWeightsOld[njets] = btagreweight;
             nEntriesOld[njets] = 1;
         } else {
@@ -203,7 +203,7 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
     for( std::map<int,double>::iterator it = averageOfWeightsOld.begin(); it != averageOfWeightsOld.end(); ++it){
         averageOfWeightsOld[it->first] = it->second / nEntriesOld[it->first];
-        std::cout << it->first << "\t" << averageOfWeights[it->first] << std::endl;
+        std::cout << it->first << "\t" << averageOfWeightsOld[it->first] << std::endl;
     }
 
     // divide sum by number to get average
