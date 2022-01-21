@@ -183,6 +183,14 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         // do basic selection
         event.cleanJetsFromFOLeptons();
         event.jetCollection().selectGoodJets();
+        event.removeTaus();
+        event.cleanElectronsFromLooseMuons();
+        event.selectTightLeptons();
+
+        if (event.numberOfLeptons() < 2) continue;
+        if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
+        if (event.numberOfJets() < 3) continue;
+
 
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = reweighter->weight(event);
