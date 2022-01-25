@@ -296,7 +296,7 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
 
             for (int i=0; i < newClassElement->GetEntries(); i++) {
                 newClassElement->GetEntry(i);
-                std::cout << *vars.first << std::endl;
+                //std::cout << *vars.first << std::endl;
                 float rnd = r->Rndm();
                 if (rnd < ptrain) {
                     dataloader->AddTrainingEvent(className, *vars.second, *vars.first);
