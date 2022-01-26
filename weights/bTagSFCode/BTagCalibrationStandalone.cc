@@ -73,17 +73,18 @@ throw std::exception();
   }
 
   // make parameters
-  unsigned op = stoi(vec[0]);
-  if (op > 3) {
+  unsigned op = *(vec[0].c_str());
+
+  if (op > 115) {
 std::cerr << "ERROR in BTagCalibration: "
           << "Invalid csv line; OperatingPoint > 3: "
           << csvLine;
 throw std::exception();
   }
   unsigned jf = stoi(vec[3]);
-  if (jf > 2) {
+  if (jf > 5) {
 std::cerr << "ERROR in BTagCalibration: "
-          << "Invalid csv line; JetFlavor > 2: "
+          << "Invalid csv line; JetFlavor > 5: "
           << csvLine;
 throw std::exception();
   }
