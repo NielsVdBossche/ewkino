@@ -1,5 +1,8 @@
 #include "../interface/ChannelManager.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
 
 ChannelManager::ChannelManager(TFile* outputFile) : outfile(outputFile) {
     // ask for outputfile as well?

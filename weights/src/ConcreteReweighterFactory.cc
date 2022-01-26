@@ -295,10 +295,10 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
                                         "lfstats1","lfstats2","cferr1","cferr2" };
     // step 3: make the reweighter
-    std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
-    reweighterBTagShape->initialize(samples, 0);
+//    std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
+//    reweighterBTagShape->initialize(samples, 0);
 
-    combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
+ //   combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
 
     combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
 

@@ -1,5 +1,9 @@
 #include "../interface/Uncertainty.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms) : id(id) {
     name = translateUnc[id];
     std::string upFlag = name + "_Up";

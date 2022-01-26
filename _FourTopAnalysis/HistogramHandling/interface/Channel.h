@@ -1,6 +1,8 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
+#include "../../globalSettings.h"
+
 #include "HistogramSet.h"
 #include "Uncertainty.h"
 #include "UncertaintyEnvelope.h"

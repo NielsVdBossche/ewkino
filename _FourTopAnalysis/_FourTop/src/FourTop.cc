@@ -36,7 +36,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             //if (! analysisTools::checkYearStringNoErr( newYearString )) {
             //    newYearString = "2018";
             //}
-            setYearString(newYearString);
+            setYearString("2018");
         }
 
         //outputFileName += yearString + "_";

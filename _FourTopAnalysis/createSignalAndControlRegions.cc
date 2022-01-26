@@ -33,9 +33,9 @@ int main(int argc, char* argv[]) {
     FourTop analysisObject("AnalysisOutput", argvStr, 1);
 
     if (argvStr[1] != "allSamples.txt") {
-        std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvStr[1]).second);
-        std::cout << "not running all samples! Year is taken to be: " << newYearString;
-        analysisObject.setYearString(newYearString);
+        //std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvStr[1]).second);
+        //std::cout << "not running all samples! Year is taken to be: " << newYearString;
+        //analysisObject.setYearString(newYearString);
     }
 
     analysisObject.analyze();

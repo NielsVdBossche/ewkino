@@ -1,5 +1,9 @@
 #include "../interface/HistogramContainer.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 HistogramContainer::HistogramContainer(std::vector<HistInfo>* oneDim, std::vector<HistInfo_2D>* twoDim) : oneDimInfo(oneDim), twoDimInfo(twoDim) {
 
 }

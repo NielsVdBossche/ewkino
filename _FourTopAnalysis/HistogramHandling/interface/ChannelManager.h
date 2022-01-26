@@ -1,6 +1,8 @@
 #ifndef CHANNELMANAGER_H
 #define CHANNELMANAGER_H
 
+#include "../../globalSettings.h"
+
 #include "Channel.h"
 #include "HistogramConfigurations.h"
 #include "../../globalSettings.h"

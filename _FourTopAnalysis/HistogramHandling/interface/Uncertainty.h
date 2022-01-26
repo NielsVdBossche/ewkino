@@ -1,6 +1,8 @@
 #ifndef UNCERTAINTY_H
 #define UNCERTAINTY_H
 
+#include "../../globalSettings.h"
+
 #include "HistogramSet.h"
 
 enum shapeUncId {

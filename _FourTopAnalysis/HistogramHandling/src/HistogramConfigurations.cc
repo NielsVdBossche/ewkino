@@ -1,5 +1,9 @@
 #include "../interface/HistogramConfigurations.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
 

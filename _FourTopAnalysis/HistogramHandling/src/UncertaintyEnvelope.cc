@@ -1,5 +1,9 @@
 #include "../interface/UncertaintyEnvelope.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms) :
     Uncertainty(translateUnc, id, histograms) 
     {
@@ -26,6 +30,7 @@ void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess)
 
     if (process != "") {
         writeHistogramsEnvelope(index);
+
     } else {
         for (unsigned j=1; j < getUpHists()->getProcessNames().size(); j++){
             getUpHists()->newSample(empty, j);
@@ -36,6 +41,8 @@ void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess)
         }
     }
     //std::cout << "New process!" << std::endl;
+
+
 
     getUpHists()->changeProcess(index, newProcess);
     getUpHists()->newSample(empty, 0);

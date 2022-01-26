@@ -1,5 +1,9 @@
 #include "../interface/Channel.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 Channel::Channel(std::string& channel, std::vector<HistInfo>* histInfo) : ChannelName(channel) {
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }

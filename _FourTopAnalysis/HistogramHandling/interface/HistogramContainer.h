@@ -1,6 +1,9 @@
 #ifndef HISTOGRAMCONTAINER_H
 #define HISTOGRAMCONTAINER_H
 
+#include "../../globalSettings.h"
+
+
 #include "../../../Tools/interface/HistInfo.h"
 #include "../../../Tools/interface/HistInfo2D.h"
 #include "../../additionalTools/interface/histHelper.h"

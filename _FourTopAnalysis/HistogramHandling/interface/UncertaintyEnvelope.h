@@ -1,6 +1,8 @@
 #ifndef UNCERTAINTYENVELOPE_H
 #define UNCERTAINTYENVELOPE_H
 
+#include "../../globalSettings.h"
+
 #include "Uncertainty.h"
 
 class UncertaintyEnvelope : public Uncertainty {

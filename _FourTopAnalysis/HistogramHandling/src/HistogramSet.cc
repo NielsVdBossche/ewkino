@@ -1,5 +1,9 @@
 #include "../interface/HistogramSet.h"
 
+#if MEMLEAK
+#include "../../../memleak/debug_new.h" 
+#endif
+
 HistogramSet::HistogramSet(std::vector<std::string>& initialProcesses, std::string addFlag, std::vector<HistInfo>* oneDimInfo, std::vector<HistInfo_2D>* twoDimInfo) : 
     additionalFlags(addFlag), 
     processHistName(initialProcesses) 
