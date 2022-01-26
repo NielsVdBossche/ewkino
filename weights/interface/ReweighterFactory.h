@@ -5,7 +5,7 @@
 
 class Sample;
 class ReweighterBTagShape;
-exit
+
 class ReweighterFactory {
     
     public:
