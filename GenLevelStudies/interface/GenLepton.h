@@ -23,7 +23,11 @@ class GenLepton : public PhysicsObject {
         Int_t momPdg() {return _MomPdg;}
         bool isPrompt() const {return _IsPrompt;}
         bool isLightLepton() const {return (_Flavor == 0 || _Flavor == 1);}
-        bool isUseful() const {return absEta() < 2.5;}
+        bool isUseful() const {
+            if (_Flavor == 0 && pt() < 7) return false;  // electron
+            if (_Flavor == 1 && pt() < 5) return false;  // muon
+            return absEta() < 2.5;
+        }
 
 
     private:

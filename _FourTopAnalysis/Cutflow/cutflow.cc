@@ -108,7 +108,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             std::shared_ptr<TH1D> cutflowHistSub;
 
             
-            bool sameCharge = (tightLeps[0].charge() == tightLeps[1].charge());
+            bool sameCharge = false;
             int nLeps = currentEvent->numberOfTightLeptons();
             int nTightLeps = nLeps;
             int recoSameCharge = sameCharge;
@@ -119,8 +119,9 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 if (nLeps == 2) {
                     sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
                 }
+            } else if (nTightLeps >= 2) {         
+                sameCharge = (tightLeps[0].charge() == tightLeps[1].charge());
             }
-            
 
             if (nLeps == 2 && sameCharge) {
                 cutflowHist = dlHist;
