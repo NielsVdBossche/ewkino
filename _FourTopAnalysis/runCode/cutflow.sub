@@ -1,6 +1,5 @@
 universe    =   vanilla
 executable  =   cutflow.sh
-arguments   =   "noGen"
 
 log         =   /user/nivanden/condor/logs/Cutflow_$(ClusterId)_$(Process).log
 error       =   /user/nivanden/condor/error/Cutflow_$(ClusterId)_$(Process).err
