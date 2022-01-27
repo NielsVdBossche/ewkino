@@ -6,4 +6,5 @@ eval `scram runtime -sh`
 export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER) 
 
 cd /user/nivanden/ewkino/_FourTopAnalysis/
-./Cutflow/cutflowExec "../sampleLists/$2" "$1"
+echo "../sampleLists/$1" "$2"
+./Cutflow/cutflowExec "../sampleLists/$1" "$2"

@@ -1,6 +1,6 @@
 universe    =   vanilla
 executable  =   cutflow.sh
-arguments   =   "GeneratorInfo FourTopsOnly.txt"
+arguments   =   "FourTopsOnly.txt GeneratorInfo"
 
 log         =   /user/nivanden/condor/logs/Cutflow_$(ClusterId).log
 error       =   /user/nivanden/condor/error/Cutflow_$(ClusterId).err

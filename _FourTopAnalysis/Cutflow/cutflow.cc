@@ -209,6 +209,9 @@ int main(int argc, char* argv[]) {
 
     // main func call
     FourTop analysisObject("Cutflow", argvStr, 0);
-
+    
+    if (argvStr.size() < 3) {
+        argvStr.push_back("noGen");
+    }
     analysisObject.cutFlow(argvStr[2]);
 }
