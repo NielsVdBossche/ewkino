@@ -54,7 +54,7 @@ class Channel {
         void newSample(std::string& uniqueSampleName);
         void writeNominalHistograms(unsigned subProc);
         void writeUncertaintyHistograms(unsigned subProc);
-        void writeUncertaintyEnvelopeHistograms(unsigned subProc);
+        //void writeUncertaintyEnvelopeHistograms(unsigned subProc);
 
         // getters
         HistogramSet* getNominalHistograms() {return nominalHistograms;}

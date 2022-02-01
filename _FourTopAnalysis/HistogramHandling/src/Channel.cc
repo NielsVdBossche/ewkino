@@ -338,9 +338,9 @@ void Channel::writeUncertaintyHistograms(unsigned subProc) {
     }
 }
 
-void Channel::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
-
-}
+//void Channel::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
+//
+//}
 
 void Channel::fillUpHistograms(shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
     uncHistMap[id]->fillUpOrDownHistograms(fillVec, weight, true, procNumber);

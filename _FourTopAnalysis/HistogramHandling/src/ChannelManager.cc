@@ -116,7 +116,7 @@ void ChannelManager::writeUncertaintyHistograms(std::string& uniqueSampleName) {
 void ChannelManager::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
     gDirectory->cd(processHistName[subProc].c_str());
     for (auto it : mapping) {
-        it.second->writeUncertaintyEnvelopeHistograms(subProc);
+        //it.second->writeUncertaintyEnvelopeHistograms(subProc);
     }
 }
 
