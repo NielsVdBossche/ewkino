@@ -161,7 +161,7 @@ void FourTop:: analyze() {
             unsigned processNb = 0;
 
             for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (! leptonPtr->isChargeFlip()) {
+                if (leptonPtr->isChargeFlip()) {
                     processNb = 2;
                     break;
                 }
