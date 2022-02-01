@@ -152,18 +152,19 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 cutflowHistSub = currentHistSet->at(2);
             } else if (nTightLeps == 3) {
                 cutflowHistSub = currentHistSet->at(3);
-            } else if (nTightLeps == 4) {
+            } else if (nTightLeps >= 4) {
                 cutflowHistSub = currentHistSet->at(4);
             } else {
                 cutflowHistSub = currentHistSet->at(1);
             }
             
+            weight = currentEvent->weight();
             currentHistSet->at(5)->Fill(currentEvent->numberOfLooseLeptons(), weight);
 
             if (nLeps < 2 || (nLeps == 2 && !sameCharge)) continue;
 
-            weight = currentEvent->weight();
 
+            //std::cout << nLeps << " " << sameCharge << std::endl;
             cutflowHist->Fill(0., weight);
             cutflowHistSub->Fill(0., weight);
 
