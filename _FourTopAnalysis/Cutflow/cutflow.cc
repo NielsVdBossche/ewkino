@@ -22,6 +22,12 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("HT_" + flag, "H_{T} [GeV]", 25, 0, 500),
         HistInfo("pt_TrailingLooseLepton" + flag, "p_{T}(trailing loose lepton)", 9, 5, 50),
         HistInfo("lepMVATrailingLepton" + flag, "leptonMVA score trailing loose lepton", 40, -1., 1.),
+        HistInfo("nJets_AtSel_" + flag, "N_{jets}", 8, -0.5, 7.5),
+        HistInfo("nLooseBjet_AtSel_" + flag, "N_{b}, loose WP", 10, -0.5, 9.5),
+        HistInfo("nMediumBjet_AtSel_" + flag, "N_{b}, med. WP", 10, -0.5, 9.5),
+        HistInfo("nJets_At2LooseBs_" + flag, "N_{jets}", 11, -0.5, 10.5),
+        HistInfo("nJets_At2MediumBs_" + flag, "N_{jets}", 11, -0.5, 10.5),
+        HistInfo("HT_AtSel_" + flag, "H_{T} [GeV]", 25, 0, 500),
     };
 
     // variables for selection
@@ -84,6 +90,8 @@ void FourTop::cutFlow(std::string& sortingMode) {
         std::shared_ptr<TH1D> dlHist = allDLHist->at(0);
         std::shared_ptr<TH1D> trilepHist = all3LHist->at(0);
         std::shared_ptr<TH1D> fourlepHist = all4LHist->at(0);
+        std::shared_ptr<TH1D> garbageHist = allGarbageHist->at(0);
+
         
         // at end of sel, count extra if it flows to other channels (3l and then ssdl?)
         double weight = 0;
@@ -119,7 +127,8 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 if (nLeps == 2) {
                     sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
                 }
-            } else if (nTightLeps >= 2) {         
+            } 
+            if (nTightLeps >= 2) {         
                 sameCharge = (tightLeps[0].charge() == tightLeps[1].charge());
             }
 
@@ -133,6 +142,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 cutflowHist = fourlepHist;
                 currentHistSet = all4LHist;
             } else {
+                cutflowHist = garbageHist;
                 currentHistSet = allGarbageHist;
             }
 
@@ -211,14 +221,24 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHistSub->Fill(7., weight);
 
 
+            currentHistSet->at(13)->Fill(currentEvent->numberOfJets(), weight);
+            if (currentEvent->numberOfLooseBTaggedJets() == 2) currentHistSet->at(16)->Fill(currentEvent->numberOfJets(), weight);
+            if (currentEvent->numberOfMediumBTaggedJets() == 2) currentHistSet->at(17)->Fill(currentEvent->numberOfJets(), weight);
+
+            currentHistSet->at(14)->Fill(currentEvent->numberOfLooseBTaggedJets(), weight);
+            currentHistSet->at(15)->Fill(currentEvent->numberOfMediumBTaggedJets(), weight);
+
             if ((currentEvent->numberOfTightLeptons() < 4 && selection->numberOfJets() < 4) || (currentEvent->numberOfTightLeptons() == 4 && selection->numberOfJets() < 3)) continue;
             cutflowHist->Fill(8., weight);
             cutflowHistSub->Fill(8., weight);
+
 
             if ((currentEvent->numberOfTightLeptons() < 4 && selection->numberOfMediumBJets() < 2) || (currentEvent->numberOfTightLeptons() == 4 && selection->numberOfMediumBJets() < 1)) continue;
             cutflowHist->Fill(9., weight);
             cutflowHistSub->Fill(9., weight);
 
+            currentHistSet->at(18)->Fill(currentEvent->HT(), weight);
+            
             if (currentEvent->numberOfTightLeptons() < 4 && selection->getHT() < 300) continue;
             cutflowHist->Fill(10., weight);
             cutflowHistSub->Fill(10., weight);
