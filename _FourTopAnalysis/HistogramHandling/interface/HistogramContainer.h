@@ -13,6 +13,10 @@
 
 class HistogramContainer {
     private:
+        std::vector<std::vector<std::shared_ptr<TH1D>>*> oldHists;
+        std::vector<std::vector<std::shared_ptr<TH2D>>*> oldHists2D;
+
+
         std::vector<std::shared_ptr<TH1D>>* oneDims = nullptr;
         std::vector<std::shared_ptr<TH2D>>* twoDims = nullptr;
         
@@ -37,6 +41,8 @@ class HistogramContainer {
 
         void newSample(std::string& uniqueSampleName);
         void writeHistograms();
+
+        void flushOldHistograms();
 };
 
 #endif

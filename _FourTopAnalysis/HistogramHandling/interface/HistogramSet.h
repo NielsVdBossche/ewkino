@@ -35,6 +35,8 @@ class HistogramSet {
         void newSample(std::string& uniqueSampleName, unsigned subProc);
 
         void writeHistograms(unsigned subProc);
+
+        void flushOldHistograms();
 };
 
 #endif

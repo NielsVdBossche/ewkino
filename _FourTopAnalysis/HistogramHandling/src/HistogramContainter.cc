@@ -37,12 +37,14 @@ void HistogramContainer::fillSingle2DHistograms(std::map<size_t, std::pair<doubl
 
 
 void HistogramContainer::newSample(std::string& uniqueSampleName) {
+    if (oneDims) oldHists.push_back(oneDims);
     oneDims = new std::vector<std::shared_ptr<TH1D>>(oneDimInfo->size());
 
     for( size_t dist = 0; dist < oneDimInfo->size(); ++dist ){
         oneDims->at(dist) = oneDimInfo->at(dist).makeHist( oneDimInfo->at(dist).name() + "_" + uniqueSampleName);
     }
     if (twoDimInfo) {
+        if (twoDims) oldHists2D.push_back(twoDims);
         twoDims = new std::vector<std::shared_ptr<TH2D>>(twoDimInfo->size());
 
         for( size_t dist = 0; dist < twoDimInfo->size(); ++dist ){
@@ -59,5 +61,15 @@ void HistogramContainer::writeHistograms() {
         for( size_t dist = 0; dist < twoDimInfo->size(); ++dist ) {
             twoDims->at(dist)->Write(TString(twoDimInfo->at(dist).name()), TObject::kOverwrite);
         }
+    }
+}
+
+void HistogramContainer::flushOldHistograms() {
+    for (auto it : oldHists) {
+        delete it;
+    }
+
+    for (auto it : oldHists2D) {
+        delete it;
     }
 }

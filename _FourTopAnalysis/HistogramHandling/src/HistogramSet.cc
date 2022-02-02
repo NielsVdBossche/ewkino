@@ -28,6 +28,8 @@ HistogramSet::HistogramSet(HistogramSet* copy, std::string& name) {
 }
 
 void HistogramSet::changeProcess(unsigned index, std::string& newTitle) {
+    if (processHistName[index] != newTitle) flushOldHistograms();
+
     processHistName[index] = newTitle;
 }
 
@@ -62,4 +64,10 @@ void HistogramSet::fillSingleHistograms(unsigned subProcess, std::vector<std::pa
 
 void HistogramSet::fillSingle2DHistograms(unsigned subProcess, std::map<size_t, std::pair<double, double>>& fillVec, double eventWeight) {
     processHist[subProcess]->fillSingle2DHistograms(fillVec, eventWeight);
+}
+
+void HistogramSet::flushOldHistograms() {
+    for (auto it : processHist) {
+        it->flushOldHistograms();
+    }
 }
