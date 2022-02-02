@@ -312,6 +312,12 @@ void Channel::newSample(std::string& uniqueSampleName) {
 
 void Channel::writeNominalHistograms(unsigned subProc) {
     nominalHistograms->writeHistograms(subProc);
+
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->writeNominalHistograms(subProc);
+        }
+    }
 }
 
 void Channel::writeUncertaintyHistograms(unsigned subProc) {
@@ -335,6 +341,12 @@ void Channel::writeUncertaintyHistograms(unsigned subProc) {
         uncHistMap[shapeUncId(id)]->writeHistograms(subProc);
         gDirectory->cd("..");
         id++;
+    }
+
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->writeUncertaintyHistograms(subProc);
+        }
     }
 }
 
