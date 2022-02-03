@@ -101,10 +101,13 @@ void FourTop::createMVATrainingSamples() {
             mvaWeight *= reweighter.totalWeight( *currentEvent );
             
             if (selection->passLeanSelection()) {
-                if (selection->numberOfLeps() == 2) {
+                if (selection->numberOfLeps() == 2 && (selection->numberOfLooseBJets() > 2 || (selection->numberOfLooseBJets() == 2 && selection->numberOfJets() >= 6))) {
                     fillMVAVariables(false);
                     trainingTree_DL_loose->Fill();
-                } else {
+                } else if (selection->numberOfLeps() == 3 && (selection->numberOfLooseBJets() > 2 || (selection->numberOfLooseBJets() == 2 && selection->numberOfJets() >= 4))) {
+                    fillMVAVariables(true);
+                    trainingTree_ML_loose->Fill();
+                } else if (selection->numberOfLeps() == 4) {
                     fillMVAVariables(true);
                     trainingTree_ML_loose->Fill();
                 }
