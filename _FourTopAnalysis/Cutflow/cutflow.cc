@@ -9,11 +9,11 @@
 std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     *histInfoVec = {
-        HistInfo("Cutflow_" + flag, "", 14, -0.5, 13.5),
-        HistInfo("Cutflow_" + flag + "_NotSel", "", 14, -0.5, 13.5),
-        HistInfo("Cutflow_" + flag + "_DL", "", 14, -0.5, 13.5),
-        HistInfo("Cutflow_" + flag + "_3L", "", 14, -0.5, 13.5),
-        HistInfo("Cutflow_" + flag + "_4L", "", 14, -0.5, 13.5),
+        HistInfo("Cutflow_" + flag, "", 15, -0.5, 14.5),
+        HistInfo("Cutflow_NotSel" + flag, "", 15, -0.5, 14.5),
+        HistInfo("Cutflow_DL" + flag, "", 15, -0.5, 14.5),
+        HistInfo("Cutflow_3L" + flag, "", 15, -0.5, 14.5),
+        HistInfo("Cutflow_4L" + flag, "", 15, -0.5, 14.5),
         HistInfo("nLooseLeptons_" + flag, "N_{l} loose", 8, -0.5, 7.5),
         HistInfo("nTightLeptons_" + flag, "N_{l} tight", 8, -0.5, 7.5),
         HistInfo("nJets_" + flag, "N_{jets}", 8, -0.5, 7.5),
@@ -29,6 +29,9 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("nJets_At2MediumBs_" + flag, "N_{jets}", 11, -0.5, 10.5),
         HistInfo("HT_AtSel_" + flag, "H_{T} [GeV]", 25, 0, 500),
         HistInfo("nJets_At3LooseBs_" + flag, "N_{jets}", 11, -0.5, 10.5),
+        HistInfo("nJets_At2LooseBs_AfterCuts_" + flag, "N_{jets}", 11, -0.5, 10.5),
+        HistInfo("nJets_At3LooseBs_AfterCuts_" + flag, "N_{jets}", 11, -0.5, 10.5),
+        HistInfo("nJets_At2MediumBs_AfterCuts_" + flag, "N_{jets}", 11, -0.5, 10.5),
     };
 
     // variables for selection
@@ -224,7 +227,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
             currentHistSet->at(13)->Fill(currentEvent->numberOfJets(), weight);
 
-            if ((currentEvent->numberOfTightLeptons() == 2 && selection->numberOfJets() < 4) || (currentEvent->numberOfTightLeptons() == 3 && selection->numberOfJets() < 3) || (currentEvent->numberOfTightLeptons() == 4 && selection->numberOfJets() < 2)) continue;
+            if ((nLeps == 2 && selection->numberOfJets() < 4) || (nLeps == 3 && selection->numberOfJets() < 3) || (nLeps == 4 && selection->numberOfJets() < 2)) continue;
             cutflowHist->Fill(8., weight);
             cutflowHistSub->Fill(8., weight);
 
@@ -239,24 +242,33 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHist->Fill(9., weight);
             cutflowHistSub->Fill(9., weight);
 
-            currentHistSet->at(18)->Fill(currentEvent->HT(), weight);
-            
-            if ((currentEvent->numberOfTightLeptons() == 2 && selection->getHT() < 240) || (currentEvent->numberOfTightLeptons() == 3 && selection->getHT() < 220)) continue;
+            if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6) || (nLeps == 3 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 4)) continue;
             cutflowHist->Fill(10., weight);
             cutflowHistSub->Fill(10., weight);
+
+            currentHistSet->at(18)->Fill(currentEvent->HT(), weight);
+
+
+            if ((nLeps == 2 && selection->getHT() < 280) || (nLeps == 3 && selection->getHT() < 220) || (nLeps == 4 && selection->getHT() < 200)) continue;
+            cutflowHist->Fill(11., weight);
+            cutflowHistSub->Fill(11., weight);
+            
+            if (currentEvent->numberOfLooseBTaggedJets() == 2) currentHistSet->at(20)->Fill(currentEvent->numberOfJets(), weight);
+            if (currentEvent->numberOfLooseBTaggedJets() == 3) currentHistSet->at(21)->Fill(currentEvent->numberOfJets(), weight);
+            if (currentEvent->numberOfMediumBTaggedJets() == 2) currentHistSet->at(22)->Fill(currentEvent->numberOfJets(), weight);
+            
             if (currentEvent->numberOfTightLeptons() == 2) {
-                cutflowHist->Fill(11., weight);
-                cutflowHistSub->Fill(11., weight);
-            }
-            if (currentEvent->numberOfTightLeptons() == 3) {
                 cutflowHist->Fill(12., weight);
                 cutflowHistSub->Fill(12., weight);
             }
-            if (currentEvent->numberOfTightLeptons() == 4) {
+            if (currentEvent->numberOfTightLeptons() == 3) {
                 cutflowHist->Fill(13., weight);
                 cutflowHistSub->Fill(13., weight);
             }
-
+            if (currentEvent->numberOfTightLeptons() == 4) {
+                cutflowHist->Fill(14., weight);
+                cutflowHistSub->Fill(14., weight);
+            }
         }
         
         // Output management: save histograms to a ROOT file.
