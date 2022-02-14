@@ -20,8 +20,7 @@
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
-#include "../../FourTopEventHandling/interface/UncertaintyManager.h"
-#include "../../FourTopEventHandling/interface/ChannelManager.h"
+#include "../../HistogramHandling/interface/ChannelManager.h"
 
 
 #include "../../../weights/interface/CombinedReweighter.h"

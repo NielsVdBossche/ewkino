@@ -11,22 +11,12 @@
 
 #include "../../../constants/particleMasses.h"
 #include "../../TopQuarkReconstruction/interface/TopReconstructionNew.h"
-#include "Uncertainty.h"
+#include "../../HistogramHandling/interface/ChannelManager.h"
 //#include "MVAHandler.h"
 
 class TopReconstructionNew;
 class MVAHandler_4T;
 ///enum shapeUncId;
-
-enum eventClass {
-    fail,
-    crz,
-    cro,
-    crw,
-    ssdl,
-    trilep,
-    fourlep
-};
 
 class EventFourT {
     private:

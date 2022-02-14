@@ -442,6 +442,7 @@ std::map< int, double > ReweighterBTagShape::calcAverageOfWeights( const Sample&
     else numberOfEntries = std::min(numberOfEntries, availableEntries);
     std::cout << "starting event loop for " << numberOfEntries << " events..." << std::endl;
     for( long unsigned entry = 0; entry < numberOfEntries; ++entry ){
+        //if (entry == 1000) break;
         Event event = treeReader.buildEvent( entry );
 
         // do basic jet cleaning
