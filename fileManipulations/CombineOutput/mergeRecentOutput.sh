@@ -11,4 +11,4 @@ file_16Post=$(ls -t Output/*2016Post* | head -1)
 file_17=$(ls -t Output/*2017* | head -1)
 file_18=$(ls -t Output/*2018* | head -1)
 
-./combineOutputExec $file_18 $file_17 $file_16Pre $file_16Post
+./../fileManipulations/CombineOutput/combineOutputExec $file_18 $file_17 $file_16Pre $file_16Post
