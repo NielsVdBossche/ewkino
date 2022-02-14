@@ -35,7 +35,8 @@ void makeCopyNest(TFile* outputFile, TFile* inputFile, std::string currentLoc) {
             outputFile->cd();
             gDirectory->cd(currentLoc.c_str());
 
-            finalHist->Write(finalHist->GetName(), TObject::kOverwrite);
+            finalHist->SetDirectory(gDirectory);
+            finalHist->Write(obj->GetName(), TObject::kOverwrite);
 
             delete finalHist;
             if (interHist) delete interHist;
@@ -45,7 +46,7 @@ void makeCopyNest(TFile* outputFile, TFile* inputFile, std::string currentLoc) {
             makeCopyNest(outputFile, inputFile, currentLoc + "/" + obj->GetName());
         }
     }
-    delete objects;
+    //delete objects;
 }
 
 
