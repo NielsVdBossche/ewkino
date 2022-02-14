@@ -19,10 +19,10 @@ void MVAHandler_4T::initReader() {
         isML = true;
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
-        weightFilePath += "FourTopClassification_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        weightFilePath += "FourTopClassification_New_DL_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == TriClass_ML) {
         isML = true;
-        weightFilePath += "FourTopClassification_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+        weightFilePath += "FourTopClassification_New_ML_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == FourClass_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == FourClass_ML) {
@@ -65,8 +65,10 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("massBestTopW",    &massBestTopW);
     reader->AddVariable("massSecTop",      &massSecTop);
     reader->AddVariable("massSecTopW",     &massSecTopW);
+    reader->AddVariable("MET",             &met);
 
     if (!isML) {
+
     }
 
     if (isML) {

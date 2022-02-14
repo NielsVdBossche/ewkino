@@ -48,12 +48,12 @@ void EventFourT::objectSelection() {
 
     jets = new JetCollection(event->jetCollection());
     jets->selectGoodJets();
-    bTagJets = new JetCollection(jets->mediumBTagCollection());
+    bTagJets = new JetCollection(jets->looseBTagCollection());
 
     event->selectTightLeptons();
 
     nJets = jets->size();
-    nMediumB = bTagJets->size();
+    nMediumB = event->numberOfMediumBTaggedJets();
     nTightB = event->numberOfTightBTaggedJets();
     nLooseB = event->numberOfLooseBTaggedJets();
     nLooseLep = looseLeps->size();
@@ -159,16 +159,16 @@ bool EventFourT::leptonsArePrompt() {
 
 void EventFourT::classifyEvent() {
     currentClass = eventClass::fail;
-    if (! passBaselineEventSelection()) return;
+    if (! passLeanSelection()) return;
     if (! passLowMassVeto()) return;
     if (! passZBosonVeto()) return;
 
-    if (! passFullEventSelection()) {
-        currentClass = eventClass::cro;
-        return;
-    }
+    //if (! passFullEventSelection()) {
+    //    currentClass = eventClass::cro;
+    //    return;
+    //}
 
-    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
+    if ((numberOfLeps() == 2 && numberOfJets() < 6 && numberOfLooseBJets() == 2) || (numberOfLeps() == 3 && numberOfJets() < 4 && numberOfLooseBJets() == 2)) {
         currentClass = eventClass::crw;
         return;
     }
@@ -189,11 +189,11 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_UpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_DownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
 
@@ -201,29 +201,29 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_UpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_DownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
     } else if (id == shapeUncId::JEC) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECUp().pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECDown().pt();
         }
     }
 
     nJets = jets->size();
-    nMediumB = bTagJets->size();
+    nMediumB = jets->numberOfMediumBTaggedJets();
     nTightB = jets->numberOfTightBTaggedJets();
     nLooseB = jets->numberOfLooseBTaggedJets();
     ht = jets->scalarPtSum();
