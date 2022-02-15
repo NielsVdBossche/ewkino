@@ -280,7 +280,7 @@ void FourTop:: analyze() {
 
             //// Start filling histograms
             // loop uncertainties
-            Channel* uncWrapper = mgrAll->at(selection->getCurrentClass());
+            Channel* uncWrapper = (selection->getCurrentClass() != eventClass::fail ? mgrAll->at(selection->getCurrentClass()) : nullptr);
 
             std::vector<double> fillVecUp = fillVec;
             std::vector<double> fillVecDown = fillVec;
@@ -293,6 +293,10 @@ void FourTop:: analyze() {
 
             unsigned uncID = 0;
             while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
+                if (! uncWrapper && uncID < shapeUncId::JER_1p93) {
+                    uncID++;
+                    continue;
+                }
                 double weightUp = 1.;
                 double weightDown = 1.;
                 std::vector<std::string> subChannelsUp;
