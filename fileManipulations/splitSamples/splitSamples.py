@@ -83,7 +83,7 @@ for folder, currFrac in folders:
         print("Analysis sub folder already exists for " + folder + "... Cleaning folder")
         files = glob.glob(outputAnalysis)
         for f in files:
-            os.remove(f)
+            if ".root" in f: os.remove(f)
 
     outputMVA = os.path.join(base_directory, mvaSubDir, folder.split('/')[-1])
     try:
@@ -92,7 +92,7 @@ for folder, currFrac in folders:
         print("MVA sub folder already exists for " + folder + "... Cleaning folder")
         files = glob.glob(outputMVA)
         for f in files:
-            os.remove(f)
+            if ".root" in f: os.remove(f)
 
     # list files in folder, copy (by random choice to right subdir)
     for file in os.listdir(folder):
