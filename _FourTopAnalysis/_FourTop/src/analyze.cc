@@ -146,7 +146,7 @@ void FourTop:: analyze() {
             }
             selection->classifyEvent();
             // TEMP! Remove for full stuff
-            if (selection->getCurrentClass() == eventClass::fail) continue;
+            //if (selection->getCurrentClass() == eventClass::fail) continue;
 
 
             double weight = currentEvent->weight();

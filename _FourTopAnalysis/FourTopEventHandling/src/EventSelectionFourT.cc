@@ -139,13 +139,13 @@ bool EventFourT::passLeanSelection() {
 
     if (nLep == 2 && nJets < 4) return false;
     if (nLep == 3 && nJets < 3) return false;
-    if (nLep == 2 && nJets < 2) return false;
+    if (nLep == 4 && nJets < 2) return false;
 
     if (event->numberOfLooseBTaggedJets() < 2) return false;
 
     if (nLep == 2 && ht < 280) return false;
     if (nLep == 3 && ht < 220) return false;
-    if (nLep == 2 && ht < 200) return false;
+    if (nLep == 4 && ht < 200) return false;
     
     return true;
 }
