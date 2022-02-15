@@ -18,13 +18,13 @@ def mergeTuples(mergableDir):
     version = mergableDir.split("_version_")[-1]
 
     outSubdir = ""
-    if (version == "2016_ULpreVFPv3" or version == "2016_ULpreVFP"):
+    if any(skimver in mergableDir for skimver in ["2016_ULpreVFP", "RunIISummer20UL16MiniAODAPV", "MiniAOD2016preVFP", "2016_ULpreVFP_Nov"]):
         outSubdir = "2016PreVFP"
-    elif (version == "2016_ULpostVFPv3" or version == "2016_ULpostVFP"):
+    elif any(skimver in mergableDir for skimver in ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD-106X", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]):
         outSubdir = "2016PostVFP"
-    elif (version == "2017_ULv3" or version == "2017_UL"):
+    elif any(skimver in mergableDir for skimver in ["2017_UL", "RunIISummer20UL17MiniAOD", "MiniAOD2017", "2017_Nov"]):
         outSubdir = "2017"
-    elif (version == "2018_ULv3" or version == "2018_UL"):
+    elif any(skimver in mergableDir for skimver in ["2018_UL", "RunIISummer20UL18MiniAOD", "MiniAOD2018", "2018_Nov"]):
         outSubdir = "2018"
 
     # join path outputbase + folder
@@ -64,8 +64,11 @@ def mergeTuples(mergableDir):
     return
 
 
-processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_13TeV", "TTTo2L2Nu_TuneCP5_13TeV", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
-fractions = [0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2]
+#processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_13TeV", "TTTo2L2Nu_TuneCP5_13TeV", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
+#fractions = [0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2]
+
+processes = ["TTGamma_Dilept", "TTGamma_SingleLept"]
+fractions = [0.2, 0.2]
 
 folders = [(element, frac) for process, frac in zip(processes, fractions) for element in glob.glob(base_directory + "*" + process + "*")]
 
