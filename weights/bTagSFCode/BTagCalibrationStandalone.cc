@@ -420,7 +420,7 @@ BTagCalibrationReader::BTagCalibrationReaderImpl::BTagCalibrationReaderImpl(
                                              const std::vector<std::string> & otherSysTypes):
   op_(op),
   sysType_(sysType),
-  tmpData_(3),
+  tmpData_(6),
   useAbsEta_(3, true)
 {
   for (const std::string & ost : otherSysTypes) {

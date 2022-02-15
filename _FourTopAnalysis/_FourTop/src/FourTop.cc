@@ -175,6 +175,10 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
     std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
 
+    // default
+    averageOfWeights->Fill(0., 1.);
+    nEntries->Fill(0., 1.);
+
     for (long unsigned entry = 0; entry < availableEntries; ++entry) {
         Event event = tempTree.buildEvent(entry);
 
