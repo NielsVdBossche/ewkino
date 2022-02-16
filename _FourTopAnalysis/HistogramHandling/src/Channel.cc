@@ -20,7 +20,7 @@ std::vector<HistInfo> Channel::hardCopyInfoVector(std::vector<HistInfo>* infoVec
     std::vector<HistInfo> newInfoVec;
 
     for (unsigned i = 0; i < infoVec->size(); i++) {
-        std::string newName = infoVec->at(i).name() + "_" + SubChannelName;
+        std::string newName = infoVec->at(i).name() + SubChannelName;
         HistInfo hardCopy(infoVec->at(i));
         hardCopy.setName(newName);
         newInfoVec.push_back(hardCopy);
@@ -33,7 +33,7 @@ std::vector<HistInfo_2D> Channel::hardCopy2DInfoVector(std::vector<HistInfo_2D>*
     std::vector<HistInfo_2D> newInfoVec;
 
     for (unsigned i = 0; i < infoVec->size(); i++) {
-        std::string newName = infoVec->at(i).name() + "_" + SubChannelName;
+        std::string newName = infoVec->at(i).name() + SubChannelName;
         HistInfo_2D hardCopy(infoVec->at(i));
         hardCopy.setName(newName);
         newInfoVec.push_back(hardCopy);
