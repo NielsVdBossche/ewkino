@@ -4,6 +4,7 @@
 //include other parts of framework
 #include "../../TreeReader/interface/TreeReader.h"
 #include "../../objects/interface/GenMet.h"
+#include "LheCollection.h"
 
 class GeneratorInfo{
     
@@ -56,6 +57,7 @@ class GeneratorInfo{
 
         const GenMet& genMet() const{ return *_genMetPtr; }
 
+        LheCollection* getLheCollection() const {return lheCollectionPtr;}
     private:
         static constexpr unsigned maxNumberOfLheWeights = 148;
         unsigned _numberOfLheWeights;
@@ -78,6 +80,8 @@ class GeneratorInfo{
         unsigned _numberOfPdfVariations;
 
         std::shared_ptr< GenMet > _genMetPtr;
+
+        LheCollection* lheCollectionPtr = nullptr;
 };
 
 #endif 
