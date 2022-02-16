@@ -12,32 +12,29 @@ class LheParticle : public PhysicsObject {
     
     public:
         LheParticle(const TreeReader&, const unsigned);
-        LheParticle(const LheParticle&) = delete;
-        LheParticle(LheParticle&&) noexcept = delete;
+        LheParticle(const LheParticle&);
+        LheParticle(LheParticle&&) noexcept;
 
-        virtual ~LheParticle();
+        LheParticle& operator=( const LheParticle& ) = default;
+        LheParticle& operator=( LheParticle&& ) = default;
+
+        ~LheParticle();
 
         int getStatus() const {return _lheStatus;}
         int getPdgId() const {return _lhePdgId;}
         int getMother1() const {return _lheMother1;}
         int getMother2() const {return _lheMother2;}
-        double getPt() const {return _lhePt;}
-        double getEta() const {return _lheEta;}
-        double getPhi() const {return _lhePhi;}
-        double getE() const {return _lheE;}
         double getMass() const {return _lheMass;}
-    
+
     private:
         int _lheStatus;
         int _lhePdgId;
         int _lheMother1;
         int _lheMother2;
-        double _lhePt;
-        double _lheEta;
-        double _lhePhi;
-        double _lheE;
         double _lheMass;
 
+        virtual LheParticle* clone() const &{ return new LheParticle( *this ); }
+        virtual LheParticle* clone() &&{ return new LheParticle( std::move(*this) ); }
 };
 
 #endif
