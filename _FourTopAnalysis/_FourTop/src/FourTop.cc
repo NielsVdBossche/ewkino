@@ -35,6 +35,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         if (argvString[1] != "allSamples.txt") {
             std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
             if (! analysisTools::checkYearStringNoErr( newYearString )) {
+                std::cout << "force year string to 2018" << std::endl;
                 newYearString = "2018";
             }
             setYearString(newYearString);
@@ -173,6 +174,9 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     long unsigned availableEntries = tempTree.numberOfEntries();
 
     std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
+
+    averageOfWeights->Fill(0., 1.);
+    nEntries->Fill(0., 1.);
 
     for (long unsigned entry = 0; entry < availableEntries; ++entry) {
         Event event = tempTree.buildEvent(entry);

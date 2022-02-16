@@ -65,6 +65,7 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("massBestTopW",    &massBestTopW);
     reader->AddVariable("massSecTop",      &massSecTop);
     reader->AddVariable("massSecTopW",     &massSecTopW);
+    reader->AddVariable("MET",             &met);
 
     if (!isML) {
     }

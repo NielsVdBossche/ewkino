@@ -416,11 +416,12 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     } else if( year == "2016PostVFP" ){
         bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_v3.csv";
     } else if( year == "2017" ){
-        bTagSFFileName = "DeepJet_106XUL17SF_V2p1.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL17_v3.csv";
     } else {
-        bTagSFFileName = "DeepJet_106XUL18SF_V1p1.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL18_v2.csv";
     }
 
+    std::cout << "bTag SF file: " << bTagSFFileName << std::endl;
     //std::string weightDirectory = stringTools::formatDirectoryName( weightDirectory );
     std::string sfFilePath = "weightFiles/bTagSF/"+bTagSFFileName;
     // step 2: set other parameters
