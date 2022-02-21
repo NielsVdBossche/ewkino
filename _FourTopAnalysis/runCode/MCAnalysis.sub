@@ -1,0 +1,9 @@
+universe    =   vanilla
+executable  =   Analysis.sh
+arguments   =   $(Filename) MCAll
+
+log         =   /user/nivanden/condor/logs/analysis_year_MCAll_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/analysis_year_MCAll_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/analysis_year_MCAll_$(ClusterId)_$(Process).out
+
+queue 1 Filename in 2016PreVFP.txt, 2016PostVFP.txt, 2017.txt, 2018.txt

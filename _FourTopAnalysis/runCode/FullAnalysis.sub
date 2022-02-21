@@ -1,0 +1,22 @@
+universe    =   vanilla
+executable  =   Analysis.sh
+arguments   =   $(Filename) $(Method)
+
+log         =   /user/nivanden/condor/logs/analysis_year_MCAll_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/analysis_year_MCAll_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/analysis_year_MCAll_$(ClusterId)_$(Process).out
+
+queue 1 Filename, Method in (
+    2016PreVFP.txt MCAll
+    2016PostVFP.txt MCAll
+    2017.txt MCAll
+    2018.txt MCAll
+    Data16Pre.txt ChargeDD
+    Data16Post.txt ChargeDD
+    Data17.txt ChargeDD
+    Data18.txt ChargeDD
+    Data16Pre.txt nonPromptDD
+    Data16Post.txt nonPromptDD
+    Data17.txt nonPromptDD
+    Data18.txt nonPromptDD
+)

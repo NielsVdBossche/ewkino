@@ -19,8 +19,8 @@
 int main(int argc, char* argv[]) {
     setTDRStyle();
 
-    if (argc < 2) {
-        std::cout << "One argument is required: <sampleList.txt>" << std::endl;
+    if (argc < 3) {
+        std::cout << "One argument is required: <sampleList.txt> <runType>" << std::endl;
     }
     // Set sample directory
 
@@ -38,5 +38,5 @@ int main(int argc, char* argv[]) {
         //analysisObject.setYearString(newYearString);
     }
 
-    analysisObject.analyze();
+    analysisObject.analyze(argvStr[2]);
 }

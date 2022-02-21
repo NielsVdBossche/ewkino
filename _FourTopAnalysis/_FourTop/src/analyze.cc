@@ -4,7 +4,7 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-void FourTop:: analyze() {
+void FourTop:: analyze(std::string method) {
     ChannelManager* mgrAll = new ChannelManager(outfile);
     std::shared_ptr< SampleCrossSections > xsecs;
 
@@ -55,6 +55,22 @@ void FourTop:: analyze() {
     std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUnc();
 
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
+    bool MCLim = false;
+    bool npDD = false;
+    bool chmisDD = false;
+    if (method == "MCLim") {
+        MCLim = true;
+        processes = {""};
+    } else if (method == "ChargeDD") {
+        chmisDD = true;
+        processes = {"ChargeMisID"};
+    } else if (method == "nonPromptDD") {
+        npDD = true;
+        processes = {"nonPrompt"};
+    } else if (method == "Obs") {
+        processes = {"Data"};
+    }
+
     mgrAll->initHistogramStacks(processes);
 
     std::cout << "event loop" << std::endl;
@@ -101,10 +117,11 @@ void FourTop:: analyze() {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
-        }
 
-        std::string currProcName = sampleVec[sampleIndex].processName();
-        mgrAll->changePrimaryProcess(currProcName);
+            // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
+            std::string currProcName = sampleVec[sampleIndex].processName();
+            mgrAll->changePrimaryProcess(currProcName);
+        }        
         
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         mgrAll->newSample(uniqueName);
@@ -148,10 +165,29 @@ void FourTop:: analyze() {
             // TEMP! Remove for full stuff
             // if (selection->getCurrentClass() == eventClass::fail) continue;
 
+            unsigned processNb = 0;
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() ){
                 weight *= reweighter.totalWeight( *currentEvent );
+
+                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
+                    if (leptonPtr->isChargeFlip()) {
+                        processNb = 2;
+                        break;
+                    }
+                }
+                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
+                    if (! leptonPtr->isPrompt()) {
+                        processNb = 1;
+                        break;
+                    }
+                }
+                if (MCLim && processNb > 0) continue;
+            } else if (currentEvent->isData() && npDD) {
+                // apply appropriate weights
+            } else if (currentEvent->isData() && chmisDD) {
+                // apply appropriate weights
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
@@ -159,22 +195,6 @@ void FourTop:: analyze() {
             std::vector<std::pair<double, double>> fillVec2D;
             std::vector<std::pair<int, double>> singleEntries;
             std::vector<std::string> subChannels;
-
-            unsigned processNb = 0;
-
-            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (leptonPtr->isChargeFlip()) {
-                    processNb = 2;
-                    break;
-                }
-            }
-
-            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (! leptonPtr->isPrompt()) {
-                    processNb = 1;
-                    break;
-                }
-            }
 
             // fill all histograms
             eventClass nominalClass = selection->getCurrentClass();
