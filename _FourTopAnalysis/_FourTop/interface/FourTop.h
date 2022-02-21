@@ -20,8 +20,7 @@
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
-#include "../../FourTopEventHandling/interface/UncertaintyManager.h"
-#include "../../FourTopEventHandling/interface/ChannelManager.h"
+#include "../../HistogramHandling/interface/ChannelManager.h"
 
 
 #include "../../../weights/interface/CombinedReweighter.h"
@@ -58,7 +57,7 @@ class FourTop {
         Double_t ptJetTwo, ptJetThree, ptLepFour;
         Double_t massBestTop, massBestTopW, massSecTop, massSecTopW;
         Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
-        Double_t m2bb, m2lblb;
+        Double_t m2bb, m2lblb, mvaWeight;
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
     public:
         // Loading settings for analysis, preparing trees, ...
@@ -68,6 +67,8 @@ class FourTop {
         // Prepare 
         void createHistInfoVec();
         void createMVAHandlers();
+        void addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir);
+        void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory);
 
         // Event selection components
         void setYearString(std::string year) {yearString = year;}
@@ -76,7 +77,7 @@ class FourTop {
         // Main loop functions
         void analyze();
         void analyzeLean();
-        void cutFlow();
+        void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();
 
         void linkMVAVariables(TTree* tree, bool isML);

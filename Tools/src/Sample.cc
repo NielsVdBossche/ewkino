@@ -211,7 +211,7 @@ void Sample::setOptions( const std::string& optionString ){
     // check if sample needs to be used in different era it was intended for 
     // (i.e. 2016 sample when comparing to 2017 or 2018 data, or vice-versa)
     // note: not yet updated to UL samples, not recommended to be used in that case!
-    bool flag2016 = stringTools::stringContains( optionString, "forceIs2016" );
+    bool flag2016 = stringTools::stringContains( optionString, "forceIs2016" ) && !flag2016PreVFP && !flag2016PostVFP ;
     bool flag2017 = stringTools::stringContains( optionString, "forceIs2017" );
     bool flag2018 = stringTools::stringContains( optionString, "forceIs2018" );
 
