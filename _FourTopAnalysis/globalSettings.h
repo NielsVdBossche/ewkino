@@ -4,7 +4,15 @@
 #define MEMLEAK false
 
 // WP's of MVAs,...
-
+enum eventClass {
+    fail,
+    crz,
+    cro,
+    crw,
+    ssdl,
+    trilep,
+    fourlep
+};
 
 // others
 #define USE_SYSTEMATICS false

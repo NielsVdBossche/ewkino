@@ -1,0 +1,24 @@
+Xgamma          2017/mvaSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL.root                         2.2204
+Xgamma          2017/mvaSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL.root                     7.4943
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                                    88.40
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                             365.34
+TTTT            2017/mvaSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_2017_ULv3.root                                 0.01197
+TTW             2017/mvaSamples/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                   0.19287
+TTZ             2017/mvaSamples/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                               0.28872
+TTH             2017/mvaSamples/ttHJetToNonbb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8crab_MiniAOD2017-v1_singlelepton_MC_2017_ULv3.root                                 0.21123
+
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5_erdON_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211022_10233600.root                           88.40
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5down_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211022_102704000.root                            88.40
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5CR2_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211029_0719330001.root                     365.34
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5_erdON_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211029_072256000.root                   365.34
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5CR1_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211022_10163000.root                              88.40
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5CR2_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211022_101956000.root                             88.40
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5_erdON_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211022_10233600.root                           88.40
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5down_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211022_102704000.root                            88.40
+ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5up_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211022_103030000.root                              88.40
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5CR1_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211029_0716140001.root                     365.34
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5CR2_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211029_0719330001.root                     365.34
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5_erdON_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211029_072256000.root                   365.34
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5down_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211029_072614000.root                     365.34
+ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5up_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL211029_0729360001.root                      365.34
+

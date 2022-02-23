@@ -1,0 +1,9 @@
+universe    =   vanilla
+executable  =   cutflow.sh
+arguments   =   "FourTopsOnly.txt GeneratorInfo"
+
+log         =   /user/nivanden/condor/logs/Cutflow_$(ClusterId).log
+error       =   /user/nivanden/condor/error/Cutflow_$(ClusterId).err
+output      =   /user/nivanden/condor/output/Cutflow_$(ClusterId).out
+
+queue

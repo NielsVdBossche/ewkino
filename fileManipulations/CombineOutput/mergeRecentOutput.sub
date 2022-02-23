@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   mergeRecentOutput.sh
+
+log         =   /user/nivanden/condor/logs/MergeOutput_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/MergeOutput_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/MergeOutput_$(ClusterId)_$(Process).out
+
+queue 1
