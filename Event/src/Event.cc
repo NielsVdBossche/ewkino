@@ -319,5 +319,16 @@ bool Event::passTTGOverlap(int sampleType) const {
     } else if (sampleType == 2 && ttgEventType < 3) {
         return false;
     }
+
+    if (sampleType == 2) {
+        LheCollection* lheInfo = _generatorInfoPtr->getLheCollection();
+        if (! lheInfo) return true;
+
+        for (auto it : *lheInfo) {
+            if (it->getPdgId() != 22) continue;
+            if (it->pt() < 10) return false;
+        }
+    }
+
     return true;
 }
