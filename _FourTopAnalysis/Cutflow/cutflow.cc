@@ -200,9 +200,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHist->Fill(3., weight);
             cutflowHistSub->Fill(3., weight);
 
-            currentEvent->selectTightLeptons();
-            LeptonCollection tightLeps = currentEvent->TightLeptonCollection();
-            
+            currentEvent->selectTightLeptons();            
             if (tightLeps.size() == 2) tightLeps.selectTightChargeLeptons();
 
             if (tightLeps.size() < 2) continue;
