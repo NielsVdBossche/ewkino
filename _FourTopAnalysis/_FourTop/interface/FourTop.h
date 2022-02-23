@@ -76,7 +76,7 @@ class FourTop {
         
         // Main loop functions
         void analyze();
-        void analyzeLean();
+        void testRuns();
         void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();
 

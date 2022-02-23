@@ -21,9 +21,13 @@ class ChannelManager {
             {fourlep, "4L"}};
         std::map<eventClass, Channel*> mapping;
         std::vector<std::string> processHistName;
+
+        bool runUncertainties;
     public:
-        ChannelManager(TFile* outputFile);
-        ChannelManager(TFile* outputFile, std::map<eventClass, std::string> naming);
+        ChannelManager(TFile* outputFile, bool unc=true);
+        ChannelManager(TFile* outputFile, std::map<eventClass, std::string> naming, bool unc=true);
+        ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass), bool unc=true);
+
         ~ChannelManager();
 
         Channel* at(eventClass ev) {return mapping[ev];}

@@ -28,10 +28,11 @@ class Channel {
         std::vector<HistInfo> hardCopyInfoVector(std::vector<HistInfo>* infoVec);
         std::vector<HistInfo_2D> hardCopy2DInfoVector(std::vector<HistInfo_2D>* infoVec);
 
+        bool runUncertainties;
 
     public:
-        Channel(std::string& channel, std::vector<HistInfo>* histInfo);
-        Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo);
+        Channel(std::string& channel, std::vector<HistInfo>* histInfo, bool unc);
+        Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo, bool unc);
 
         ~Channel();
 

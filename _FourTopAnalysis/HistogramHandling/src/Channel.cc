@@ -4,11 +4,11 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-Channel::Channel(std::string& channel, std::vector<HistInfo>* histInfo) : ChannelName(channel) {
+Channel::Channel(std::string& channel, std::vector<HistInfo>* histInfo, bool unc) : ChannelName(channel), runUncertainties(unc) {
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }
 
-Channel::Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo) : ChannelName(channel), SubChannelName(subChannel) {
+Channel::Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo, bool unc) : ChannelName(channel), SubChannelName(subChannel), runUncertainties(unc) {
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }
 
@@ -48,7 +48,7 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
     subChannels = new std::map<std::string, Channel*>;
 
     for (unsigned i=0; i<newSubChannels.size(); i++) {
-        (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo);
+        (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo, runUncertainties);
         (*subChannels)[newSubChannels[i]]->set2DHistInfo(twoDimInfo);
     }
 }
@@ -77,6 +77,14 @@ void Channel::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
 void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
     // build uncertainty class objects, histogramsets etc etc
     nominalHistograms = new HistogramSet(divsInitial, "", oneDimInfo, twoDimInfo);
+
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->initializeHistogramStack(divsInitial);
+        }
+    }
+
+    if (! runUncertainties) return;
     
     unsigned id = 0;
 
@@ -90,25 +98,21 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
         }
         id++;
     }
-
-    if (subChannels) {
-        for (auto it : *subChannels) {
-            it.second->initializeHistogramStack(divsInitial);
-        }
-    }
 }
 
 void Channel::changeProcess(unsigned index, std::string& newTitle) {
     nominalHistograms->changeProcess(index, newTitle);
 
-    for (auto it : uncHistMap) {
-        it.second->changeProcess(index, newTitle);
-    }
-
     if (subChannels) {
         for (auto it : *subChannels) {
             it.second->changeProcess(index, newTitle);
         }
+    }
+
+    if (! runUncertainties) return;
+
+    for (auto it : uncHistMap) {
+        it.second->changeProcess(index, newTitle);
     }
 }
 
@@ -292,6 +296,13 @@ void Channel::fillAll2DSubUncertainty(std::vector<std::string>& subs, shapeUncId
 void Channel::newSample(std::string& uniqueSampleName) {
     nominalHistograms->newSample(uniqueSampleName);
 
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->newSample(uniqueSampleName);
+        }
+    }
+
+    if (! runUncertainties) return;
     unsigned id = 0;
 
     while (id != shapeUncId::end) {
@@ -301,12 +312,6 @@ void Channel::newSample(std::string& uniqueSampleName) {
         }
         uncHistMap[shapeUncId(id)]->newSample(uniqueSampleName);
         id++;
-    }
-
-    if (subChannels) {
-        for (auto it : *subChannels) {
-            it.second->newSample(uniqueSampleName);
-        }
     }
 }
 
