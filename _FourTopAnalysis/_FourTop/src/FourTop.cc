@@ -83,33 +83,6 @@ FourTop::~FourTop() {
     //outfile->Close();
 }
 
-// Prepare 
-void FourTop::createHistInfoVec() {
-
-    // Temp solution
-    //histInfoVec_DL = fourTopHists::allHists("DL", false);
-    //histInfoVec_3L = fourTopHists::allHists("3L", true);
-    //histInfoVec_4L = fourTopHists::allHists("4L", true, true);
-    //histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
-    //histInfoVec_CRW = fourTopHists::allHists("CRW", false);
-    //histInfoVec_Other = fourTopHists::allHists("CRO", false);
-
-    // Go over settings, voor elke setting, add de passende histosetup bij het totaal
-    // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken
-
-    // Set hier mss ook setting voor lengte -> fill vector zelfde lengte, anders teveel checks/constructing voor vector?
-
-    // Init histograms
-    //std::vector< Sample > sampleVec = treeReader->sampleVector();
-
-    //hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
-    //hists_3L = histHelper::initHistograms(histInfoVec_3L, sampleVec);
-    //hists_4L = histHelper::initHistograms(histInfoVec_4L, sampleVec);
-    //hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
-    //hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
-    //hists_Other = histHelper::initHistograms(histInfoVec_Other, sampleVec);
-}
-
 void FourTop::createMVAHandlers() {
     mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection);
     mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection);

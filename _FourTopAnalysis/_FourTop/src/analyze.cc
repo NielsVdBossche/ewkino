@@ -58,15 +58,19 @@ void FourTop:: analyze(std::string method) {
     bool MCLim = false;
     bool npDD = false;
     bool chmisDD = false;
+
+    double chMisCorr = 0.;
     if (method == "MCLim") {
         MCLim = true;
         processes = {""};
     } else if (method == "ChargeDD") {
         chmisDD = true;
-        processes = {"ChargeMisID"};
+        initDatadrivenChargeMisID(&chMisCorr);
+        processes = {"ChargeMisID_DD"};
     } else if (method == "nonPromptDD") {
         npDD = true;
-        processes = {"nonPrompt"};
+        initFakerate();
+        processes = {"nonPrompt_DD"};
     } else if (method == "Obs") {
         processes = {"Data"};
     }
@@ -128,7 +132,7 @@ void FourTop:: analyze(std::string method) {
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
-            //if (entry % 1000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
+            //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
             // Initialize event
@@ -145,25 +149,17 @@ void FourTop:: analyze(std::string method) {
 
             if (! treeReader->isData()) {
                 numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
-                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-                    hasValidQcds = true;
-                } else {
-                    hasValidQcds = false;
-                }
+                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
+                else hasValidQcds = false;
 
-                if (numberOfPdfVariations>=100){
-                    hasValidPdfs = true;
-                } else {
-                    hasValidPdfs = false;
-                }
+                if (numberOfPdfVariations>=100) hasValidPdfs = true;
+                else hasValidPdfs = false;
             }
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
                 continue;
             }
             selection->classifyEvent();
-            // TEMP! Remove for full stuff
-            // if (selection->getCurrentClass() == eventClass::fail) continue;
 
             unsigned processNb = 0;
 
@@ -183,7 +179,7 @@ void FourTop:: analyze(std::string method) {
                         break;
                     }
                 }
-                if (MCLim && processNb > 0) continue;
+                if (MCLim && processNb > 0) continue; // only ssdl?
             } else if (currentEvent->isData() && npDD) {
                 // apply appropriate weights
             } else if (currentEvent->isData() && chmisDD) {

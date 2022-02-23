@@ -59,13 +59,17 @@ class FourTop {
         Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
         Double_t m2bb, m2lblb, mvaWeight;
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
+
+
+        TH2D* MisIDRates = nullptr;
+        TH2D* FakeRates = nullptr;
+
     public:
         // Loading settings for analysis, preparing trees, ...
         FourTop(std::string outputName, std::vector<std::string>& argvString, int mode = 0);
         ~FourTop();
 
-        // Prepare 
-        void createHistInfoVec();
+        // Prepare
         void createMVAHandlers();
         void addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir);
         void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory);
@@ -84,6 +88,9 @@ class FourTop {
         void fillMVAVariables(bool isML);
 
         bool eventPassesTriggers();
+
+        void initDatadrivenChargeMisID(double* corr);
+        void initFakerate();
 };
 
 
