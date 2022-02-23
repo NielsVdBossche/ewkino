@@ -46,6 +46,9 @@ void EventFourT::objectSelection() {
     mediumLeps = new LeptonCollection(event->TightLeptonCollection());
     foLeps = new LeptonCollection(event->FOLeptonCollection());
 
+    mediumLeps->selectTightChargeLeptons();
+    foLeps->selectTightChargeLeptons();
+
     jets = new JetCollection(event->jetCollection());
     jets->selectGoodJets();
     bTagJets = new JetCollection(jets->looseBTagCollection());
