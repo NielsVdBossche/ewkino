@@ -249,7 +249,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(18)->Fill(currentEvent->HT(), weight);
 
 
-            if ((nLeps == 2 && selection->getHT() < 280) || (nLeps == 3 && selection->getHT() < 220) || (nLeps == 4 && selection->getHT() < 200)) continue;
+            if ((nLeps == 2 && selection->getHT() < 280) || (nLeps == 3 && selection->getHT() < 220)) continue;
             cutflowHist->Fill(11., weight);
             cutflowHistSub->Fill(11., weight);
             
