@@ -119,9 +119,10 @@ void FourTop::cutFlow(std::string& sortingMode) {
             std::vector<std::shared_ptr<TH1D>>* currentHistSet;
             std::shared_ptr<TH1D> cutflowHistSub;
 
-            
+            selection->addNewEvent(currentEvent);
+
             bool sameCharge = false;
-            int nLeps = currentEvent->numberOfTightLeptons();
+            int nLeps = selection->numberOfLeps();
             int nTightLeps = nLeps;
             int recoSameCharge = sameCharge;
             if (sortOnGenerator) {
@@ -200,21 +201,23 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHistSub->Fill(3., weight);
 
             currentEvent->selectTightLeptons();
+            LeptonCollection tightLeps = currentEvent->TightLeptonCollection();
+            
+            if (tightLeps.size() == 2) tightLeps.selectTightChargeLeptons();
 
-            if (currentEvent->numberOfTightLeptons() < 2) continue;
-            if (currentEvent->numberOfTightLeptons() == 2 && currentEvent->hasOSLeptonPair()) continue;
+            if (tightLeps.size() < 2) continue;
+            if (tightLeps.size() == 2 && tightLeps.hasOSSFPair()) continue;
 
             cutflowHist->Fill(4., weight);
             cutflowHistSub->Fill(4., weight);
             currentEvent->sortLeptonsByPt();
 
-            if (currentEvent->lepton(0).pt() < 25 || currentEvent->lepton(1).pt() < 20) continue;
+            if (tightLeps[0].pt() < 25 || tightLeps[1].pt() < 20) continue;
             
             cutflowHist->Fill(5., weight);
             cutflowHistSub->Fill(5., weight);
 
             // Remove mass resonances
-            selection->addNewEvent(currentEvent);
             if (! selection->passLowMassVeto()) continue;
 
             cutflowHist->Fill(6., weight);
