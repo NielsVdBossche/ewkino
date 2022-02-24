@@ -5,7 +5,7 @@ TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* out
 
     analysType += "Multiclass";
 
-    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_New", outputFile, analysType.c_str());
+    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification__OrigSel", outputFile, analysType.c_str());
 
     return factory;
 }
