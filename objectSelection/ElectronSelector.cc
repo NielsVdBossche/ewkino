@@ -108,7 +108,7 @@ bool ElectronSelector::isFOBase() const{
         if( electronPtr->sigmaIEtaEta() >= 0.030 ) return false;
     }
     if( !electronPtr->passConversionVeto() ) return false;
-    //if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
+    if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
 
     return true;
 }

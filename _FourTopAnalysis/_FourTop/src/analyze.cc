@@ -5,7 +5,7 @@
 #endif
 
 void FourTop:: analyze() {
-    ChannelManager* mgrAll = new ChannelManager(outfile);
+    ChannelManager* mgrAll = new ChannelManager(outfile, true);
     std::shared_ptr< SampleCrossSections > xsecs;
 
     // reweighter creation

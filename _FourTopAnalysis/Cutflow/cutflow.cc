@@ -9,19 +9,19 @@
 std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     *histInfoVec = {
-        HistInfo("Cutflow_" + flag, "", 15, -0.5, 14.5),
-        HistInfo("Cutflow_NotSel" + flag, "", 15, -0.5, 14.5),
-        HistInfo("Cutflow_DL" + flag, "", 15, -0.5, 14.5),
-        HistInfo("Cutflow_3L" + flag, "", 15, -0.5, 14.5),
-        HistInfo("Cutflow_4L" + flag, "", 15, -0.5, 14.5),
+        HistInfo("Cutflow_" + flag, "", 17, -0.5, 16.5),
+        HistInfo("Cutflow_NotSel_" + flag, "", 17, -0.5, 16.5),
+        HistInfo("Cutflow_DL_" + flag, "", 17, -0.5, 16.5),
+        HistInfo("Cutflow_3L_" + flag, "", 17, -0.5, 16.5),
+        HistInfo("Cutflow_4L_" + flag, "", 17, -0.5, 16.5),
         HistInfo("nLooseLeptons_" + flag, "N_{l} loose", 8, -0.5, 7.5),
         HistInfo("nTightLeptons_" + flag, "N_{l} tight", 8, -0.5, 7.5),
         HistInfo("nJets_" + flag, "N_{jets}", 8, -0.5, 7.5),
         HistInfo("nLooseBjet_" + flag, "N_{b}, loose WP", 10, -0.5, 9.5),
         HistInfo("nMediumBjet_" + flag, "N_{b}, med. WP", 10, -0.5, 9.5),
         HistInfo("HT_" + flag, "H_{T} [GeV]", 25, 0, 500),
-        HistInfo("pt_TrailingLooseLepton" + flag, "p_{T}(trailing loose lepton)", 18, 5, 50),
-        HistInfo("lepMVATrailingLepton" + flag, "leptonMVA score trailing loose lepton", 40, -1., 1.),
+        HistInfo("pt_TrailingLooseLepton_" + flag, "p_{T}(trailing loose lepton)", 18, 5, 50),
+        HistInfo("lepMVATrailingLepton_" + flag, "leptonMVA score trailing loose lepton", 40, -1., 1.),
         HistInfo("nJets_AtSel_" + flag, "N_{jets}", 8, -0.5, 7.5),
         HistInfo("nLooseBjet_AtSel_" + flag, "N_{b}, loose WP", 10, -0.5, 9.5),
         HistInfo("nMediumBjet_AtSel_" + flag, "N_{b}, med. WP", 10, -0.5, 9.5),
@@ -32,6 +32,10 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("nJets_At2LooseBs_AfterCuts_" + flag, "N_{jets}", 11, -0.5, 10.5),
         HistInfo("nJets_At3LooseBs_AfterCuts_" + flag, "N_{jets}", 11, -0.5, 10.5),
         HistInfo("nJets_At2MediumBs_AfterCuts_" + flag, "N_{jets}", 11, -0.5, 10.5),
+        HistInfo("nLepsAfterChargeConsistency_" + flag, "N_{l}", 8, -0.5, 7.5),
+        HistInfo("nLepsAfterConversionVeto_" + flag, "N_{l}", 8, -0.5, 7.5),
+        HistInfo("nLepsAfterLepMVA_" + flag, "N_{l}", 8, -0.5, 7.5),
+
     };
 
     // variables for selection
@@ -45,6 +49,16 @@ bool selectLeptonsPt(const Lepton& lepton) {
 
 bool selectLeptonsMVA(const LightLepton& lepton) {
     return (lepton.leptonMVATOP() > 0.40);
+}
+
+bool selectLeptonsChargeConsistency(const LightLepton& lepton) {
+    return lepton.isTightCharge();
+}
+
+bool selectElectronsConversionVeto(const LightLepton& lepton) {
+    if (! lepton.isElectron()) return true;
+    const Electron& el = (Electron&) lepton;
+    return el.passConversionVeto();
 }
 
 void FourTop::cutFlow(std::string& sortingMode) {
@@ -194,43 +208,58 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHist->Fill(2., weight);
             cutflowHistSub->Fill(2., weight);
 
-            LightLeptonCollection lightLeps = currentEvent->lightLeptonCollection();
-            lightLeps.selectObjects(selectLeptonsMVA);
-            if (lightLeps.size() < 2 || (lightLeps.size() == 2 && lightLeps[0].charge() != lightLeps[1].charge())) continue;
+            LightLeptonCollection* lightLeps = looseLeps.lightLeptonCollectionPtr();
+            lightLeps->selectObjects(selectLeptonsMVA);
+
+            if (lightLeps->size() < 2 || (lightLeps->size() == 2 && lightLeps->at(0)->charge() != lightLeps->at(1)->charge())) continue;
             cutflowHist->Fill(3., weight);
             cutflowHistSub->Fill(3., weight);
+            
+            currentHistSet->at(25)->Fill(lightLeps->size(), weight);
 
-            currentEvent->selectTightLeptons();            
-            if (tightLeps.size() == 2) tightLeps.selectTightChargeLeptons();
+            // tight charge
+            // conversion veto
+            lightLeps->selectObjects(selectLeptonsChargeConsistency);
+            if (lightLeps->size() < 2 || (lightLeps->size() == 2 && lightLeps->at(0)->charge() != lightLeps->at(1)->charge())) continue;
+            cutflowHist->Fill(4., weight);
+            cutflowHistSub->Fill(4., weight);
+
+            currentHistSet->at(23)->Fill(lightLeps->size(), weight);
+
+            lightLeps->selectObjects(selectElectronsConversionVeto);
+            if (lightLeps->size() < 2 || (lightLeps->size() == 2 && lightLeps->at(0)->charge() != lightLeps->at(1)->charge())) continue;
+            cutflowHist->Fill(5., weight);
+            cutflowHistSub->Fill(5., weight);
+
+            currentHistSet->at(24)->Fill(lightLeps->size(), weight);
 
             if (tightLeps.size() < 2) continue;
             if (tightLeps.size() == 2 && tightLeps.hasOSSFPair()) continue;
 
-            cutflowHist->Fill(4., weight);
-            cutflowHistSub->Fill(4., weight);
+            cutflowHist->Fill(6., weight);
+            cutflowHistSub->Fill(6., weight);
             currentEvent->sortLeptonsByPt();
 
             if (tightLeps[0].pt() < 25 || tightLeps[1].pt() < 20) continue;
             
-            cutflowHist->Fill(5., weight);
-            cutflowHistSub->Fill(5., weight);
+            cutflowHist->Fill(7., weight);
+            cutflowHistSub->Fill(7., weight);
 
             // Remove mass resonances
             if (! selection->passLowMassVeto()) continue;
 
-            cutflowHist->Fill(6., weight);
-            cutflowHistSub->Fill(6., weight);
+            cutflowHist->Fill(8., weight);
+            cutflowHistSub->Fill(8., weight);
             
             if (! selection->passZBosonVeto()) continue;
-            cutflowHist->Fill(7., weight);
-            cutflowHistSub->Fill(7., weight);
-
+            cutflowHist->Fill(9., weight);
+            cutflowHistSub->Fill(9., weight);
 
             currentHistSet->at(13)->Fill(currentEvent->numberOfJets(), weight);
 
             if ((nLeps == 2 && selection->numberOfJets() < 4) || (nLeps == 3 && selection->numberOfJets() < 3) || (nLeps == 4 && selection->numberOfJets() < 2)) continue;
-            cutflowHist->Fill(8., weight);
-            cutflowHistSub->Fill(8., weight);
+            cutflowHist->Fill(10., weight);
+            cutflowHistSub->Fill(10., weight);
 
             if (currentEvent->numberOfLooseBTaggedJets() == 2) currentHistSet->at(16)->Fill(currentEvent->numberOfJets(), weight);
             if (currentEvent->numberOfLooseBTaggedJets() == 3) currentHistSet->at(19)->Fill(currentEvent->numberOfJets(), weight);
@@ -240,35 +269,35 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(15)->Fill(currentEvent->numberOfMediumBTaggedJets(), weight);
 
             if (selection->numberOfLooseBJets() < 2) continue;
-            cutflowHist->Fill(9., weight);
-            cutflowHistSub->Fill(9., weight);
+            cutflowHist->Fill(11., weight);
+            cutflowHistSub->Fill(11., weight);
 
             if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6) || (nLeps == 3 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 4)) continue;
-            cutflowHist->Fill(10., weight);
-            cutflowHistSub->Fill(10., weight);
+            cutflowHist->Fill(12., weight);
+            cutflowHistSub->Fill(12., weight);
 
             currentHistSet->at(18)->Fill(currentEvent->HT(), weight);
 
 
             if ((nLeps == 2 && selection->getHT() < 280) || (nLeps == 3 && selection->getHT() < 220)) continue;
-            cutflowHist->Fill(11., weight);
-            cutflowHistSub->Fill(11., weight);
+            cutflowHist->Fill(13., weight);
+            cutflowHistSub->Fill(13., weight);
             
             if (currentEvent->numberOfLooseBTaggedJets() == 2) currentHistSet->at(20)->Fill(currentEvent->numberOfJets(), weight);
             if (currentEvent->numberOfLooseBTaggedJets() == 3) currentHistSet->at(21)->Fill(currentEvent->numberOfJets(), weight);
             if (currentEvent->numberOfMediumBTaggedJets() == 2) currentHistSet->at(22)->Fill(currentEvent->numberOfJets(), weight);
             
             if (currentEvent->numberOfTightLeptons() == 2) {
-                cutflowHist->Fill(12., weight);
-                cutflowHistSub->Fill(12., weight);
-            }
-            if (currentEvent->numberOfTightLeptons() == 3) {
-                cutflowHist->Fill(13., weight);
-                cutflowHistSub->Fill(13., weight);
-            }
-            if (currentEvent->numberOfTightLeptons() == 4) {
                 cutflowHist->Fill(14., weight);
                 cutflowHistSub->Fill(14., weight);
+            }
+            if (currentEvent->numberOfTightLeptons() == 3) {
+                cutflowHist->Fill(15., weight);
+                cutflowHistSub->Fill(15., weight);
+            }
+            if (currentEvent->numberOfTightLeptons() == 4) {
+                cutflowHist->Fill(16., weight);
+                cutflowHistSub->Fill(16., weight);
             }
         }
         

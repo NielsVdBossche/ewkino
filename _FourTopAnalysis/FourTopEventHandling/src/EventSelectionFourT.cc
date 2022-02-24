@@ -47,8 +47,8 @@ void EventFourT::objectSelection() {
     foLeps = new LeptonCollection(event->FOLeptonCollection());
 
     if (mediumLeps->size() < 3) {
-        mediumLeps->selectTightChargeLeptons();
-        foLeps->selectTightChargeLeptons();
+        //mediumLeps->selectTightChargeLeptons();
+        //foLeps->selectTightChargeLeptons();
     }
 
     jets = new JetCollection(event->jetCollection());
