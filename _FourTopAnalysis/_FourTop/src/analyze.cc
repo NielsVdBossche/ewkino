@@ -40,8 +40,10 @@ void FourTop:: analyze(std::string method) {
     mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
 
     std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
-
     mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
+
+    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
+    mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
 
     std::map<eventClass, int> offsets;
     offsets[eventClass::cro] = croPosMVA;
@@ -271,9 +273,15 @@ void FourTop:: analyze(std::string method) {
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
                 singleEntries.push_back({mlPosMVA + classAndScore.first, classAndScore.second});
 
-                mgrAll->at(eventClass::trilep)->fillHistograms(processNb, fillVec, weight);
-                mgrAll->at(eventClass::trilep)->fill2DHistograms(processNb, fillVec2D, weight);
-                mgrAll->at(eventClass::trilep)->fillSingleHistograms(processNb, singleEntries, weight);
+                if (selection->getMediumLepCol()->hasOSSFPair()) {
+                    subChannels.push_back("OSSF");
+                } else {
+                    subChannels.push_back("noOSSF");
+                }
+
+                mgrAll->at(eventClass::trilep)->fillAllHistograms(subChannels, processNb, fillVec, weight);
+                mgrAll->at(eventClass::trilep)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
+                mgrAll->at(eventClass::trilep)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
             } else if (nominalClass == eventClass::fourlep) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
@@ -422,6 +430,8 @@ void FourTop:: analyze(std::string method) {
                         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsUp.push_back("ee");
                         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsUp.push_back("mm");
                         else subChannelsUp.push_back("em");
+                    } else {
+                        subChannelsUp = subChannels;
                     }
 
                     if (downClass == eventClass::ssdl) {
@@ -431,6 +441,8 @@ void FourTop:: analyze(std::string method) {
                         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsDown.push_back("ee");
                         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsDown.push_back("mm");
                         else subChannelsDown.push_back("em");
+                    } else {
+                        subChannelsDown = subChannels;
                     }
                 }
 
