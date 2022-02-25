@@ -35,7 +35,7 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("nLepsAfterChargeConsistency_" + flag, "N_{l}", 8, -0.5, 7.5),
         HistInfo("nLepsAfterConversionVeto_" + flag, "N_{l}", 8, -0.5, 7.5),
         HistInfo("nLepsAfterLepMVA_" + flag, "N_{l}", 8, -0.5, 7.5),
-
+        //HistInfo("LowestLepMVAScore_" + flag, "score", 100, -1., 1.),
     };
 
     // variables for selection
@@ -110,7 +110,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
         std::shared_ptr<TH1D> fourlepHist = all4LHist->at(0);
         std::shared_ptr<TH1D> garbageHist = allGarbageHist->at(0);
 
-        
+        if (sortOnGenerator) std::cout << "SORT ON GEN PARTICLES" << std::endl;
         // at end of sel, count extra if it flows to other channels (3l and then ssdl?)
         double weight = 0;
 
@@ -141,14 +141,15 @@ void FourTop::cutFlow(std::string& sortingMode) {
             int recoSameCharge = sameCharge;
             if (sortOnGenerator) {
                 GenLeptonCollection* genLeptons = new GenLeptonCollection(*treeReader);
-                genLeptons->selectLightLeptons();
+                //genLeptons->selectLightLeptons();
+                genLeptons->selectLightLeptonsMinimal();
                 nLeps = genLeptons->size();
                 if (nLeps == 2) {
                     sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
                 }
             } 
             if (nTightLeps >= 2) {         
-                sameCharge = (tightLeps[0].charge() == tightLeps[1].charge());
+                recoSameCharge = (tightLeps[0].charge() == tightLeps[1].charge());
             }
 
             if (nLeps == 2 && sameCharge) {

@@ -12,6 +12,7 @@ class GenLeptonCollection : public PhysicsObjectCollection<GenLepton> {
         GenLeptonCollection() = default;
 
         void selectLightLeptons(); // only keep prompt and light leptons
+        void selectLightLeptonsMinimal();
 
         double getLT();
         GenLepton* getLepton(int index);
