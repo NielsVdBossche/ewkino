@@ -430,8 +430,12 @@ void FourTop:: analyze(std::string method) {
                         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsUp.push_back("ee");
                         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsUp.push_back("mm");
                         else subChannelsUp.push_back("em");
-                    } else {
-                        subChannelsUp = subChannels;
+                    } else if (upClass == eventClass::trilep) {
+                        if (selection->getMediumLepCol()->hasOSSFPair()) {
+                            subChannelsUp.push_back("OSSF");
+                        } else {
+                            subChannelsUp.push_back("noOSSF");
+                        }
                     }
 
                     if (downClass == eventClass::ssdl) {
@@ -441,8 +445,12 @@ void FourTop:: analyze(std::string method) {
                         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsDown.push_back("ee");
                         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsDown.push_back("mm");
                         else subChannelsDown.push_back("em");
-                    } else {
-                        subChannelsDown = subChannels;
+                    } else if (downClass == eventClass::trilep) {
+                        if (selection->getMediumLepCol()->hasOSSFPair()) {
+                            subChannelsDown.push_back("OSSF");
+                        } else {
+                            subChannelsDown.push_back("noOSSF");
+                        }
                     }
                 }
 
