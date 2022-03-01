@@ -8,11 +8,11 @@ import random
 import shutil
 import subprocess
 
-base_directory = "/pnfs/iihe/cms/store/user/nivanden/skims/rawSkims/"
+base_directory = "/pnfs/iihe/cms/store/user/nivanden/skims_v2/rawSkims/"
 analysisSubDir = "analysisSamples"
 mvaSubDir = "mvaSamples"
 
-finalOutputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/"
+finalOutputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v2/"
 
 def mergeTuples(mergableDir):
     version = mergableDir.split("_version_")[-1]
@@ -64,8 +64,10 @@ def mergeTuples(mergableDir):
     return
 
 
-processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_13TeV", "TTTo2L2Nu_TuneCP5_13TeV", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
-fractions = [0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2]
+#processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_13TeV", "TTTo2L2Nu_TuneCP5_13TeV", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
+processes = ["TTGamma_Dilept", "TTGamma_SingleLept"]
+
+fractions = [0.2, 0.2]
 
 folders = [(element, frac) for process, frac in zip(processes, fractions) for element in glob.glob(base_directory + "*" + process + "*")]
 
