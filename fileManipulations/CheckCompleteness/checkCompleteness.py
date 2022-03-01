@@ -9,8 +9,8 @@ def missing_elements(L):
 
 
 if __name__ == '__main__':
-    dir = "/home/njovdnbo/Documents/EPR/LumiBias/"# sys.argv[1]
-    dataset = "VDM"# sys.argv[2]
+    dir = sys.argv[1]
+    dataset = sys.argv[1]
 
     #### ask a dataset as argument
     # list all folders matching this name in the dir
