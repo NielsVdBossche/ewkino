@@ -10,12 +10,12 @@ def missing_elements(L):
 
 if __name__ == '__main__':
     dir = sys.argv[1]
-    dataset = sys.argv[1]
+    dataset = sys.argv[2]
 
     #### ask a dataset as argument
     # list all folders matching this name in the dir
     out = glob.glob(dir + "*" + dataset + "*")
-
+    print(dir + "*" + dataset + "*")
     print(out)
 
     for subdir in out:
@@ -24,10 +24,11 @@ if __name__ == '__main__':
         integers = np.zeros(len(files), dtype=np.int64)
 
         for i, file in enumerate(files):
-            print(file[file.rfind('_'):-5])
-            # integers[i] = int(file[:-5])
-
-            
+            # print(file[file.rfind('_')+1:-5])
+            integers[i] = int(file[file.rfind('_')+1:-5])
+        
+        integers = sorted(integers)
+        print("folder {} missing: {}".format(subdir, missing_elements(integers)))
 
         
 
