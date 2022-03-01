@@ -8,6 +8,7 @@ GenLeptonCollection::GenLeptonCollection(const TreeReader& treeReader) {
 
 void GenLeptonCollection::selectLightLeptonsMinimal() {
     selectObjects(& GenLepton::isLightLepton);
+    selectObjects(& GenLepton::isPrompt);
 }
 
 void GenLeptonCollection::selectLightLeptons() {

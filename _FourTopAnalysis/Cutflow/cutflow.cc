@@ -112,7 +112,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
         if (sortOnGenerator) std::cout << "SORT ON GEN PARTICLES" << std::endl;
         // at end of sel, count extra if it flows to other channels (3l and then ssdl?)
-        double weight = 0;
+        double weight = 1.;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             delete currentEvent;

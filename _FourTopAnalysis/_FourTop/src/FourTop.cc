@@ -42,8 +42,9 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         }
 
         //outputFileName += yearString + "_";
+        std::string outputTag = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
         
-        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << yearString << ".root";
+        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << outputTag << ".root";
 
         outputFileName += oss.str();
 
