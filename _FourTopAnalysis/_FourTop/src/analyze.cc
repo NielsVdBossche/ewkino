@@ -314,7 +314,7 @@ void FourTop:: analyze(std::string method) {
 
 
             // TODO: Systematics
-            if (currentEvent->isData()) continue;
+            if (currentEvent->isData() || (st != selectionType::MCPrompt && st != selectionType::MCAll)) continue;
 
             //// Start filling histograms
             // loop uncertainties
