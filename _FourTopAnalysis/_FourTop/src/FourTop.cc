@@ -5,6 +5,8 @@
 #include <sstream>
 #include <ctime>
 
+#include "TObjString.h"
+
 #include "../../../Tools/interface/systemTools.h"
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
@@ -70,6 +72,18 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
         intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
         
+        // also write metadata here. This includes branch?
+        #ifdef GIT_BRANCH
+        std::string branchString = GIT_BRANCH;
+        TObjString branchInfo(branchString.c_str());
+        outfile->WriteObject(&branchInfo, "Branch");
+        #endif
+        
+        std::stringstream time;
+        time << std::put_time(&tm, "%d_%m_%Y-%H_%M");
+        TObjString timestamp(time.str().c_str());
+        outfile->WriteObject(&timestamp, "Timestamp");
+
         //createHistInfoVec();
 
         if (mode == 1) {
