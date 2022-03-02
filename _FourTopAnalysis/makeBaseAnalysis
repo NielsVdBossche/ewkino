@@ -6,7 +6,8 @@ SOURCES= createSignalAndControlRegions.cc ../codeLibrary.o _FourTop/src/*.cc Fou
 OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=analysisExec
 GIT_BRANCH=`git branch | grep "^\*" | sed 's/^..//'`
-export VERSION_FLAGS=-DGIT_BRANCH="\"$(GIT_BRANCH)\""
+GIT_HASH=`git rev-parse HEAD`
+export VERSION_FLAGS=-DGIT_HASH="\"$(GIT_HASH)\"" -DGIT_BRANCH="\"$(GIT_BRANCH)\""
 
 all: 
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) $(VERSION_FLAGS) -o $(EXECUTABLE)

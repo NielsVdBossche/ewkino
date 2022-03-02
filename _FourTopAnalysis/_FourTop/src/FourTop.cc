@@ -78,6 +78,12 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         TObjString branchInfo(branchString.c_str());
         outfile->WriteObject(&branchInfo, "Branch");
         #endif
+
+        #ifdef GIT_HASH
+        std::string commithash = GIT_HASH;
+        TObjString commitInfo(branchString.c_str());
+        outfile->WriteObject(&commitInfo, "commit_hash");
+        #endif
         
         std::stringstream time;
         time << std::put_time(&tm, "%d_%m_%Y-%H_%M");
