@@ -1,6 +1,6 @@
 #include "../interface/FourTop.h"
 
-void FourTop::initDatadrivenChargeMisID(double* corr) {
+void FourTop::initDdChargeMisID(double* corr) {
     std::string year = yearString;
     std::string objName;
     if (yearString == "2016PreVFP" || yearString == "2016PostVFP") {
@@ -18,6 +18,16 @@ void FourTop::initDatadrivenChargeMisID(double* corr) {
     MisIDRates->SetDirectory( gROOT );
 
     weightFilePtr->Close();
+}
+
+double FourTop::ChmisIDWeight() {
+    ElectronCollection* electrons = selection->getMediumLepCol()->electronCollectionPtr();
+    double returnWeight = 0.;
+    for (auto el : *electrons) {
+        returnWeight += histogram::contentAtValues(MisIDRates, el->pt(), el->eta());
+    }
+
+    return returnWeight;
 }
 
 void FourTop::initFakerate() {

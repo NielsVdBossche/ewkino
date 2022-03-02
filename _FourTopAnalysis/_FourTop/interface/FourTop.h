@@ -89,8 +89,9 @@ class FourTop {
 
         bool eventPassesTriggers();
 
-        void initDatadrivenChargeMisID(double* corr);
+        void initDdChargeMisID(double* corr);
         void initFakerate();
+        double ChmisIDWeight();
 };
 
 
