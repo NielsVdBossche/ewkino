@@ -32,18 +32,30 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             }
         }
 
+        std::string strippedSampleList = "";
+
         if (argvString[1] != "allSamples.txt") {
-            std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
+            strippedSampleList = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
+            std::string newYearString = "2018";
+            Sample sampleZero = treeReader->sampleVector()[0];
+            if (sampleZero.is2017()) {
+                newYearString = "2017";
+            } else if (sampleZero.is2016PostVFP()) {
+                newYearString = "2016PostVFP";
+            } else if (sampleZero.is2016PreVFP()) {
+                newYearString = "2016PreVFP";
+            }
+
+            std::cout << "year string is: " << newYearString << std::endl;
+
             if (! analysisTools::checkYearStringNoErr( newYearString )) {
                 std::cout << "force year string to 2018" << std::endl;
                 newYearString = "2018";
             }
             setYearString(newYearString);
         }
-
-        //outputFileName += yearString + "_";
         
-        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << yearString << ".root";
+        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << strippedSampleList << ".root";
 
         outputFileName += oss.str();
 
