@@ -24,13 +24,15 @@ class EventFourT {
 
         LeptonCollection* looseLeps;
         LeptonCollection* foLeps;
-        LeptonCollection* mediumLeps;
+        LeptonCollection* mediumLeps; // leptons used in the analysis
 
         // These should only be used to increase nonprompt yield. Should be triggered by other functions and only done when ttbar sample used
         // Additionally, the event selection based on these should take into account the full event selection but allow one of the leptons to be loose
         LeptonCollection* altLeps; 
 
         eventClass currentClass = fail;
+        // selection type: makes difference in weight calculation and lepton selection
+        selectionType selType = MCAll;
 
         JetCollection* jets;
         JetCollection* bTagJets;
@@ -52,6 +54,8 @@ class EventFourT {
         EventFourT();
         ~EventFourT() {cleanSelection();};
 
+        void setSelectionType(selectionType st) {selType = st;}
+        
         void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}
         void setMLMVA(MVAHandler_4T* ml_new) {ml_MVA = ml_new;}
         void setOffsets(std::map<eventClass, int> newOffsets) {offsets = newOffsets;}
@@ -84,6 +88,7 @@ class EventFourT {
 
         void objectSelection();
         bool passBaselineEventSelection();
+        bool passLeptonSelection();
         bool passFullEventSelection();
         bool passLeanSelection();
         bool passZBosonVeto();

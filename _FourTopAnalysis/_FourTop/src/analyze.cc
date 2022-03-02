@@ -57,6 +57,7 @@ void FourTop:: analyze(std::string method) {
     std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUnc();
 
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
+    selectionType st = selectionType::MCAll;
     bool MCLim = false;
     bool npDD = false;
     bool chmisDD = false;
@@ -65,16 +66,24 @@ void FourTop:: analyze(std::string method) {
     if (method == "MCLim") {
         MCLim = true;
         processes = {""};
+        selection->setSelectionType(selectionType::MCPrompt);
+        st = selectionType::MCPrompt;
     } else if (method == "ChargeDD") {
         chmisDD = true;
-        initDatadrivenChargeMisID(&chMisCorr);
+        initDdChargeMisID(&chMisCorr);
         processes = {"ChargeMisID_DD"};
+        selection->setSelectionType(selectionType::ChargeMisDD);
+        st = selectionType::ChargeMisDD;
     } else if (method == "nonPromptDD") {
         npDD = true;
         initFakerate();
         processes = {"nonPrompt_DD"};
+        selection->setSelectionType(selectionType::NPDD);
+        st = selectionType::NPDD;
     } else if (method == "Obs") {
         processes = {"Data"};
+        selection->setSelectionType(selectionType::Data);
+        st = selectionType::Data;
     }
 
     mgrAll->initHistogramStacks(processes);
@@ -181,11 +190,16 @@ void FourTop:: analyze(std::string method) {
                         break;
                     }
                 }
-                if (MCLim && processNb > 0) continue; // only ssdl?
-            } else if (currentEvent->isData() && npDD) {
+                if (st == selectionType::MCPrompt && processNb > 0) continue; // only ssdl?
+            } else if (currentEvent->isData() && st == selectionType::NPDD) {
                 // apply appropriate weights
-            } else if (currentEvent->isData() && chmisDD) {
+            } else if (currentEvent->isData() && st == selectionType::ChargeMisDD) {
                 // apply appropriate weights
+                if (selection->numberOfLeps() > 2) continue; // seems appropriate
+                weight *= ChmisIDWeight();
+                weight *= chMisCorr;
+
+                if (weight == 0.) continue; // event only contains muons if this is the case
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
