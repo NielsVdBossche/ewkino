@@ -2,13 +2,13 @@ universe    =   vanilla
 executable  =   Analysis.sh
 arguments   =   $(Filename) $(Method)
 
-log         =   /user/nivanden/condor/logs/analysis_year_MCAll_$(ClusterId)_$(Process).log
-error       =   /user/nivanden/condor/error/analysis_year_MCAll_$(ClusterId)_$(Process).err
-output      =   /user/nivanden/condor/output/analysis_year_MCAll_$(ClusterId)_$(Process).out
+log         =   /user/nivanden/condor/logs/analysis_year_Obs_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/analysis_year_Obs_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/analysis_year_Obs_$(ClusterId)_$(Process).out
 
 queue 1 Filename, Method in (
-    Data16Pre.txt Obs
-    Data16Post.txt Obs
+    Data16PreVFP.txt Obs
+    Data16PostVFP.txt Obs
     Data17.txt Obs
     Data18.txt Obs
 )

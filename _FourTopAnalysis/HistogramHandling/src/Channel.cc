@@ -74,10 +74,18 @@ void Channel::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
     twoDimInfo = new std::vector<HistInfo_2D>(hardCopy2DInfoVector(new2DInfo));
 }
 
-void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
+void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties) {
     // build uncertainty class objects, histogramsets etc etc
     nominalHistograms = new HistogramSet(divsInitial, "", oneDimInfo, twoDimInfo);
+
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->initializeHistogramStack(divsInitial, uncertainties);
+        }
+    }
     
+    if (! uncertainties) return;
+
     unsigned id = 0;
 
     while (id != shapeUncId::end) {
@@ -89,12 +97,6 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial) {
             uncHistMap[shapeUncId(id)] = new Uncertainty(translateUnc, shapeUncId(id), nominalHistograms);
         }
         id++;
-    }
-
-    if (subChannels) {
-        for (auto it : *subChannels) {
-            it.second->initializeHistogramStack(divsInitial);
-        }
     }
 }
 
@@ -289,8 +291,16 @@ void Channel::fillAll2DSubUncertainty(std::vector<std::string>& subs, shapeUncId
     }
 }
 
-void Channel::newSample(std::string& uniqueSampleName) {
+void Channel::newSample(std::string& uniqueSampleName, bool uncertainties) {
     nominalHistograms->newSample(uniqueSampleName);
+
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->newSample(uniqueSampleName, uncertainties);
+        }
+    }
+
+    if (! uncertainties) return;
 
     unsigned id = 0;
 
@@ -301,12 +311,6 @@ void Channel::newSample(std::string& uniqueSampleName) {
         }
         uncHistMap[shapeUncId(id)]->newSample(uniqueSampleName);
         id++;
-    }
-
-    if (subChannels) {
-        for (auto it : *subChannels) {
-            it.second->newSample(uniqueSampleName);
-        }
     }
 }
 

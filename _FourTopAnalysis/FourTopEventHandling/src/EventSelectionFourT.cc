@@ -81,7 +81,6 @@ bool EventFourT::passBaselineEventSelection() {
     // 1 bjets
     if (bTagJets->size() < 1) return false;
 
-
     if (nLep < 4 && ht < 300) return false;
 
     return true;
@@ -272,7 +271,7 @@ std::vector<double> EventFourT::fillVector() {
     std::vector<double> fillVec;
     if (currentClass == eventClass::fail) return fillVec;
     MVAHandler_4T* currentMVA = dl_MVA;
-    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
+    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl)
     if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
 
     std::vector<double> scores = currentMVA->scoreEvent();
