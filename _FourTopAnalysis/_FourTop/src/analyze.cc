@@ -4,7 +4,7 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-void FourTop:: analyze(std::string method) {
+void FourTop::analyze(std::string method, bool onlyCR) {
     ChannelManager* mgrAll = new ChannelManager(outfile);
     std::shared_ptr< SampleCrossSections > xsecs;
 
@@ -20,30 +20,36 @@ void FourTop:: analyze(std::string method) {
     size_t crzPosMVA = mgrAll->at(eventClass::crz)->getHistInfo()->size() + mva_ML->getMaxClass();
     size_t croPosMVA = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
     size_t crwPosMVA = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
-    size_t dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
-    size_t mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
-    size_t fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
-
 
     mgrAll->at(eventClass::crz)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
     mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CRO", true));
     mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CRW", true));
-    mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
-    mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
-    mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
 
     mgrAll->at(eventClass::crz)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
     mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
     mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
-    mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
-    mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
-    mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
 
+    size_t dlPosMVA = 0;
+    size_t mlPosMVA = 0;
+    size_t fourlPosMVA = 0;
+    
     std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
-    mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
-
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
-    mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
+
+    if (! onlyCR) {
+        size_t dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
+        size_t mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
+        size_t fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
+        mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
+        mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
+        mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
+        mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
+        mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
+        mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
+
+        mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
+        mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
+    }
 
     std::map<eventClass, int> offsets;
     offsets[eventClass::cro] = croPosMVA;
@@ -61,8 +67,8 @@ void FourTop:: analyze(std::string method) {
     bool useUncertainties = true;
 
     double chMisCorr = 0.;
-    if (method == "MCLim") {
-        processes = {""};
+    if (method == "MCPrompt") {
+        processes = {"", "ChargeMisID"};
         selection->setSelectionType(selectionType::MCPrompt);
         st = selectionType::MCPrompt;
     } else if (method == "ChargeDD") {
@@ -184,10 +190,18 @@ void FourTop:: analyze(std::string method) {
                         break;
                     }
                 }
-                if (st == selectionType::MCPrompt && processNb > 0) continue; // only ssdl?
-            } else if (currentEvent->isData() && st == selectionType::NPDD) {
+                if (st == selectionType::MCPrompt) {
+                    if (processNb == 1) continue;
+                    if (processNb == 2 && selection->numberOfLeps() == 2) continue;
+                    processNb = 1;
+                }
+            } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
-            } else if (currentEvent->isData() && st == selectionType::ChargeMisDD) {
+
+                if (currentEvent->isMC()) {
+                    weight *= -1;
+                }
+            } else if (st == selectionType::ChargeMisDD) {
                 // apply appropriate weights
                 if (selection->numberOfLeps() > 2) continue; // seems appropriate
                 weight *= ChmisIDWeight();
@@ -203,6 +217,7 @@ void FourTop:: analyze(std::string method) {
             std::vector<std::string> subChannels;
 
             // fill all histograms
+            // replace with functions in eventHandling?
             eventClass nominalClass = selection->getCurrentClass();
             if (nominalClass == eventClass::crz) {
                 std::vector<double> scores = mva_ML->scoreEvent();
@@ -240,7 +255,7 @@ void FourTop:: analyze(std::string method) {
                     mgrAll->at(eventClass::cro)->fillSingleHistograms(processNb, singleEntries, weight);
                 }
 
-            } else if (nominalClass == eventClass::ssdl) {   
+            } else if (nominalClass == eventClass::ssdl && ! onlyCR) {   
 
                 std::vector<double> scores = mva_DL->scoreEvent();
 
@@ -270,7 +285,7 @@ void FourTop:: analyze(std::string method) {
                 mgrAll->at(eventClass::ssdl)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
                 mgrAll->at(eventClass::ssdl)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
 
-            } else if (nominalClass == eventClass::trilep) {
+            } else if (nominalClass == eventClass::trilep && ! onlyCR) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection);
@@ -290,7 +305,7 @@ void FourTop:: analyze(std::string method) {
                 mgrAll->at(eventClass::trilep)->fillAllHistograms(subChannels, processNb, fillVec, weight);
                 mgrAll->at(eventClass::trilep)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
                 mgrAll->at(eventClass::trilep)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
-            } else if (nominalClass == eventClass::fourlep) {
+            } else if (nominalClass == eventClass::fourlep && ! onlyCR) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
@@ -320,18 +335,18 @@ void FourTop:: analyze(std::string method) {
             std::vector<std::pair<int, double>> singleEntriesDown = singleEntries;
             std::vector<std::pair<double, double>> fillVec2DUp = fillVec2D;
             std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
-            eventClass upClass = eventClass::fail;
-            eventClass downClass = eventClass::fail;
 
             unsigned uncID = 0;
             while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
-                if (! uncWrapper && uncID < shapeUncId::JER_1p93) {
+                if ((! uncWrapper && uncID < shapeUncId::JER_1p93) || (onlyCR && unsigned(nominalClass) >= eventClass::ssdl && uncID < shapeUncId::JER_1p93)) {
                     uncID++;
                     continue;
                 }
 
                 double weightUp = 1.;
                 double weightDown = 1.;
+                eventClass upClass = eventClass::fail;
+                eventClass downClass = eventClass::fail;
                 std::vector<std::string> subChannelsUp;
                 std::vector<std::string> subChannelsDown;
 
@@ -467,8 +482,8 @@ void FourTop:: analyze(std::string method) {
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
                 } else {
-                    mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                    mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    if (! onlyCR || unsigned(upClass) < eventClass::ssdl) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    if (! onlyCR || unsigned(downClass) < eventClass::ssdl) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 }
 
                 uncID = uncID + 1;

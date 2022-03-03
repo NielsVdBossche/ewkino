@@ -37,6 +37,8 @@ int main(int argc, char* argv[]) {
         //std::cout << "not running all samples! Year is taken to be: " << newYearString;
         //analysisObject.setYearString(newYearString);
     }
+    bool onlyCR = false;
+    if (argc >= 4 && argvStr[4] == "CR") onlyCR = true;
 
-    analysisObject.analyze(argvStr[2]);
+    analysisObject.analyze(argvStr[2], onlyCR);
 }

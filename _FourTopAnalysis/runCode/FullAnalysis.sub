@@ -7,16 +7,16 @@ error       =   /user/nivanden/condor/error/analysis_year_$(Method)_$(ClusterId)
 output      =   /user/nivanden/condor/output/analysis_year_$(Method)_$(ClusterId)_$(Process).out
 
 queue 1 Filename, Method in (
-    2016PreVFP.txt MCLim
-    2016PostVFP.txt MCLim
-    2017.txt MCLim
-    2018.txt MCLim
-    Data16Pre.txt ChargeDD
-    Data16Post.txt ChargeDD
+    2016PreVFP.txt MCPrompt
+    2016PostVFP.txt MCPrompt
+    2017.txt MCPrompt
+    2018.txt MCPrompt
+    Data16PreVFP.txt ChargeDD
+    Data16PostVFP.txt ChargeDD
     Data17.txt ChargeDD
     Data18.txt ChargeDD
-    Data16Pre.txt nonPromptDD
-    Data16Post.txt nonPromptDD
+    Data16PreVFP.txt nonPromptDD
+    Data16PostVFP.txt nonPromptDD
     Data17.txt nonPromptDD
     Data18.txt nonPromptDD
 )

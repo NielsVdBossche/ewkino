@@ -79,7 +79,7 @@ class FourTop {
         std::string getYearString() {return yearString;}
         
         // Main loop functions
-        void analyze(std::string method);
+        void analyze(std::string method, bool onlyCR);
         void analyzeLean();
         void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();
