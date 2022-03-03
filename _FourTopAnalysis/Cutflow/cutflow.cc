@@ -133,23 +133,23 @@ void FourTop::cutFlow(std::string& sortingMode) {
             std::vector<std::shared_ptr<TH1D>>* currentHistSet;
             std::shared_ptr<TH1D> cutflowHistSub;
 
-            selection->addNewEvent(currentEvent);
 
             bool sameCharge = false;
-            int nLeps = selection->numberOfLeps();
+            int nLeps = currentEvent->numberOfTightLeptons();
             int nTightLeps = nLeps;
             int recoSameCharge = sameCharge;
             if (sortOnGenerator) {
                 GenLeptonCollection* genLeptons = new GenLeptonCollection(*treeReader);
-                //genLeptons->selectLightLeptons();
-                genLeptons->selectLightLeptonsMinimal();
+                genLeptons->selectLightLeptons();
+                //genLeptons->selectLightLeptonsMinimal();
                 nLeps = genLeptons->size();
                 if (nLeps == 2) {
                     sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
                 }
             } 
-            if (nTightLeps >= 2) {         
+            if (nTightLeps >= 2) {     
                 recoSameCharge = (tightLeps[0].charge() == tightLeps[1].charge());
+                if (! sortOnGenerator) sameCharge = recoSameCharge;
             }
 
             if (nLeps == 2 && sameCharge) {
@@ -246,6 +246,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHist->Fill(7., weight);
             cutflowHistSub->Fill(7., weight);
 
+            selection->addNewEvent(currentEvent); // THIS CAN NOT BE PLACED EARLIER DUE TO THE SELECTIONS IT PERFORMS
             // Remove mass resonances
             if (! selection->passLowMassVeto()) continue;
 
