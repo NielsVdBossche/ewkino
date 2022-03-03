@@ -58,35 +58,33 @@ void FourTop:: analyze(std::string method) {
 
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
     selectionType st = selectionType::MCAll;
-    bool MCLim = false;
-    bool npDD = false;
-    bool chmisDD = false;
+    bool useUncertainties = true;
 
     double chMisCorr = 0.;
     if (method == "MCLim") {
-        MCLim = true;
         processes = {""};
         selection->setSelectionType(selectionType::MCPrompt);
         st = selectionType::MCPrompt;
     } else if (method == "ChargeDD") {
-        chmisDD = true;
         initDdChargeMisID(&chMisCorr);
-        processes = {"ChargeMisID_DD"};
+        processes = {"ChargeMisID"};
         selection->setSelectionType(selectionType::ChargeMisDD);
+        useUncertainties = false;
         st = selectionType::ChargeMisDD;
     } else if (method == "nonPromptDD") {
-        npDD = true;
         initFakerate();
-        processes = {"nonPrompt_DD"};
+        processes = {"nonPrompt"};
         selection->setSelectionType(selectionType::NPDD);
+        useUncertainties = false;
         st = selectionType::NPDD;
     } else if (method == "Obs") {
         processes = {"Data"};
         selection->setSelectionType(selectionType::Data);
         st = selectionType::Data;
+        useUncertainties = false;
     }
 
-    mgrAll->initHistogramStacks(processes);
+    mgrAll->initHistogramStacks(processes, useUncertainties);
 
     std::cout << "event loop" << std::endl;
 
@@ -110,7 +108,12 @@ void FourTop:: analyze(std::string method) {
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+            std::string currProcName = sampleVec[sampleIndex].processName();
+            mgrAll->changePrimaryProcess(currProcName);
+        } 
 
+        if (useUncertainties) {
+            // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
             std::cout << "finding available PS scale variations...\n";
@@ -119,12 +122,8 @@ void FourTop:: analyze(std::string method) {
             if(numberOfPSVariations==14) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
 
-            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-                hasValidQcds = true;
-            }
-            if(numberOfPdfVariations>=100){
-	            hasValidPdfs = true;
-            }
+            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
+            if(numberOfPdfVariations>=100) hasValidPdfs = true;
 
             considerBTagShape = true;
             
@@ -132,11 +131,7 @@ void FourTop:: analyze(std::string method) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
-
-            // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
-            std::string currProcName = sampleVec[sampleIndex].processName();
-            mgrAll->changePrimaryProcess(currProcName);
-        }        
+        }
         
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         mgrAll->newSample(uniqueName);
@@ -149,7 +144,6 @@ void FourTop:: analyze(std::string method) {
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
 
-
             // Check triggers here
             if (! eventPassesTriggers()) continue;
 
@@ -158,7 +152,7 @@ void FourTop:: analyze(std::string method) {
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
-            if (! treeReader->isData()) {
+            if (! treeReader->isData() && useUncertainties) {
                 numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
                 if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
                 else hasValidQcds = false;
@@ -314,7 +308,7 @@ void FourTop:: analyze(std::string method) {
 
 
             // TODO: Systematics
-            if (currentEvent->isData() || (st != selectionType::MCPrompt && st != selectionType::MCAll)) continue;
+            if (currentEvent->isData() || ! useUncertainties) continue;
 
             //// Start filling histograms
             // loop uncertainties

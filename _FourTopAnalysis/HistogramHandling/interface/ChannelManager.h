@@ -21,6 +21,8 @@ class ChannelManager {
             {fourlep, "4L"}};
         std::map<eventClass, Channel*> mapping;
         std::vector<std::string> processHistName;
+
+        bool useUncertainties = true;
     public:
         ChannelManager(TFile* outputFile);
         ChannelManager(TFile* outputFile, std::map<eventClass, std::string> naming);
@@ -33,7 +35,7 @@ class ChannelManager {
 
         void addSubUncertainties(shapeUncId uncID, std::vector<std::string>& subUncNames);
 
-        void initHistogramStacks(std::vector<std::string>& initialProcessNames);
+        void initHistogramStacks(std::vector<std::string>& initialProcessNames, bool uncertainties);
         void changePrimaryProcess(std::string& newPrimProc);
         void changeProcess(unsigned procNumber, std::string& newProc);
 
