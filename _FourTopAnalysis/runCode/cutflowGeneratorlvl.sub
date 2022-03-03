@@ -1,9 +1,9 @@
 universe    =   vanilla
 executable  =   cutflow.sh
-arguments   =   "FourTopsOnly.txt GeneratorInfo"
+arguments   =   $(Samplelist) GeneratorInfo
 
-log         =   /user/nivanden/condor/logs/Cutflow_$(ClusterId).log
-error       =   /user/nivanden/condor/error/Cutflow_$(ClusterId).err
-output      =   /user/nivanden/condor/output/Cutflow_$(ClusterId).out
+log         =   /user/nivanden/condor/logs/Cutflow_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/Cutflow_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/Cutflow_$(ClusterId)_$(Process).out
 
-queue
+queue 1 Samplelist in FourTopsOnly16Pre.txt, FourTopsOnly16Post.txt, FourTopsOnly17.txt, FourTopsOnly18.txt
