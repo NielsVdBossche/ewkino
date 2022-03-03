@@ -11,8 +11,8 @@ Rare            2018/GluGluToContinToZZTo4tau_TuneCP5_13TeV-mcfm701-pythia8crab_
 Rare            2018/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv4.root                                 3.74
 # Rare            2018/ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_Nov.root                 80.95
 # Rare            2018/ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_Nov.root                     136.02
-Rare            2018/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv4.root                         19.467
-Rare            2018/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv4.root                             19.467
+Rare            2018/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv4.root                         21.585204
+Rare            2018/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv4.root                             21.585204
 Rare            2018/THQ_ctcvcp_4f_Hincl_TuneCP5_13TeV_madgraph_pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv4.root                                          0.07096
 Rare            2018/TTTJ_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_Nov.root                                                          0.0003974
 Rare            2018/TTTW_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv4.root                                                         0.0007314
@@ -22,23 +22,30 @@ Rare            2018/WW_TuneCP5_13TeV-pythia8crab_MiniAOD2018-v2_singlelepton_MC
 Rare            2018/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                        0.2086
 Rare            2018/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                        0.1651
 Rare            2018/WZ_TuneCP5_13TeV-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                                     27.6
+# COMBINE THESE 
 Rare            2018/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1_ext1-v2_singlelepton_MC_2018_Nov.root                                                      0.05565
-Rare            2018/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_Nov.root                                                           0.05565
+# Rare            2018/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_Nov.root                                                           0.05565
 Rare            2018/ZZ_TuneCP5_13TeV-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_Nov.root                                                                     12.14
 Rare            2018/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                           0.01476
+
 TTVV            2018/TTHH_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_2018_UL.root                                                                           0.0006655
 TTVV            2018/TTWH_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_2018_UL.root                                                                           0.001141
 TTVV            2018/TTWW_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                                           0.007003
 TTVV            2018/TTWZ_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                                           0.002453	
 TTVV            2018/TTZH_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_2018_UL.root                                                                           0.00113
 TTVV            2018/TTZZ_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                                           0.001386	
+
 ttbar     2018/analysisSamples/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                       88.40
 ttbar     2018/TTToHadronic_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                    377.96
 ttbar     2018/analysisSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                365.34
-Xgamma          2018/analysisSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                 2.22
-Xgamma          2018/TTGamma_Hadronic_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                               6.162
-Xgamma          2018/analysisSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                             7.509
+
+Xgamma          ../skims_v2/2018/analysisSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                 2.22
+Xgamma          ../skims_v2/2018/TTGamma_Hadronic_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                               6.162
+Xgamma          ../skims_v2/2018/analysisSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                             7.509
+# Xgamma  ZG
+
 TTW             2018/analysisSamples/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                      0.19287
+# TTW qq and ttw ewk
 TTZ             2018/analysisSamples/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                              0.28872
 TTZ             2018/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                       0.57028
 TTH             2018/analysisSamples/ttHJetToNonbb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8crab_MiniAOD2018-v1_singlelepton_MC_2018_ULv3.root                                                                0.21123
