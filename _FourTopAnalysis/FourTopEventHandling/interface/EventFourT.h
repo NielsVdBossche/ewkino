@@ -58,6 +58,8 @@ class EventFourT {
         
         void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}
         void setMLMVA(MVAHandler_4T* ml_new) {ml_MVA = ml_new;}
+        MVAHandler_4T* GetDLMVA() {return dl_MVA;}
+        MVAHandler_4T* GetMLMVA() {return ml_MVA;}
         void setOffsets(std::map<eventClass, int> newOffsets) {offsets = newOffsets;}
 
         void cleanSelection();

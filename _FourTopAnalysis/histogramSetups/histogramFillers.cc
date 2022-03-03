@@ -177,6 +177,13 @@ std::vector<double> fourTopHists::fillAllHistsML(Event* event) {
 }
 
 std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec, bool fourLep) {
+    MVAHandler_4T* mva;
+    if (multilep) {
+        mva = selec->GetMLMVA();
+    } else {
+        mva = selec->GetDLMVA();
+    }
+
     JetCollection* jets = selec->getJetCol();
     JetCollection* bJets = selec->getBtagJetCol();
     LightLeptonCollection* lightLeps;
@@ -185,10 +192,12 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     } else {
         lightLeps = (LightLeptonCollection*) selec->getAltLeptonCol();
     }
-    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
-    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
+    //std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
+    //std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
     
     int nb = bJets->size();
+
+    jets->sortByPt();
 
     std::vector<double> fillVal = {
         (*lightLeps)[0].pt(),
@@ -215,10 +224,10 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         selec->getEvent()->metPt(),
 
         // Calculate DR? What is best way...
-        (nb >= 2 ? mindR_Bjets[0] : 5.),
+        mva->deltaRBjets, //(nb >= 2 ? mindR_Bjets[0] : 5.),
 
-        (nb > 0 ? mindR_Bjet_lep[0] : 5.),
-        (nb > 0 ? mindR_Bjet_lep[1] : 5.),
+        mva->min_dr_lep_b, // (nb > 0 ? mindR_Bjet_lep[0] : 5.),
+        mva->sec_min_dr_lep_b, // (nb > 0 ? mindR_Bjet_lep[1] : 5.),
 
         lightLeps->scalarPtSum(), // LT
         double(lightLeps->size()),
@@ -228,13 +237,13 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         (jets->size() > 2 ? jets->at(2)->deepFlavor() : -1.),
         (jets->size() > 3 ? jets->at(3)->deepFlavor() : -1.),
 
-        mt(*lightLeps->at(0), selec->getEvent()->met()),
-        mt(*lightLeps->at(1), selec->getEvent()->met()),
+        mva->mtLeadLepMET, // mt(*lightLeps->at(0), selec->getEvent()->met()),
+        mva->mtSubLeadLepMET, // mt(*lightLeps->at(1), selec->getEvent()->met()),
 
         //mt2::mt2(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met()),
-        mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met()),
-        (nb >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
-        (nb >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
+        mva->m2ll, //mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selec->getEvent()->met()),
+        mva->m2bb, //(nb >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
+        mva->m2lblb, //(nb >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
 
 
     };
@@ -274,13 +283,13 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     }
     
 
-    TopReconstructionNew* topReco = selec->getTopReco();
-
-    topReco->RecoBestTwoTops();
-    fillVal.push_back(topReco->getBestRecoTop().first);
-    fillVal.push_back(topReco->getBestRecoTop().second);
-    fillVal.push_back(topReco->getSecondBestRecoTop().first);
-    fillVal.push_back(topReco->getSecondBestRecoTop().second);
+    //TopReconstructionNew* topReco = selec->getTopReco();
+//
+    //topReco->RecoBestTwoTops();
+    fillVal.push_back(mva->massBestTop);   //topReco->getBestRecoTop().first);
+    fillVal.push_back(mva->massBestTopW);   //topReco->getBestRecoTop().second);
+    fillVal.push_back(mva->massSecTop);   //topReco->getSecondBestRecoTop().first);
+    fillVal.push_back(mva->massSecTopW);   //topReco->getSecondBestRecoTop().second);
 
 
     if (multilep) {
