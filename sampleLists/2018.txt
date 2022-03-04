@@ -42,7 +42,7 @@ ttbar     2018/analysisSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8crab
 Xgamma          ../skims_v2/2018/analysisSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                 2.22
 Xgamma          ../skims_v2/2018/TTGamma_Hadronic_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                                               6.162
 Xgamma          ../skims_v2/2018/analysisSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_2018_UL.root                                             7.509
-# Xgamma  ZG
+Xgamma          2018/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8crab_MiniAOD2018-v1_singlelepton_MC_2018_ULv3.root                                55.48
 
 TTW             2018/analysisSamples/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                      0.19287
 # TTW qq and ttw ewk

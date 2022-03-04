@@ -332,3 +332,17 @@ bool Event::passTTGOverlap(int sampleType) const {
 
     return true;
 }
+
+bool Event::passZGOverlap(int sampleType) const {
+    if (sampleType == 0 || isData()) return true;
+
+    unsigned int ttgEventType = _generatorInfoPtr->ttgEventType();
+    
+    if (sampleType == 1 && ttgEventType > 2) {
+        return false;
+    } else if (sampleType == 2 && ttgEventType < 3) {
+        return false;
+    }
+
+    return true;
+}

@@ -79,6 +79,10 @@ void FourTop:: analyze() {
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+            zgOverlapCheck = treeReader->currentSamplePtr()->zgOverlap();
+
+            std::cout << "ttg sample " << ttgOverlapCheck << std::endl;
+            std::cout << "zg sample " << zgOverlapCheck << std::endl;
 
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
@@ -125,6 +129,7 @@ void FourTop:: analyze() {
 
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
             if (! treeReader->isData()) {
                 numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
