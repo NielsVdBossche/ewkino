@@ -39,8 +39,8 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("lepMVALeadingLepton_" + flag, "leptonMVA score leading loose lepton", 40, -1., 1.),
         HistInfo("lepMVASubleadingLepton_" + flag, "leptonMVA score sublead loose lepton", 40, -1., 1.),
         HistInfo("lepMVASubSubleadinfLepton_" + flag, "leptonMVA score subsublead loose lepton", 40, -1., 1.),
-        HistInfo("lepMVATrailingLepton_" + flag, "leptonMVA score trailing loose lepton", 40, -1., 1.),
-        HistInfo("LowestLepMVAScore_" + flag, "score", 100, -1., 1.),
+        HistInfo("lepMVATrailingLeptonNew_" + flag, "leptonMVA score trailing loose lepton", 40, -1., 1.),
+        HistInfo("LowestLepMVAScore_" + flag, "score", 40, -1., 1.),
     };
 
     // variables for selection
@@ -214,15 +214,15 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHist->Fill(2., weight);
             cutflowHistSub->Fill(2., weight);
 
-            currentHistSet->at(26)->Fill(currentEvent->lightLepton(0).leptonMVATOP());
-            currentHistSet->at(27)->Fill(currentEvent->lightLepton(1).leptonMVATOP());
-            if (looseLeps.size() >= 3) currentHistSet->at(28)->Fill(currentEvent->lightLepton(2).leptonMVATOP());
-            if (looseLeps.size() >= 4) currentHistSet->at(29)->Fill(currentEvent->lightLepton(3).leptonMVATOP());
+            currentHistSet->at(26)->Fill(currentEvent->lightLepton(0).leptonMVATOP(), weight);
+            currentHistSet->at(27)->Fill(currentEvent->lightLepton(1).leptonMVATOP(), weight);
+            if (looseLeps.size() >= 3) currentHistSet->at(28)->Fill(currentEvent->lightLepton(2).leptonMVATOP(), weight);
+            if (looseLeps.size() >= 4) currentHistSet->at(29)->Fill(currentEvent->lightLepton(3).leptonMVATOP(), weight);
 
             LightLeptonCollection lightLepsTemp = currentEvent->lightLeptonCollection();
             lightLepsTemp.sortByAttribute([](const std::shared_ptr<LightLepton>& lhs, const std::shared_ptr<LightLepton>& rhs){ return lhs->leptonMVATOP() > rhs->leptonMVATOP();});
 
-            currentHistSet->at(29)->Fill(lightLepsTemp[lightLepsTemp.size() -1].leptonMVATOP());
+            currentHistSet->at(30)->Fill(lightLepsTemp[lightLepsTemp.size() -1].leptonMVATOP(), weight);
 
             LightLeptonCollection* lightLeps = looseLeps.lightLeptonCollectionPtr();
             lightLeps->selectObjects(selectLeptonsMVA);
