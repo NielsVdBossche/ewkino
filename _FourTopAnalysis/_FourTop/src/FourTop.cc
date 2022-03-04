@@ -32,6 +32,9 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 infuseNonPrompt = true;
                 outputFileName += "EnlargedNonprompt_";
             }
+            if (argvString[3] == "CR") {
+                outputFileName += "CR_";
+            }
         }
 
         std::string strippedSampleList = "";

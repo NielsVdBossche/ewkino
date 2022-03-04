@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         //analysisObject.setYearString(newYearString);
     }
     bool onlyCR = false;
-    if (argc >= 4 && argvStr[4] == "CR") onlyCR = true;
+    if (argc >= 4 && argvStr[3] == "CR") onlyCR = true;
 
     analysisObject.analyze(argvStr[2], onlyCR);
 }
