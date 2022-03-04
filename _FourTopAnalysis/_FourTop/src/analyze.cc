@@ -513,13 +513,14 @@ void FourTop::analyze(std::string method, bool onlyCR) {
 
         //gDirectory->mkdir("analytics");
         //gDirectory->cd("analytics");
+        if (useUncertainties) {
+            std::cout << "writing uncertainties" << std::endl;
 
-        std::cout << "writing uncertainties" << std::endl;
+            outfile->cd();
+            outfile->cd("Uncertainties");
 
-        outfile->cd();
-        outfile->cd("Uncertainties");
-
-        mgrAll->writeUncertaintyHistograms(outdir);
+            mgrAll->writeUncertaintyHistograms(outdir);
+        }
     }
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process

@@ -5,7 +5,7 @@ void FourTop::initDdChargeMisID(double* corr) {
     std::string objName;
     if (yearString == "2016PreVFP" || yearString == "2016PostVFP") {
         year = "2016";
-        objName = "chamidRate2016";
+        //objName = "chamidRate2016";
         *corr = 0.966;
     } else if (yearString == "2017") *corr = 1.509;
     else if (yearString == "2018") *corr = 1.515;
@@ -45,10 +45,10 @@ void FourTop::initFakerate() {
 
     std::string fullPath = "DatadrivenInput/nonprompt/" + filename;
 
-    TFile* weightFilePtr = TFile::Open( fullPath.c_str() );
+    TFile* weightFilePtr = nullptr; // TFile::Open( fullPath.c_str() );
 
-    FakeRates = dynamic_cast< TH2D* >( weightFilePtr->Get( "nominal" ) );
-    FakeRates->SetDirectory( gROOT );
-
-    weightFilePtr->Close();
+    //FakeRates = dynamic_cast< TH2D* >( weightFilePtr->Get( "nominal" ) );
+    //FakeRates->SetDirectory( gROOT );
+//
+    //weightFilePtr->Close();
 }
