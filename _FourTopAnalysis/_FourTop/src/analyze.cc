@@ -9,12 +9,17 @@ void FourTop::analyze(std::string method, bool onlyCR) {
     std::shared_ptr< SampleCrossSections > xsecs;
 
     // reweighter creation
-    std::cout << "building reweighter" << std::endl;
-    std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
-    ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
-    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
 
-    addBTaggingNormFactors(*btagReweighter, "bTagNorms/");
+    std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
+    ReweighterBTagShape** btagReweighter;
+    CombinedReweighter reweighter;
+    if (! treeReader->sampleVector()[0].isData()) {
+        std::cout << "building reweighter" << std::endl;
+        btagReweighter = new ReweighterBTagShape*();
+        reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
+
+        addBTaggingNormFactors(*btagReweighter, "bTagNorms/");
+    }
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
 
     size_t crzPosMVA = mgrAll->at(eventClass::crz)->getHistInfo()->size() + mva_ML->getMaxClass();
@@ -118,7 +123,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             mgrAll->changePrimaryProcess(currProcName);
         } 
 
-        if (useUncertainties) {
+        if (useUncertainties && ! treeReader->isData()) {
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
@@ -201,6 +206,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                 if (currentEvent->isMC()) {
                     weight *= -1;
                 }
+                if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             } else if (st == selectionType::ChargeMisDD) {
                 // apply appropriate weights
                 if (selection->numberOfLeps() > 2) continue; // seems appropriate
@@ -208,6 +214,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                 weight *= chMisCorr;
 
                 if (weight == 0.) continue; // event only contains muons if this is the case
+                if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
