@@ -42,9 +42,9 @@ void FourTop::analyze(std::string method, bool onlyCR) {
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
 
     if (! onlyCR) {
-        size_t dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
-        size_t mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
-        size_t fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
+        dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
+        mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
+        fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
         mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
         mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
         mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
