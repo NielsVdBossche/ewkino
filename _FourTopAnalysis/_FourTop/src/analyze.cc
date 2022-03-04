@@ -119,11 +119,11 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
-            std::string currProcName = sampleVec[sampleIndex].processName();
-            mgrAll->changePrimaryProcess(currProcName);
         } 
 
         if (useUncertainties && ! treeReader->isData()) {
+            std::string currProcName = sampleVec[sampleIndex].processName();
+            mgrAll->changePrimaryProcess(currProcName);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
