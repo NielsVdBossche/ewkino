@@ -75,6 +75,7 @@ class Sample{
         std::shared_ptr<TFile> filePtr() const;
 
         int ttgOverlap() const;
+        int zgOverlap() const;
 
     private:
         void setIsData(); 

@@ -15,6 +15,7 @@ if __name__ == '__main__':
     #### ask a dataset as argument
     # list all folders matching this name in the dir
     out = glob.glob(dir + "*" + dataset + "*")
+
     print(dir + "*" + dataset + "*")
     print(out)
 
@@ -29,8 +30,4 @@ if __name__ == '__main__':
         
         integers = sorted(integers)
         print("folder {} missing: {}".format(subdir, missing_elements(integers)))
-
-        
-
-    
 

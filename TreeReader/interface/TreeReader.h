@@ -34,6 +34,7 @@ class TreeReader {
         static const unsigned nL_max = 20;
         static const unsigned nJets_max = 100;
         static const unsigned gen_nL_max = 20;
+        static const unsigned lhe_n_max = 20;
 	// global event variables and weights
         ULong_t         _runNb;
         ULong_t         _lumiBlock;
@@ -63,6 +64,18 @@ class TreeReader {
         Bool_t          _gen_lIsPrompt[gen_nL_max];   
         UInt_t          _ttgEventType;
         UInt_t          _zgEventType;
+        // lhe variables
+        UInt_t          _nLheTau;
+        UInt_t          _nLheParticles;
+        Int_t           _lheStatus[lhe_n_max];
+        Int_t           _lhePdgId[lhe_n_max];
+        Int_t           _lheMother1[lhe_n_max];
+        Int_t           _lheMother2[lhe_n_max];
+        Double_t        _lhePt[lhe_n_max];
+        Double_t        _lheEta[lhe_n_max];
+        Double_t        _lhePhi[lhe_n_max];
+        Double_t        _lheE[lhe_n_max];
+        Double_t        _lheMass[lhe_n_max];
 	// triggers and filters
         Bool_t          _passTrigger_e;
         Bool_t          _passTrigger_ee;
@@ -317,7 +330,8 @@ class TreeReader {
 
         //check whether generator info is present in current tree
         bool containsGeneratorInfo() const;
-
+        bool containsLheInfo() const;
+        
         //check whether SUSY mass info is present in the current sample
 	// ( this is the case for SUSY signal scans )
         bool containsSusyMassInfo() const;
@@ -436,7 +450,18 @@ class TreeReader {
         TBranch        *b__gen_lFlavor;   
         TBranch        *b__gen_lCharge;   
         TBranch        *b__gen_lMomPdg;   
-        TBranch        *b__gen_lIsPrompt;   
+        TBranch        *b__gen_lIsPrompt;
+        TBranch        *b__nLheTau;
+        TBranch        *b__nLheParticles;
+        TBranch        *b__lheStatus;
+        TBranch        *b__lhePdgId;
+        TBranch        *b__lheMother1;
+        TBranch        *b__lheMother2;
+        TBranch        *b__lhePt;
+        TBranch        *b__lheEta;
+        TBranch        *b__lhePhi;
+        TBranch        *b__lheE;
+        TBranch        *b__lheMass;
         TBranch        *b__ttgEventType;
         TBranch        *b__zgEventType;
         TBranch        *b__passTrigger_e;   

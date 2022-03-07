@@ -131,7 +131,11 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
-        } 
+            zgOverlapCheck = treeReader->currentSamplePtr()->zgOverlap();
+
+            std::cout << "ttg sample " << ttgOverlapCheck << std::endl;
+            std::cout << "zg sample " << zgOverlapCheck << std::endl;
+        }
 
         if (useUncertainties && ! treeReader->isData()) {
             std::string currProcName = sampleVec[sampleIndex].processName();
@@ -174,6 +178,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
 
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
             if (! treeReader->isData() && useUncertainties) {
                 numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();

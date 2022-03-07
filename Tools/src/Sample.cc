@@ -309,3 +309,13 @@ int Sample::ttgOverlap() const {
         return 0;
     }
 }
+
+int Sample::zgOverlap() const {
+    if (stringTools::stringStartsWith(_fileName, "DY")) {
+        return 1;
+    } else if (stringTools::stringStartsWith(_fileName, "ZG")) {
+        return 2;
+    } else {
+        return 0;
+    }
+}
