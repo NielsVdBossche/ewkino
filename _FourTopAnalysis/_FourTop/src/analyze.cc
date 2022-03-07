@@ -13,7 +13,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     ReweighterBTagShape** btagReweighter;
     CombinedReweighter reweighter;
-    if (! treeReader->sampleVector()[0].isData()) {
+    if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
         std::cout << "building reweighter" << std::endl;
         btagReweighter = new ReweighterBTagShape*();
         reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
@@ -42,6 +42,8 @@ void FourTop::analyze(std::string method, bool onlyCR) {
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
 
     if (! onlyCR) {
+        std::cout << "SRs are considered" << std::endl;
+
         dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
         mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
         fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
@@ -76,23 +78,33 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         processes = {"", "ChargeMisID"};
         selection->setSelectionType(selectionType::MCPrompt);
         st = selectionType::MCPrompt;
+
+        std::cout << "Running method " << "MCPrompt" << std::endl;
     } else if (method == "ChargeDD") {
         initDdChargeMisID(&chMisCorr);
         processes = {"ChargeMisID"};
         selection->setSelectionType(selectionType::ChargeMisDD);
         useUncertainties = false;
         st = selectionType::ChargeMisDD;
+
+        std::cout << "Running method " << "ChargeDD" << std::endl;
     } else if (method == "nonPromptDD") {
         initFakerate();
         processes = {"nonPrompt"};
         selection->setSelectionType(selectionType::NPDD);
         useUncertainties = false;
         st = selectionType::NPDD;
+
+        std::cout << "Running method " << "NP DD" << std::endl;
     } else if (method == "Obs") {
         processes = {"Data"};
         selection->setSelectionType(selectionType::Data);
         st = selectionType::Data;
         useUncertainties = false;
+
+        std::cout << "Running method " << "Obs" << std::endl;
+    } else {
+        std::cout << "Running method " << "MCAll" << std::endl;
     }
 
     mgrAll->initHistogramStacks(processes, useUncertainties);
@@ -180,7 +192,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             unsigned processNb = 0;
 
             double weight = currentEvent->weight();
-            if( currentEvent->isMC() ){
+            if( currentEvent->isMC() && st != selectionType::Data ){
                 weight *= reweighter.totalWeight( *currentEvent );
 
                 for (const auto& leptonPtr : *selection->getMediumLepCol()) {

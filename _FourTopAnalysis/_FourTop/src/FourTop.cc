@@ -94,10 +94,10 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         time << std::put_time(&tm, "%d_%m_%Y-%H_%M");
         TObjString timestamp(time.str().c_str());
         outfile->WriteObject(&timestamp, "Timestamp");
-
-        TObjString anType(argvString[2].c_str());
-        outfile->WriteObject(&anType, "AN_Type");
-
+        if (argvString.size() > 2) {
+            TObjString anType(argvString[2].c_str());
+            outfile->WriteObject(&anType, "AN_Type");
+        }
         //createHistInfoVec();
 
         if (mode == 1) {

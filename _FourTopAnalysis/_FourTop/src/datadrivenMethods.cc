@@ -10,7 +10,7 @@ void FourTop::initDdChargeMisID(double* corr) {
     } else if (yearString == "2017") *corr = 1.509;
     else if (yearString == "2018") *corr = 1.515;
 
-    std::string fullPath = "DatadrivenInput/Charge/chamid_" + year + "_DYpile_onZ-nLep2-lepsPrompt_ptEtaNEWbinning.root";
+    std::string fullPath = "DatadrivenInput/charge/chamid_" + year + "_DYpile_onZ-nLep2-lepsPrompt_ptEtaNEWbinning.root";
 
     TFile* weightFilePtr = TFile::Open( fullPath.c_str() );
 
