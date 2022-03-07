@@ -17,7 +17,8 @@ enum skimCondition {
     trilepton,
     fourlepton,
     fakerate,
-    light_SSdilepton_or_trilep
+    light_SSdilepton_or_trilep,
+    lightDileptonSkim
 };
 
 skimCondition giveCondition(const std::string& condstring);
@@ -33,5 +34,7 @@ bool passLightDileptonSkim(Event &);
 bool passLightTrilepSkim(Event&);
 bool passLightDLSameChargeSkim(Event&);
 bool passLight_SSdilepton_or_trilep(Event&);
+
+bool passLightLeptonSkimNew(Event&);
 
 #endif

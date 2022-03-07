@@ -34,6 +34,8 @@ class FourTop {
         // Is this used?
         //std::vector<Sample>* sampleVec;
         int ttgOverlapCheck; // 0: neither, 1: ttbar, 2: ttgamma
+        int zgOverlapCheck; // 0: neither, 1: DY, 2: ZG
+
         bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar 
 
         // General settings for analysis run
@@ -59,13 +61,17 @@ class FourTop {
         Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
         Double_t m2bb, m2lblb, mvaWeight;
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
+
+
+        TH2D* MisIDRates = nullptr;
+        TH2D* FakeRates = nullptr;
+
     public:
         // Loading settings for analysis, preparing trees, ...
         FourTop(std::string outputName, std::vector<std::string>& argvString, int mode = 0);
         ~FourTop();
 
-        // Prepare 
-        void createHistInfoVec();
+        // Prepare
         void createMVAHandlers();
         void addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir);
         void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory);
@@ -75,8 +81,9 @@ class FourTop {
         std::string getYearString() {return yearString;}
         
         // Main loop functions
-        void analyze();
+        void analyze(std::string method, bool onlyCR);
         void testRuns();
+  
         void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();
 
@@ -84,6 +91,10 @@ class FourTop {
         void fillMVAVariables(bool isML);
 
         bool eventPassesTriggers();
+
+        void initDdChargeMisID(double* corr);
+        void initFakerate();
+        double ChmisIDWeight();
 };
 
 

@@ -4,44 +4,59 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-void FourTop:: analyze() {
-    ChannelManager* mgrAll = new ChannelManager(outfile, true);
+void FourTop::analyze(std::string method, bool onlyCR) {
+    ChannelManager* mgrAll = new ChannelManager(outfile);
     std::shared_ptr< SampleCrossSections > xsecs;
 
     // reweighter creation
-    std::cout << "building reweighter" << std::endl;
-    std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
-    ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
-    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
 
-    addBTaggingNormFactors(*btagReweighter, "bTagNorms/");
+    std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
+    ReweighterBTagShape** btagReweighter;
+    CombinedReweighter reweighter;
+    if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
+        std::cout << "building reweighter" << std::endl;
+        btagReweighter = new ReweighterBTagShape*();
+        reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
+
+        addBTaggingNormFactors(*btagReweighter, "bTagNorms/");
+    }
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
 
     size_t crzPosMVA = mgrAll->at(eventClass::crz)->getHistInfo()->size() + mva_ML->getMaxClass();
     size_t croPosMVA = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
     size_t crwPosMVA = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
-    size_t dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
-    size_t mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
-    size_t fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
-
 
     mgrAll->at(eventClass::crz)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
     mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CRO", true));
     mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CRW", true));
-    mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
-    mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
-    mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
 
     mgrAll->at(eventClass::crz)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
     mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
     mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
-    mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
-    mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
-    mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
 
+    size_t dlPosMVA = 0;
+    size_t mlPosMVA = 0;
+    size_t fourlPosMVA = 0;
+    
     std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
+    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
 
-    mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
+    if (! onlyCR) {
+        std::cout << "SRs are considered" << std::endl;
+
+        dlPosMVA = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
+        mlPosMVA = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
+        fourlPosMVA = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
+        mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
+        mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
+        mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
+        mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
+        mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
+        mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
+
+        mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
+        mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
+    }
 
     std::map<eventClass, int> offsets;
     offsets[eventClass::cro] = croPosMVA;
@@ -55,7 +70,44 @@ void FourTop:: analyze() {
     std::map<shapeUncId, std::string> uncTranslateMap = mgrAll->getTranslateUnc();
 
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
-    mgrAll->initHistogramStacks(processes);
+    selectionType st = selectionType::MCAll;
+    bool useUncertainties = true;
+
+    double chMisCorr = 0.;
+    if (method == "MCPrompt") {
+        processes = {"", "ChargeMisID"};
+        selection->setSelectionType(selectionType::MCPrompt);
+        st = selectionType::MCPrompt;
+
+        std::cout << "Running method " << "MCPrompt" << std::endl;
+    } else if (method == "ChargeDD") {
+        initDdChargeMisID(&chMisCorr);
+        processes = {"ChargeMisID"};
+        selection->setSelectionType(selectionType::ChargeMisDD);
+        useUncertainties = false;
+        st = selectionType::ChargeMisDD;
+
+        std::cout << "Running method " << "ChargeDD" << std::endl;
+    } else if (method == "nonPromptDD") {
+        initFakerate();
+        processes = {"nonPrompt"};
+        selection->setSelectionType(selectionType::NPDD);
+        useUncertainties = false;
+        st = selectionType::NPDD;
+
+        std::cout << "Running method " << "NP DD" << std::endl;
+    } else if (method == "Obs") {
+        processes = {"Data"};
+        selection->setSelectionType(selectionType::Data);
+        st = selectionType::Data;
+        useUncertainties = false;
+
+        std::cout << "Running method " << "Obs" << std::endl;
+    } else {
+        std::cout << "Running method " << "MCAll" << std::endl;
+    }
+
+    mgrAll->initHistogramStacks(processes, useUncertainties);
 
     std::cout << "event loop" << std::endl;
 
@@ -79,7 +131,16 @@ void FourTop:: analyze() {
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
             ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+            zgOverlapCheck = treeReader->currentSamplePtr()->zgOverlap();
 
+            std::cout << "ttg sample " << ttgOverlapCheck << std::endl;
+            std::cout << "zg sample " << zgOverlapCheck << std::endl;
+        }
+
+        if (useUncertainties && ! treeReader->isData()) {
+            std::string currProcName = sampleVec[sampleIndex].processName();
+            mgrAll->changePrimaryProcess(currProcName);
+            // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
             std::cout << "finding available PS scale variations...\n";
@@ -88,12 +149,8 @@ void FourTop:: analyze() {
             if(numberOfPSVariations==14) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
 
-            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-                hasValidQcds = true;
-            }
-            if(numberOfPdfVariations>=100){
-	            hasValidPdfs = true;
-            }
+            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
+            if(numberOfPdfVariations>=100) hasValidPdfs = true;
 
             considerBTagShape = true;
             
@@ -102,21 +159,17 @@ void FourTop:: analyze() {
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
         }
-
-        std::string currProcName = sampleVec[sampleIndex].processName();
-        mgrAll->changePrimaryProcess(currProcName);
         
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         mgrAll->newSample(uniqueName);
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
-            //if (entry % 1000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
+            //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
-
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
@@ -125,33 +178,65 @@ void FourTop:: analyze() {
 
             // Apply overlap removal & apply triggers
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
-            if (! treeReader->isData()) {
+            if (! treeReader->isData() && useUncertainties) {
                 numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
-                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) {
-                    hasValidQcds = true;
-                } else {
-                    hasValidQcds = false;
-                }
+                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
+                else hasValidQcds = false;
 
-                if (numberOfPdfVariations>=100){
-                    hasValidPdfs = true;
-                } else {
-                    hasValidPdfs = false;
-                }
+                if (numberOfPdfVariations>=100) hasValidPdfs = true;
+                else hasValidPdfs = false;
             }
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
                 continue;
             }
             selection->classifyEvent();
+
             // TEMP! Remove for full stuff
             //if (selection->getCurrentClass() == eventClass::fail) continue;
 
+            unsigned processNb = 0;
 
             double weight = currentEvent->weight();
-            if( currentEvent->isMC() ){
+            if( currentEvent->isMC() && st != selectionType::Data ){
                 weight *= reweighter.totalWeight( *currentEvent );
+
+                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
+                    if (leptonPtr->isChargeFlip()) {
+                        processNb = 2;
+                        break;
+                    }
+                }
+                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
+                    if (! leptonPtr->isPrompt()) {
+                        processNb = 1;
+                        break;
+                    }
+                }
+                if (st == selectionType::MCPrompt) {
+                    if (processNb == 1) continue;
+                    if (processNb == 2 && selection->numberOfLeps() == 2) continue;
+                    processNb = 1;
+                } else if (st != selectionType::MCAll) {
+                    processNb = 0;
+                }
+            } else if (st == selectionType::NPDD) {
+                // apply appropriate weights
+
+                if (currentEvent->isMC()) {
+                    weight *= -1;
+                }
+                if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
+            } else if (st == selectionType::ChargeMisDD) {
+                // apply appropriate weights
+                if (selection->numberOfLeps() > 2) continue; // seems appropriate
+                weight *= ChmisIDWeight();
+                weight *= chMisCorr;
+
+                if (weight == 0.) continue; // event only contains muons if this is the case
+                if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
@@ -160,23 +245,8 @@ void FourTop:: analyze() {
             std::vector<std::pair<int, double>> singleEntries;
             std::vector<std::string> subChannels;
 
-            unsigned processNb = 0;
-
-            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (leptonPtr->isChargeFlip()) {
-                    processNb = 2;
-                    break;
-                }
-            }
-
-            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (! leptonPtr->isPrompt()) {
-                    processNb = 1;
-                    break;
-                }
-            }
-
             // fill all histograms
+            // replace with functions in eventHandling?
             eventClass nominalClass = selection->getCurrentClass();
             if (nominalClass == eventClass::crz) {
                 std::vector<double> scores = mva_ML->scoreEvent();
@@ -214,7 +284,7 @@ void FourTop:: analyze() {
                     mgrAll->at(eventClass::cro)->fillSingleHistograms(processNb, singleEntries, weight);
                 }
 
-            } else if (nominalClass == eventClass::ssdl) {   
+            } else if (nominalClass == eventClass::ssdl && ! onlyCR) {   
 
                 std::vector<double> scores = mva_DL->scoreEvent();
 
@@ -244,7 +314,7 @@ void FourTop:: analyze() {
                 mgrAll->at(eventClass::ssdl)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
                 mgrAll->at(eventClass::ssdl)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
 
-            } else if (nominalClass == eventClass::trilep) {
+            } else if (nominalClass == eventClass::trilep && ! onlyCR) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection);
@@ -255,10 +325,16 @@ void FourTop:: analyze() {
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
                 singleEntries.push_back({mlPosMVA + classAndScore.first, classAndScore.second});
 
-                mgrAll->at(eventClass::trilep)->fillHistograms(processNb, fillVec, weight);
-                mgrAll->at(eventClass::trilep)->fill2DHistograms(processNb, fillVec2D, weight);
-                mgrAll->at(eventClass::trilep)->fillSingleHistograms(processNb, singleEntries, weight);
-            } else if (nominalClass == eventClass::fourlep) {
+                if (selection->getMediumLepCol()->hasOSSFPair()) {
+                    subChannels.push_back("OSSF");
+                } else {
+                    subChannels.push_back("noOSSF");
+                }
+
+                mgrAll->at(eventClass::trilep)->fillAllHistograms(subChannels, processNb, fillVec, weight);
+                mgrAll->at(eventClass::trilep)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
+                mgrAll->at(eventClass::trilep)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
+            } else if (nominalClass == eventClass::fourlep && ! onlyCR) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection, true);
@@ -276,7 +352,7 @@ void FourTop:: analyze() {
 
 
             // TODO: Systematics
-            if (currentEvent->isData()) continue;
+            if (currentEvent->isData() || ! useUncertainties) continue;
 
             //// Start filling histograms
             // loop uncertainties
@@ -288,17 +364,17 @@ void FourTop:: analyze() {
             std::vector<std::pair<int, double>> singleEntriesDown = singleEntries;
             std::vector<std::pair<double, double>> fillVec2DUp = fillVec2D;
             std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
-            eventClass upClass = eventClass::fail;
-            eventClass downClass = eventClass::fail;
 
             unsigned uncID = 0;
             while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
-                if (! uncWrapper && uncID < shapeUncId::JER_1p93) {
+                if ((! uncWrapper && uncID < shapeUncId::JER_1p93) || (onlyCR && unsigned(nominalClass) >= eventClass::ssdl && uncID < shapeUncId::JER_1p93)) {
                     uncID++;
                     continue;
                 }
                 double weightUp = 1.;
                 double weightDown = 1.;
+                eventClass upClass = eventClass::fail;
+                eventClass downClass = eventClass::fail;
                 std::vector<std::string> subChannelsUp;
                 std::vector<std::string> subChannelsDown;
 
@@ -405,6 +481,12 @@ void FourTop:: analyze() {
                         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsUp.push_back("ee");
                         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsUp.push_back("mm");
                         else subChannelsUp.push_back("em");
+                    } else if (upClass == eventClass::trilep) {
+                        if (selection->getMediumLepCol()->hasOSSFPair()) {
+                            subChannelsUp.push_back("OSSF");
+                        } else {
+                            subChannelsUp.push_back("noOSSF");
+                        }
                     }
 
                     if (downClass == eventClass::ssdl) {
@@ -414,6 +496,12 @@ void FourTop:: analyze() {
                         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsDown.push_back("ee");
                         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsDown.push_back("mm");
                         else subChannelsDown.push_back("em");
+                    } else if (downClass == eventClass::trilep) {
+                        if (selection->getMediumLepCol()->hasOSSFPair()) {
+                            subChannelsDown.push_back("OSSF");
+                        } else {
+                            subChannelsDown.push_back("noOSSF");
+                        }
                     }
                 }
 
@@ -422,8 +510,8 @@ void FourTop:: analyze() {
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
                 } else {
-                    mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                    mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    if (! onlyCR || unsigned(upClass) < eventClass::ssdl) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    if (! onlyCR || unsigned(downClass) < eventClass::ssdl) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 }
 
                 uncID = uncID + 1;
@@ -446,13 +534,14 @@ void FourTop:: analyze() {
 
         //gDirectory->mkdir("analytics");
         //gDirectory->cd("analytics");
+        if (useUncertainties) {
+            std::cout << "writing uncertainties" << std::endl;
 
-        std::cout << "writing uncertainties" << std::endl;
+            outfile->cd();
+            outfile->cd("Uncertainties");
 
-        outfile->cd();
-        outfile->cd("Uncertainties");
-
-        mgrAll->writeUncertaintyHistograms(outdir);
+            mgrAll->writeUncertaintyHistograms(outdir);
+        }
     }
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process

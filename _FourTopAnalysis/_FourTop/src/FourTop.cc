@@ -5,6 +5,8 @@
 #include <sstream>
 #include <ctime>
 
+#include "TObjString.h"
+
 #include "../../../Tools/interface/systemTools.h"
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
@@ -30,22 +32,37 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 infuseNonPrompt = true;
                 outputFileName += "EnlargedNonprompt_";
             }
+            if (argvString.size() >= 4) {
+                if (argvString[3] == "CR") {
+                    outputFileName += "CR_";
+                }
+            }
         }
 
+        std::string strippedSampleList = "";
+
         if (argvString[1] != "allSamples.txt") {
-            std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
+            strippedSampleList = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
+            std::string newYearString = "2018";
+            Sample sampleZero = treeReader->sampleVector()[0];
+            if (sampleZero.is2017()) {
+                newYearString = "2017";
+            } else if (sampleZero.is2016PostVFP()) {
+                newYearString = "2016PostVFP";
+            } else if (sampleZero.is2016PreVFP()) {
+                newYearString = "2016PreVFP";
+            }
+
+            std::cout << "year string is: " << newYearString << std::endl;
+
             if (! analysisTools::checkYearStringNoErr( newYearString )) {
                 std::cout << "force year string to 2018" << std::endl;
                 newYearString = "2018";
             }
             setYearString(newYearString);
         }
-
-        //outputFileName += yearString + "_";
-        std::string outputTag = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvString[1]).second);
-        
-        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << outputTag << ".root";
-
+       
+        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << strippedSampleList << ".root";
         outputFileName += oss.str();
 
         std::cout << outputFileName.c_str() << std::endl;
@@ -59,6 +76,27 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
         intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
         
+        // also write metadata here. This includes branch?
+        #ifdef GIT_BRANCH
+        std::string branchString = GIT_BRANCH;
+        TObjString branchInfo(branchString.c_str());
+        outfile->WriteObject(&branchInfo, "Branch");
+        #endif
+
+        #ifdef GIT_HASH
+        std::string commithash = GIT_HASH;
+        TObjString commitInfo(branchString.c_str());
+        outfile->WriteObject(&commitInfo, "commit_hash");
+        #endif
+        
+        std::stringstream time;
+        time << std::put_time(&tm, "%d_%m_%Y-%H_%M");
+        TObjString timestamp(time.str().c_str());
+        outfile->WriteObject(&timestamp, "Timestamp");
+        if (argvString.size() > 2) {
+            TObjString anType(argvString[2].c_str());
+            outfile->WriteObject(&anType, "AN_Type");
+        }
         //createHistInfoVec();
 
         if (mode == 1) {
@@ -82,33 +120,6 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
 FourTop::~FourTop() {
 
     //outfile->Close();
-}
-
-// Prepare 
-void FourTop::createHistInfoVec() {
-
-    // Temp solution
-    //histInfoVec_DL = fourTopHists::allHists("DL", false);
-    //histInfoVec_3L = fourTopHists::allHists("3L", true);
-    //histInfoVec_4L = fourTopHists::allHists("4L", true, true);
-    //histInfoVec_CRZ = fourTopHists::allHists("CRZ", false);
-    //histInfoVec_CRW = fourTopHists::allHists("CRW", false);
-    //histInfoVec_Other = fourTopHists::allHists("CRO", false);
-
-    // Go over settings, voor elke setting, add de passende histosetup bij het totaal
-    // Niet te veel om easy te houden, wil niet voor elke fill kei veel settings checken
-
-    // Set hier mss ook setting voor lengte -> fill vector zelfde lengte, anders teveel checks/constructing voor vector?
-
-    // Init histograms
-    //std::vector< Sample > sampleVec = treeReader->sampleVector();
-
-    //hists_DL = histHelper::initHistograms(histInfoVec_DL, sampleVec);
-    //hists_3L = histHelper::initHistograms(histInfoVec_3L, sampleVec);
-    //hists_4L = histHelper::initHistograms(histInfoVec_4L, sampleVec);
-    //hists_CRZ = histHelper::initHistograms(histInfoVec_CRZ, sampleVec);
-    //hists_CRW = histHelper::initHistograms(histInfoVec_CRW, sampleVec);
-    //hists_Other = histHelper::initHistograms(histInfoVec_Other, sampleVec);
 }
 
 void FourTop::createMVAHandlers() {
@@ -176,7 +187,6 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
     std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
 
-    // default
     averageOfWeights->Fill(0., 1.);
     nEntries->Fill(0., 1.);
 

@@ -70,11 +70,13 @@ void EventFourT::objectSelection() {
 bool EventFourT::passBaselineEventSelection() {
     // Baseline event selection keeping most leptons in order to correctly veto resonances
 
-    double n_lep = mediumLeps->size();
+    //double n_lep = mediumLeps->size();
 
-    if (n_lep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
-    if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
+    //if (n_lep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
+    //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
+    if (! passLeptonSelection()) return false;
+    
     if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
@@ -84,13 +86,45 @@ bool EventFourT::passBaselineEventSelection() {
     // 1 bjets
     if (bTagJets->size() < 1) return false;
 
-
-    //if (event->met().pt() < 25) return false;
-
-    if (n_lep < 4 && ht < 300) return false;
+    if (nLep < 4 && ht < 300) return false;
 
     return true;
 }
+
+bool EventFourT::passLeptonSelection() {
+    // place here the different set of requirements for leptons (e.g. all tight, all FO, prompt or not prompt, depending on the selection criteria)
+
+    if (selType == MCAll) {
+        // normal tight lepton selection, no prompt or charge requirements
+        if (mediumLeps->size() < 2) return false;
+        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+    } else if (selType == MCPrompt) {
+        // tight and prompt and no charge misID
+        // or also FO and prompt with negative weight?
+        if (mediumLeps->size() < 2) return false;
+        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+        // check if any lepton is nonprompt or charge misIDd
+    } else if (selType == ChargeMisDD) {
+        // tight but OS events
+        if (mediumLeps->size() != 2) return false;
+        if (! mediumLeps->hasOSPair()) return false;
+    } else if (selType == NPDD) {
+        // FO  with at least 1 non tight
+        if (foLeps->size() < 2) return false;
+        if (foLeps->size() == 2 && foLeps->hasOSPair()) return false;
+        if (mediumLeps->size() == foLeps->size()) return false;
+
+        delete mediumLeps;
+        mediumLeps = foLeps;
+        nLep = foLeps->size();
+    } else if (selType == Data) {
+        if (mediumLeps->size() < 2) return false;
+        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+    }
+    
+    return true;
+}
+
 
 bool EventFourT::passFullEventSelection() {
 
@@ -210,4 +244,56 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
 
     classifyEvent();
     return currentClass;
+}
+
+std::vector<double> EventFourT::fillVector() {
+    std::vector<double> fillVec;
+    if (currentClass == eventClass::fail) return fillVec;
+    MVAHandler_4T* currentMVA = dl_MVA;
+    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl)
+    if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
+
+    std::vector<double> scores = currentMVA->scoreEvent();
+    if (currentClass == eventClass::crz) {
+        fillVec = fourTopHists::fillAllLean(false, this);
+    } else if (currentClass == eventClass::crw || currentClass == eventClass::cro) {
+        fillVec = fourTopHists::fillAllLean(false, this);
+    } else if (currentClass == eventClass::ssdl) {
+        fillVec = fourTopHists::fillAllHists(false, this);
+    } else if (currentClass == eventClass::trilep) {
+        fillVec = fourTopHists::fillAllHists(true, this);
+    } else if (currentClass == eventClass::fourlep) {
+        fillVec = fourTopHists::fillAllHists(true, this, true);
+    }
+
+    fillVec.insert(fillVec.end(), scores.begin(), scores.end());
+
+    return fillVec;
+
+}
+
+std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
+    std::vector<std::pair<int, double>> singleEntries;
+    if (currentClass == eventClass::fail) return singleEntries;
+    MVAHandler_4T* currentMVA = dl_MVA;
+    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
+    if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
+
+
+    std::pair<MVAClasses, double> classAndScore = currentMVA->getClassAndScore();
+    int offset = offsets[currentClass];  
+    singleEntries.push_back({offset + classAndScore.first, classAndScore.second});
+
+    return singleEntries;
+}
+
+std::vector<std::pair<double, double>> EventFourT::fillVector2D() {
+    std::vector<std::pair<double, double>> fillVec2D;
+    if (currentClass == eventClass::fail) return fillVec2D;
+    MVAHandler_4T* currentMVA = dl_MVA;
+    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
+    if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
+    fillVec2D = currentMVA->fill2DVector();
+
+    return fillVec2D;
 }
