@@ -421,7 +421,7 @@ BTagCalibrationReader::BTagCalibrationReaderImpl::BTagCalibrationReaderImpl(
   op_(op),
   sysType_(sysType),
   tmpData_(6),
-  useAbsEta_(3, true)
+  useAbsEta_(6, true)
 {
   for (const std::string & ost : otherSysTypes) {
     if (otherSysTypeReaders_.count(ost)) {

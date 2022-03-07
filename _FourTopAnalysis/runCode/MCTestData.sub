@@ -1,0 +1,9 @@
+universe    =   vanilla
+executable  =   Analysis.sh
+arguments   =   $(Filename) Obs
+
+log         =   /user/nivanden/condor/logs/analysis_year_Obs_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/analysis_year_Obs_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/analysis_year_Obs_$(ClusterId)_$(Process).out
+
+queue 1 Filename in TmpLists/2016PreVFP_Rare.txt, TmpLists/2016PreVFP_TTVV.txt, TmpLists/2016PreVFP_Xgamma.txt, TmpLists/2016PreVFP_ttbar.txt, TmpLists/2016PreVFP_TTW.txt, TmpLists/2016PreVFP_TTZ.txt, TmpLists/2016PreVFP_TTH.txt, TmpLists/2016PreVFP_TTTT.txt, TmpLists/2016PostVFP_Rare.txt, TmpLists/2016PostVFP_TTVV.txt, TmpLists/2016PostVFP_ttbar.txt, TmpLists/2016PostVFP_Xgamma.txt, TmpLists/2016PostVFP_TTW.txt, TmpLists/2016PostVFP_TTZ.txt, TmpLists/2016PostVFP_TTH.txt, TmpLists/2016PostVFP_TTTT.txt, TmpLists/2017_Rare.txt, TmpLists/2017_TTVV.txt, TmpLists/2017_ttbar.txt, TmpLists/2017_Xgamma.txt, TmpLists/2017_TTW.txt, TmpLists/2017_TTZ.txt, TmpLists/2017_TTH.txt, TmpLists/2017_TTTT.txt, TmpLists/2018_Rare.txt, TmpLists/2018_TTVV.txt, TmpLists/2018_ttbar.txt, TmpLists/2018_Xgamma.txt, TmpLists/2018_TTW.txt, TmpLists/2018_TTZ.txt, TmpLists/2018_TTH.txt, TmpLists/2018_TTTT.txt

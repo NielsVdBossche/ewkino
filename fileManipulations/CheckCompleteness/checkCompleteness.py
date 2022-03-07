@@ -1,7 +1,6 @@
 import os
 import sys
 import numpy as np
-
 import glob
 
 def missing_elements(L):
@@ -10,31 +9,25 @@ def missing_elements(L):
 
 
 if __name__ == '__main__':
-    dir = "/pnfs/iihe/cms/store/user/nivanden/skims/rawSkims/"# sys.argv[1]
-    dataset = "EGamma"# sys.argv[2]
+    dir = sys.argv[1]
+    dataset = sys.argv[2]
 
     #### ask a dataset as argument
     # list all folders matching this name in the dir
     out = glob.glob(dir + "*" + dataset + "*")
 
+    print(dir + "*" + dataset + "*")
     print(out)
 
     for subdir in out:
         files = glob.glob(subdir + "/*.root")
-        #print(files)
+        # list all folders for this dataset and check  if there is continuity in the numbering
         integers = np.zeros(len(files), dtype=np.int64)
 
-
         for i, file in enumerate(files):
+            # print(file[file.rfind('_')+1:-5])
             integers[i] = int(file[file.rfind('_')+1:-5])
-
-        sortedInts = np.sort(integers)
-        res = missing_elements(sortedInts)
-        print(subdir + " missing " + str(len(res)) + " components:")
-        print(res)
-
         
-    
+        integers = sorted(integers)
+        print("folder {} missing: {}".format(subdir, missing_elements(integers)))
 
-
-# list all folders for this dataset and check if there is continuity in the numbering

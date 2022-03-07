@@ -30,7 +30,7 @@ ChannelManager::~ChannelManager() {
 
 void ChannelManager::newSample(std::string& sampleName) {
     for (auto it : mapping) {
-        it.second->newSample(sampleName);
+        it.second->newSample(sampleName, useUncertainties);
     }
 }
 
@@ -40,10 +40,11 @@ void ChannelManager::addSubUncertainties(shapeUncId uncID, std::vector<std::stri
     }
 }
 
-void ChannelManager::initHistogramStacks(std::vector<std::string>& initialProcessNames) {
+void ChannelManager::initHistogramStacks(std::vector<std::string>& initialProcessNames, bool uncertainties) {
     processHistName = initialProcessNames;
+    useUncertainties = uncertainties;
     for (auto it : mapping) {
-        it.second->initializeHistogramStack(processHistName);
+        it.second->initializeHistogramStack(processHistName, uncertainties);
     }
 
     for (auto it : initialProcessNames) {
@@ -52,6 +53,9 @@ void ChannelManager::initHistogramStacks(std::vector<std::string>& initialProces
         outfile->cd();
         outfile->cd("Nominal");
         if (! gDirectory->GetDirectory(it.c_str())) gDirectory->mkdir(it.c_str());
+
+        if (! uncertainties) continue;
+
         outfile->cd();
         outfile->cd("Uncertainties");
         if (! gDirectory->GetDirectory(it.c_str())) gDirectory->mkdir(it.c_str());

@@ -4,8 +4,8 @@ import os
 import sys
 import subprocess
 
-inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/rawSkims/"
-outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/"
+inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v2/rawSkims/"
+outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v2/"
 
 skimVersion = []
 outSubdir = ""
@@ -16,11 +16,14 @@ if (sys.argv[1] == '0'):
 elif (sys.argv[1] == '1'):
     skimVersion = ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD-106X", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]
     outSubdir = "2016PostVFP"
+elif (sys.argv[1] == '4'):
+    skimVersion = ["Run2016"]
+    outSubdir = "2016"
 elif (sys.argv[1] == '2'):
-    skimVersion = ["2017_UL", "RunIISummer20UL17MiniAOD", "MiniAOD2017", "2017_Nov"]
+    skimVersion = ["2017_UL", "RunIISummer20UL17MiniAOD", "MiniAOD2017", "2017_Nov", "Run2017"]
     outSubdir = "2017"
 elif (sys.argv[1] == '3'):
-    skimVersion = ["2018_UL", "RunIISummer20UL18MiniAOD", "MiniAOD2018", "2018_Nov"]
+    skimVersion = ["2018_UL", "RunIISummer20UL18MiniAOD", "MiniAOD2018", "2018_Nov", "Run2018"]
     outSubdir = "2018"
 
 print(skimVersion)
@@ -30,7 +33,8 @@ if (len(sys.argv) >= 3):
     if (sys.argv[2] == "TTTrainingSamples"):
         outSubdir += "/mvaSamples"
 
-processes = ["TTGamma"]
+processes = ["ST_t", "WW", "WZ", "ZZ", "DY_", "WZZ", "GluGlu", "TTWJetsToQQ"]
+
 for dir in os.listdir(inputBase):
     print(dir)
     # catch version, decide outputfolder
@@ -57,6 +61,9 @@ for dir in os.listdir(inputBase):
     #dir = dir[15:] # NOT NECESSARY -> all information in filename itself 
     if ("pnfsiihecmsstoreusergmestdacheavyNeutrinoUL" in inputFileName) :
         inputFileName = inputFileName[len("pnfsiihecmsstoreusergmestdacheavyNeutrinoUL"):]
+
+    if ("pnfsiihecmsstoreuserlwezenbeheavyNeutrino" in inputFileName) :
+        inputFileName = inputFileName[len("pnfsiihecmsstoreuserlwezenbeheavyNeutrino"):]
 
     #if ("singlelepton" in inputFileName):
     #    outputFileName = inputFileName.split("singlelepton_")[0][:-17] + ".root"

@@ -5,4 +5,4 @@ output	= /user/nivanden/condor/output/mergetuples_$(Process).out
 error	= /user/nivanden/condor/error/mergetuples_$(Process).err
 log	= /user/nivanden/condor/logs/mergetuples_$(Process).log
 
-queue 4
+queue 5

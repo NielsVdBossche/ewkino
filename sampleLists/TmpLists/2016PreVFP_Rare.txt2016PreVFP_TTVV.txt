@@ -1,0 +1,6 @@
+TTVV            2016PreVFP/TTHH_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_2016_ULpreVFP.root                                                               0.0006655
+TTVV            2016PreVFP/TTWH_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_2016_ULpreVFP.root                                                               0.001141 
+TTVV            2016PreVFP/TTWW_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_2016_ULpreVFP.root                                                               0.007003 
+TTVV            2016PreVFP/TTWZ_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_2016_ULpreVFP.root                                                               0.002453 	
+TTVV            2016PreVFP/TTZH_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_2016_ULpreVFP.root                                                               0.00113  
+TTVV            2016PreVFP/TTZZ_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_2016_ULpreVFP.root                                                               0.001386 	

@@ -8,11 +8,11 @@ import random
 import shutil
 import subprocess
 
-base_directory = "/pnfs/iihe/cms/store/user/nivanden/skims/rawSkims/"
+base_directory = "/pnfs/iihe/cms/store/user/nivanden/skims_v2/rawSkims/"
 analysisSubDir = "analysisSamples"
 mvaSubDir = "mvaSamples"
 
-finalOutputBase = "/pnfs/iihe/cms/store/user/nivanden/skims/"
+finalOutputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v2/"
 
 def mergeTuples(mergableDir):
     version = mergableDir.split("_version_")[-1]
