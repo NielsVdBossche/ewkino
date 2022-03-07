@@ -41,6 +41,8 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("lepMVASubSubleadinfLepton_" + flag, "leptonMVA score subsublead loose lepton", 40, -1., 1.),
         HistInfo("lepMVATrailingLeptonNew_" + flag, "leptonMVA score trailing loose lepton", 40, -1., 1.),
         HistInfo("LowestLepMVAScore_" + flag, "score", 40, -1., 1.),
+        HistInfo("LeptonsAtLooseWP_" + flag, "N_{l}", 8, -0.5, 7.5),
+        HistInfo("nEventsWith3T1Looser_" + flag, "N_{l}", 2, -0.5, 1.5)
     };
 
     // variables for selection
@@ -50,6 +52,10 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
 
 bool selectLeptonsPt(const Lepton& lepton) {
     return (lepton.pt() > 10);
+}
+
+bool selectLeptonsLooseMVA(const LightLepton& lepton) {
+    return (lepton.leptonMVATOP() > 0.);
 }
 
 bool selectLeptonsMVA(const LightLepton& lepton) {
@@ -225,7 +231,14 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(30)->Fill(lightLepsTemp[lightLepsTemp.size() -1].leptonMVATOP(), weight);
 
             LightLeptonCollection* lightLeps = looseLeps.lightLeptonCollectionPtr();
+            lightLeps->selectObjects(selectLeptonsLooseMVA);
+            currentHistSet->at(31)->Fill(lightLeps->size(), weight);
+            int nLepsLooseMVA = lightLeps->size();
+
+
             lightLeps->selectObjects(selectLeptonsMVA);
+            if (lightLeps->size() == 3 && nLepsLooseMVA - lightLeps->size() == 1) currentHistSet->at(32)->Fill(1., weight);
+            else currentHistSet->at(32)->Fill(0., weight);
 
             if (lightLeps->size() < 2 || (lightLeps->size() == 2 && lightLeps->at(0)->charge() != lightLeps->at(1)->charge())) continue;
             cutflowHist->Fill(3., weight);
