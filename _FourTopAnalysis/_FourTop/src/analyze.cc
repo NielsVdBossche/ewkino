@@ -211,6 +211,8 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                     if (processNb == 1) continue;
                     if (processNb == 2 && selection->numberOfLeps() == 2) continue;
                     processNb = 1;
+                } else if (st != selectionType::MCAll) {
+                    processNb = 0;
                 }
             } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
