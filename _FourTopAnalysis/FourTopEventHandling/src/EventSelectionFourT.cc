@@ -46,14 +46,19 @@ void EventFourT::objectSelection() {
     mediumLeps = new LeptonCollection(event->TightLeptonCollection());
     foLeps = new LeptonCollection(event->FOLeptonCollection());
 
+    if (mediumLeps->size() < 3) {
+        //mediumLeps->selectTightChargeLeptons();
+        //foLeps->selectTightChargeLeptons();
+    }
+
     jets = new JetCollection(event->jetCollection());
     jets->selectGoodJets();
-    bTagJets = new JetCollection(jets->mediumBTagCollection());
+    bTagJets = new JetCollection(jets->looseBTagCollection());
 
     event->selectTightLeptons();
 
     nJets = jets->size();
-    nMediumB = bTagJets->size();
+    nMediumB = event->numberOfMediumBTaggedJets();
     nTightB = event->numberOfTightBTaggedJets();
     nLooseB = event->numberOfLooseBTaggedJets();
     nLooseLep = looseLeps->size();
@@ -173,13 +178,13 @@ bool EventFourT::passLeanSelection() {
 
     if (nLep == 2 && nJets < 4) return false;
     if (nLep == 3 && nJets < 3) return false;
-    if (nLep == 2 && nJets < 2) return false;
+    if (nLep == 4 && nJets < 2) return false;
 
     if (event->numberOfLooseBTaggedJets() < 2) return false;
 
     if (nLep == 2 && ht < 280) return false;
     if (nLep == 3 && ht < 220) return false;
-    if (nLep == 2 && ht < 200) return false;
+    if (nLep == 4 && ht < 200) return false;
     
     return true;
 }
@@ -191,43 +196,17 @@ bool EventFourT::leptonsArePrompt() {
     return true;
 }
 
-void EventFourT::classifyEvent() {
-    currentClass = eventClass::fail;
-    if (! passBaselineEventSelection()) return;
-    if (! passLowMassVeto()) return;
-    if (! passZBosonVeto()) return;
-
-    if (! passFullEventSelection()) {
-        currentClass = eventClass::cro;
-        return;
-    }
-
-    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
-        currentClass = eventClass::crw;
-        return;
-    }
-
-    if (numberOfLeps() == 2) {
-        currentClass = eventClass::ssdl;
-    } else if (numberOfLeps() == 3) {
-        currentClass = eventClass::trilep;
-    } else if (numberOfLeps() == 4) {
-        currentClass = eventClass::fourlep;
-    }
-    return;
-}
-
 eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
     //if JER
     if (id == shapeUncId::JER_1p93) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_UpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_DownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
 
@@ -235,29 +214,29 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_UpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_DownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
     } else if (id == shapeUncId::JEC) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECUp().pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECDown().pt();
         }
     }
 
     nJets = jets->size();
-    nMediumB = bTagJets->size();
+    nMediumB = jets->numberOfMediumBTaggedJets();
     nTightB = jets->numberOfTightBTaggedJets();
     nLooseB = jets->numberOfLooseBTaggedJets();
     ht = jets->scalarPtSum();

@@ -95,10 +95,11 @@ class EventFourT {
         bool passLeanSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
-        void classifyEvent();
 
         bool leptonsArePrompt();
         bool leptonsAreTight();
+
+        void classifyEvent();
 
         eventClass classifyUncertainty(shapeUncId id, bool up);
         std::vector<double> fillVector();
@@ -121,5 +122,4 @@ class EventFourT {
         //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
 };
 
-bool leptonPtReq(const Lepton& lep);
 #endif

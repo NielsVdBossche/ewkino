@@ -194,6 +194,9 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             }
             selection->classifyEvent();
 
+            // TEMP! Remove for full stuff
+            //if (selection->getCurrentClass() == eventClass::fail) continue;
+
             unsigned processNb = 0;
 
             double weight = currentEvent->weight();
@@ -368,7 +371,6 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                     uncID++;
                     continue;
                 }
-
                 double weightUp = 1.;
                 double weightDown = 1.;
                 eventClass upClass = eventClass::fail;

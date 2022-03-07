@@ -23,20 +23,9 @@ namespace fourTopHists {
     std::vector<HistInfo>* allHistsML();
 
 
-    // others
-    std::vector<HistInfo>* crzInfo();
-    std::vector<HistInfo>* crwInfo();
-
     // create filling vector?
-    std::vector<double> fillLepInfoDL(Event* event);
-    std::vector<double> fillLepInfoML(Event* event);
-
-    std::vector<double> fillJetInfoDL(Event* event);
-    std::vector<double> fillJetInfoML(Event* event);
-
     std::vector<double> fillAllHistsDL(Event* event);
     std::vector<double> fillAllHistsML(Event* event);
-
 
     std::vector<HistInfo>* allHists(std::string flag, bool multilep, bool fourLep=false);
     std::vector<HistInfo>* infoLean(std::string flag, bool multilep);
@@ -44,6 +33,8 @@ namespace fourTopHists {
     std::vector<double> fillAllHists(bool multilep, EventFourT* selec, bool fourLep=false);
     std::vector<double> fillAllLean(bool multilep, EventFourT* selec);
 
+    std::vector<HistInfo>* testHists(eventClass);
+    std::vector<double> fillTestHists(eventClass, EventFourT* selec);
 
 }
 

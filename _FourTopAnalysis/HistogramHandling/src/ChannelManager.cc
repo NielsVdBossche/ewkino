@@ -4,23 +4,31 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-ChannelManager::ChannelManager(TFile* outputFile) : outfile(outputFile) {
+ChannelManager::ChannelManager(TFile* outputFile, bool unc) : outfile(outputFile), runUncertainties(unc) {
     // ask for outputfile as well?
 
     for (auto it : namingScheme) {
         if (it.first == eventClass::fail) continue;
         std::vector<HistInfo>* histInfoVec = HistogramConfig::getHistInfo(it.first);
-        mapping[it.first] = new Channel(it.second, histInfoVec);
+        mapping[it.first] = new Channel(it.second, histInfoVec, unc);
     }
 }
 
 
-ChannelManager::ChannelManager(TFile* outputFile, std::map<eventClass, std::string> names) : outfile(outputFile) {
+ChannelManager::ChannelManager(TFile* outputFile, std::map<eventClass, std::string> names, bool unc) : outfile(outputFile), runUncertainties(unc) {
     // ask for outputfile as well?
 
     for (auto it : names) {
         std::vector<HistInfo>* histInfoVec = HistogramConfig::getHistInfo(it.first);
-        mapping[it.first] = new Channel(it.second, histInfoVec);
+        mapping[it.first] = new Channel(it.second, histInfoVec, unc);
+    }
+}
+
+ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass), bool unc) : outfile(outputFile), runUncertainties(unc) {
+    for (auto it : namingScheme) {
+        if (it.first == eventClass::fail) continue;
+        std::vector<HistInfo>* histInfoVec = histInfoGenerator(it.first);
+        mapping[it.first] = new Channel(it.second, histInfoVec, unc);
     }
 }
 
@@ -35,6 +43,8 @@ void ChannelManager::newSample(std::string& sampleName) {
 }
 
 void ChannelManager::addSubUncertainties(shapeUncId uncID, std::vector<std::string>& subUncNames) {
+    if (! runUncertainties) return;
+    
     for (auto it : mapping) {
         it.second->addSubUncertainties(uncID, subUncNames);
     }
@@ -101,6 +111,8 @@ void ChannelManager::writeNominalHistograms(std::string& uniqueSampleName) {
 }
 
 void ChannelManager::writeUncertaintyHistograms(std::string& uniqueSampleName) {
+    if (! runUncertainties) return;
+
     for (unsigned i=0; i<processHistName.size(); i++) {
         gDirectory->cd(processHistName[i].c_str());
         if (! gDirectory->GetDirectory(uniqueSampleName.c_str())) {
@@ -118,6 +130,8 @@ void ChannelManager::writeUncertaintyHistograms(std::string& uniqueSampleName) {
 }
 
 void ChannelManager::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
+    if (! runUncertainties) return;
+
     gDirectory->cd(processHistName[subProc].c_str());
     for (auto it : mapping) {
         //it.second->writeUncertaintyEnvelopeHistograms(subProc);

@@ -52,6 +52,7 @@ class Lepton : public PhysicsObject {
         bool isLoose() const{ return selector->isLoose(); }
         bool isFO() const{ return selector->isFO(); }
         bool isTight() const{ return selector->isTight(); }
+        bool isTightCharge() const {return selector->isTightCharge();}
         virtual bool isGood() const override{ return isFO(); }
 
         //cone-correction for fake-rate prediction

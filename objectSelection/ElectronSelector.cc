@@ -109,25 +109,17 @@ bool ElectronSelector::isFOBase() const{
     }
     if( !electronPtr->passConversionVeto() ) return false;
     if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
-    // put tunable FO cuts below
-    //if( electronMVAValue(electronPtr) < electronMVACut() ){
-    //}
+
     return true;
 }
 
 bool ElectronSelector::isFO2016() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-	// modification attempt:
-	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
-        //    electronPtr->uncorrectedPt()) ) return false;
+
 	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
-	// Tu Thong's original FO ID:
-        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.05,
-	    electronPtr->uncorrectedPt()) ) return false;
-        if( electronPtr->ptRatio() < 0.5 ) return false;
-        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
+
     }
     return true;
 }
@@ -136,17 +128,11 @@ bool ElectronSelector::isFO2016() const{
 
 bool ElectronSelector::isFO2016PreVFP() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-	// modification attempt:
-	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
-        //    electronPtr->uncorrectedPt()) ) return false;
+
 	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
-	// Tu Thong's original FO ID:
-        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.05,
-	    electronPtr->uncorrectedPt()) ) return false;
-        if( electronPtr->ptRatio() < 0.5 ) return false;
-        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
+
     }
     return true;
 }
@@ -154,51 +140,33 @@ bool ElectronSelector::isFO2016PreVFP() const{
 
 bool ElectronSelector::isFO2016PostVFP() const {
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-	// modification attempt:
-	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
-        //    electronPtr->uncorrectedPt()) ) return false;
+
 	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
-	// Tu Thong's original FO ID:
-        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.05,
-	    electronPtr->uncorrectedPt()) ) return false;
-        if( electronPtr->ptRatio() < 0.5 ) return false;
-        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
+
     }
     return true;
 }
 
 bool ElectronSelector::isFO2017() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-	// modification attempt:
-	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
-        //    electronPtr->uncorrectedPt()) ) return false;
+
 	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
-	// Tu Thong's original FO ID:
-	/*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.08,
-	    electronPtr->uncorrectedPt()) ) return false;
-	if( electronPtr->ptRatio() < 0.5 ) return false;
-        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
+
     }
     return true;
 }
 
 bool ElectronSelector::isFO2018() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-	// modification attempt:
-	//if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.5,50,0.1,
-        //    electronPtr->uncorrectedPt()) ) return false;
+
         if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
 	if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
-	// Tu Thong's original FO ID:
-        /*if( electronPtr->closestJetDeepFlavor() > electronSlidingDeepFlavorThreshold(25,0.4,50,0.05,
-	    electronPtr->uncorrectedPt())) return false;
-        if( electronPtr->ptRatio() < 0.5 ) return false;
-        if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;*/
+
     }
     return true;
 }
@@ -236,6 +204,13 @@ bool ElectronSelector::isTight2017() const{
 bool ElectronSelector::isTight2018() const{
     return true;
 }
+
+// Tight charge requirement
+bool ElectronSelector::isTightCharge() const {
+    if( !electronPtr->passChargeConsistency() ) return false;
+    return true;
+}
+
 
 /*
 cone correction
