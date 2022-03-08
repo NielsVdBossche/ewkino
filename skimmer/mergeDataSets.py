@@ -11,10 +11,10 @@ if __name__=='__main__':
 
     # read command line args
     if len(sys.argv)<4:
-	print('ERROR: need at least three command line arguments:')
-	print('- target file')
-	print('- at least two files to merge')
-	sys.exit()
+        print('ERROR: need at least three command line arguments:')
+        print('- target file')
+        print('- at least two files to merge')
+        sys.exit()
 
     targetfile = sys.argv[1]
     inputfiles = sys.argv[2:]
@@ -22,17 +22,17 @@ if __name__=='__main__':
     
     # check if input files exist
     for f in inputfiles:
-	if not os.path.exists(f):
-	    raise Exception('ERROR: input file {} does not exist'.format(f))
+        if not os.path.exists(f):
+            raise Exception('ERROR: input file {} does not exist'.format(f))
     
     # check if target file exists
     if os.path.exists(targetfile):
-	raise Exception('ERROR: target file {} already exist,'.format(targetfile)
-			+' please remove it manually before recreating')
+        raise Exception('ERROR: target file {} already exist,'.format(targetfile)
+                +' please remove it manually before recreating')
 
     # check if executable exists
     if not os.path.exists(exe):
-	raise Exception('ERROR: executable {} does not exist'.format(exe))
+        raise Exception('ERROR: executable {} does not exist'.format(exe))
 
     # print and ask for confirmation
     print('will merge the following files:')

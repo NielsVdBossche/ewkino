@@ -14,6 +14,14 @@ enum eventClass {
     fourlep
 };
 
+enum selectionType {
+    MCAll,
+    MCPrompt,
+    ChargeMisDD,
+    NPDD,
+    Data
+};
+
 // others
 #define USE_SYSTEMATICS false
 #define NONPROMPT_ESTIMATION false

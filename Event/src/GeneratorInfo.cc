@@ -36,6 +36,10 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
         _prefireWeightUp = 1.;
     }
 
+    if (treeReader.containsLheInfo()) {
+        lheCollectionPtr = new LheCollection(treeReader);
+    }
+
     _firstScaleIndex = 0;
     _numberOfScaleVariations = std::min( treeReader._nLheWeights, unsigned(9) );
     _firstPdfIndex = 9;

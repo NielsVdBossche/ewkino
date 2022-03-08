@@ -51,6 +51,11 @@ bool passFourLeptonSkim( Event& event ){
     return passLeptonicSkim( event, 4 );
 }
 
+bool passLightLeptonSkimNew(Event& event) {
+    event.selectLooseLeptons();
+    event.cleanElectronsFromLooseMuons();
+    return ( event.numberOfLightLeptons() >= 2 );
+}
 
 bool passFakeRateSkim( Event& event ){
     event.selectLooseLeptons();
@@ -72,7 +77,8 @@ skimCondition giveCondition(const std::string& condstring) {
         { "trilepton", trilepton },
         { "fourlepton", fourlepton },
         { "fakerate", fakerate },
-        { "light_SSdilepton_or_trilep", light_SSdilepton_or_trilep }
+        { "light_SSdilepton_or_trilep", light_SSdilepton_or_trilep },
+        { "lightDileptonSkim", lightDileptonSkim}
     };
 
     auto it = skimFunctionMap.find( condstring );
@@ -92,7 +98,8 @@ bool passSkim( Event& event, skimCondition cond){
         { trilepton, passTrileptonSkim },
         { fourlepton, passFourLeptonSkim },
         { fakerate, passFakeRateSkim },
-        { light_SSdilepton_or_trilep, passLight_SSdilepton_or_trilep }
+        { light_SSdilepton_or_trilep, passLight_SSdilepton_or_trilep },
+        { lightDileptonSkim, passLightLeptonSkimNew}
     };
     //auto it = skimFunctionMap.find( cond );
 

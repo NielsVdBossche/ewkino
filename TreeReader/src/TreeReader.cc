@@ -251,6 +251,9 @@ bool TreeReader::containsGeneratorInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_gen_" );
 }
 
+bool TreeReader::containsLheInfo() const{
+    return treeHasBranchWithName( _currentTreePtr, "_lhePt" );
+}
 
 bool TreeReader::containsSusyMassInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_mChi" );
@@ -540,7 +543,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("_runNb", &_runNb, &b__runNb);
     _currentTreePtr->SetBranchAddress("_lumiBlock", &_lumiBlock, &b__lumiBlock);
     _currentTreePtr->SetBranchAddress("_eventNb", &_eventNb, &b__eventNb);
-    _currentTreePtr->SetBranchAddress("_nVertex", &_nVertex, &b__nVertex);    
+    _currentTreePtr->SetBranchAddress("_nVertex", &_nVertex, &b__nVertex);
     _currentTreePtr->SetBranchAddress("_passTrigger_e", &_passTrigger_e, &b__passTrigger_e);
     _currentTreePtr->SetBranchAddress("_passTrigger_ee", &_passTrigger_ee, &b__passTrigger_ee);
     _currentTreePtr->SetBranchAddress("_passTrigger_eee", &_passTrigger_eee, &b__passTrigger_eee);
@@ -725,6 +728,20 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
         _currentTreePtr->SetBranchAddress("_zgEventType", &_zgEventType, &b__zgEventType);
     } 
 
+    if (containsLheInfo()) {
+        _currentTreePtr->SetBranchAddress("_nLheTau", &_nLheTau, &b__nLheTau);
+        _currentTreePtr->SetBranchAddress("_nLheParticles", &_nLheParticles, &b__nLheParticles);
+        _currentTreePtr->SetBranchAddress("_lheStatus", _lheStatus, &b__lheStatus);
+        _currentTreePtr->SetBranchAddress("_lhePdgId", _lhePdgId, &b__lhePdgId);
+        _currentTreePtr->SetBranchAddress("_lheMother1", _lheMother1, &b__lheMother1);
+        _currentTreePtr->SetBranchAddress("_lheMother2", _lheMother2, &b__lheMother2);
+        _currentTreePtr->SetBranchAddress("_lhePt", _lhePt, &b__lhePt);
+        _currentTreePtr->SetBranchAddress("_lheEta", _lheEta, &b__lheEta);
+        _currentTreePtr->SetBranchAddress("_lhePhi", _lhePhi, &b__lhePhi);
+        _currentTreePtr->SetBranchAddress("_lheE", _lheE, &b__lheE);
+        _currentTreePtr->SetBranchAddress("_lheMass", _lheMass, &b__lheMass);
+    }
+
     if( !is2018() && isMC() ){
         _currentTreePtr->SetBranchAddress("_prefireWeight", &_prefireWeight, &b__prefireWeight);
         _currentTreePtr->SetBranchAddress("_prefireWeightDown", &_prefireWeightDown, &b__prefireWeightDown);
@@ -852,7 +869,6 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     outputTree->Branch("_lPOGMedium",                   &_lPOGMedium,                   "_lPOGMedium[_nL]/O");
     outputTree->Branch("_lPOGTight",                    &_lPOGTight,                    "_lPOGTight[_nL]/O");
 
-    /*
     outputTree->Branch("_tauDecayMode",                 &_tauDecayMode,                 "_tauDecayMode[_nL]/i");
     outputTree->Branch("_decayModeFinding",             &_decayModeFinding,             "_decayModeFinding[_nL]/O");
    	outputTree->Branch("_decayModeFindingNew",          &_decayModeFindingNew,          "_decayModeFindingNew[_nL]/O");
@@ -881,8 +897,7 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     outputTree->Branch("_tauEleVetoMedium",             &_tauEleVetoMedium,             "_tauEleVetoMedium[_nL]/O");
     outputTree->Branch("_tauEleVetoTight",              &_tauEleVetoTight,              "_tauEleVetoTight[_nL]/O");
     outputTree->Branch("_tauEleVetoVTight",             &_tauEleVetoVTight,             "_tauEleVetoVTight[_nL]/O"); 
-    */
-
+    
     outputTree->Branch("_relIso",                       &_relIso,                       "_relIso[_nLight]/D");
     outputTree->Branch("_relIso0p4",                    &_relIso0p4,                    "_relIso0p4[_nLight]/D");
     outputTree->Branch("_relIso0p4MuDeltaBeta",         &_relIso0p4MuDeltaBeta,         "_relIso0p4MuDeltaBeta[_nMu]/D");
@@ -964,6 +979,20 @@ void TreeReader::setOutputTree( TTree* outputTree ){
         outputTree->Branch("_ttgEventType",              &_ttgEventType,              "_ttgEventType/i");
         outputTree->Branch("_zgEventType",               &_zgEventType,               "_zgEventType/i");
     } 
+
+    if (containsLheInfo()) {
+        outputTree->Branch("_nLheTau",                   &_nLheTau,                   "_nLheTau/i");
+        outputTree->Branch("_nLheParticles",             &_nLheParticles,             "_nLheParticles/i");
+        outputTree->Branch("_lheStatus",                 &_lheStatus,                 "_lheStatus[_nLheParticles]/I");
+        outputTree->Branch("_lhePdgId",                  &_lhePdgId,                  "_lhePdgId[_nLheParticles]/I");
+        outputTree->Branch("_lheMother1",                &_lheMother1,                "_lheMother1[_nLheParticles]/I");
+        outputTree->Branch("_lheMother2",                &_lheMother2,                "_lheMother2[_nLheParticles]/I");
+        outputTree->Branch("_lhePt",                     &_lhePt,                     "_lhePt[_nLheParticles]/F");
+        outputTree->Branch("_lheEta",                    &_lheEta,                    "_lheEta[_nLheParticles]/F");
+        outputTree->Branch("_lhePhi",                    &_lhePhi,                    "_lhePhi[_nLheParticles]/F");
+        outputTree->Branch("_lheE",                      &_lheE,                      "_lheE[_nLheParticles]/F");
+        outputTree->Branch("_lheMass",                   &_lheMass,                   "_lheMass[_nLheParticles]/F");
+    }
 
     if( !is2018() && isMC() ){
        	outputTree->Branch("_prefireWeight",             &_prefireWeight,             "_prefireWeight/F");
@@ -1126,7 +1155,21 @@ void TreeReader::setLeanOutputTree( TTree* outputTree ){
         outputTree->Branch("_gen_lIsPrompt",             &_gen_lIsPrompt,             "_gen_lIsPrompt[_gen_nL]/O");
         outputTree->Branch("_ttgEventType",              &_ttgEventType,              "_ttgEventType/i");
         outputTree->Branch("_zgEventType",               &_zgEventType,               "_zgEventType/i");
-    } 
+    }
+    
+    if (containsLheInfo()) {
+        outputTree->Branch("_nLheTau",                   &_nLheTau,                   "_nLheTau/i");
+        outputTree->Branch("_nLheParticles",             &_nLheParticles,             "_nLheParticles/i");
+        outputTree->Branch("_lheStatus",                 &_lheStatus,                 "_lheStatus[_nLheParticles]/I");
+        outputTree->Branch("_lhePdgId",                  &_lhePdgId,                  "_lhePdgId[_nLheParticles]/I");
+        outputTree->Branch("_lheMother1",                &_lheMother1,                "_lheMother1[_nLheParticles]/I");
+        outputTree->Branch("_lheMother2",                &_lheMother2,                "_lheMother2[_nLheParticles]/I");
+        outputTree->Branch("_lhePt",                     &_lhePt,                     "_lhePt[_nLheParticles]/F");
+        outputTree->Branch("_lheEta",                    &_lheEta,                    "_lheEta[_nLheParticles]/F");
+        outputTree->Branch("_lhePhi",                    &_lhePhi,                    "_lhePhi[_nLheParticles]/F");
+        outputTree->Branch("_lheE",                      &_lheE,                      "_lheE[_nLheParticles]/F");
+        outputTree->Branch("_lheMass",                   &_lheMass,                   "_lheMass[_nLheParticles]/F");
+    }
 }
 
 

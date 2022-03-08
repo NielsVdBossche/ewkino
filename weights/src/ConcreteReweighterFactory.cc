@@ -420,7 +420,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     } else {
         bTagSFFileName = "reshaping_deepJet_106XUL18_v2.csv";
     }
-    
+
     std::cout << "bTag SF file: " << bTagSFFileName << std::endl;
     //std::string weightDirectory = stringTools::formatDirectoryName( weightDirectory );
     std::string sfFilePath = "weightFiles/bTagSF/"+bTagSFFileName;

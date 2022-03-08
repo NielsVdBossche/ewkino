@@ -46,13 +46,13 @@ class Channel {
         std::vector<HistInfo_2D>* get2DHistInfo() {return twoDimInfo;}
         Uncertainty* getUncertainty(shapeUncId id) {return uncHistMap[id];}
 
-        void initializeHistogramStack(std::vector<std::string>& divsInitial);
+        void initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties);
 
         //void subDivisions(std::vector<std::string>& divs);
         void changeProcess(unsigned index, std::string& newTitle);
 
         // histogram management
-        void newSample(std::string& uniqueSampleName);
+        void newSample(std::string& uniqueSampleName, bool uncertainties);
         void writeNominalHistograms(unsigned subProc);
         void writeUncertaintyHistograms(unsigned subProc);
         //void writeUncertaintyEnvelopeHistograms(unsigned subProc);

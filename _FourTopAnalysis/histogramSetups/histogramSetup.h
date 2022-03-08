@@ -10,6 +10,7 @@
 
 #include "../../Event/interface/Event.h"
 #include "../FourTopEventHandling/interface/EventFourT.h"
+#include "../FourTopEventHandling/interface/MVAHandler.h"
 
 #include "../TopQuarkReconstruction/interface/TopReconstructionNew.h"
 

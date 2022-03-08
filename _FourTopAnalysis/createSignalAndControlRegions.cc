@@ -19,8 +19,8 @@
 int main(int argc, char* argv[]) {
     setTDRStyle();
 
-    if (argc < 2) {
-        std::cout << "One argument is required: <sampleList.txt>" << std::endl;
+    if (argc < 3) {
+        std::cout << "One argument is required: <sampleList.txt> <runType>" << std::endl;
     }
     // Set sample directory
 
@@ -30,13 +30,15 @@ int main(int argc, char* argv[]) {
     // Settings splitsen if necessary
 
     // main func call
-    FourTop analysisObject("AnalysisOutput", argvStr, 1);
+    FourTop analysisObject("AnalysisOutput_" + argvStr[2], argvStr, 1);
 
     if (argvStr[1] != "allSamples.txt") {
         //std::string newYearString = stringTools::fileNameWithoutExtension(stringTools::splitDirectoryFileName(argvStr[1]).second);
         //std::cout << "not running all samples! Year is taken to be: " << newYearString;
         //analysisObject.setYearString(newYearString);
     }
+    bool onlyCR = false;
+    if (argc >= 4 && argvStr[3] == "CR") onlyCR = true;
 
-    analysisObject.analyze();
+    analysisObject.analyze(argvStr[2], onlyCR);
 }
