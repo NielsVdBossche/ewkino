@@ -19,7 +19,7 @@ for sl in sampleLists:
     with open(filePath) as f:
         for line in f:
             splitLine = line.split()
-
+            if line == "\n": continue
             if line[0] == '#' or splitLine[0] == "#": continue
             
             if not splitLine[0] in sampleDict.keys():
