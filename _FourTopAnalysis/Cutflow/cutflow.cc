@@ -42,7 +42,8 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("lepMVATrailingLeptonNew_" + flag, "leptonMVA score trailing loose lepton", 40, -1., 1.),
         HistInfo("LowestLepMVAScore_" + flag, "score", 40, -1., 1.),
         HistInfo("LeptonsAtLooseWP_" + flag, "N_{l}", 8, -0.5, 7.5),
-        HistInfo("nEventsWith3T1Looser_" + flag, "N_{l}", 2, -0.5, 1.5)
+        HistInfo("nEventsWith3T1Looser_" + flag, "N_{l}", 2, -0.5, 1.5),
+        HistInfo("nLepsNotTightButLooseWP_" + flag, "N_{l}", 4, -0.5, 3.5)
     };
 
     // variables for selection
@@ -237,8 +238,9 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
 
             lightLeps->selectObjects(selectLeptonsMVA);
-            if (lightLeps->size() == 3 && nLepsLooseMVA - lightLeps->size() == 1) currentHistSet->at(32)->Fill(1., weight);
+            if (tightLeps.size() == 3 && nLepsLooseMVA - tightLeps.size() == 1) currentHistSet->at(32)->Fill(1., weight);
             else currentHistSet->at(32)->Fill(0., weight);
+            currentHistSet->at(33)->Fill(nLepsLooseMVA - tightLeps.size(), weight);
 
             if (lightLeps->size() < 2 || (lightLeps->size() == 2 && lightLeps->at(0)->charge() != lightLeps->at(1)->charge())) continue;
             cutflowHist->Fill(3., weight);
