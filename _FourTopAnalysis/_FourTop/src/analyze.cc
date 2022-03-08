@@ -103,6 +103,19 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         useUncertainties = false;
 
         std::cout << "Running method " << "Obs" << std::endl;
+    } else if (method == "MCNoChargeMisID") {
+        // only run DL channel
+        // testmethod for chargeMisID
+        processes = {"", "nonPrompt"};
+        selection->setSelectionType(selectionType::MCNoChargeMisID);
+        st = selectionType::MCNoChargeMisID;
+        std::cout << "Running method " << "MCNoChargeMisID" << std::endl;
+    } else if (method == "MCNoNP") {
+        // testmethod for NP est
+        processes = {"", "ChargeMisID"};
+        selection->setSelectionType(selectionType::MCNoNP);
+        st = selectionType::MCNoNP;
+        std::cout << "Running method " << "MCNoNP" << std::endl;
     } else {
         std::cout << "Running method " << "MCAll" << std::endl;
     }
@@ -194,33 +207,33 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             }
             selection->classifyEvent();
 
+            // Add lepton selection boolean call here!
+            if (! selection->passLeptonSelection()) continue;
             unsigned processNb = 0;
-
             double weight = currentEvent->weight();
-            if( currentEvent->isMC() && (st == selectionType::MCAll || st == selectionType::MCPrompt)) {
+            if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
                 weight *= reweighter.totalWeight( *currentEvent );
 
-                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                    if (leptonPtr->isChargeFlip()) {
-                        processNb = 2;
-                        break;
-                    }
-                }
-                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                    if (! leptonPtr->isPrompt()) {
-                        processNb = 1;
-                        break;
-                    }
-                }
-                
                 if (st == selectionType::MCPrompt) {
-                    if (processNb == 1) continue;
-                    if (processNb == 2 && selection->numberOfLeps() == 2) continue;
-                    processNb = 1;
+                    if (! selection->leptonsArePrompt()) continue;
+                    if (! selection->leptonsAreNotChargeFlip()) processNb = 1; 
+                    if (processNb == 1 && selection->numberOfLeps() == 2) continue;
+
+                } else if (st == selectionType::MCNoChargeMisID)  {
+                    if (! selection->leptonsAreNotChargeFlip()) continue;
+                    if (! selection->leptonsArePrompt()) processNb = 1;
+
+                    if (selection->numberOfLeps() >= 2) continue;
+                } else if (st == selectionType::MCNoNP) {
+                    if (! selection->leptonsArePrompt()) continue;
+                    if (! selection->leptonsAreNotChargeFlip()) processNb = 1;
+                } else {
+                    if (! selection->leptonsAreNotChargeFlip()) processNb = 2; 
+                    if (! selection->leptonsArePrompt()) processNb = 1;
                 }
             } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
-
+                weight *= FakeRateWeight();
                 if (currentEvent->isMC()) {
                     weight *= -1;
                 }
@@ -348,7 +361,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
 
 
             // TODO: Systematics
-            if (currentEvent->isData() || ! useUncertainties) continue;
+            if (currentEvent->isData() || ! useUncertainties || processNb > 0) continue;
 
             //// Start filling histograms
             // loop uncertainties

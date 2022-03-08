@@ -70,7 +70,7 @@ bool EventFourT::passBaselineEventSelection() {
     //if (n_lep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
     //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
-    if (! passLeptonSelection()) return false;
+    //if (! passLeptonSelection()) return false;
     
     if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
     // 2 SS leptons OR 3+ leps
@@ -93,11 +93,16 @@ bool EventFourT::passLeptonSelection() {
         // normal tight lepton selection, no prompt or charge requirements
         if (mediumLeps->size() < 2) return false;
         if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != mediumLeps->size()) return false;
     } else if (selType == MCPrompt) {
         // tight and prompt and no charge misID
         // or also FO and prompt with negative weight?
         if (mediumLeps->size() < 2) return false;
         if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != mediumLeps->size()) return false;
+        if (! leptonsArePrompt()) return false;
         // check if any lepton is nonprompt or charge misIDd
     } else if (selType == ChargeMisDD) {
         // tight but OS events
@@ -115,6 +120,8 @@ bool EventFourT::passLeptonSelection() {
     } else if (selType == Data) {
         if (mediumLeps->size() < 2) return false;
         if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != mediumLeps->size()) return false;
     }
     
     return true;
@@ -187,6 +194,20 @@ bool EventFourT::passLeanSelection() {
 bool EventFourT::leptonsArePrompt() {
     for( const auto& leptonPtr : *mediumLeps ){
         if( !leptonPtr->isPrompt() ) return false;
+    }
+    return true;
+}
+
+bool EventFourT::leptonsAreNotChargeFlip() {
+    for( const auto& leptonPtr : *mediumLeps ){
+        if(leptonPtr->isChargeFlip()) return false;
+    }
+    return true;
+}
+
+bool EventFourT::leptonsAreNotChargeMisMatch() {
+    for( const auto& leptonPtr : *mediumLeps ){
+        if(leptonPtr->isChargeMisMatch()) return false;
     }
     return true;
 }

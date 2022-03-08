@@ -98,6 +98,8 @@ class EventFourT {
         void classifyEvent();
 
         bool leptonsArePrompt();
+        bool leptonsAreNotChargeFlip();
+        bool leptonsAreNotChargeMisMatch();
         bool leptonsAreTight();
 
         eventClass classifyUncertainty(shapeUncId id, bool up);

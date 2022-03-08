@@ -31,24 +31,48 @@ double FourTop::ChmisIDWeight() {
 }
 
 void FourTop::initFakerate() {
-    std::string filename;
+    std::string filename = "fakeRateMap_data_";
 
     if (yearString == "2016PreVFP") {
-        filename = "";
+        //filename = "";
     } else if( yearString == "2016PostVFP" ){
-        filename= "";
+        //filename= "";
     } else if( yearString == "2017" ){
-        filename = "";
+        //filename = "";
     } else {
-        filename = "";
+        //filename = "";
     }
 
-    std::string fullPath = "DatadrivenInput/nonprompt/" + filename;
+    std::string fullPathElectron = "DatadrivenInput/nonprompt/" + filename + "electron_" + yearString + "_mT.root";
+    std::string fullPathMuon = "DatadrivenInput/nonprompt/" + filename + "muon_" + yearString + "_mT.root";
 
-    TFile* weightFilePtr = nullptr; // TFile::Open( fullPath.c_str() );
 
-    //FakeRates = dynamic_cast< TH2D* >( weightFilePtr->Get( "nominal" ) );
-    //FakeRates->SetDirectory( gROOT );
-//
-    //weightFilePtr->Close();
+    TFile* elWeightFile = TFile::Open( fullPathElectron.c_str() );
+    FakeRatesElectron = dynamic_cast< TH2D* >( elWeightFile->Get( "nominal" ) );
+    FakeRatesElectron->SetDirectory( gROOT );
+    elWeightFile->Close();
+
+    TFile* muWeightFile = TFile::Open( fullPathMuon.c_str() );
+    FakeRatesMuon = dynamic_cast< TH2D* >( muWeightFile->Get( "nominal" ) );
+    FakeRatesMuon->SetDirectory( gROOT );
+    muWeightFile->Close();
+}
+
+double FourTop::FakeRateWeight() {
+    double weight = -1.;
+
+    for (const auto &lep : currentEvent->lightLeptonCollection()) {
+        if (!(lep->isFO() && !lep->isTight())) continue;
+
+        double fr;
+        if (lep->isMuon()) {
+            fr = histogram::contentAtValues(FakeRatesMuon, lep->pt(), lep->eta());
+        } else {
+            fr = histogram::contentAtValues(FakeRatesElectron, lep->pt(), lep->eta());
+        }
+        // calculate weight
+        weight *= (-fr / (1. - fr));
+    }
+    
+    return weight;
 }
