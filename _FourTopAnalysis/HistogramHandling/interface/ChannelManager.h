@@ -24,9 +24,9 @@ class ChannelManager {
 
         bool useUncertainties = true;
     public:
-        ChannelManager(TFile* outputFile, bool unc=true);
-        ChannelManager(TFile* outputFile, std::map<eventClass, std::string> naming, bool unc=true);
-        ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass), bool unc=true);
+        ChannelManager(TFile* outputFile);
+        ChannelManager(TFile* outputFile, std::map<eventClass, std::string> naming);
+        ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass));
 
         ~ChannelManager();
 

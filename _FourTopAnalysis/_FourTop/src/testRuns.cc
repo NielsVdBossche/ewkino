@@ -5,7 +5,7 @@
 #endif
 
 void FourTop:: testRuns() {
-    ChannelManager* mgrAll = new ChannelManager(outfile, fourTopHists::testHists, false);
+    ChannelManager* mgrAll = new ChannelManager(outfile, fourTopHists::testHists);
     std::shared_ptr< SampleCrossSections > xsecs;
 
     // reweighter creation
@@ -18,7 +18,7 @@ void FourTop:: testRuns() {
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
 
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
-    mgrAll->initHistogramStacks(processes);
+    mgrAll->initHistogramStacks(processes, false);
 
     std::cout << "event loop" << std::endl;
 
