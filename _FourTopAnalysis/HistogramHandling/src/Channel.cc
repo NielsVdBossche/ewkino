@@ -4,11 +4,11 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-Channel::Channel(std::string& channel, std::vector<HistInfo>* histInfo, bool unc) : ChannelName(channel), runUncertainties(unc) {
+Channel::Channel(std::string& channel, std::vector<HistInfo>* histInfo) : ChannelName(channel) {
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }
 
-Channel::Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo, bool unc) : ChannelName(channel), SubChannelName(subChannel), runUncertainties(unc) {
+Channel::Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo) : ChannelName(channel), SubChannelName(subChannel) {
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }
 
@@ -48,7 +48,7 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
     subChannels = new std::map<std::string, Channel*>;
 
     for (unsigned i=0; i<newSubChannels.size(); i++) {
-        (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo, runUncertainties);
+        (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo);
         (*subChannels)[newSubChannels[i]]->set2DHistInfo(twoDimInfo);
     }
 }
@@ -100,16 +100,16 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bo
     }
 }
 
-void Channel::changeProcess(unsigned index, std::string& newTitle) {
+void Channel::changeProcess(unsigned index, std::string& newTitle, bool uncertainties) {
     nominalHistograms->changeProcess(index, newTitle);
 
     if (subChannels) {
         for (auto it : *subChannels) {
-            it.second->changeProcess(index, newTitle);
+            it.second->changeProcess(index, newTitle, uncertainties);
         }
     }
 
-    if (! runUncertainties) return;
+    if (! uncertainties) return;
 
     for (auto it : uncHistMap) {
         it.second->changeProcess(index, newTitle);

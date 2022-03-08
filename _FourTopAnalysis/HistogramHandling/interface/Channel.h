@@ -46,7 +46,7 @@ class Channel {
         void initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties);
 
         //void subDivisions(std::vector<std::string>& divs);
-        void changeProcess(unsigned index, std::string& newTitle);
+        void changeProcess(unsigned index, std::string& newTitle, bool uncertainties);
 
         // histogram management
         void newSample(std::string& uniqueSampleName, bool uncertainties);
