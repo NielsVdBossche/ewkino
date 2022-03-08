@@ -197,7 +197,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             unsigned processNb = 0;
 
             double weight = currentEvent->weight();
-            if( currentEvent->isMC() && st != selectionType::Data ){
+            if( currentEvent->isMC() && (st == selectionType::MCAll || st == selectionType::MCPrompt)) {
                 weight *= reweighter.totalWeight( *currentEvent );
 
                 for (const auto& leptonPtr : *selection->getMediumLepCol()) {
@@ -212,12 +212,11 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                         break;
                     }
                 }
+                
                 if (st == selectionType::MCPrompt) {
                     if (processNb == 1) continue;
                     if (processNb == 2 && selection->numberOfLeps() == 2) continue;
                     processNb = 1;
-                } else if (st != selectionType::MCAll) {
-                    processNb = 0;
                 }
             } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
