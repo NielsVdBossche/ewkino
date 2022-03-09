@@ -1,5 +1,5 @@
-Obs     ../skims_v2/2018/Merged_Run2017B-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
-Obs     ../skims_v2/2018/Merged_Run2017C-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
-Obs     ../skims_v2/2018/Merged_Run2017D-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
-Obs     ../skims_v2/2018/Merged_Run2017E-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
-Obs     ../skims_v2/2018/Merged_Run2017F-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
+Obs     ../skims_v2/2017/Merged_Run2017B-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
+Obs     ../skims_v2/2017/Merged_Run2017C-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
+Obs     ../skims_v2/2017/Merged_Run2017D-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
+Obs     ../skims_v2/2017/Merged_Run2017E-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
+Obs     ../skims_v2/2017/Merged_Run2017F-09Aug2019_UL2017-v1_singlelepton_data_UL2017v2.root
