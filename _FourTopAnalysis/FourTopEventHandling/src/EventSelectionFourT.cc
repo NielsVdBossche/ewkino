@@ -71,7 +71,9 @@ bool EventFourT::passBaselineEventSelection() {
     //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
     //if (! passLeptonSelection()) return false;
-    
+    if (mediumLeps->size() < 2) return false;
+    if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+
     if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
@@ -118,6 +120,16 @@ bool EventFourT::passLeptonSelection() {
         mediumLeps = foLeps;
         nLep = foLeps->size();
     } else if (selType == Data) {
+        if (mediumLeps->size() < 2) return false;
+        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != mediumLeps->size()) return false;
+    } else if (selType == MCNoChargeMisID) {
+        if (mediumLeps->size() < 2) return false;
+        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != mediumLeps->size()) return false;
+    } else if (selType == MCNoNP) {
         if (mediumLeps->size() < 2) return false;
         if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
 

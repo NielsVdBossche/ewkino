@@ -6,7 +6,7 @@ log         =   /user/nivanden/condor/logs/analysis_year_$(Method)_$(ClusterId)_
 error       =   /user/nivanden/condor/error/analysis_year_$(Method)_$(ClusterId)_$(Process).err
 output      =   /user/nivanden/condor/output/analysis_year_$(Method)_$(ClusterId)_$(Process).out
 
-queue 1 Filename, Method in (
+queue 1 Filename, Method from (
     TmpLists/2016PreVFP_Rare.txt, MCPrompt
     TmpLists/2016PreVFP_TTVV.txt, MCPrompt
     TmpLists/2016PreVFP_Xgamma.txt, MCPrompt

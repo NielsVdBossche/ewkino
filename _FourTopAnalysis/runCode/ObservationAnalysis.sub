@@ -6,7 +6,7 @@ log         =   /user/nivanden/condor/logs/analysis_year_Obs_$(ClusterId)_$(Proc
 error       =   /user/nivanden/condor/error/analysis_year_Obs_$(ClusterId)_$(Process).err
 output      =   /user/nivanden/condor/output/analysis_year_Obs_$(ClusterId)_$(Process).out
 
-queue 1 Filename, Method in (
+queue 1 Filename, Method from (
     Data16PreVFP.txt Obs
     Data16PostVFP.txt Obs
     Data17.txt Obs

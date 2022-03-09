@@ -223,7 +223,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                     if (! selection->leptonsAreNotChargeFlip()) continue;
                     if (! selection->leptonsArePrompt()) processNb = 1;
 
-                    if (selection->numberOfLeps() >= 2) continue;
+                    // if (selection->numberOfLeps() >= 2) continue;
                 } else if (st == selectionType::MCNoNP) {
                     if (! selection->leptonsArePrompt()) continue;
                     if (! selection->leptonsAreNotChargeFlip()) processNb = 1;
