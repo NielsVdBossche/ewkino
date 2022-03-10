@@ -305,7 +305,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(14)->Fill(currentEvent->numberOfLooseBTaggedJets(), weight);
             currentHistSet->at(15)->Fill(currentEvent->numberOfMediumBTaggedJets(), weight);
 
-            if (nLeps < 4 && selection->numberOfLooseBJets() < 2) continue;
+            if ((nLeps < 4 && selection->numberOfLooseBJets() < 2) || (nLeps == 4 && selection->numberOfLooseBJets() < 1)) continue;
             cutflowHist->Fill(11., weight);
             cutflowHistSub->Fill(11., weight);
 
@@ -324,15 +324,15 @@ void FourTop::cutFlow(std::string& sortingMode) {
             if (currentEvent->numberOfLooseBTaggedJets() == 3) currentHistSet->at(21)->Fill(currentEvent->numberOfJets(), weight);
             if (currentEvent->numberOfMediumBTaggedJets() == 2) currentHistSet->at(22)->Fill(currentEvent->numberOfJets(), weight);
             
-            if (currentEvent->numberOfTightLeptons() == 2) {
+            if (nLeps == 2) {
                 cutflowHist->Fill(14., weight);
                 cutflowHistSub->Fill(14., weight);
             }
-            if (currentEvent->numberOfTightLeptons() == 3) {
+            if (nLeps == 3) {
                 cutflowHist->Fill(15., weight);
                 cutflowHistSub->Fill(15., weight);
             }
-            if (currentEvent->numberOfTightLeptons() == 4) {
+            if (nLeps == 4) {
                 cutflowHist->Fill(16., weight);
                 cutflowHistSub->Fill(16., weight);
             }
