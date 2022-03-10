@@ -162,7 +162,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 LightLeptonCollection* lightLeps = currentEvent->looseLeptonCollection().lightLeptonCollectionPtr();
                 lightLeps->selectObjects(selectLeptonsLooseMVA);
                 if (nTightLeps == 3) {
-                    nLeps = nTightLeps + (nTightLeps - lightLeps->size());
+                    nLeps = nTightLeps + (lightLeps->size() - nTightLeps);
                 }
             }
             if (nTightLeps >= 2) {     
