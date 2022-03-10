@@ -158,7 +158,13 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 if (nLeps == 2) {
                     sameCharge = (genLeptons->at(0)->charge() == genLeptons->at(1)->charge());
                 }
-            } 
+            } else {
+                LightLeptonCollection* lightLeps = currentEvent->looseLeptonCollection().lightLeptonCollectionPtr();
+                lightLeps->selectObjects(selectLeptonsLooseMVA);
+                if (nTightLeps = 3) {
+                    nLeps = nTightLeps + (nTightLeps - lightLeps->size());
+                }
+            }
             if (nTightLeps >= 2) {     
                 recoSameCharge = (tightLeps[0].charge() == tightLeps[1].charge());
                 if (! sortOnGenerator) sameCharge = recoSameCharge;
@@ -236,7 +242,6 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(31)->Fill(lightLeps->size(), weight);
             int nLepsLooseMVA = lightLeps->size();
 
-
             lightLeps->selectObjects(selectLeptonsMVA);
             if (tightLeps.size() == 3 && nLepsLooseMVA - tightLeps.size() == 1) currentHistSet->at(32)->Fill(1., weight);
             else currentHistSet->at(32)->Fill(0., weight);
@@ -300,7 +305,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(14)->Fill(currentEvent->numberOfLooseBTaggedJets(), weight);
             currentHistSet->at(15)->Fill(currentEvent->numberOfMediumBTaggedJets(), weight);
 
-            if (selection->numberOfLooseBJets() < 2) continue;
+            if (nLeps < 4 && selection->numberOfLooseBJets() < 2) continue;
             cutflowHist->Fill(11., weight);
             cutflowHistSub->Fill(11., weight);
 
