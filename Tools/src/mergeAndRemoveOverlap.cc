@@ -71,8 +71,10 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
     TFile* outputFilePtr = TFile::Open( outputPath.c_str(), "RECREATE" );
     outputFilePtr->mkdir( "blackJackAndHookers" );
     outputFilePtr->cd( "blackJackAndHookers" );
+    TDirectory* outputDir = outputFilePtr->GetDirectory( "blackJackAndHookers" );
+    TFile* currentOutputFile = outputFilePtr;
     std::shared_ptr< TTree > outputTreePtr( std::make_shared< TTree >( "blackJackAndHookersTree","blackJackAndHookersTree" ) );
-
+    outputDir->Append(outputTreePtr.get());
     //histograms stored in file
     std::map< std::string, std::shared_ptr< TH1 > > outputHistogramMap;
 
@@ -88,7 +90,12 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
         //open next sample
         //DO NOT reset triggers because this will invalidate the addresses set by setOutputTree and trigger decisions in output file will be wrong!
         treeReader.initSampleFromFile( inputFilePath, false );
-        outputTreePtr->SetDirectory( outputFilePtr );
+
+        //if (currentOutputFile != outputTreePtr->GetCurrentFile()) {
+        //    currentOutputFile = outputTreePtr->GetCurrentFile();
+        //    currentOutputFile->mkdir( "blackJackAndHookers" );
+        //}
+        //outputTreePtr->SetDirectory( currentOutputFile );
 
         //set output histograms and output tree for first file
         if( inputPathIt == inputPathVector.cbegin() ){
@@ -125,6 +132,10 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
 
     }
 
+    if (! outputFilePtr->IsOpen()) {
+        outputFilePtr = TFile::Open( outputPath.c_str(), "UPDATE" );
+    }
+
     //need to change directory for writing
     outputFilePtr->cd( "blackJackAndHookers" );
 
@@ -134,7 +145,7 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
     }
     
     //write output tree 
-    outputTreePtr->Write( "", BIT(2) );
+    //outputTreePtr->Write( "", BIT(2) );
 
     //close output file
     outputFilePtr->Close();
