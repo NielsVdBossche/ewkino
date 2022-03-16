@@ -211,6 +211,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             if (! selection->passLeptonSelection()) continue;
             unsigned processNb = 0;
             double weight = currentEvent->weight();
+            
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
                 weight *= reweighter.totalWeight( *currentEvent );
 
@@ -236,6 +237,8 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                 weight *= FakeRateWeight();
                 if (currentEvent->isMC()) {
                     weight *= -1;
+                    // should all leptons be prompt?
+                    if (! selection->leptonsArePrompt()) continue;
                 }
                 if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             } else if (st == selectionType::ChargeMisDD) {

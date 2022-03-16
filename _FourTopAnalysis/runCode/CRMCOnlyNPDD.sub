@@ -39,6 +39,38 @@ queue 1 Filename, Method from (
     TmpLists/2018_TTZ.txt, MCNoNP
     TmpLists/2018_TTH.txt, MCNoNP
     TmpLists/2018_TTTT.txt, MCNoNP
+    TmpLists/2016PreVFP_Rare.txt, nonPromptDD
+    TmpLists/2016PreVFP_TTVV.txt, nonPromptDD
+    TmpLists/2016PreVFP_Xgamma.txt, nonPromptDD
+    TmpLists/2016PreVFP_ttbar.txt, nonPromptDD
+    TmpLists/2016PreVFP_TTW.txt, nonPromptDD
+    TmpLists/2016PreVFP_TTZ.txt, nonPromptDD
+    TmpLists/2016PreVFP_TTH.txt, nonPromptDD
+    TmpLists/2016PreVFP_TTTT.txt, nonPromptDD
+    TmpLists/2016PostVFP_Rare.txt, nonPromptDD
+    TmpLists/2016PostVFP_TTVV.txt, nonPromptDD
+    TmpLists/2016PostVFP_ttbar.txt, nonPromptDD
+    TmpLists/2016PostVFP_Xgamma.txt, nonPromptDD
+    TmpLists/2016PostVFP_TTW.txt, nonPromptDD
+    TmpLists/2016PostVFP_TTZ.txt, nonPromptDD
+    TmpLists/2016PostVFP_TTH.txt, nonPromptDD
+    TmpLists/2016PostVFP_TTTT.txt, nonPromptDD
+    TmpLists/2017_Rare.txt, nonPromptDD
+    TmpLists/2017_TTVV.txt, nonPromptDD
+    TmpLists/2017_ttbar.txt, nonPromptDD
+    TmpLists/2017_Xgamma.txt, nonPromptDD
+    TmpLists/2017_TTW.txt, nonPromptDD
+    TmpLists/2017_TTZ.txt, nonPromptDD
+    TmpLists/2017_TTH.txt, nonPromptDD
+    TmpLists/2017_TTTT.txt, nonPromptDD
+    TmpLists/2018_Rare.txt, nonPromptDD
+    TmpLists/2018_TTVV.txt, nonPromptDD
+    TmpLists/2018_ttbar.txt, nonPromptDD
+    TmpLists/2018_Xgamma.txt, nonPromptDD
+    TmpLists/2018_TTW.txt, nonPromptDD
+    TmpLists/2018_TTZ.txt, nonPromptDD
+    TmpLists/2018_TTH.txt, nonPromptDD
+    TmpLists/2018_TTTT.txt, nonPromptDD
     Data16PreVFP.txt, nonPromptDD
     Data16PostVFP.txt, nonPromptDD
     Data17.txt, nonPromptDD
