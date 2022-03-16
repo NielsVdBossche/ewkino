@@ -64,6 +64,8 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
         throw std::logic_error( "Can't merge datasets corresponding to different files unless explicitly specified." );
     }
 
+    TTree::SetMaxTreeSize(100000000LL);
+
     //initialize TreeReader
     TreeReader treeReader;
 
@@ -72,9 +74,9 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
     outputFilePtr->mkdir( "blackJackAndHookers" );
     outputFilePtr->cd( "blackJackAndHookers" );
     TDirectory* outputDir = outputFilePtr->GetDirectory( "blackJackAndHookers" );
-    TFile* currentOutputFile = outputFilePtr;
     std::shared_ptr< TTree > outputTreePtr( std::make_shared< TTree >( "blackJackAndHookersTree","blackJackAndHookersTree" ) );
-    outputDir->Append(outputTreePtr.get());
+    outputTreePtr->SetDirectory( outputDir );
+    //outputDir->Append(outputTreePtr.get());
     //histograms stored in file
     std::map< std::string, std::shared_ptr< TH1 > > outputHistogramMap;
 
@@ -91,11 +93,7 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
         //DO NOT reset triggers because this will invalidate the addresses set by setOutputTree and trigger decisions in output file will be wrong!
         treeReader.initSampleFromFile( inputFilePath, false );
 
-        //if (currentOutputFile != outputTreePtr->GetCurrentFile()) {
-        //    currentOutputFile = outputTreePtr->GetCurrentFile();
-        //    currentOutputFile->mkdir( "blackJackAndHookers" );
-        //}
-        //outputTreePtr->SetDirectory( currentOutputFile );
+        outputTreePtr->SetDirectory( outputDir );
 
         //set output histograms and output tree for first file
         if( inputPathIt == inputPathVector.cbegin() ){
@@ -132,9 +130,9 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
 
     }
 
-    if (! outputFilePtr->IsOpen()) {
-        outputFilePtr = TFile::Open( outputPath.c_str(), "UPDATE" );
-    }
+    //if (! outputFilePtr->IsOpen()) {
+    //    outputFilePtr = TFile::Open( outputPath.c_str(), "UPDATE" );
+    //}
 
     //need to change directory for writing
     outputFilePtr->cd( "blackJackAndHookers" );
@@ -145,7 +143,7 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
     }
     
     //write output tree 
-    //outputTreePtr->Write( "", BIT(2) );
+    outputTreePtr->Write( "", BIT(2) );
 
     //close output file
     outputFilePtr->Close();
