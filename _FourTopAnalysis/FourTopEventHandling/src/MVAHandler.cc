@@ -265,7 +265,7 @@ void MVAHandler_4T::fillVariables() {
     sec_min_dr_lep_b =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.);
 
     jetCol->sortByPt();
-    ptJetOne         =  jetCol->at(0)->pt();
+    ptJetOne         =  (n_jets_f >= 1 ? jetCol->at(0)->pt() : 0.);
     ptJetFour        =  (n_jets_f >= 4 ? jetCol->at(3)->pt() : 0.);
     ptJetFive        =  (n_jets_f >= 5 ? jetCol->at(4)->pt() : 0.);
     ptJetSix         =  (n_jets_f >= 6 ? jetCol->at(5)->pt() : 0.);

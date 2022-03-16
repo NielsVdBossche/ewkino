@@ -10,8 +10,8 @@ void EventFourT::classifyEvent() {
 
     if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) {
         currentClass = eventClass::cro;
+        return;
     }
-
 
     if ((numberOfLeps() == 2 && numberOfJets() < 6 && numberOfLooseBJets() == 2) || (numberOfLeps() == 3 && numberOfJets() < 4 && numberOfLooseBJets() == 2)) {
         currentClass = eventClass::crw;

@@ -6,6 +6,12 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
+bool selectLeptonsLooseMVA(const Lepton& lepton) {
+    if (! lepton.isLightLepton()) return true;
+    const LightLepton& el = (LightLepton&) lepton;
+    return (el.leptonMVATOP() > 0.);
+}
+
 EventFourT::EventFourT() {
     looseLeps = new LeptonCollection();
     mediumLeps = new LeptonCollection();
@@ -63,6 +69,17 @@ void EventFourT::objectSelection() {
     nLooseB = event->numberOfLooseBTaggedJets();
     nLooseLep = looseLeps->size();
     nLep = mediumLeps->size();
+
+    if (nLep == 3) {
+        LeptonCollection looseWPLeptons(*looseLeps);
+        looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
+        if (looseWPLeptons.size() - 3 == 1) {
+            nLep = 4;
+            delete mediumLeps;
+            mediumLeps = new LeptonCollection(looseWPLeptons);
+        }
+    }
+    
     ht = jets->scalarPtSum();
     met = event->met().pt();
 }
@@ -180,6 +197,7 @@ bool EventFourT::passLeanSelection() {
     if (nLep == 2 && nJets < 4) return false;
     if (nLep == 3 && nJets < 3) return false;
     if (nLep == 4 && nJets < 2) return false;
+    if (nJets < 2) return false;
 
     //if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) return false;
     if (event->numberOfLooseBTaggedJets() < 1) return false;
