@@ -79,7 +79,7 @@ void EventFourT::objectSelection() {
             mediumLeps = new LeptonCollection(looseWPLeptons);
         }
     }
-    
+
     ht = jets->scalarPtSum();
     met = event->met().pt();
 }
@@ -194,16 +194,17 @@ bool EventFourT::passLeanSelection() {
     if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
     //if (met < 25) return false;
 
-    if (nLep == 2 && nJets < 4) return false;
-    if (nLep == 3 && nJets < 3) return false;
-    if (nLep == 4 && nJets < 2) return false;
+    //if (nLep == 2 && nJets < 4) return false;
+    //if (nLep == 3 && nJets < 3) return false;
+    //if (nLep == 4 && nJets < 2) return false;
     if (nJets < 2) return false;
 
     //if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) return false;
     if (event->numberOfLooseBTaggedJets() < 1) return false;
 
-    if (nLep == 2 && ht < 280) return false;
-    if (nLep == 3 && ht < 220) return false;
+    if (nLep < 4 && ht < 200) return false;
+    //if (nLep == 2 && ht < 280) return false;
+    //if (nLep == 3 && ht < 220) return false;
     //if (nLep == 4 && ht < 200) return false;
     
     return true;
