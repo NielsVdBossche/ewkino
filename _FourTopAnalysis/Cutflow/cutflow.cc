@@ -111,6 +111,8 @@ void FourTop::cutFlow(std::string& sortingMode) {
         garbageManager->newSample(uniqueName);
 
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+        zgOverlapCheck = treeReader->currentSamplePtr()->zgOverlap();
+
 
         std::vector<std::shared_ptr<TH1D>>* allDLHist = DLManager->getHistograms(false);
         std::vector<std::shared_ptr<TH1D>>* all3LHist = TriLManager->getHistograms(false);
@@ -132,6 +134,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
             currentEvent->removeTaus();
             currentEvent->cleanElectronsFromLooseMuons();

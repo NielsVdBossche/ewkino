@@ -170,6 +170,7 @@ bool EventFourT::passZBosonVeto() {
 }
 
 bool EventFourT::passLeanSelection() {
+    passLeptonSelection();
     if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
     if (nLep == 2 && mediumLeps->hasOSPair()) return false;
 
@@ -180,11 +181,12 @@ bool EventFourT::passLeanSelection() {
     if (nLep == 3 && nJets < 3) return false;
     if (nLep == 4 && nJets < 2) return false;
 
-    if (event->numberOfLooseBTaggedJets() < 2) return false;
+    //if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) return false;
+    if (event->numberOfLooseBTaggedJets() < 1) return false;
 
     if (nLep == 2 && ht < 280) return false;
     if (nLep == 3 && ht < 220) return false;
-    if (nLep == 4 && ht < 200) return false;
+    //if (nLep == 4 && ht < 200) return false;
     
     return true;
 }
