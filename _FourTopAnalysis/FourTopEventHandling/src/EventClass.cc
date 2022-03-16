@@ -13,7 +13,7 @@ void EventFourT::classifyEvent() {
         return;
     }
 
-    if (nLep == 2 && nJets < 4 || nLep == 3 && nJets < 3 || nLep == 4 && nJets < 2) {
+    if ((nLep == 2 && nJets < 4) || (nLep == 3 && nJets < 3) || (nLep == 4 && nJets < 2)) {
         currentClass = eventClass::cro;
         return;
     }
