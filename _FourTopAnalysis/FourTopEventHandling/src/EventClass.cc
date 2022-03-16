@@ -9,7 +9,7 @@ void EventFourT::classifyEvent() {
     if (! passZBosonVeto()) return;
 
     if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) {
-        currentClass == eventClass::cro;
+        currentClass = eventClass::cro;
     }
 
 
