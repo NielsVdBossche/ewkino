@@ -5,7 +5,7 @@ TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* out
 
     analysType += "Multiclass";
 
-    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification__OrigSel", outputFile, analysType.c_str());
+    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_OrigSel_TEST_", outputFile, analysType.c_str());
 
     return factory;
 }
@@ -42,7 +42,11 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
 }
 
 void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
-
+    if (initsetup == "DL_NN") {
+        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN", 'H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_35_3_128_2.h5:NumEpochs=20:BatchSize=256');
+    } else {
+        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN", 'H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_36_3_128_2.h5:NumEpochs=20:BatchSize=256');
+    }
 }
 
 void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {

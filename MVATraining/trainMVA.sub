@@ -1,8 +1,14 @@
 universe    =   vanilla
-executable  =   trainMVA.sh
+executable  =   trainMVAAll.sh
+arguments   =   $(Tree) $(Method)
 
-log         =   /user/nivanden/condor/logs/trainMVA_$(ClusterId).log
-error       =   /user/nivanden/condor/error/trainMVA_$(ClusterId).err
-output      =   /user/nivanden/condor/output/trainMVA_$(ClusterId).out
+log         =   /user/nivanden/condor/logs/trainMVA_$(Method)_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainMVA_$(Method)_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainMVA_$(Method)_$(ClusterId)_$(Process).out
 
-queue
+queue 1 Tree, Method from (
+    DL_tree, DL_BDT
+    DL_tree, DL_NN
+    ML_tree, ML_BDT
+    ML_tree, ML_NN
+)
