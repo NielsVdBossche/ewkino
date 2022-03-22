@@ -50,7 +50,7 @@ void EventFourT::objectSelection() {
     jets->selectGoodJets();
     bTagJets = new JetCollection(jets->mediumBTagCollection());
 
-    event->selectTightLeptons();
+    event->selectFOLeptons();
 
     nJets = jets->size();
     nMediumB = bTagJets->size();
@@ -71,17 +71,21 @@ bool EventFourT::passBaselineEventSelection() {
     //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
     //if (! passLeptonSelection()) return false;
-    if (mediumLeps->size() < 2) return false;
-    if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+    //std::cout << "pqss lep sel" << std::endl;
+    //if (mediumLeps->size() < 2) return false;
+    //if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
 
     if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
+
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
     // 2 cuts which must be replaced for systematics
     if (jets->size() < 3) return false;
 
+
     // 1 bjets
     if (bTagJets->size() < 1) return false;
+
 
     if (nLep < 4 && ht < 300) return false;
 

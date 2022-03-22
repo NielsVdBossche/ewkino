@@ -205,10 +205,11 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             if (! selection->passLowMassVeto()) {
                 continue;
             }
-            selection->classifyEvent();
 
             // Add lepton selection boolean call here!
+
             if (! selection->passLeptonSelection()) continue;
+            selection->classifyEvent();
             unsigned processNb = 0;
             double weight = currentEvent->weight();
             
@@ -259,6 +260,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
 
             // fill all histograms
             // replace with functions in eventHandling?
+
             eventClass nominalClass = selection->getCurrentClass();
             if (nominalClass == eventClass::crz) {
                 std::vector<double> scores = mva_ML->scoreEvent();

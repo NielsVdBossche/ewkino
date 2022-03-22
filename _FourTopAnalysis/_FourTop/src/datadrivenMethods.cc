@@ -63,7 +63,6 @@ double FourTop::FakeRateWeight() {
 
     for (const auto &lep : currentEvent->lightLeptonCollection()) {
         if (!(lep->isFO() && !lep->isTight())) continue;
-
         double fr;
         if (lep->isMuon()) {
             fr = histogram::contentAtValues(FakeRatesMuon, lep->pt(), lep->eta());
