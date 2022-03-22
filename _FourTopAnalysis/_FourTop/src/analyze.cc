@@ -90,7 +90,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         std::cout << "Running method " << "ChargeDD" << std::endl;
     } else if (method == "nonPromptDD") {
         initFakerate();
-        processes = {"nonPrompt"};
+        processes = {"nonPromptDD"};
         selection->setSelectionType(selectionType::NPDD);
         useUncertainties = false;
         st = selectionType::NPDD;
@@ -112,7 +112,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         std::cout << "Running method " << "MCNoChargeMisID" << std::endl;
     } else if (method == "MCNoNP") {
         // testmethod for NP est
-        processes = {"", "ChargeMisID"};
+        processes = {"", "ChargeMisIDDD"};
         selection->setSelectionType(selectionType::MCNoNP);
         st = selectionType::MCNoNP;
         std::cout << "Running method " << "MCNoNP" << std::endl;
