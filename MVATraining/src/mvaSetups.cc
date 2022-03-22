@@ -1,4 +1,5 @@
 #include "../interface/mvaSetups.h"
+#include "TMVA/PyMethodBase.h"
 
 TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile) {
     std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";

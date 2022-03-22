@@ -3,6 +3,7 @@
 
 #include <TMVA/DataLoader.h>
 #include <TMVA/Factory.h>
+#include <TMVA/PyMethodBase.h>
 
 #include <TROOT.h>
 #include <TTree.h>
@@ -13,6 +14,7 @@
 #include <iostream>
 
 int main(int argc, char const *argv[]) {
+    TMVA::PyMethodBase::PyInitialize();
 
     if (argc < 5) {
         std::cerr << "Mvatrainer requires at least four arguments: <samplelist.txt> treename setup searchOrNot" << std::endl;

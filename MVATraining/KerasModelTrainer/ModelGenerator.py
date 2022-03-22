@@ -15,12 +15,12 @@ def generate_model(num_hidden_layers, nodes_hidden_layer, num_input_nodes=30, nu
     
     # Hidden layer 1
     # NOTE: Number of input nodes need to be defined in this layer
-    model.add(Dense(nodes_hidden_layer, activation='relu', W_regularizer=l2(l2_val), input_dim=num_input_nodes))
+    model.add(Dense(nodes_hidden_layer, activation='relu', input_dim=num_input_nodes))
     
     # Hidden layer 2 to num_hidden_layers
     # NOTE: Here, you can do what you want
     for k in range(num_hidden_layers-1):
-        model.add(Dense(nodes_hidden_layer, activation='relu', W_regularizer=l2(l2_val)))
+        model.add(Dense(nodes_hidden_layer, activation='relu'))
     
     # Ouput layer
     # NOTE: Use following output types for the different tasks
@@ -51,8 +51,8 @@ def generate_model(num_hidden_layers, nodes_hidden_layer, num_input_nodes=30, nu
         print('[INFO] Failed to make model plot')
 
 if __name__ == "__main__":
-    num_hidden_layers = np.arange(1, 3, 1)
-    nodes_hidden_layer = [128, 256, 512]
+    num_hidden_layers = [2]
+    nodes_hidden_layer = [128]
     num_input_nodes = [35, 36]
     # num_output_nodes = np.linspace()
     for num_input in num_input_nodes: 
