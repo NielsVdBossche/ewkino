@@ -51,8 +51,8 @@ def generate_model(num_hidden_layers, nodes_hidden_layer, num_input_nodes=30, nu
         print('[INFO] Failed to make model plot')
 
 if __name__ == "__main__":
-    num_hidden_layers = [2]
-    nodes_hidden_layer = [128]
+    num_hidden_layers = [2, 3, 4]
+    nodes_hidden_layer = [256, 512]
     num_input_nodes = [35, 36]
     # num_output_nodes = np.linspace()
     for num_input in num_input_nodes: 
