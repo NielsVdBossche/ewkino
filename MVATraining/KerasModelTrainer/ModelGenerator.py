@@ -1,10 +1,45 @@
-from keras.models import Sequential
-from keras.layers.core import Dense, Activation
+from re import M
+from keras.models import Sequential, Model
+from keras.layers.core import Dense, Activation, Flatten
+import keras.layers as layers
+import keras.layers.convolutional as conv
+from keras.layers.merge import concatenate
+from keras.layers.pooling import MaxPooling2D
 from keras.regularizers import l2
 from keras.optimizers import SGD
 from keras.utils import plot_model
+from keras.backend import slice
 
 import numpy as np
+
+def altKerasModel():
+    # input layer
+    inputLayer = layers.Input(shape=(10,4))
+    
+    split_1 = layers.Lambda(lambda x: slice(x, (0, 0), (6, -1)))(inputLayer)
+    split_2 = layers.Lambda(lambda x: slice(x, (7, 0), (-1, -1)))(inputLayer)
+
+    d1 = conv.Conv2D(32, kernel_size=(2,2), activation='relu')(split_1)
+    #d1 = conv.Conv2D(16, kernel_size=2, activation='relu')(d1)
+    #d1 = conv.Conv2D(16, kernel_size=2, activation='relu')(d1)
+    d1 = MaxPooling2D(pool_size=(2,2))(d1)
+    d1 = Flatten()(d1)
+
+    d2 = conv.Conv2D(32, kernel_size=(2,2), activation='relu')(split_2)
+    d2 = MaxPooling2D(pool_size=(2,2))(d2)
+    d2 = Flatten()(d2)
+
+    merge = concatenate([d1, d2])
+
+    dm = Dense(128, activation='relu')(merge)
+    out = Dense(3, activation='softmax')(dm)
+    #d2 = conv.Conv2D(16, kernel_size=2, activation='relu')(d2)
+    #d2 = conv.Conv2D(16, kernel_size=2, activation='relu')(d2)
+    model = Model(inputs=inputLayer, outputs=out)
+    model.save("Models/SplitInMiddle.h5")
+    print(model.summary())
+    plot_model(model, to_file='shared_input_layer.png')
+
 
 def generate_model(num_hidden_layers, nodes_hidden_layer, num_input_nodes=30, num_output_nodes=3):
     name = "keras_" + str(num_input_nodes) + "_" + str(num_output_nodes) + "_" + str(num_hidden_layers) + "_" + str(nodes_hidden_layer)
@@ -51,6 +86,7 @@ def generate_model(num_hidden_layers, nodes_hidden_layer, num_input_nodes=30, nu
         print('[INFO] Failed to make model plot')
 
 if __name__ == "__main__":
+    # altKerasModel()
     num_hidden_layers = [2, 3, 4]
     nodes_hidden_layer = [256, 512]
     num_input_nodes = [35, 36]

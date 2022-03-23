@@ -89,6 +89,7 @@ class FourTop {
 
         void linkMVAVariables(TTree* tree, bool isML);
         void fillMVAVariables(bool isML);
+        void fillMVAVariablesNormalized(bool is4L);
 
         bool eventPassesTriggers();
 

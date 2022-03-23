@@ -5,11 +5,9 @@
 void FourTop::fillMVAVariables(bool isML) {
     JetCollection* bJets = selection->getBtagJetCol();
     LightLeptonCollection* lightLeps; // = selection->getMediumLepCol();
-    if (selection->isEventNormalSelected()) {
-        lightLeps = (LightLeptonCollection*) selection->getMediumLepCol();
-    } else {
-        lightLeps = (LightLeptonCollection*) selection->getAltLeptonCol();
-    }
+
+    lightLeps = (LightLeptonCollection*) selection->getMediumLepCol();
+
     std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
     std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
 
@@ -87,3 +85,12 @@ void FourTop::fillMVAVariables(bool isML) {
     m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
 
 }
+
+
+void FourTop::fillMVAVariablesNormalized(bool is4L) {
+    n_jets_f         =  selection->getJetCol()->size();
+    n_jets_f         =  (is4L ? (n_jets_f - 2) / 5 : (n_jets_f - 3) / 6);
+    ht               =  selection->getJetCol()->scalarPtSum();
+    ht               =  (is4L ? ht / 900 : (ht - 220) / 1280);
+}
+

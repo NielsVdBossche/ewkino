@@ -15,43 +15,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
     } else if (config == BDT_ML || config == NN_ML) {
         dataVector = new std::vector<Double_t>(36);
     }
-    /*
-    if ( config == BDT_DL || config == NN_DL || config == BDT_ML || config == NN_ML) {
-        chain->SetBranchAddress("N_jets",           &dataVector->at(0));
-        chain->SetBranchAddress("N_b",              &dataVector->at(1));
-        chain->SetBranchAddress("N_b_tight",        &dataVector->at(2));
-        chain->SetBranchAddress("N_b_loose",        &dataVector->at(3));
-        chain->SetBranchAddress("dr_bJets",         &dataVector->at(0));
-        chain->SetBranchAddress("dr_leps",          &dataVector->at(1));
-        chain->SetBranchAddress("aziAngle",         &dataVector->at(2));
-        chain->SetBranchAddress("ht",               &dataVector->at(2));
-        chain->SetBranchAddress("mToPt",            &dataVector->at(2));
-        chain->SetBranchAddress("min_dr_lep_b",     &dataVector->at(4));
-        chain->SetBranchAddress("sec_min_dr_lep_b", &dataVector->at(3));
-        chain->SetBranchAddress("pt_jet_one",       &dataVector->at(8));
-        chain->SetBranchAddress("pt_jet_four",      &dataVector->at(4));
-        chain->SetBranchAddress("pt_jet_five",      &dataVector->at(7));
-        chain->SetBranchAddress("pt_jet_six",       &dataVector->at(11));
-        chain->SetBranchAddress("pt_lep_one",       &dataVector->at(12));
-        chain->SetBranchAddress("pt_lep_two",       &dataVector->at(5));
-        chain->SetBranchAddress("bTagLead",         &dataVector->at(10));
-        chain->SetBranchAddress("bTagSub",          &dataVector->at(5));
-        chain->SetBranchAddress("bTagThird",        &dataVector->at(7));
-        chain->SetBranchAddress("bTagFourth",       &dataVector->at(17));
-        chain->SetBranchAddress("bTagPtLead",       &dataVector->at(6));
-        chain->SetBranchAddress("bTagPtSub",        &dataVector->at(9));
-        chain->SetBranchAddress("bTagPtThird",      &dataVector->at(7));
-        chain->SetBranchAddress("bTagPtFourth",     &dataVector->at(8));
-        chain->SetBranchAddress("m2ll",             &dataVector->at(22));
-        chain->SetBranchAddress("m2bb",             &dataVector->at(19));
-        chain->SetBranchAddress("m2lblb",           &dataVector->at(24));
-        chain->SetBranchAddress("mtLeadLepMET",     &dataVector->at(9));
-        chain->SetBranchAddress("mtSubLeadLepMET",  &dataVector->at(10));
-        chain->SetBranchAddress("massBestTop",      &dataVector->at(11));
-        chain->SetBranchAddress("massBestTopW",     &dataVector->at(31));
-        chain->SetBranchAddress("massSecTop",       &dataVector->at(12));
-        chain->SetBranchAddress("massSecTopW",      &dataVector->at(33));
-    }*/
+
 
     if (config == BDT_DL || config == NN_DL) {
         chain->SetBranchAddress("N_jets",           &dataVector->at(0));

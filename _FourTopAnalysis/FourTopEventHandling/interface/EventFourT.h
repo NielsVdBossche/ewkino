@@ -123,5 +123,6 @@ class EventFourT {
         //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
 };
 
-bool leptonPtReq(const Lepton& lep);
+bool selectLeptonsLooseMVA(const Lepton& lepton);
+
 #endif
