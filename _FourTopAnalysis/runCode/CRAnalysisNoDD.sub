@@ -1,0 +1,46 @@
+universe    =   vanilla
+executable  =   Analysis.sh
+arguments   =   $(Filename) $(Method) CR
+
+log         =   /user/nivanden/condor/logs/analysis_year_CRAnNoDD_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/analysis_year_CRAnNoDD_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/analysis_year_CRAnNoDD_$(ClusterId)_$(Process).out
+
+queue 1 Filename, Method from (
+    TmpLists/2016PreVFP_Rare.txt, MCAll
+    TmpLists/2016PreVFP_TTVV.txt, MCAll
+    TmpLists/2016PreVFP_Xgamma.txt, MCAll
+    TmpLists/2016PreVFP_ttbar.txt, MCAll
+    TmpLists/2016PreVFP_TTW.txt, MCAll
+    TmpLists/2016PreVFP_TTZ.txt, MCAll
+    TmpLists/2016PreVFP_TTH.txt, MCAll
+    TmpLists/2016PreVFP_TTTT.txt, MCAll
+    TmpLists/2016PostVFP_Rare.txt, MCAll
+    TmpLists/2016PostVFP_TTVV.txt, MCAll
+    TmpLists/2016PostVFP_ttbar.txt, MCAll
+    TmpLists/2016PostVFP_Xgamma.txt, MCAll
+    TmpLists/2016PostVFP_TTW.txt, MCAll
+    TmpLists/2016PostVFP_TTZ.txt, MCAll
+    TmpLists/2016PostVFP_TTH.txt, MCAll
+    TmpLists/2016PostVFP_TTTT.txt, MCAll
+    TmpLists/2017_Rare.txt, MCAll
+    TmpLists/2017_TTVV.txt, MCAll
+    TmpLists/2017_ttbar.txt, MCAll
+    TmpLists/2017_Xgamma.txt, MCAll
+    TmpLists/2017_TTW.txt, MCAll
+    TmpLists/2017_TTZ.txt, MCAll
+    TmpLists/2017_TTH.txt, MCAll
+    TmpLists/2017_TTTT.txt, MCAll
+    TmpLists/2018_Rare.txt, MCAll
+    TmpLists/2018_TTVV.txt, MCAll
+    TmpLists/2018_ttbar.txt, MCAll
+    TmpLists/2018_Xgamma.txt, MCAll
+    TmpLists/2018_TTW.txt, MCAll
+    TmpLists/2018_TTZ.txt, MCAll
+    TmpLists/2018_TTH.txt, MCAll
+    TmpLists/2018_TTTT.txt, MCAll
+    Data16PreVFP.txt, Obs
+    Data16PostVFP.txt, Obs
+    Data17.txt, Obs
+    Data18.txt, Obs
+)
