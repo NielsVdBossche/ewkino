@@ -115,7 +115,19 @@ void UncertaintyEnvelope::writeHistogramsEnvelope(unsigned processNb) {
         gDirectory->cd(getName().c_str());
     }
 
-    Uncertainty::writeHistograms(processNb);
+    if (GetPrintAllVariations()) {
+
+        for (auto hists : envelopeHists) {
+            
+            // loop all possible up and down variations
+            std::vector<std::shared_ptr<TH1D>>* currentVariation = hists->getHistograms(processNb);
+            for (auto hist : *currentVariation) {
+                hist->Write(hist->GetName(), TObject::kOverwrite);
+            }
+        }
+    } else {
+        Uncertainty::writeHistograms(processNb);
+    }
 
     gDirectory->cd("../../");
 }

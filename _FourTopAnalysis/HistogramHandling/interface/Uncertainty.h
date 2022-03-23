@@ -39,6 +39,8 @@ class Uncertainty {
 
         std::map<std::string, HistogramSet*>* upSubMap = nullptr;
         std::map<std::string, HistogramSet*>* downSubMap = nullptr;
+
+        bool printAllVariations = false;
     public:
         Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms);
         virtual ~Uncertainty() {};
@@ -55,6 +57,8 @@ class Uncertainty {
         void fillUpOrDownSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weight, bool up, unsigned subProc);
         void fillUpOrDown2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weight, bool up, unsigned subProc);
 
+        bool GetPrintAllVariations() {return printAllVariations;}
+        void SetPrintAllVariations(bool printVars) {printAllVariations = printVars;}
 
         shapeUncId getID() const {return id;}
         std::string getName() const {return name;}

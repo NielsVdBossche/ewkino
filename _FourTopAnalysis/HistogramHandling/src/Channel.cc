@@ -63,6 +63,17 @@ void Channel::addSubUncertainties(shapeUncId uncID, std::vector<std::string>& su
     }
 }
 
+void Channel::SetPrintAllUncertaintyVariations(bool setting) {
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->SetPrintAllUncertaintyVariations(setting);
+        }
+    }
+
+    for (auto it : uncHistMap) {
+        it.second->SetPrintAllVariations(setting);
+    }
+}
 
 void Channel::updateHistInfo(std::vector<HistInfo>* extraInfo) {
     std::vector<HistInfo> extraInfoCopy = hardCopyInfoVector(extraInfo);
