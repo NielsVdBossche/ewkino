@@ -300,6 +300,7 @@ class TreeReader {
         //Get entry from Tree, should not be used except for test purposes
         void GetEntry(const Sample&, long unsigned );
         void GetEntry(long unsigned );
+        TTree* GetTree() {return _currentTreePtr;}
 
         //Build event (this will implicitly use GetEntry )
         //Use these functions in analysis code 
