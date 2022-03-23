@@ -1,0 +1,5 @@
+Rare            2017/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_Nov.root                                                   15810.0
+Rare            2017/GluGluToContinToZZTo2e2mu_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv4.root                                                0.005423
+Rare            2017/GluGluToContinToZZTo2e2nu_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv4.root                                                0.005423
+Rare            2017/GluGluToContinToZZTo2e2tau_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv4.root                                               0.005423
+Rare            2017/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv4.root                                               0.005423

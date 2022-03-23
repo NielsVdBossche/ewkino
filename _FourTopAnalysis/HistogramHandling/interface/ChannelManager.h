@@ -43,6 +43,8 @@ class ChannelManager {
         void writeUncertaintyHistograms(std::string& uniqueSampleName);
         void writeUncertaintyEnvelopeHistograms(unsigned subProc);
 
+        void SetPrintAllUncertaintyVariations(bool setting);
+
         // series of functions passing through
         std::map<shapeUncId, std::string> getTranslateUnc() {return mapping[eventClass::ssdl]->getTranslateUnc();}
 

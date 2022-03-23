@@ -1,7 +1,7 @@
 CC=g++ -Wall -Wextra -O3 -g 
 CFLAGS= -Wl,--no-as-needed,-lpthread
 CXXFLAGS = -std=gnu++17
-LDFLAGS=`root-config --glibs --cflags` -lTMVA
+LDFLAGS=`root-config --glibs --cflags` -lTMVA -lPyMVA
 SOURCES=main.cc ../codeLibrary.o src/*.cc
 OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=trainMVAMethodsExec

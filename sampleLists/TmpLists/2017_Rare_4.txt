@@ -1,0 +1,5 @@
+Rare            2017/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                                                                                        0.2086
+Rare            2017/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                                                                                        0.1651
+Rare            ../skims_v2/2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v3_singlelepton_MC_2017_Nov.root                                                             4.9173
+Rare            ../skims_v2/2017/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_Nov_MERGED.root                                                               0.05565
+Rare            ../skims_v2/2017/ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_Nov.root                                                                  0.6204
