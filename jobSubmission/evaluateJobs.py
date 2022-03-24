@@ -19,9 +19,11 @@ if __name__ == "__main__":
 
                 if (splitLine[0] == "005"):
                     print("job " + log + " terminated with code 005. Should be nominal")
+                    break
                 if (splitLine[0] == "009"):
                     print("job " + log + " aborted")
+                    break
                 if not any(splitLine[0] in id for id in ["000", "001", "002", "003"]):
-                    print("Check job " + log + ". Check manually.")
+                    print("Job " + log + " has id" + splitLine[0] + ". Check manually.")
                  
 
