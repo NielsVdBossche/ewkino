@@ -1,5 +1,5 @@
 universe    =   vanilla
-executable  =   Analysis.sh
+executable  =   AnalysisCR.sh
 arguments   =   $(Filename) $(Method) CR
 
 log         =   /user/nivanden/condor/logs/analysis_year_CRAnNoDD_$(ClusterId)_$(Process).log

@@ -1,6 +1,6 @@
 universe    =   vanilla
-executable  =   Analysis.sh
-arguments   =   $(Filename) $(Method) CR
+executable  =   AnalysisCR.sh
+arguments   =   $(Filename) $(Method)
 
 log         =   /user/nivanden/condor/logs/analysis_year_$(Method)_$(ClusterId)_$(Process).log
 error       =   /user/nivanden/condor/error/analysis_year_$(Method)_$(ClusterId)_$(Process).err
