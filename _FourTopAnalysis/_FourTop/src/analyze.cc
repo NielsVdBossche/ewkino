@@ -164,7 +164,6 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
 
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
-            if(numberOfPdfVariations>=100) hasValidPdfs = true;
 
             considerBTagShape = true;
             
@@ -425,7 +424,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                         if (numberOfPdfVariations < max) {
                             max = numberOfPdfVariations;
                         }
-                        for(int i=0; i<max; ++i){
+                        for(int i=1; i<max+1; ++i){
                             pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
                         }
                     } else {
