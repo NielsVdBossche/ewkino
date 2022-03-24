@@ -23,7 +23,7 @@ if __name__ == "__main__":
                 if (splitLine[0] == "009"):
                     print("job " + log + " aborted")
                     break
-                if not any(splitLine[0] in id for id in ["000", "001", "002", "003"]):
-                    print("Job " + log + " has id" + splitLine[0] + ". Check manually.")
+                if not any(splitLine[0] in id for id in ["000", "001", "002", "003", "006"]):
+                    print("Job " + log + " has id " + splitLine[0] + ". Check manually.")
                  
 
