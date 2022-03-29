@@ -29,7 +29,7 @@ def makeUnique(fname):
     print(' consider choosing more specific names, splitting in folders, etc.')
     sys.exit()
 
-def initJobScript(name, cmssw_version='CMSSW_10_6_20'):
+def initJobScript(name, cmssw_version='CMSSW_10_6_27'):
     ### initialize an executable bash script by setting correct cms env
     ### note: similar to ewkino/skimmer/jobSubmission.py/initializeJobScript
     ### but copied here to be more standalone
@@ -59,9 +59,9 @@ def makeJobDescription(name, exe, argstring=None, stdout=None, stderr=None, log=
     name = os.path.splitext(name)[0]
     fname = name+'.sub'
     if os.path.exists(fname): os.system('rm {}'.format(fname))
-    if stdout is None: stdout = '/user/nivanden/condor/output/' + name+'_out_$(ClusterId)_$(ProcId)'
-    if stderr is None: stderr = '/user/nivanden/condor/error/' + name+'_err_$(ClusterId)_$(ProcId)'
-    if log is None: log = '/user/nivanden/condor/logs/' + name+'_log_$(ClusterId)_$(ProcId)'
+    if stdout is None: stdout = '/user/nivanden/condor/output/' + name+'_$(ClusterId)_$(ProcId).out'
+    if stderr is None: stderr = '/user/nivanden/condor/error/' + name+'_$(ClusterId)_$(ProcId).err'
+    if log is None: log = '/user/nivanden/condor/logs/' + name+'_$(ClusterId)_$(ProcId).log'
     # write file
     with open(fname,'w') as f:
         f.write('executable = {}\n'.format(exe))
@@ -87,14 +87,14 @@ def submitCondorJob(jobDescription):
     os.system('condor_submit {}'.format(fname))
 
 def submitCommandAsCondorJob(name, command, stdout=None, stderr=None, log=None,
-                        cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_20'):
+                        cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_27'):
     ### submit a single command as a single job
     ### command is a string representing a single command (executable + args)
     submitCommandsAsCondorJobs(name, [[command]], stdout=stdout, stderr=stderr, log=log,
 			cpus=cpus, mem=mem, disk=disk, cmssw_version=cmssw_version)
 
 def submitCommandsAsCondorCluster(name, commands, stdout=None, stderr=None, log=None,
-                        cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_20'):
+                        cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_27'):
     ### run several similar commands within a single cluster of jobs
     ### note: each command must have the same executable and number of args, only args can differ!
     ### note: commands can be a list of commands (-> a job will be submitted for each command)
@@ -130,7 +130,7 @@ def submitCommandsAsCondorCluster(name, commands, stdout=None, stderr=None, log=
 
 def submitCommandsAsCondorJob(name, commands, stdout=None, stderr=None, log=None,
                         cpus=1, mem=1024, disk=10240,
-                        cmssw_version='CMSSW_10_6_20'):
+                        cmssw_version='CMSSW_10_6_27'):
     ### submit a set of commands as a single job
     ### commands is a list of strings, each string represents a single command (executable + args)
     ### the commands can be anything and are not necessarily same executable or same number of args.
@@ -138,7 +138,7 @@ def submitCommandsAsCondorJob(name, commands, stdout=None, stderr=None, log=None
                         cpus=cpus, mem=mem, disk=disk, cmssw_version=cmssw_version)
 
 def submitCommandsAsCondorJobs(name, commands, stdout=None, stderr=None, log=None,
-            cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_20'):
+            cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_27'):
     ### submit multiple sets of commands as jobs (one job per set)
     ### commands is a list of lists of strings, each string represents a single command
     ### the commands can be anything and are not necessarily same executable or number of args.

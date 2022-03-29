@@ -2,6 +2,32 @@
 #include "../interface/MVAHandler.h"
 #include "../../histogramSetups/histogramSetup.h"
 
+void EventFourT::classifyEventNominal() {
+    currentClass = eventClass::fail;
+    if (! passBaselineEventSelection()) return;
+    if (! passLowMassVeto()) return;
+    if (! passZBosonVeto()) return;
+
+    if (! passFullEventSelection()) {
+        currentClass = eventClass::cro;
+        return;
+    }
+
+    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
+        currentClass = eventClass::crw;
+        return;
+    }
+
+    if (numberOfLeps() == 2) {
+        currentClass = eventClass::ssdl;
+    } else if (numberOfLeps() == 3) {
+        currentClass = eventClass::trilep;
+    } else if (numberOfLeps() == 4) {
+        currentClass = eventClass::fourlep;
+    }
+    return;
+}
+
 void EventFourT::classifyEvent() {
     currentClass = eventClass::fail;
     if (! passLeanSelection()) return;
