@@ -34,7 +34,7 @@ for sl in sampleLists:
                 sampleDict[processFilename] = [line]
             else:
                 curr = sampleDict[processFilename]
-                if len(curr) > 4:
+                if len(curr) > 2:
                     count += 1
                     processFilename = process + "_" + str(count)
                     sampleDict[processFilename] = [line]
@@ -52,8 +52,12 @@ for sl in sampleLists:
                 of.write(samp)     
 
 outputstring = ""
-
+outputAlt = ""
 for samp in outputSampleLists:
     outputstring += samp + ", "
+    outputAlt += samp + "\n"
+
 
 print(outputstring[:-2])
+print(outputAlt)
+
