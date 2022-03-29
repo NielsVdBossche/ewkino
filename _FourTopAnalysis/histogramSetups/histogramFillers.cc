@@ -200,6 +200,8 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     jets->sortByPt();
 
     std::vector<double> fillVal = {
+        double(selec->getMediumLepCol()->numberOfMuons()),
+        double(selec->getMediumLepCol()->numberOfElectrons()),
         (*lightLeps)[0].pt(),
         (*lightLeps)[1].pt(),
         (*lightLeps)[0].eta(),
@@ -325,6 +327,8 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
     int nlep = lightLeps->size();
 
     std::vector<double> fillVal = {
+        double(selec->getMediumLepCol()->numberOfMuons()),
+        double(selec->getMediumLepCol()->numberOfElectrons()),
         (*lightLeps)[0].pt(),
         (*lightLeps)[1].pt(),
         (*lightLeps)[0].eta(),
