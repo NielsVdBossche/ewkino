@@ -103,7 +103,7 @@ class EventFourT {
         bool leptonsAreTight();
 
         void classifyEvent();
-        void classifyEventNominal();
+        void classifyEventLean();
 
         eventClass classifyUncertainty(shapeUncId id, bool up);
         std::vector<double> fillVector();

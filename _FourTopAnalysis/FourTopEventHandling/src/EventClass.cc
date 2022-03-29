@@ -2,7 +2,7 @@
 #include "../interface/MVAHandler.h"
 #include "../../histogramSetups/histogramSetup.h"
 
-void EventFourT::classifyEventNominal() {
+void EventFourT::classifyEvent() {
     currentClass = eventClass::fail;
     if (! passBaselineEventSelection()) return;
     if (! passLowMassVeto()) return;
@@ -28,7 +28,7 @@ void EventFourT::classifyEventNominal() {
     return;
 }
 
-void EventFourT::classifyEvent() {
+void EventFourT::classifyEventLean() {
     currentClass = eventClass::fail;
     if (! passLeanSelection()) return;
     if (! passLowMassVeto()) return;
