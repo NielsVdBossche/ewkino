@@ -61,9 +61,8 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             }
             setYearString(newYearString);
         }
-        
+       
         oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << strippedSampleList << ".root";
-
         outputFileName += oss.str();
 
         std::cout << outputFileName.c_str() << std::endl;

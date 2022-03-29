@@ -96,12 +96,14 @@ class EventFourT {
         bool passLeanSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
-        void classifyEvent();
 
         bool leptonsArePrompt();
         bool leptonsAreNotChargeFlip();
         bool leptonsAreNotChargeMisMatch();
         bool leptonsAreTight();
+
+        void classifyEvent();
+        void classifyEventNominal();
 
         eventClass classifyUncertainty(shapeUncId id, bool up);
         std::vector<double> fillVector();

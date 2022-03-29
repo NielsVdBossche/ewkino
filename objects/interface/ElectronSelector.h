@@ -39,6 +39,8 @@ class ElectronSelector : public LeptonSelector {
         virtual bool isTight2017() const override;
         virtual bool isTight2018() const override;
 
+        virtual bool isTightCharge() const override;
+
         virtual double coneCorrection() const override;
 
         virtual bool is2016() const override{ return electronPtr->is2016(); }

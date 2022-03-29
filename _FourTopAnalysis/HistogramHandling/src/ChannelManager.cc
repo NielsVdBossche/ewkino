@@ -24,6 +24,14 @@ ChannelManager::ChannelManager(TFile* outputFile, std::map<eventClass, std::stri
     }
 }
 
+ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass)) : outfile(outputFile) {
+    for (auto it : namingScheme) {
+        if (it.first == eventClass::fail) continue;
+        std::vector<HistInfo>* histInfoVec = histInfoGenerator(it.first);
+        mapping[it.first] = new Channel(it.second, histInfoVec);
+    }
+}
+
 ChannelManager::~ChannelManager() {
 
 }
@@ -35,6 +43,8 @@ void ChannelManager::newSample(std::string& sampleName) {
 }
 
 void ChannelManager::addSubUncertainties(shapeUncId uncID, std::vector<std::string>& subUncNames) {
+    if (! useUncertainties) return;
+    
     for (auto it : mapping) {
         it.second->addSubUncertainties(uncID, subUncNames);
     }
@@ -71,7 +81,7 @@ void ChannelManager::changeProcess(unsigned procNumber, std::string& newProc) {
     outfile->cd("Uncertainties");
     processHistName[procNumber] = newProc;
     for (auto it : mapping) {
-        it.second->changeProcess(procNumber, newProc);
+        it.second->changeProcess(procNumber, newProc, useUncertainties);
     }
 
     // folder checking:
@@ -109,6 +119,8 @@ void ChannelManager::writeNominalHistograms(std::string& uniqueSampleName) {
 }
 
 void ChannelManager::writeUncertaintyHistograms(std::string& uniqueSampleName) {
+    if (! useUncertainties) return;
+
     for (unsigned i=0; i<processHistName.size(); i++) {
         gDirectory->cd(processHistName[i].c_str());
         if (! gDirectory->GetDirectory(uniqueSampleName.c_str())) {
@@ -126,6 +138,8 @@ void ChannelManager::writeUncertaintyHistograms(std::string& uniqueSampleName) {
 }
 
 void ChannelManager::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
+    if (! useUncertainties) return;
+
     gDirectory->cd(processHistName[subProc].c_str());
     for (auto it : mapping) {
         //it.second->writeUncertaintyEnvelopeHistograms(subProc);
@@ -134,21 +148,25 @@ void ChannelManager::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
 
 
 void ChannelManager::fillUpHistograms(eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (! useUncertainties) return;
     if (evClass == eventClass::fail) return;
     mapping[evClass]->fillUpHistograms(id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }
 
 void ChannelManager::fillDownHistograms(eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (! useUncertainties) return;
     if (evClass == eventClass::fail) return;
     mapping[evClass]->fillDownHistograms(id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }
 
 void ChannelManager::fillAllUpHistograms(std::vector<std::string>& subs, eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (! useUncertainties) return;
     if (evClass == eventClass::fail) return;
     mapping[evClass]->fillAllUpHistograms(subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }
 
 void ChannelManager::fillAllDownHistograms(std::vector<std::string>& subs, eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (! useUncertainties) return;
     if (evClass == eventClass::fail) return;
     mapping[evClass]->fillAllDownHistograms(subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }

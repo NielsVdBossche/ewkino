@@ -19,10 +19,10 @@ void MVAHandler_4T::initReader() {
         isML = true;
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
-        weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        weightFilePath += "FourTopClassification_New_DL_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == TriClass_ML) {
         isML = true;
-        weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+        weightFilePath += "FourTopClassification_New_ML_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == FourClass_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == FourClass_ML) {
@@ -68,6 +68,7 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("MET",             &met);
 
     if (!isML) {
+
     }
 
     if (isML) {
@@ -264,7 +265,7 @@ void MVAHandler_4T::fillVariables() {
     sec_min_dr_lep_b =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.);
 
     jetCol->sortByPt();
-    ptJetOne         =  jetCol->at(0)->pt();
+    ptJetOne         =  (n_jets_f >= 1 ? jetCol->at(0)->pt() : 0.);
     ptJetFour        =  (n_jets_f >= 4 ? jetCol->at(3)->pt() : 0.);
     ptJetFive        =  (n_jets_f >= 5 ? jetCol->at(4)->pt() : 0.);
     ptJetSix         =  (n_jets_f >= 6 ? jetCol->at(5)->pt() : 0.);

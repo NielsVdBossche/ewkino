@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     // Settings splitsen if necessary
 
     // main func call
-    FourTop analysisObject("LeanAnalysis", argvStr, 1);
+    FourTop analysisObject("Tests", argvStr, 1);
 
-    analysisObject.analyzeLean();
+    analysisObject.testRuns();
 }

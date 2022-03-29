@@ -27,8 +27,6 @@ class Channel {
 
         std::vector<HistInfo> hardCopyInfoVector(std::vector<HistInfo>* infoVec);
         std::vector<HistInfo_2D> hardCopy2DInfoVector(std::vector<HistInfo_2D>* infoVec);
-
-
     public:
         Channel(std::string& channel, std::vector<HistInfo>* histInfo);
         Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo);
@@ -49,7 +47,7 @@ class Channel {
         void SetPrintAllUncertaintyVariations(bool setting);
 
         //void subDivisions(std::vector<std::string>& divs);
-        void changeProcess(unsigned index, std::string& newTitle);
+        void changeProcess(unsigned index, std::string& newTitle, bool uncertainties);
 
         // histogram management
         void newSample(std::string& uniqueSampleName, bool uncertainties);

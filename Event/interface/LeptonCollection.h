@@ -34,11 +34,13 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
         void selectLooseLeptons();
         void selectFOLeptons();
         void selectTightLeptons();
+        void selectTightChargeLeptons();
 
         //build collection of leptons passing certain selection
         LeptonCollection looseLeptonCollection() const;
         LeptonCollection FOLeptonCollection() const;
         LeptonCollection tightLeptonCollection() const;
+        LeptonCollection tightChargeCollection() const;
 
         //build collection of the X leading leptons 
         LeptonCollection leadingLeptonCollection( const size_type );

@@ -58,7 +58,7 @@ void EventFourT::objectSelection() {
 
     jets = new JetCollection(event->jetCollection());
     jets->selectGoodJets();
-    bTagJets = new JetCollection(jets->mediumBTagCollection());
+    bTagJets = new JetCollection(jets->looseBTagCollection());
 
     event->selectFOLeptons();
 
@@ -75,7 +75,7 @@ void EventFourT::objectSelection() {
     *mediumLeps = tightLeps;
 
     nJets = jets->size();
-    nMediumB = bTagJets->size();
+    nMediumB = event->numberOfMediumBTaggedJets();
     nTightB = event->numberOfTightBTaggedJets();
     nLooseB = event->numberOfLooseBTaggedJets();
     nLooseLep = looseLeps->size();
@@ -210,20 +210,25 @@ bool EventFourT::passZBosonVeto() {
 }
 
 bool EventFourT::passLeanSelection() {
+    passLeptonSelection();
     if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
     if (nLep == 2 && (*mediumLeps)->hasOSPair()) return false;
 
     if ((**mediumLeps)[0].pt() < 25 || (**mediumLeps)[1].pt() < 20) return false;
     //if (met < 25) return false;
 
-    if (nLep == 2 && nJets < 4) return false;
-    if (nLep == 3 && nJets < 3) return false;
-    if (nLep == 4 && nJets < 2) return false;
+    //if (nLep == 2 && nJets < 4) return false;
+    //if (nLep == 3 && nJets < 3) return false;
+    //if (nLep == 4 && nJets < 2) return false;
+    if (nJets < 2) return false;
 
-    if (event->numberOfLooseBTaggedJets() < 2) return false;
+    //if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) return false;
+    if (event->numberOfLooseBTaggedJets() < 1) return false;
 
-    if (nLep == 2 && ht < 280) return false;
-    if (nLep == 3 && ht < 220) return false;
+    if (nLep < 4 && ht < 200) return false;
+    //if (nLep == 2 && ht < 280) return false;
+    //if (nLep == 3 && ht < 220) return false;
+    //if (nLep == 4 && ht < 200) return false;
     
     return true;
 }
@@ -249,43 +254,17 @@ bool EventFourT::leptonsAreNotChargeMisMatch() {
     return true;
 }
 
-void EventFourT::classifyEvent() {
-    currentClass = eventClass::fail;
-    if (! passBaselineEventSelection()) return;
-    if (! passLowMassVeto()) return;
-    if (! passZBosonVeto()) return;
-
-    if (! passFullEventSelection()) {
-        currentClass = eventClass::cro;
-        return;
-    }
-
-    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
-        currentClass = eventClass::crw;
-        return;
-    }
-
-    if (numberOfLeps() == 2) {
-        currentClass = eventClass::ssdl;
-    } else if (numberOfLeps() == 3) {
-        currentClass = eventClass::trilep;
-    } else if (numberOfLeps() == 4) {
-        currentClass = eventClass::fourlep;
-    }
-    return;
-}
-
 eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
     //if JER
     if (id == shapeUncId::JER_1p93) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_UpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_DownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
 
@@ -293,29 +272,29 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_UpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_DownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
     } else if (id == shapeUncId::JEC) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECUp().pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection());
             jets->selectGoodJets();
-            bTagJets = new JetCollection(jets->mediumBTagCollection());
+            bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECDown().pt();
         }
     }
 
     nJets = jets->size();
-    nMediumB = bTagJets->size();
+    nMediumB = jets->numberOfMediumBTaggedJets();
     nTightB = jets->numberOfTightBTaggedJets();
     nLooseB = jets->numberOfLooseBTaggedJets();
     ht = jets->scalarPtSum();
@@ -323,56 +302,4 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
 
     classifyEvent();
     return currentClass;
-}
-
-std::vector<double> EventFourT::fillVector() {
-    std::vector<double> fillVec;
-    if (currentClass == eventClass::fail) return fillVec;
-    MVAHandler_4T* currentMVA = dl_MVA;
-    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl)
-    if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
-
-    std::vector<double> scores = currentMVA->scoreEvent();
-    if (currentClass == eventClass::crz) {
-        fillVec = fourTopHists::fillAllLean(false, this);
-    } else if (currentClass == eventClass::crw || currentClass == eventClass::cro) {
-        fillVec = fourTopHists::fillAllLean(false, this);
-    } else if (currentClass == eventClass::ssdl) {
-        fillVec = fourTopHists::fillAllHists(false, this);
-    } else if (currentClass == eventClass::trilep) {
-        fillVec = fourTopHists::fillAllHists(true, this);
-    } else if (currentClass == eventClass::fourlep) {
-        fillVec = fourTopHists::fillAllHists(true, this, true);
-    }
-
-    fillVec.insert(fillVec.end(), scores.begin(), scores.end());
-
-    return fillVec;
-
-}
-
-std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
-    std::vector<std::pair<int, double>> singleEntries;
-    if (currentClass == eventClass::fail) return singleEntries;
-    MVAHandler_4T* currentMVA = dl_MVA;
-    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
-    if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
-
-
-    std::pair<MVAClasses, double> classAndScore = currentMVA->getClassAndScore();
-    int offset = offsets[currentClass];  
-    singleEntries.push_back({offset + classAndScore.first, classAndScore.second});
-
-    return singleEntries;
-}
-
-std::vector<std::pair<double, double>> EventFourT::fillVector2D() {
-    std::vector<std::pair<double, double>> fillVec2D;
-    if (currentClass == eventClass::fail) return fillVec2D;
-    MVAHandler_4T* currentMVA = dl_MVA;
-    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
-    if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
-    fillVec2D = currentMVA->fill2DVector();
-
-    return fillVec2D;
 }

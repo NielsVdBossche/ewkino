@@ -129,6 +129,9 @@ void LeptonCollection::selectTightLeptons(){
     selectObjects( &Lepton::isTight );
 }
 
+void LeptonCollection::selectTightChargeLeptons() {
+    selectObjects( &Lepton::isTightCharge );
+}
 
 LeptonCollection LeptonCollection::selectedCollection( void (LeptonCollection::*applySelection)() ) const{
     LeptonCollection lepCol( *this );
@@ -149,6 +152,10 @@ LeptonCollection LeptonCollection::FOLeptonCollection() const{
 
 LeptonCollection LeptonCollection::tightLeptonCollection() const{
     return selectedCollection( &LeptonCollection::selectTightLeptons );
+}
+
+LeptonCollection LeptonCollection::tightChargeCollection() const {
+    return selectedCollection( &LeptonCollection::selectTightChargeLeptons );
 }
 
 

@@ -5,39 +5,6 @@
 #include "../../memleak/debug_new.h" 
 #endif
 
-std::vector<HistInfo>* fourTopHists::crzInfo() {
-    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
-    
-    *histInfoVec = {
-        HistInfo( "CRZ_N_jets", "N_{jets}", 10, -0.5, 9.5),
-        HistInfo( "CRZ_N_b", "N_{b}", 5, -0.5, 4.5),
-        HistInfo( "CRZ_HT", "H_{T} [GeV]", 13, 300, 1600),
-        HistInfo( "CRZ_MET", "p_{T}^{miss} [GeV]", 19, 25, 500),
-        HistInfo( "CRZ_ptLeadingLep", "p_{T}(l1) [GeV]", 14, 20, 300),
-        HistInfo( "CRZ_ptLepTwo", "p_{T}(l2) [GeV]", 7, 20, 160),
-        HistInfo( "CRZ_ptLepThree", "p_{T}(l3) [GeV]", 8, 20, 100)
-    };
-
-    return histInfoVec;
-
-}
-
-std::vector<HistInfo>* fourTopHists::crwInfo() {
-    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
-    
-    *histInfoVec = {
-        HistInfo( "CRW_N_jets", "N_{jets}", 10, -0.5, 9.5),
-        HistInfo( "CRW_N_b", "N_{b}", 5, -0.5, 4.5),
-        HistInfo( "CRW_HT", "H_{T} [GeV]", 13, 300, 1600),
-        HistInfo( "CRW_MET", "p_{T}^{miss} [GeV]", 19, 25, 500),
-        HistInfo( "CRW_ptLeadingLep", "p_{T}(l1) [GeV]", 14, 20, 300),
-        HistInfo( "CRW_ptLepTwo", "p_{T}(l2) [GeV]", 7, 20, 160)
-    };
-
-    return histInfoVec;
-
-}
-
 std::vector<HistInfo>* fourTopHists::allHistsDL() {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
@@ -246,6 +213,27 @@ std::vector<HistInfo>* fourTopHists::infoLean(std::string flag, bool multilep) {
         //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
 
     }
+
+    return histInfoVec;
+}
+
+std::vector<HistInfo>* fourTopHists::testHists(eventClass evClass) {
+    std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
+
+    std::map<eventClass, std::string> flagMapping = {
+    {fail, "fail"},
+    {crz, "CRZ"},
+    {cro, "CRO"},
+    {crw, "CRW"},
+    {ssdl, "DL"},
+    {trilep, "3L"},
+    {fourlep, "4L"}};
+
+    std::string flag = flagMapping[evClass];
+
+    *histInfoVec = {
+        HistInfo("NLeps_After_TightCharge" + flag, "N_{L}", 6, -0.5, 5.5),
+    };
 
     return histInfoVec;
 }

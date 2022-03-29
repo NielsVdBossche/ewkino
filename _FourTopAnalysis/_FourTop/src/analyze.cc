@@ -390,7 +390,6 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                     uncID++;
                     continue;
                 }
-
                 double weightUp = 1.;
                 double weightDown = 1.;
                 eventClass upClass = eventClass::fail;
