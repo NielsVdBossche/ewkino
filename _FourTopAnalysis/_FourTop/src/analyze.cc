@@ -6,9 +6,9 @@
 
 void FourTop::analyze(std::string method, bool onlyCR) {
     if (onlyCR) {
-        std::cout << "CR only works" << std::endl;
+        std::cout << "ANALYZING ONLY CR" << std::endl;
     } else {
-        std::cout << "CR only does not work" << std::endl;
+        std::cout << "ANALYZING SR + CR" << std::endl;
     }
     ChannelManager* mgrAll = new ChannelManager(outfile);
     std::shared_ptr< SampleCrossSections > xsecs;
