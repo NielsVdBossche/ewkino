@@ -156,7 +156,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         }
 
         if (useUncertainties && ! treeReader->isData()) {
-            mgrAll->SetPrintAllUncertaintyVariations(true);
+            //mgrAll->SetPrintAllUncertaintyVariations(true);
             std::string currProcName = sampleVec[sampleIndex].processName();
             mgrAll->changePrimaryProcess(currProcName);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
