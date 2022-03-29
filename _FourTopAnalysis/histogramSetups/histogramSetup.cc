@@ -96,6 +96,8 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
+        HistInfo( "N_mu_" + flag, "N_#mu", 6, -0.5, 5.5),
+        HistInfo( "N_e_" + flag, "N_e", 6, -0.5, 5.5),
         HistInfo( "leptonPtLeading_" + flag, "p_{T}(l1) [GeV]", 18, 20, 200),
         HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "leptonEtaLeading_" + flag, "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
@@ -183,6 +185,8 @@ std::vector<HistInfo>* fourTopHists::infoLean(std::string flag, bool multilep) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
     
     *histInfoVec = {
+        HistInfo( "N_mu_" + flag, "N_#mu", 6, -0.5, 5.5),
+        HistInfo( "N_e_" + flag, "N_e", 6, -0.5, 5.5),
         HistInfo( "leptonPtLeading_" + flag, "p_{T}(l1) [GeV]", 18, 20, 200),
         HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "leptonEtaLeading_" + flag, "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation

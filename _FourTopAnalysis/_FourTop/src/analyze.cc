@@ -5,6 +5,11 @@
 #endif
 
 void FourTop::analyze(std::string method, bool onlyCR) {
+    if (onlyCR) {
+        std::cout << "ANALYZING ONLY CR" << std::endl;
+    } else {
+        std::cout << "ANALYZING SR + CR" << std::endl;
+    }
     ChannelManager* mgrAll = new ChannelManager(outfile);
     std::shared_ptr< SampleCrossSections > xsecs;
 
@@ -90,7 +95,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         std::cout << "Running method " << "ChargeDD" << std::endl;
     } else if (method == "nonPromptDD") {
         initFakerate();
-        processes = {"nonPrompt"};
+        processes = {"nonPromptDD"};
         selection->setSelectionType(selectionType::NPDD);
         useUncertainties = false;
         st = selectionType::NPDD;
@@ -103,6 +108,19 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         useUncertainties = false;
 
         std::cout << "Running method " << "Obs" << std::endl;
+    } else if (method == "MCNoChargeMisID") {
+        // only run DL channel
+        // testmethod for chargeMisID
+        processes = {"", "nonPrompt"};
+        selection->setSelectionType(selectionType::MCNoChargeMisID);
+        st = selectionType::MCNoChargeMisID;
+        std::cout << "Running method " << "MCNoChargeMisID" << std::endl;
+    } else if (method == "MCNoNP") {
+        // testmethod for NP est
+        processes = {"", "ChargeMisIDDD"};
+        selection->setSelectionType(selectionType::MCNoNP);
+        st = selectionType::MCNoNP;
+        std::cout << "Running method " << "MCNoNP" << std::endl;
     } else {
         std::cout << "Running method " << "MCAll" << std::endl;
     }
@@ -138,6 +156,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         }
 
         if (useUncertainties && ! treeReader->isData()) {
+            //mgrAll->SetPrintAllUncertaintyVariations(true);
             std::string currProcName = sampleVec[sampleIndex].processName();
             mgrAll->changePrimaryProcess(currProcName);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
@@ -150,7 +169,6 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
 
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
-            if(numberOfPdfVariations>=100) hasValidPdfs = true;
 
             considerBTagShape = true;
             
@@ -192,41 +210,41 @@ void FourTop::analyze(std::string method, bool onlyCR) {
             if (! selection->passLowMassVeto()) {
                 continue;
             }
+
+            // Add lepton selection boolean call here!
+
+            if (! selection->passLeptonSelection()) continue;
             selection->classifyEvent();
-
-            // TEMP! Remove for full stuff
-            //if (selection->getCurrentClass() == eventClass::fail) continue;
-
             unsigned processNb = 0;
-
             double weight = currentEvent->weight();
-            if( currentEvent->isMC() && st != selectionType::Data ){
+            
+            if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
                 weight *= reweighter.totalWeight( *currentEvent );
 
-                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                    if (leptonPtr->isChargeFlip()) {
-                        processNb = 2;
-                        break;
-                    }
-                }
-                for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                    if (! leptonPtr->isPrompt()) {
-                        processNb = 1;
-                        break;
-                    }
-                }
                 if (st == selectionType::MCPrompt) {
-                    if (processNb == 1) continue;
-                    if (processNb == 2 && selection->numberOfLeps() == 2) continue;
-                    processNb = 1;
-                } else if (st != selectionType::MCAll) {
-                    processNb = 0;
+                    if (! selection->leptonsArePrompt()) continue;
+                    if (! selection->leptonsAreNotChargeFlip()) processNb = 1; 
+                    if (processNb == 1 && selection->numberOfLeps() == 2) continue;
+
+                } else if (st == selectionType::MCNoChargeMisID)  {
+                    if (! selection->leptonsAreNotChargeFlip()) continue;
+                    if (! selection->leptonsArePrompt()) processNb = 1;
+
+                    // if (selection->numberOfLeps() >= 2) continue;
+                } else if (st == selectionType::MCNoNP) {
+                    if (! selection->leptonsArePrompt()) continue;
+                    if (! selection->leptonsAreNotChargeFlip()) processNb = 1;
+                } else {
+                    if (! selection->leptonsAreNotChargeFlip()) processNb = 2; 
+                    if (! selection->leptonsArePrompt()) processNb = 1;
                 }
             } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
-
+                weight *= FakeRateWeight();
                 if (currentEvent->isMC()) {
                     weight *= -1;
+                    // should all leptons be prompt?
+                    if (! selection->leptonsArePrompt()) continue;
                 }
                 if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             } else if (st == selectionType::ChargeMisDD) {
@@ -247,6 +265,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
 
             // fill all histograms
             // replace with functions in eventHandling?
+
             eventClass nominalClass = selection->getCurrentClass();
             if (nominalClass == eventClass::crz) {
                 std::vector<double> scores = mva_ML->scoreEvent();
@@ -352,7 +371,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
 
 
             // TODO: Systematics
-            if (currentEvent->isData() || ! useUncertainties) continue;
+            if (currentEvent->isData() || ! useUncertainties || processNb > 0) continue;
 
             //// Start filling histograms
             // loop uncertainties
@@ -409,7 +428,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                         if (numberOfPdfVariations < max) {
                             max = numberOfPdfVariations;
                         }
-                        for(int i=0; i<max; ++i){
+                        for(int i=1; i<max+1; ++i){
                             pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
                         }
                     } else {
@@ -555,8 +574,9 @@ bool FourTop::eventPassesTriggers() {
                 currentEvent->passTriggers_em()  || currentEvent->passTriggers_mm()  || currentEvent->passTriggers_ee()  || 
                 currentEvent->passTriggers_eee() || currentEvent->passTriggers_eem() || currentEvent->passTriggers_emm() || currentEvent->passTriggers_mmm());
     } else {
-        // TODO: event is data, apply triggers!!
-        return true;
+        return (currentEvent->passTriggers_e()   || currentEvent->passTriggers_m()   || 
+                currentEvent->passTriggers_em()  || currentEvent->passTriggers_mm()  || currentEvent->passTriggers_ee()  || 
+                currentEvent->passTriggers_eee() || currentEvent->passTriggers_eem() || currentEvent->passTriggers_emm() || currentEvent->passTriggers_mmm());
     }
 
     return true;

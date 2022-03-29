@@ -14,7 +14,8 @@ bool selectLeptonsLooseMVA(const Lepton& lepton) {
 
 EventFourT::EventFourT() {
     looseLeps = new LeptonCollection();
-    mediumLeps = new LeptonCollection();
+    tightLeps = new LeptonCollection();
+    mediumLeps = new LeptonCollection*();
     jets = new JetCollection();
     bTagJets = new JetCollection();
 
@@ -22,8 +23,10 @@ EventFourT::EventFourT() {
 }
 
 void EventFourT::cleanSelection() {
-    delete looseLeps;
     delete mediumLeps;
+    delete looseLeps;
+    delete tightLeps;
+    delete foLeps;
     delete jets;
     delete bTagJets;
     scoresMVA.clear();
@@ -31,6 +34,7 @@ void EventFourT::cleanSelection() {
 
 void EventFourT::addNewEvent(Event* newEvent) {
     cleanSelection();
+    mediumLeps = new LeptonCollection*();
     event = newEvent;
     isNormalSelected = true;
     currentClass = eventClass::fail;
@@ -49,37 +53,33 @@ void EventFourT::objectSelection() {
     event->sortLeptonsByPt();
 
     looseLeps = new LeptonCollection(event->looseLeptonCollection());
-    mediumLeps = new LeptonCollection(event->TightLeptonCollection());
+    tightLeps = new LeptonCollection(event->TightLeptonCollection());
     foLeps = new LeptonCollection(event->FOLeptonCollection());
-
-    if (mediumLeps->size() < 3) {
-        //mediumLeps->selectTightChargeLeptons();
-        //foLeps->selectTightChargeLeptons();
-    }
 
     jets = new JetCollection(event->jetCollection());
     jets->selectGoodJets();
     bTagJets = new JetCollection(jets->looseBTagCollection());
 
-    event->selectTightLeptons();
+    event->selectFOLeptons();
+
+    if (nLep == 3) {
+        LeptonCollection looseWPLeptons(*looseLeps);
+        looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
+        if (looseWPLeptons.size() - 3 == 1) {
+            delete tightLeps;
+            tightLeps = new LeptonCollection(looseWPLeptons); 
+            nLep = 4;
+        }
+    }
+
+    *mediumLeps = tightLeps;
 
     nJets = jets->size();
     nMediumB = event->numberOfMediumBTaggedJets();
     nTightB = event->numberOfTightBTaggedJets();
     nLooseB = event->numberOfLooseBTaggedJets();
     nLooseLep = looseLeps->size();
-    nLep = mediumLeps->size();
-
-    if (nLep == 3) {
-        LeptonCollection looseWPLeptons(*looseLeps);
-        looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
-        if (looseWPLeptons.size() - 3 == 1) {
-            nLep = 4;
-            delete mediumLeps;
-            mediumLeps = new LeptonCollection(looseWPLeptons);
-        }
-    }
-
+    nLep = (*mediumLeps)->size();
     ht = jets->scalarPtSum();
     met = event->met().pt();
 }
@@ -92,16 +92,22 @@ bool EventFourT::passBaselineEventSelection() {
     //if (n_lep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
     //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
-    if (! passLeptonSelection()) return false;
-    
-    if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
+    //if (! passLeptonSelection()) return false;
+    //std::cout << "pqss lep sel" << std::endl;
+    //if (mediumLeps->size() < 2) return false;
+    //if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+
+    if ((**mediumLeps)[0].pt() < 25 || (**mediumLeps)[1].pt() < 20) return false;
+
     // 2 SS leptons OR 3+ leps
     // check basic nr jets
     // 2 cuts which must be replaced for systematics
     if (jets->size() < 3) return false;
 
+
     // 1 bjets
     if (bTagJets->size() < 1) return false;
+
 
     if (nLep < 4 && ht < 300) return false;
 
@@ -113,32 +119,49 @@ bool EventFourT::passLeptonSelection() {
 
     if (selType == MCAll) {
         // normal tight lepton selection, no prompt or charge requirements
-        if (mediumLeps->size() < 2) return false;
-        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+        if (tightLeps->size() < 2) return false;
+        if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != tightLeps->size()) return false;
     } else if (selType == MCPrompt) {
         // tight and prompt and no charge misID
         // or also FO and prompt with negative weight?
-        if (mediumLeps->size() < 2) return false;
-        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+        if (tightLeps->size() < 2) return false;
+        if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != tightLeps->size()) return false;
+        if (! leptonsArePrompt()) return false;
         // check if any lepton is nonprompt or charge misIDd
     } else if (selType == ChargeMisDD) {
         // tight but OS events
-        if (mediumLeps->size() != 2) return false;
-        if (! mediumLeps->hasOSPair()) return false;
+        if (tightLeps->size() != 2) return false;
+        if (! tightLeps->hasOSPair()) return false;
     } else if (selType == NPDD) {
         // FO  with at least 1 non tight
         if (foLeps->size() < 2) return false;
         if (foLeps->size() == 2 && foLeps->hasOSPair()) return false;
-        if (mediumLeps->size() == foLeps->size()) return false;
+        if (tightLeps->size() == foLeps->size()) return false;
 
-        delete mediumLeps;
-        mediumLeps = foLeps;
-        nLep = foLeps->size();
+        *mediumLeps = foLeps;
+        nLep = (*mediumLeps)->size();
     } else if (selType == Data) {
-        if (mediumLeps->size() < 2) return false;
-        if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
+        if (tightLeps->size() < 2) return false;
+        if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != tightLeps->size()) return false;
+    } else if (selType == MCNoChargeMisID) {
+        if (tightLeps->size() < 2) return false;
+        if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != tightLeps->size()) return false;
+    } else if (selType == MCNoNP) {
+        if (tightLeps->size() < 2) return false;
+        if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
+
+        if (foLeps->size() != tightLeps->size()) return false;
     }
     
+    nLep = (*mediumLeps)->size();
     return true;
 }
 
@@ -189,9 +212,9 @@ bool EventFourT::passZBosonVeto() {
 bool EventFourT::passLeanSelection() {
     passLeptonSelection();
     if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
-    if (nLep == 2 && mediumLeps->hasOSPair()) return false;
+    if (nLep == 2 && (*mediumLeps)->hasOSPair()) return false;
 
-    if ((*mediumLeps)[0].pt() < 25 || (*mediumLeps)[1].pt() < 20) return false;
+    if ((**mediumLeps)[0].pt() < 25 || (**mediumLeps)[1].pt() < 20) return false;
     //if (met < 25) return false;
 
     //if (nLep == 2 && nJets < 4) return false;
@@ -211,8 +234,22 @@ bool EventFourT::passLeanSelection() {
 }
 
 bool EventFourT::leptonsArePrompt() {
-    for( const auto& leptonPtr : *mediumLeps ){
+    for( const auto& leptonPtr : **mediumLeps ){
         if( !leptonPtr->isPrompt() ) return false;
+    }
+    return true;
+}
+
+bool EventFourT::leptonsAreNotChargeFlip() {
+    for( const auto& leptonPtr : **mediumLeps ){
+        if(leptonPtr->isChargeFlip()) return false;
+    }
+    return true;
+}
+
+bool EventFourT::leptonsAreNotChargeMisMatch() {
+    for( const auto& leptonPtr : **mediumLeps ){
+        if(leptonPtr->isChargeMisMatch()) return false;
     }
     return true;
 }

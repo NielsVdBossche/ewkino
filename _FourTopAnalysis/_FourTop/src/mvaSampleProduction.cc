@@ -4,6 +4,7 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
 
     //std::vector<double>* variableVector = selection->;
     tree->Branch("weight",          &mvaWeight,     "weight/D");
+
     tree->Branch("N_jets",          &n_jets_f,      "N_jets/D");
     tree->Branch("N_b",             &n_bjets_f,     "N_b/D");
     tree->Branch("N_b_tight",       &n_b_tight,     "N_b_tight/D");
@@ -49,6 +50,8 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     }
 }
 
+//void FourTop::BuildVariableMapAlt(TTree* tree, )
+
 void FourTop::createMVATrainingSamples() {
     std::cout << "Sample loop" << std::endl;
 
@@ -79,9 +82,15 @@ void FourTop::createMVATrainingSamples() {
         TTree* trainingTree_ML_loose = new TTree("ML_tree_loose", "ML_tree_loose");
         linkMVAVariables(trainingTree_ML_loose, true);
 
+        TTree* trainingTree_ML_Norm = new TTree("ML_tree", "ML_tree_NormalizedVariables");
+        linkMVAVariables(trainingTree_ML_Norm, true);
+        TTree* trainingTree_ML_loose_Norm = new TTree("ML_tree_loose", "ML_tree_loose_NormalizedVariables");
+        linkMVAVariables(trainingTree_ML_loose_Norm, true);
+
         std::cout << "Event loop" << std::endl;
 
         ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
+        zgOverlapCheck = treeReader->currentSamplePtr()->zgOverlap();
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ) {
             //if (entry > 10000) break;
@@ -97,6 +106,9 @@ void FourTop::createMVATrainingSamples() {
                 continue;
             }
 
+            if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue;
+            if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue;
+
             mvaWeight = currentEvent->weight();
             mvaWeight *= reweighter.totalWeight( *currentEvent );
             
@@ -107,17 +119,17 @@ void FourTop::createMVATrainingSamples() {
                 } else if (selection->numberOfLeps() == 3 && (selection->numberOfLooseBJets() > 2 || (selection->numberOfLooseBJets() == 2 && selection->numberOfJets() >= 4))) {
                     fillMVAVariables(true);
                     trainingTree_ML_loose->Fill();
+                    fillMVAVariablesNormalized(false);
+                    trainingTree_ML_loose_Norm->Fill();
                 } else if (selection->numberOfLeps() == 4) {
                     fillMVAVariables(true);
                     trainingTree_ML_loose->Fill();
+                    fillMVAVariablesNormalized(true);
+                    trainingTree_ML_loose_Norm->Fill();
                 }
             }
 
-            if (infuseNonPrompt && ttgOverlapCheck > 0) {
-                if (! selection->passBaselineEventSelectionWithAltLeptons()) {
-                    continue;
-                }
-            } else if (! selection->passBaselineEventSelection())  {
+            if (! selection->passBaselineEventSelection())  {
                 continue;
             }
 
@@ -135,9 +147,16 @@ void FourTop::createMVATrainingSamples() {
             if (selection->numberOfLeps() == 2) {
                 fillMVAVariables(false);
                 trainingTree_DL->Fill();
-            } else {
+            } else if (selection->numberOfLeps() == 3) {
                 fillMVAVariables(true);
                 trainingTree_ML->Fill();
+                fillMVAVariablesNormalized(false);
+                trainingTree_ML_Norm->Fill();
+            } else if (selection->numberOfLeps() == 4) {
+                fillMVAVariables(true);
+                trainingTree_ML->Fill();
+                fillMVAVariablesNormalized(true);
+                trainingTree_ML_Norm->Fill();
             }
         }
         
@@ -148,6 +167,8 @@ void FourTop::createMVATrainingSamples() {
         trainingTree_ML->Write(trainingTree_ML->GetName(), TObject::kOverwrite);
         trainingTree_DL_loose->Write(trainingTree_DL_loose->GetName(), TObject::kOverwrite);
         trainingTree_ML_loose->Write(trainingTree_ML_loose->GetName(), TObject::kOverwrite);
+        trainingTree_ML_Norm->Write(trainingTree_ML_Norm->GetName(), TObject::kOverwrite);
+        trainingTree_ML_loose_Norm->Write(trainingTree_ML_loose_Norm->GetName(), TObject::kOverwrite);
 
         currentOutputFile->Close();
     }

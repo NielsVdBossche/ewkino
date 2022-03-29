@@ -93,6 +93,14 @@ void ChannelManager::changeProcess(unsigned procNumber, std::string& newProc) {
     if (! gDirectory->GetDirectory(newProc.c_str())) gDirectory->mkdir(newProc.c_str());
 }
 
+void ChannelManager::SetPrintAllUncertaintyVariations(bool setting) {
+    if (!useUncertainties) return;
+    for (auto it : mapping) {
+        it.second->SetPrintAllUncertaintyVariations(setting);
+    }
+}
+
+
 void ChannelManager::writeNominalHistograms(std::string& uniqueSampleName) {
     for (unsigned i=0; i<processHistName.size(); i++) {
         gDirectory->cd(processHistName[i].c_str());

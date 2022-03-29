@@ -17,6 +17,8 @@ enum eventClass {
 enum selectionType {
     MCAll,
     MCPrompt,
+    MCNoChargeMisID,
+    MCNoNP,
     ChargeMisDD,
     NPDD,
     Data

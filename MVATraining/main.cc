@@ -3,6 +3,7 @@
 
 #include <TMVA/DataLoader.h>
 #include <TMVA/Factory.h>
+#include <TMVA/PyMethodBase.h>
 
 #include <TROOT.h>
 #include <TTree.h>
@@ -13,6 +14,7 @@
 #include <iostream>
 
 int main(int argc, char const *argv[]) {
+    TMVA::PyMethodBase::PyInitialize();
 
     if (argc < 5) {
         std::cerr << "Mvatrainer requires at least four arguments: <samplelist.txt> treename setup searchOrNot" << std::endl;
@@ -36,7 +38,7 @@ int main(int argc, char const *argv[]) {
 
     TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf);
 
-    TFile* outfile = new TFile(("Classifiers/FourTopClassification_OrigSel_" + setup + ".root").c_str() ,"RECREATE");
+    TFile* outfile = new TFile(("Classifiers/FourTopClassification_OrigSel_TEST_" + setup + ".root").c_str() ,"RECREATE");
     TMVA::Factory* factory = mvaSetupManager::buildFactory(conf, outfile);
 
     // class manages a dataloader and a factory, as well as settings for the mva's

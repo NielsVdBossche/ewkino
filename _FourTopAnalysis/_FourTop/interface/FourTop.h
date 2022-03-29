@@ -64,7 +64,8 @@ class FourTop {
 
 
         TH2D* MisIDRates = nullptr;
-        TH2D* FakeRates = nullptr;
+        TH2D* FakeRatesElectron = nullptr;
+        TH2D* FakeRatesMuon = nullptr;
 
     public:
         // Loading settings for analysis, preparing trees, ...
@@ -89,12 +90,14 @@ class FourTop {
 
         void linkMVAVariables(TTree* tree, bool isML);
         void fillMVAVariables(bool isML);
+        void fillMVAVariablesNormalized(bool is4L);
 
         bool eventPassesTriggers();
 
         void initDdChargeMisID(double* corr);
         void initFakerate();
         double ChmisIDWeight();
+        double FakeRateWeight();
 };
 
 

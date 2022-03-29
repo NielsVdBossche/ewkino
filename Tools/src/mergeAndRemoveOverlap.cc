@@ -64,6 +64,8 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
         throw std::logic_error( "Can't merge datasets corresponding to different files unless explicitly specified." );
     }
 
+    TTree::SetMaxTreeSize(100000000LL);
+
     //initialize TreeReader
     TreeReader treeReader;
 
@@ -71,8 +73,10 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
     TFile* outputFilePtr = TFile::Open( outputPath.c_str(), "RECREATE" );
     outputFilePtr->mkdir( "blackJackAndHookers" );
     outputFilePtr->cd( "blackJackAndHookers" );
+    TDirectory* outputDir = outputFilePtr->GetDirectory( "blackJackAndHookers" );
     std::shared_ptr< TTree > outputTreePtr( std::make_shared< TTree >( "blackJackAndHookersTree","blackJackAndHookersTree" ) );
-
+    outputTreePtr->SetDirectory( outputDir );
+    //outputDir->Append(outputTreePtr.get());
     //histograms stored in file
     std::map< std::string, std::shared_ptr< TH1 > > outputHistogramMap;
 
@@ -88,7 +92,8 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
         //open next sample
         //DO NOT reset triggers because this will invalidate the addresses set by setOutputTree and trigger decisions in output file will be wrong!
         treeReader.initSampleFromFile( inputFilePath, false );
-        outputTreePtr->SetDirectory( outputFilePtr );
+
+        outputTreePtr->SetDirectory( outputDir );
 
         //set output histograms and output tree for first file
         if( inputPathIt == inputPathVector.cbegin() ){
@@ -124,6 +129,10 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
         }
 
     }
+
+    //if (! outputFilePtr->IsOpen()) {
+    //    outputFilePtr = TFile::Open( outputPath.c_str(), "UPDATE" );
+    //}
 
     //need to change directory for writing
     outputFilePtr->cd( "blackJackAndHookers" );

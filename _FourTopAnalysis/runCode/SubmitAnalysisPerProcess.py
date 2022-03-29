@@ -2,7 +2,7 @@ import os
 from random import sample
 import sys
 
-sys.path.append(os.path.abspath('../../'))
+#sys.path.append(os.path.abspath('../../'))
 
 #from jobSubmission.condorTools import submitCommandsAsCondorJob
 
@@ -15,20 +15,34 @@ for sl in sampleLists:
     filePath = sampleListPath + sl + ".txt"
 
     sampleDict = dict()
-
+    #input
     with open(filePath) as f:
+        process = ""
+
         for line in f:
             splitLine = line.split()
-
+            
+            if line == "\n": continue
             if line[0] == '#' or splitLine[0] == "#": continue
             
-            if not splitLine[0] in sampleDict.keys():
-                sampleDict[splitLine[0]] = [line]
+            if splitLine[0] != process:
+                process = splitLine[0]
+                count = 0
+                processFilename = process + "_" + str(count)
+
+            if not processFilename in sampleDict.keys():
+                sampleDict[processFilename] = [line]
             else:
-                curr = sampleDict[splitLine[0]]
-                curr.append(line)
-                sampleDict[splitLine[0]] = curr
+                curr = sampleDict[processFilename]
+                if len(curr) > 2:
+                    count += 1
+                    processFilename = process + "_" + str(count)
+                    sampleDict[processFilename] = [line]
+                else:
+                    curr.append(line)
+                    sampleDict[processFilename] = curr
     
+    # output
     for key in sampleDict.keys():
         currOutPath = outputPath + sl + "_" + key + ".txt"
         outputSampleLists.append("TmpLists/" + sl + "_" + key + ".txt")
@@ -38,8 +52,12 @@ for sl in sampleLists:
                 of.write(samp)     
 
 outputstring = ""
-
+outputAlt = ""
 for samp in outputSampleLists:
     outputstring += samp + ", "
+    outputAlt += samp + "\n"
+
 
 print(outputstring[:-2])
+print(outputAlt)
+
