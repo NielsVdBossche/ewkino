@@ -140,8 +140,8 @@ FourTop::~FourTop() {
 }
 
 void FourTop::createMVAHandlers() {
-    mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection);
-    mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection);
+    mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection, leanEventSelection);
+    mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection, leanEventSelection);
 
     selection->setDLMVA(mva_DL);
     selection->setMLMVA(mva_ML);
@@ -170,10 +170,6 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
                 normFactors[i-1] = normFactor;
             }
         }
-
-        //for (auto it : normFactors) {
-        //    //std::cout << it.first << "\t" << it.second << std::endl;
-        //}
 
         reweighter->setNormFactors(samp, normFactors);
     }
@@ -219,8 +215,15 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
         if (event.numberOfLeptons() < 2) continue;
         if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
-        if (event.numberOfJets() < 3) continue;
+        
+        if (leanEventSelection) {
+            if (event.numberOfJets() < 2) continue;
+            if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
 
+        } else {
+            if (event.numberOfJets() < 3) continue;
+            if (event.numberOfLeptons() < 4 && event.HT() < 300) continue;
+        }
 
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = reweighter->weight(event);

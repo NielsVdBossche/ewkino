@@ -22,8 +22,11 @@ void FourTop::analyze(std::string method) {
         std::cout << "building reweighter" << std::endl;
         btagReweighter = new ReweighterBTagShape*();
         reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
-
-        addBTaggingNormFactors(*btagReweighter, "bTagNorms/");
+        if (leanEventSelection) {
+            addBTaggingNormFactors(*btagReweighter, "bTagNorms/Lean");
+        } else {
+            addBTaggingNormFactors(*btagReweighter, "bTagNorms/Original");
+        }
     }
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
 

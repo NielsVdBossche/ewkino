@@ -39,6 +39,7 @@ class MVAHandler_4T {
         MVAConfigs currentConfig;
         double isML = false;
         int maxClass = 1;
+        bool lean;
 
         EventFourT* selection;
 
@@ -59,7 +60,7 @@ class MVAHandler_4T {
         Float_t m2ll, m2bb, m2lblb, mtLeadLepMET, mtSubLeadLepMET, met;
 
 
-        MVAHandler_4T(MVAConfigs config, EventFourT* selec);
+        MVAHandler_4T(MVAConfigs config, EventFourT* selec, bool isLean);
         ~MVAHandler_4T();
         
         void initReader();

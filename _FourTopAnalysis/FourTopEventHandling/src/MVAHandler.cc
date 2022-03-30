@@ -5,7 +5,7 @@
 #include "../../../memleak/debug_new.h"
 #endif
 
-MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventFourT* selec) : currentConfig(config), selection(selec) {
+MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventFourT* selec, bool isLean) : currentConfig(config), selection(selec), lean(isLean) {
     initReader();
 }
 
@@ -19,10 +19,18 @@ void MVAHandler_4T::initReader() {
         isML = true;
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
-        weightFilePath += "FourTopClassification_New_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        if (lean) {
+            weightFilePath += "FourTopClassification_New_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        } else {
+            weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        }
     } else if (currentConfig == TriClass_ML) {
+        if (lean) {
+            weightFilePath += "FourTopClassification_New_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+        } else {
+            weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+        }
         isML = true;
-        weightFilePath += "FourTopClassification_New_ML_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == FourClass_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == FourClass_ML) {
