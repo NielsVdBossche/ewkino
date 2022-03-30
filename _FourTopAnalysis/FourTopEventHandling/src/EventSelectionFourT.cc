@@ -15,6 +15,7 @@ bool selectLeptonsLooseMVA(const Lepton& lepton) {
 EventFourT::EventFourT() {
     looseLeps = new LeptonCollection();
     tightLeps = new LeptonCollection();
+    foLeps = new LeptonCollection();
     mediumLeps = new LeptonCollection*();
     jets = new JetCollection();
     bTagJets = new JetCollection();

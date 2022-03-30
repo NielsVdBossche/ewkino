@@ -156,7 +156,7 @@ if __name__ == "__main__":
             queueString += "\n"
 
 
-    queueString = ")\n\n"
+    queueString += ")\n\n"
 
     with open("AnalysisJob.sub", 'a') as f:
         f.write(queueString)

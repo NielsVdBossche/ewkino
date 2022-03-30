@@ -39,9 +39,9 @@ class MVAHandler_4T {
         MVAConfigs currentConfig;
         double isML = false;
         int maxClass = 1;
-        bool lean;
 
         EventFourT* selection;
+        bool lean;
 
 
         std::vector<double> scoresCurrent;
