@@ -34,9 +34,10 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 outputFileName += "EnlargedNonprompt_";
             } else if (it == "CR") {
                 outputFileName += "CR_";
+                onlyCR = true;
             } else if (stringTools::stringContains(it, "timestamp=")) {
                 timestampOutputName = stringTools::split(it, "=")[1];
-            } else if (stringTools::stringContains(it, "lean")) {
+            } else if (stringTools::stringContains(it, "lean") || stringTools::stringContains(it, "loose")) {
                 leanEventSelection = true;
                 delete selection;
                 selection = new EventFourTLoose();

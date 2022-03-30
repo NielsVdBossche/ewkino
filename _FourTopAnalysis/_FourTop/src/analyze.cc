@@ -4,7 +4,7 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-void FourTop::analyze(std::string method, bool onlyCR) {
+void FourTop::analyze(std::string method) {
     if (onlyCR) {
         std::cout << "ANALYZING ONLY CR" << std::endl;
     } else {

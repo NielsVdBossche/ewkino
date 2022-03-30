@@ -39,6 +39,7 @@ class FourTop {
 
         bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar
         bool leanEventSelection = false;
+        bool onlyCR = false;
 
         // General settings for analysis run
         std::string yearString = "Combi";
@@ -84,7 +85,7 @@ class FourTop {
         std::string getYearString() {return yearString;}
         
         // Main loop functions
-        void analyze(std::string method, bool onlyCR);
+        void analyze(std::string method);
         void testRuns();
   
         void cutFlow(std::string& sortingMode);
