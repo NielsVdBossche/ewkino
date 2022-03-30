@@ -19,10 +19,10 @@ def PrepareJobDescription(additionalArguments):
     return
 
 
-runTypesCode = ["MCAll", "MCPrompt", "ChargeDD", "nonPromptDD", "Obs", "MCNoChargeMisID", "MCNoNP"]
-runTypes = ["mcall", "dd", "npdd", "chdd"]
+runTypesCode = ["MCAll", "MCPrompt", "ChargeDD", "nonPromptDD", "nonPromptDDControl", "Obs", "MCNoChargeMisID", "MCNoNP"]
+runTypes = ["mcall", "dd", "npdd", "chdd", "npcontrol"]
 
-matches = {"mcall" : ["MCAll"], "npdd" : ["nonPromptDD", "MCAll"], "chdd" : ["ChargeDD"], "dd" : ["MCPrompt", "ChargeDD", "nonPromptDD"]}
+matches = {"mcall" : ["MCAll"], "npdd" : ["nonPromptDD", "MCAll"], "chdd" : ["ChargeDD"], "dd" : ["MCPrompt", "ChargeDD", "nonPromptDD"], "npcontrol" : {"nonPromptDD", "nonPromptDDControl"}}
 
 ddtypes = ["all", "np", "ch"]
 
@@ -49,11 +49,10 @@ mcSL = ["TmpLists/2016PreVFP_Rare_0.txt", "TmpLists/2016PreVFP_Rare_1.txt", "Tmp
             "TmpLists/2018_ttbar_0.txt", "TmpLists/2018_Xgamma_0.txt", "TmpLists/2018_Xgamma_1.txt", "TmpLists/2018_TTW_0.txt", 
             "TmpLists/2018_TTZ_0.txt", "TmpLists/2018_TTH_0.txt", "TmpLists/2018_TTTT_0.txt"]
 
-dataSL = ["Data16PostVFP.txt", "Data16PreVFP.txt", "Data17.txt", "Data18.txt"]
+dataSL = ["Data16PreVFP.txt", "Data16PostVFP.txt", "Data17.txt", "Data18.txt"]
 
 
-sets = {"MCAll" : [mcSL], "nonPromptDD" : [mcSL, dataSL], "ChargeDD" : [dataSL], "MCPrompt" : [mcSL]}
-
+sets = {"MCAll" : [mcSL], "nonPromptDD" : [dataSL, mcSL], "ChargeDD" : [dataSL], "MCPrompt" : [mcSL], "nonPromptDDControl" : [mcSL]}
 
 wd = "/user/nivanden/ewkino/_FourTopAnalysis"
 

@@ -80,6 +80,7 @@ void FourTop::analyze(std::string method) {
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
     selectionType st = selectionType::MCAll;
     bool useUncertainties = true;
+    bool isNPControl = false;
 
     double chMisCorr = 0.;
     if (method == "MCPrompt") {
@@ -100,6 +101,15 @@ void FourTop::analyze(std::string method) {
         initFakerate();
         processes = {"nonPromptDD"};
         selection->setSelectionType(selectionType::NPDD);
+        useUncertainties = false;
+        st = selectionType::NPDD;
+
+        std::cout << "Running method " << "NP DD" << std::endl;
+    } else if (method == "nonPromptDDControl") {
+        initFakerate();
+        processes = {"nonPrompt"};
+        selection->setSelectionType(selectionType::NPDD);
+        isNPControl = true;
         useUncertainties = false;
         st = selectionType::NPDD;
 
@@ -244,7 +254,7 @@ void FourTop::analyze(std::string method) {
             } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
                 weight *= FakeRateWeight();
-                if (currentEvent->isMC()) {
+                if (currentEvent->isMC() && ! isNPControl) {
                     weight *= -1;
                     // should all leptons be prompt?
                     if (! selection->leptonsArePrompt()) continue;
