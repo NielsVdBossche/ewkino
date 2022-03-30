@@ -175,7 +175,7 @@ void FourTop::analyze(std::string method) {
 
             considerBTagShape = true;
             
-            if (sampleIndex == 0) {
+            if (sampleIndex == 0 && considerBTagShape) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
