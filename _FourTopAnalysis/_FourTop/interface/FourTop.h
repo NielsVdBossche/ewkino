@@ -19,6 +19,7 @@
 #include "../../additionalTools/interface/HistogramManager.h"
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
+#include "../../FourTopEventHandling/interface/EventFourTLoose.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 #include "../../HistogramHandling/interface/ChannelManager.h"
 
@@ -36,7 +37,8 @@ class FourTop {
         int ttgOverlapCheck; // 0: neither, 1: ttbar, 2: ttgamma
         int zgOverlapCheck; // 0: neither, 1: DY, 2: ZG
 
-        bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar 
+        bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar
+        bool leanEventSelection = false;
 
         // General settings for analysis run
         std::string yearString = "Combi";

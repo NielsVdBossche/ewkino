@@ -28,47 +28,6 @@ void EventFourT::classifyEvent() {
     return;
 }
 
-void EventFourT::classifyEventLean() {
-    currentClass = eventClass::fail;
-    if (! passLeanSelection()) return;
-    if (! passLowMassVeto()) return;
-    if (! passZBosonVeto()) return;
-
-    if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) {
-        currentClass = eventClass::cro;
-        return;
-    }
-
-    if ((nLep == 2 && nJets < 4) || (nLep == 3 && nJets < 3) || (nLep == 4 && nJets < 2)) {
-        currentClass = eventClass::cro;
-        return;
-    }
-
-    if (nLep == 2 && ht < 280) {
-        currentClass = eventClass::cro;
-        return;
-    }
-    if (nLep == 3 && ht < 220) {
-        currentClass = eventClass::cro;
-        return;
-    }
-
-
-    if ((numberOfLeps() == 2 && numberOfJets() < 6 && numberOfLooseBJets() == 2) || (numberOfLeps() == 3 && numberOfJets() < 4 && numberOfLooseBJets() == 2)) {
-        currentClass = eventClass::crw;
-        return;
-    }
-
-    if (numberOfLeps() == 2) {
-        currentClass = eventClass::ssdl;
-    } else if (numberOfLeps() == 3) {
-        currentClass = eventClass::trilep;
-    } else if (numberOfLeps() == 4) {
-        currentClass = eventClass::fourlep;
-    }
-    return;
-}
-
 std::vector<double> EventFourT::fillVector() {
     std::vector<double> fillVec;
     if (currentClass == eventClass::fail) return fillVec;

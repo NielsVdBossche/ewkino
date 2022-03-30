@@ -124,7 +124,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     //std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
     //std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
     
-    int nb = bJets->size();
+    //int nb = bJets->size();
 
     jets->sortByPt();
 

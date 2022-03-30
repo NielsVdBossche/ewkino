@@ -19,6 +19,8 @@ class MVAHandler_4T;
 ///enum shapeUncId;
 
 class EventFourT {
+    protected:
+        void SetEventClass(eventClass newClass) {currentClass = newClass;}
     private:
         Event* event = nullptr;
 
@@ -53,7 +55,7 @@ class EventFourT {
     public:
 
         EventFourT();
-        ~EventFourT() {cleanSelection();};
+        virtual ~EventFourT() {cleanSelection();};
 
         void setSelectionType(selectionType st) {selType = st;}
         
@@ -102,8 +104,8 @@ class EventFourT {
         bool leptonsAreNotChargeMisMatch();
         bool leptonsAreTight();
 
-        void classifyEvent();
-        void classifyEventLean();
+        virtual void classifyEvent();
+        //void classifyEventLean();
 
         eventClass classifyUncertainty(shapeUncId id, bool up);
         std::vector<double> fillVector();

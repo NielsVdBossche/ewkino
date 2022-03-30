@@ -141,9 +141,9 @@ void ChannelManager::writeUncertaintyEnvelopeHistograms(unsigned subProc) {
     if (! useUncertainties) return;
 
     gDirectory->cd(processHistName[subProc].c_str());
-    for (auto it : mapping) {
-        //it.second->writeUncertaintyEnvelopeHistograms(subProc);
-    }
+    //for (auto it : mapping) {
+    //    //it.second->writeUncertaintyEnvelopeHistograms(subProc);
+    //}
 }
 
 

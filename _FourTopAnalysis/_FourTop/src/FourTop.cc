@@ -27,17 +27,22 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         auto t = std::time(nullptr);
         auto tm = *std::localtime(&t);
 
-        if (argvString.size() >= 3) {
-            if (argvString[2] == "additionalNonPrompt") {
+        std::string timestampOutputName = "";
+        for (auto it : argvString) {
+            if (it == "additionalNonPrompt") {
                 infuseNonPrompt = true;
                 outputFileName += "EnlargedNonprompt_";
-            }
-            if (argvString.size() >= 4) {
-                if (argvString[3] == "CR") {
-                    outputFileName += "CR_";
-                }
+            } else if (it == "CR") {
+                outputFileName += "CR_";
+            } else if (stringTools::stringContains(it, "timestamp=")) {
+                timestampOutputName = stringTools::split(it, "=")[1];
+            } else if (stringTools::stringContains(it, "lean")) {
+                leanEventSelection = true;
+                delete selection;
+                selection = new EventFourTLoose();
             }
         }
+
 
         std::string strippedSampleList = "";
 
@@ -61,11 +66,17 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             }
             setYearString(newYearString);
         }
-       
-        oss << std::put_time(&tm, "%d_%m_%Y-%H_%M") << "_" << strippedSampleList << ".root";
+        if (timestampOutputName != "") {
+            oss << timestampOutputName;
+        } else {
+            oss << std::put_time(&tm, "%d_%m_%Y-%H_%M");
+        }
+        oss << "_" << strippedSampleList << ".root";
+
         outputFileName += oss.str();
 
         std::cout << outputFileName.c_str() << std::endl;
+
         outfile = new TFile(outputFileName.c_str(), "recreate");
         
         outfile->mkdir("Nominal");
@@ -97,7 +108,12 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             TObjString anType(argvString[2].c_str());
             outfile->WriteObject(&anType, "AN_Type");
         }
-        //createHistInfoVec();
+
+        TObjString eventSelectionType = "OriginalSelection";
+        if (leanEventSelection) {
+            eventSelectionType = "LooseSelection";
+        }
+        outfile->WriteObject(&eventSelectionType, "EventSelectionType");
 
         if (mode == 1) {
             createMVAHandlers();
