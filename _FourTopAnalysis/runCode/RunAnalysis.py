@@ -61,9 +61,9 @@ if __name__ == "__main__":
     baseCommand = "./analysisExec $1 $2"
     
     dateTimeObj = datetime.now()
-    timestamp = dateTimeObj.year + "-" + dateTimeObj.month + "-" + dateTimeObj.day + "_" + dateTimeObj.hour + "-" + dateTimeObj.minute
+    timestamp = "timestamp=" + dateTimeObj.year + "-" + dateTimeObj.month + "-" + dateTimeObj.day + "_" + dateTimeObj.hour + "-" + dateTimeObj.minute
  
-    additionalArgs = []
+    additionalArgs = [timestamp]
     customSamplelist = False
     runData = False
     customSamplelistName = ""
