@@ -76,28 +76,58 @@ void UncertaintyEnvelope::fillEnvelope2Ds(std::vector<std::pair<double, double>>
 
 void UncertaintyEnvelope::finalizeEnvelope(unsigned subProc) {
     // nominal histograms should be fixed
-    std::vector<std::shared_ptr<TH1D>>* upHistograms = getUpHists()->getHistograms(subProc);
-    std::vector<std::shared_ptr<TH1D>>* downHistograms = getDownHists()->getHistograms(subProc);
 
-    for (unsigned i = 0; i < upHistograms->size(); i++) {
-        // loop all individual histograms
-        for (auto hists : envelopeHists) {
 
-            // loop all possible up and down variations
-            std::vector<std::shared_ptr<TH1D>>* currentVariation = hists->getHistograms(subProc);
-            std::shared_ptr<TH1D> currentHist = currentVariation->at(i);
+    if (getID() == shapeUncId::qcdScale) {
+        std::vector<std::shared_ptr<TH1D>>* upHistograms = getUpHists()->getHistograms(subProc);
+        std::vector<std::shared_ptr<TH1D>>* downHistograms = getDownHists()->getHistograms(subProc);
+        for (unsigned i = 0; i < upHistograms->size(); i++) {
+            // loop all individual histograms
+            for (auto hists : envelopeHists) {
 
-            for(int j=1; j < currentHist->GetNbinsX()+1; j++){
+                // loop all possible up and down variations
+                std::vector<std::shared_ptr<TH1D>>* currentVariation = hists->getHistograms(subProc);
+                std::shared_ptr<TH1D> currentHist = currentVariation->at(i);
 
-                // for each up and down variation, we fix the content
-                double bincontentCurrent = currentHist->GetBinContent(j);
+                for(int j=1; j < currentHist->GetNbinsX()+1; j++){
 
-                if (bincontentCurrent > upHistograms->at(i)->GetBinContent(j) ){
-                    upHistograms->at(i)->SetBinContent(j, bincontentCurrent);
-                } else if (bincontentCurrent < downHistograms->at(i)->GetBinContent(j) ){
-                    downHistograms->at(i)->SetBinContent(j, bincontentCurrent);
+                    // for each up and down variation, we fix the content
+                    double bincontentCurrent = currentHist->GetBinContent(j);
+
+                    if (bincontentCurrent > upHistograms->at(i)->GetBinContent(j) ){
+                        upHistograms->at(i)->SetBinContent(j, bincontentCurrent);
+                    } else if (bincontentCurrent < downHistograms->at(i)->GetBinContent(j) ){
+                        downHistograms->at(i)->SetBinContent(j, bincontentCurrent);
+                    }
                 }
             }
+        }
+    } else if (getID() == shapeUncId::pdfShapeVar) {
+        std::vector<std::shared_ptr<TH1D>>* upHistograms = getUpHists()->getHistograms(subProc);
+        std::vector<std::shared_ptr<TH1D>>* downHistograms = getDownHists()->getHistograms(subProc);
+        for (unsigned i = 0; i < upHistograms->size(); i++) {
+            // loop all individual histograms
+            TH1D* tempHistogram = new TH1D(*(upHistograms->at(i).get()));
+            tempHistogram->Reset();
+
+            for (auto hists : envelopeHists) {
+                // loop all possible up and down variations
+                std::shared_ptr<TH1D> currentHist = hists->getHistograms(subProc)->at(i);
+
+                for(int j=1; j < tempHistogram->GetNbinsX()+1; j++){
+                    // for each up and down variation, we fix the content
+                    double bincontentCurrent = currentHist->GetBinContent(j) - upHistograms->at(i)->GetBinContent(j);
+                    tempHistogram->SetBinContent(j, tempHistogram->GetBinContent(j) + bincontentCurrent * bincontentCurrent);
+                }
+            }
+
+            //for(int j=1; j < tempHistogram->GetNbinsX()+1; j++){
+            //    tempHistogram->SetBinContent(j, sqrt(tempHistogram->GetBinContent(j)));
+            //}
+            upHistograms->at(i)->Reset();
+            upHistograms->at(i)->Add(tempHistogram);
+            downHistograms->at(i)->Reset();
+            downHistograms->at(i)->Add(tempHistogram, -1.);
         }
     }
 }
@@ -115,19 +145,17 @@ void UncertaintyEnvelope::writeHistogramsEnvelope(unsigned processNb) {
         gDirectory->cd(getName().c_str());
     }
 
-    if (GetPrintAllVariations()) {
-
+    if (GetPrintAllVariations() || getID() == shapeUncId::qcdScale) {
         for (auto hists : envelopeHists) {
-            
             // loop all possible up and down variations
             std::vector<std::shared_ptr<TH1D>>* currentVariation = hists->getHistograms(processNb);
             for (auto hist : *currentVariation) {
                 hist->Write(hist->GetName(), TObject::kOverwrite);
             }
         }
-    } else {
-        Uncertainty::writeHistograms(processNb);
     }
+    Uncertainty::writeHistograms(processNb);
+
 
     gDirectory->cd("../../");
 }

@@ -187,6 +187,11 @@ bool MuonSelector::isTight2018() const{
     return true;
 }
 
+// Tight charge requirement
+bool MuonSelector::isTightCharge() const {
+    return true;
+}
+
 /*
 cone correction
 */

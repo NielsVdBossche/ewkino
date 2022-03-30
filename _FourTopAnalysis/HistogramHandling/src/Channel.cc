@@ -111,17 +111,19 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bo
     }
 }
 
-void Channel::changeProcess(unsigned index, std::string& newTitle) {
+void Channel::changeProcess(unsigned index, std::string& newTitle, bool uncertainties) {
     nominalHistograms->changeProcess(index, newTitle);
-
-    for (auto it : uncHistMap) {
-        it.second->changeProcess(index, newTitle);
-    }
 
     if (subChannels) {
         for (auto it : *subChannels) {
-            it.second->changeProcess(index, newTitle);
+            it.second->changeProcess(index, newTitle, uncertainties);
         }
+    }
+
+    if (! uncertainties) return;
+
+    for (auto it : uncHistMap) {
+        it.second->changeProcess(index, newTitle);
     }
 }
 
@@ -312,7 +314,6 @@ void Channel::newSample(std::string& uniqueSampleName, bool uncertainties) {
     }
 
     if (! uncertainties) return;
-
     unsigned id = 0;
 
     while (id != shapeUncId::end) {

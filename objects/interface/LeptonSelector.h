@@ -43,6 +43,8 @@ class LeptonSelector {
         virtual bool is2017() const = 0;
 	virtual bool is2018() const = 0;
 
+        virtual bool isTightCharge() const = 0;
+
     private:
         virtual LeptonSelector* clone() const & = 0;
         virtual LeptonSelector* clone() && = 0;

@@ -19,12 +19,15 @@ class MVAHandler_4T;
 ///enum shapeUncId;
 
 class EventFourT {
+    protected:
+        void SetEventClass(eventClass newClass) {currentClass = newClass;}
     private:
         Event* event = nullptr;
 
         LeptonCollection* looseLeps;
         LeptonCollection* foLeps;
-        LeptonCollection* mediumLeps; // leptons used in the analysis
+        LeptonCollection* tightLeps;
+        LeptonCollection** mediumLeps; // leptons used in the analysis
 
         // These should only be used to increase nonprompt yield. Should be triggered by other functions and only done when ttbar sample used
         // Additionally, the event selection based on these should take into account the full event selection but allow one of the leptons to be loose
@@ -52,7 +55,7 @@ class EventFourT {
     public:
 
         EventFourT();
-        ~EventFourT() {cleanSelection();};
+        virtual ~EventFourT() {cleanSelection();};
 
         void setSelectionType(selectionType st) {selType = st;}
         
@@ -66,12 +69,12 @@ class EventFourT {
         void addNewEvent(Event* newEvent);
 
         Event* getEvent() {return event;};
-        Lepton* getLepton(size_t index) {return mediumLeps->at(index);}
+        Lepton* getLepton(size_t index) {return (*mediumLeps)->at(index);}
         Jet* getJet(size_t index) {return jets->at(index);}
         Jet* getBtagJet(size_t index) {return bTagJets->at(index);}
 
         LeptonCollection* getLooseLepCol() {return looseLeps;}
-        LeptonCollection* getMediumLepCol() {return mediumLeps;}
+        LeptonCollection* getMediumLepCol() {return *mediumLeps;}
         JetCollection* getJetCol() {return jets;}
         JetCollection* getBtagJetCol() {return bTagJets;}
 
@@ -95,12 +98,14 @@ class EventFourT {
         bool passLeanSelection();
         bool passZBosonVeto();
         bool passLowMassVeto();
-        void classifyEvent();
 
         bool leptonsArePrompt();
         bool leptonsAreNotChargeFlip();
         bool leptonsAreNotChargeMisMatch();
         bool leptonsAreTight();
+
+        virtual void classifyEvent();
+        //void classifyEventLean();
 
         eventClass classifyUncertainty(shapeUncId id, bool up);
         std::vector<double> fillVector();

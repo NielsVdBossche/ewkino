@@ -4,11 +4,11 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-void FourTop::analyze(std::string method, bool onlyCR) {
+void FourTop::analyze(std::string method) {
     if (onlyCR) {
-        std::cout << "CR only works" << std::endl;
+        std::cout << "ANALYZING ONLY CR" << std::endl;
     } else {
-        std::cout << "CR only does not work" << std::endl;
+        std::cout << "ANALYZING SR + CR" << std::endl;
     }
     ChannelManager* mgrAll = new ChannelManager(outfile);
     std::shared_ptr< SampleCrossSections > xsecs;
@@ -156,7 +156,7 @@ void FourTop::analyze(std::string method, bool onlyCR) {
         }
 
         if (useUncertainties && ! treeReader->isData()) {
-            mgrAll->SetPrintAllUncertaintyVariations(true);
+            //mgrAll->SetPrintAllUncertaintyVariations(true);
             std::string currProcName = sampleVec[sampleIndex].processName();
             mgrAll->changePrimaryProcess(currProcName);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
@@ -390,7 +390,6 @@ void FourTop::analyze(std::string method, bool onlyCR) {
                     uncID++;
                     continue;
                 }
-
                 double weightUp = 1.;
                 double weightDown = 1.;
                 eventClass upClass = eventClass::fail;

@@ -32,5 +32,5 @@ int main(int argc, char* argv[]) {
     // main func call
     FourTop analysisObject("Tests", argvStr, 1);
 
-    analysisObject.analyzeLean();
+    analysisObject.testRuns();
 }
