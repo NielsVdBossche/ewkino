@@ -139,8 +139,9 @@ bool analysisTools::fileIs2016PreVFP( const std::string& filePath ){
     if( stringTools::stringContains( filePath, "Run2016B" )
 	|| stringTools::stringContains( filePath, "Run2016C" )
 	|| stringTools::stringContains( filePath, "Run2016D" )
-	|| stringTools::stringContains( filePath, "Run2016E" )
-	|| stringTools::stringContains( filePath, "Run2016F" ) ) return true;
+	|| stringTools::stringContains( filePath, "Run2016E" ) ) return true;
+
+    if (stringTools::stringContains( filePath, "Run2016F" ) && stringTools::stringContains( filePath, "HIPM" )) return true;
     // for combined data
     if( stringTools::stringContains( filePath, "Run2016PreVFP" ) ) return true;
     if( stringTools::stringContains( filePath, "Run2016preVFP" ) ) return true;
@@ -163,6 +164,8 @@ bool analysisTools::fileIs2016PostVFP( const std::string& filePath ){
     // need to check 2016PreVFP first since overlapping names for simulation
     if( fileIs2016PreVFP( filePath ) ) return false;
     // for data split in eras
+    if (stringTools::stringContains( filePath, "Run2016F" ) && ! stringTools::stringContains( filePath, "HIPM" )) return true;
+
     if( stringTools::stringContains( filePath, "Run2016G" ) 
         || stringTools::stringContains( filePath, "Run2016H" ) ) return true;
     // for combined data
