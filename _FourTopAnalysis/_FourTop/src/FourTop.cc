@@ -39,6 +39,8 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 timestampOutputName = stringTools::split(it, "=")[1];
             } else if (stringTools::stringContains(it, "lean") || stringTools::stringContains(it, "loose")) {
                 leanEventSelection = true;
+                outputFileName += "LooseAn_";
+
                 delete selection;
                 selection = new EventFourTLoose();
             }
