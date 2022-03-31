@@ -284,15 +284,21 @@ std::vector< Sample > readSampleList( const std::string& listFile, const std::st
         throw std::invalid_argument( "Sample list '" + listFile + "' does not exist." );
     }
     
-	
 	std::vector< Sample> sampleList;
 
     //read sample info from txt file
     std::ifstream inFile(listFile);
-    while( !inFile.eof() ){
-        sampleList.push_back( Sample( inFile, directory ) );
+    for (std::string line; inFile >> line;) {
+        bool lineToConsider = false;
+
+        //skip comments or empty lines 
+        lineToConsider = considerLine( line );
+        if( !lineToConsider ) continue;
+
+        Sample extraSample = Sample( line, directory ); 
+
+        sampleList.push_back( extraSample );
     }
-    sampleList.pop_back();
 
     //close file after usage
     inFile.close();
