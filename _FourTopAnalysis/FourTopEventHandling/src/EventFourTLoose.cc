@@ -20,13 +20,8 @@ void EventFourTLoose::classifyEvent() {
         SetEventClass(eventClass::cro);
         return;
     }
-    if (numberOfLeps() == 3 && getHT() < 220) {
-        SetEventClass(eventClass::cro);
-        return;
-    }
 
-
-    if ((numberOfLeps() == 2 && numberOfJets() < 6 && numberOfLooseBJets() == 2) || (numberOfLeps() == 3 && numberOfJets() < 4 && numberOfLooseBJets() == 2)) {
+    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfLooseBJets() == 2) {
         SetEventClass(eventClass::crw);
         return;
     }

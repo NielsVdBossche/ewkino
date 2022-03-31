@@ -152,6 +152,7 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         double(jets->size()),
 
         jets->scalarPtSum(),
+        jets->scalarPtSum() / double(jets->size()),
         selec->getEvent()->metPt(),
 
         // Calculate DR? What is best way...

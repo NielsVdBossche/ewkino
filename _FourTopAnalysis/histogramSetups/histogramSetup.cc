@@ -119,6 +119,7 @@ std::vector<HistInfo>* fourTopHists::allHists(std::string flag, bool multilep, b
         HistInfo( "N_jets_" + flag, "N_{jets}", 15, -0.5, 14.5),
 
         HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 1600),
+        HistInfo( "HT_over_NJets_" + flag, "H_{T}/N_{jets} [GeV]", 30, 0, 300),
         HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 20, 0, 500),
 
         HistInfo( "Min_dR_Bs_" + flag, "Min. #Delta R(b,b)", 12, 0, 4.8),

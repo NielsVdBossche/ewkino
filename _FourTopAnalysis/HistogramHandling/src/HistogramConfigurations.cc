@@ -43,6 +43,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "N_jets_" + flag, "N_{jets}", 15, -0.5, 14.5),
 
             HistInfo( "HT_" + flag, "H_{T} [GeV]", 100, 0, 1600),
+            HistInfo( "HT_over_NJets_" + flag, "H_{T}/N_{jets} [GeV]", 30, 0, 300),
             HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 100, 0, 500),
 
             HistInfo( "Min_dR_Bs_" + flag, "Min. #Delta R(b,b)", 24, 0, 4.8),

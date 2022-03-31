@@ -288,12 +288,13 @@ std::vector< Sample > readSampleList( const std::string& listFile, const std::st
 
     //read sample info from txt file
     std::ifstream inFile(listFile);
-    for (std::string line; inFile >> line;) {
-        bool lineToConsider = false;
-
+    std::string line;
+    while (std::getline(inFile, line)) {
+        bool lineToConsider = true;
         //skip comments or empty lines 
         lineToConsider = considerLine( line );
         if( !lineToConsider ) continue;
+        std::cout << "consider line" << std::endl;
 
         Sample extraSample = Sample( line, directory ); 
 
