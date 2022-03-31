@@ -37,7 +37,7 @@ std::vector<double> EventFourT::fillVector() {
 
     std::vector<double> scores = currentMVA->scoreEvent();
     if (currentClass == eventClass::crz) {
-        fillVec = fourTopHists::fillAllLean(false, this);
+        fillVec = fourTopHists::fillAllLean(true, this);
     } else if (currentClass == eventClass::crw || currentClass == eventClass::cro) {
         fillVec = fourTopHists::fillAllLean(false, this);
     } else if (currentClass == eventClass::ssdl) {
