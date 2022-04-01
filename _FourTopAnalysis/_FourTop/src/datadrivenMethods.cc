@@ -64,10 +64,12 @@ double FourTop::FakeRateWeight() {
     for (const auto &lep : currentEvent->lightLeptonCollection()) {
         if (!(lep->isFO() && !lep->isTight())) continue;
         double fr;
+        double leppt = lep->pt();
+        if (leppt >= 45.) leppt = 49.9;
         if (lep->isMuon()) {
-            fr = histogram::contentAtValues(FakeRatesMuon, lep->pt(), lep->eta());
+            fr = histogram::contentAtValues(FakeRatesMuon, leppt, lep->eta());
         } else {
-            fr = histogram::contentAtValues(FakeRatesElectron, lep->pt(), lep->eta());
+            fr = histogram::contentAtValues(FakeRatesElectron, leppt, lep->eta());
         }
         // calculate weight
         weight *= (-fr / (1. - fr));
