@@ -211,9 +211,9 @@ bool EventFourT::passZBosonVeto() {
 }
 
 bool EventFourT::passLeanSelection() {
-    passLeptonSelection();
-    if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
-    if (nLep == 2 && (*mediumLeps)->hasOSPair()) return false;
+    //if (! passLeptonSelection());
+    //if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
+    //if (nLep == 2 && (*mediumLeps)->hasOSPair()) return false;
 
     if ((**mediumLeps)[0].pt() < 25 || (**mediumLeps)[1].pt() < 20) return false;
     //if (met < 25) return false;
