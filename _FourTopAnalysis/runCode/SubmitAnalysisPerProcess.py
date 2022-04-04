@@ -53,11 +53,14 @@ for sl in sampleLists:
 
 outputstring = ""
 outputAlt = ""
+outputTri = "["
 for samp in outputSampleLists:
     outputstring += samp + ", "
     outputAlt += samp + "\n"
+    outputTri += "\"" + samp + "\","
 
 
 print(outputstring[:-2])
 print(outputAlt)
+print(outputTri[:-1] + "]")
 

@@ -1,3 +1,3 @@
-Rare            2016PreVFP/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFPv4.root                 21.585204
-Rare            2016PreVFP/THQ_ctcvcp_4f_Hincl_TuneCP5_13TeV_madgraph_pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFPv4.root                              0.07096
-Rare            2016PreVFP/TTTJ_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFP_Nov.root                                           0.0003974
+Rare            ../skims_v2/2016PreVFP/ZZTo4L_M-1toInf_TuneCP5_13TeV_powheg_pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFP_Nov.root                      1.3816
+Rare            2016PreVFP/ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8crab_MiniAOD2016preVFP-v1_singlelepton_MC_2016_ULpreVFPv3.root                                                                                     0.9738   
+Rare            2016PreVFP/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016preVFP-v2_singlelepton_MC_2016_ULpreVFPv3.root                                                                                         0.01476  
