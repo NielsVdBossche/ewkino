@@ -24,7 +24,7 @@ double FourTop::ChmisIDWeight() {
     ElectronCollection* electrons = selection->getMediumLepCol()->electronCollectionPtr();
     double returnWeight = 0.;
     for (auto el : *electrons) {
-        returnWeight += histogram::contentAtValues(MisIDRates, el->pt(), el->eta());
+        returnWeight += histogram::contentAtValues(MisIDRates, el->pt(), el->absEta());
     }
 
     return returnWeight;
@@ -67,9 +67,9 @@ double FourTop::FakeRateWeight() {
         double leppt = lep->pt();
         if (leppt >= 45.) leppt = 49.9;
         if (lep->isMuon()) {
-            fr = histogram::contentAtValues(FakeRatesMuon, leppt, lep->eta());
+            fr = histogram::contentAtValues(FakeRatesMuon, leppt, lep->absEta());
         } else {
-            fr = histogram::contentAtValues(FakeRatesElectron, leppt, lep->eta());
+            fr = histogram::contentAtValues(FakeRatesElectron, leppt, lep->absEta());
         }
         // calculate weight
         weight *= (-fr / (1. - fr));
