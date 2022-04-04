@@ -65,7 +65,7 @@ double FourTop::FakeRateWeight() {
         if (!(lep->isFO() && !lep->isTight())) continue;
         double fr;
         double leppt = lep->pt();
-        if (leppt >= 45.) leppt = 49.9;
+        if (leppt >= 45.) leppt = 44.9;
         if (lep->isMuon()) {
             fr = histogram::contentAtValues(FakeRatesMuon, leppt, lep->absEta());
         } else {
