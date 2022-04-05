@@ -34,7 +34,7 @@ std::vector<double> EventFourT::fillVector() {
     MVAHandler_4T* currentMVA = dl_MVA;
     //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
     if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
-
+    bool useMVA = true;
     std::vector<double> scores = currentMVA->scoreEvent();
     if (currentClass == eventClass::crz) {
         fillVec = fourTopHists::fillAllLean(true, this);
@@ -46,9 +46,12 @@ std::vector<double> EventFourT::fillVector() {
         fillVec = fourTopHists::fillAllHists(true, this);
     } else if (currentClass == eventClass::fourlep) {
         fillVec = fourTopHists::fillAllHists(true, this, true);
+    } else if (currentClass != eventClass::fail) {
+        useMVA = false;
+        fillVec = fourTopHists::fillAllLean(false, this);
     }
 
-    fillVec.insert(fillVec.end(), scores.begin(), scores.end());
+    if (useMVA) fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
     return fillVec;
 
@@ -56,7 +59,7 @@ std::vector<double> EventFourT::fillVector() {
 
 std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
     std::vector<std::pair<int, double>> singleEntries;
-    if (currentClass == eventClass::fail) return singleEntries;
+    if (currentClass == eventClass::fail || currentClass < eventClass::crz) return singleEntries;
     MVAHandler_4T* currentMVA = dl_MVA;
     //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
     if (currentClass == eventClass::crz || currentClass > eventClass::ssdl) currentMVA = ml_MVA;

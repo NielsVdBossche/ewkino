@@ -280,7 +280,7 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
-            if (nominalClass == eventClass::crz) {
+            if (nominalClass == eventClass::crz && st != selectionType::ChargeMisDD) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
@@ -346,7 +346,7 @@ void FourTop::analyze(std::string method) {
                 mgrAll->at(eventClass::ssdl)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
                 mgrAll->at(eventClass::ssdl)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
 
-            } else if (nominalClass == eventClass::trilep && ! onlyCR) {
+            } else if (nominalClass == eventClass::trilep && ! onlyCR  && st != selectionType::ChargeMisDD) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllHists(true, selection);
@@ -380,6 +380,12 @@ void FourTop::analyze(std::string method) {
                 mgrAll->at(eventClass::fourlep)->fillHistograms(processNb, fillVec, weight);
                 mgrAll->at(eventClass::fourlep)->fill2DHistograms(processNb, fillVec2D, weight);
                 mgrAll->at(eventClass::fourlep)->fillSingleHistograms(processNb, singleEntries, weight);
+            } else if (nominalClass != eventClass::fail) {
+                fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
+                
+                mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
+                mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
+                mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
             }
 
 

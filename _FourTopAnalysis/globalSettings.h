@@ -6,6 +6,10 @@
 // WP's of MVAs,...
 enum eventClass {
     fail,
+    crwInvHT,
+    crwOSLeps,
+    crzInvHT,
+    crzNoB,
     crz,
     cro,
     crw,

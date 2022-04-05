@@ -5,7 +5,6 @@
 
 #include "Channel.h"
 #include "HistogramConfigurations.h"
-#include "../../globalSettings.h"
 
 class ChannelManager {
     private:
@@ -18,7 +17,11 @@ class ChannelManager {
             {crw, "CRW"},
             {ssdl, "DL"},
             {trilep, "3L"},
-            {fourlep, "4L"}};
+            {fourlep, "4L"},
+            {crwInvHT, "CRW_INV_HT"},
+            {crwOSLeps, "CRW_OSDL"},
+            {crzInvHT, "CRZ_INV_HT"},
+            {crzNoB, "CRZ_No_B"}};
         std::map<eventClass, Channel*> mapping;
         std::vector<std::string> processHistName;
 
