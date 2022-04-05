@@ -14,7 +14,11 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     {crw, "CRW"},
     {ssdl, "DL"},
     {trilep, "3L"},
-    {fourlep, "4L"}};
+    {fourlep, "4L"},
+    {crwInvHT, "CRW_INV_HT"},
+    {crwOSLeps, "CRW_OSDL"},
+    {crzInvHT, "CRZ_INV_HT"},
+    {crzNoB, "CRZ_No_B"}};
 
     std::string flag = flagMapping[evClass];
 
