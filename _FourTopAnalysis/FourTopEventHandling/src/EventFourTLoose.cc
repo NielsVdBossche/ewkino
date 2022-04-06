@@ -4,7 +4,9 @@ void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
     if (! passLowMassVeto()) return;
     if (! passZBosonVeto()) {
-        if (passLeanSelection()) {
+        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) {
+            if (numberOfJets() < 2 && numberOfLooseBJets() < 1) SetEventClass(eventClass::crz);
+        } else if (passLeanSelection()) {
             SetEventClass(eventClass::crz);
         } else if (! passLeanSelection() && (getHT() > 200 || numberOfLooseBJets() >= 1)) {
             SetEventClass(eventClass::fail);

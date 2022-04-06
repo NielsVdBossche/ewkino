@@ -10,6 +10,7 @@ enum eventClass {
     crwOSLeps,
     crzInvHT,
     crzNoB,
+    crzInvBAndJets,
     crz,
     cro,
     crw,

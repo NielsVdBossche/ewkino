@@ -18,12 +18,14 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     {crwInvHT, "CRW-INV-HT"},
     {crwOSLeps, "CRW-OSDL"},
     {crzInvHT, "CRZ-INV-HT"},
-    {crzNoB, "CRZ-No-B"}};
+    {crzNoB, "CRZ-No-B"},
+    {crzInvBAndJets, "crzInvBAndJets"}};
 
     std::string flag = flagMapping[evClass];
 
     if (unsigned(evClass) >= eventClass::ssdl) {
         *histInfoVec = {
+            HistInfo( "Yield_" + flag, "yield", 1, 0., 1.),
             HistInfo( "N_mu_" + flag, "N_#mu", 6, -0.5, 5.5),
             HistInfo( "N_e_" + flag, "N_e", 6, -0.5, 5.5),
             HistInfo( "leptonPtLeading_" + flag, "p_{T}(l1) [GeV]", 18, 20, 200),
@@ -108,6 +110,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
         }
     } else {
         *histInfoVec = {
+            HistInfo( "Yield_" + flag, "yield", 1, 0., 1.),
             HistInfo( "N_mu_" + flag, "N_#mu", 6, -0.5, 5.5),
             HistInfo( "N_e_" + flag, "N_e", 6, -0.5, 5.5),            
             HistInfo( "leptonPtLeading_" + flag, "p_{T}(l1) [GeV]", 18, 20, 200),
