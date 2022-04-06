@@ -5,7 +5,7 @@ void EventFourTLoose::classifyEvent() {
     if (! passLowMassVeto()) return;
     if (! passZBosonVeto()) {
         if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) {
-            if (numberOfJets() < 2 && numberOfLooseBJets() < 1) SetEventClass(eventClass::crz);
+            if (numberOfJets() < 2 && numberOfLooseBJets() < 1) SetEventClass(eventClass::crzInvBAndJets);
         } else if (passLeanSelection()) {
             SetEventClass(eventClass::crz);
         } else if (! passLeanSelection() && (getHT() > 200 || numberOfLooseBJets() >= 1)) {
@@ -15,13 +15,20 @@ void EventFourTLoose::classifyEvent() {
             SetEventClass(eventClass::crzInvHT);
         } else if (! passLeanSelection() && numberOfLooseBJets() < 1) {
             SetEventClass(eventClass::crzNoB);
+        } else {
+            SetEventClass(eventClass::fail);
         }
         return;
     }
+
+    if (numberOfLooseBJets() <= 1) {
+        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
+        SetEventClass(eventClass::crLowB);
+    }
+
     if (! passLeanSelection()) {
         if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
 
-        if (numberOfLooseBJets() < 2) return;
         if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfJets() >= 4 && numberOfLooseBJets() == 2) {
             SetEventClass(crwInvHT);
         }

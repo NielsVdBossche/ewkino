@@ -22,7 +22,8 @@ class ChannelManager {
             {crwOSLeps, "CRW-OSDL"},
             {crzInvHT, "CRZ-INV-HT"},
             {crzNoB, "CRZ-No-B"},
-            {crzInvBAndJets, "crzInvBAndJets"}};
+            {crzInvBAndJets, "crzInvBAndJets"},
+            {crLowB, "CR-low-B"}};
         std::map<eventClass, Channel*> mapping;
         std::vector<std::string> processHistName;
 

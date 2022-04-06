@@ -19,7 +19,8 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     {crwOSLeps, "CRW-OSDL"},
     {crzInvHT, "CRZ-INV-HT"},
     {crzNoB, "CRZ-No-B"},
-    {crzInvBAndJets, "crzInvBAndJets"}};
+    {crzInvBAndJets, "crzInvBAndJets"},
+    {crLowB, "CR-low-B"}};
 
     std::string flag = flagMapping[evClass];
 
@@ -44,6 +45,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "ptJetThree_" + flag, "p_{T}(j3) [GeV]", 19, 25, 500),
             HistInfo( "ptJetFour_" + flag, "p_{T}(j4) [GeV]", 20, 0, 500),
             HistInfo( "N_B_jets_" + flag, "N_{b}", 10, -0.5, 9.5),
+            HistInfo( "N_mediumB_jets_" + flag, "N_{b}^{medium}", 10, -0.5, 9.5),
             HistInfo( "N_looseB_jets_" + flag, "N_{b}^{loose}", 10, -0.5, 9.5),
             HistInfo( "N_tightB_jets_" + flag, "N_{b}^{tight}", 10, -0.5, 9.5),
             HistInfo( "N_jets_" + flag, "N_{jets}", 15, -0.5, 14.5),

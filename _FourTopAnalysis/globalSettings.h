@@ -11,6 +11,7 @@ enum eventClass {
     crzInvHT,
     crzNoB,
     crzInvBAndJets,
+    crLowB,
     crz,
     cro,
     crw,
