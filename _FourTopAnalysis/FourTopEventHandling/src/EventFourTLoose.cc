@@ -4,10 +4,16 @@ void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
     if (! passLowMassVeto()) return;
     if (! passZBosonVeto()) {
-        if (! passLeanSelection() && getHT() > 200) {
+        if (passLeanSelection()) {
+            SetEventClass(eventClass::crz);
+        } else if (! passLeanSelection() && (getHT() > 200 || numberOfLooseBJets() >= 1)) {
+            SetEventClass(eventClass::fail);
             return;
+        } else if (! passLeanSelection() && getHT() <= 200) {
+            SetEventClass(eventClass::crzInvHT);
+        } else if (! passLeanSelection() && numberOfLooseBJets() < 1) {
+            SetEventClass(eventClass::crzNoB);
         }
-        SetEventClass(crzInvHT);
         return;
     }
     if (! passLeanSelection()) {

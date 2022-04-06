@@ -6,7 +6,10 @@ void EventFourT::classifyEvent() {
     currentClass = eventClass::fail;
     if (! passBaselineEventSelection()) return;
     if (! passLowMassVeto()) return;
-    if (! passZBosonVeto()) return;
+    if (! passZBosonVeto()) {
+        currentClass = eventClass::crz;
+        return;
+    }
 
     if (! passFullEventSelection()) {
         currentClass = eventClass::cro;

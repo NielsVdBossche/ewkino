@@ -107,7 +107,7 @@ bool EventFourT::passBaselineEventSelection() {
 
 
     // 1 bjets
-    if (bTagJets->size() < 1) return false;
+    if (nMediumB < 1) return false;
 
 
     if (nLep < 4 && ht < 300) return false;
