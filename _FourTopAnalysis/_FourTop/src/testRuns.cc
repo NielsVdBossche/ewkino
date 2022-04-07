@@ -99,8 +99,8 @@ void FourTop:: testRuns() {
             // fill all histograms
             eventClass nominalClass = selection->getCurrentClass();
             fillVec = fourTopHists::fillTestHists(nominalClass, selection);
-            if (nominalClass == eventClass::crz) {
-                mgrAll->at(eventClass::crz)->fillHistograms(processNb, fillVec, weight);
+            if (nominalClass == eventClass::crz3L || nominalClass == eventClass::crz4L || nominalClass == eventClass::cro3L) {
+                mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
             } else if (nominalClass == eventClass::crw || nominalClass == eventClass::cro) {
                 if (nominalClass == eventClass::crw) {
                     mgrAll->at(eventClass::crw)->fillHistograms(processNb, fillVec, weight);
