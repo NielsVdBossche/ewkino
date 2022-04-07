@@ -30,15 +30,21 @@ void FourTop::analyze(std::string method) {
     }
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
 
-    size_t crzPosMVA = mgrAll->at(eventClass::crz)->getHistInfo()->size() + mva_ML->getMaxClass();
+    size_t crzPosMVA = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
+    size_t crzPosMVA = mgrAll->at(eventClass::crz4L)->getHistInfo()->size() + mva_ML->getMaxClass();
+    size_t crzPosMVA = mgrAll->at(eventClass::cro3L)->getHistInfo()->size() + mva_ML->getMaxClass();
     size_t croPosMVA = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
     size_t crwPosMVA = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
 
-    mgrAll->at(eventClass::crz)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
+    mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
+    mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
+    mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
     mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CRO", true));
     mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CRW", true));
 
-    mgrAll->at(eventClass::crz)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
+    mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
+    mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
+    mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
     mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
     mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
 
@@ -69,7 +75,9 @@ void FourTop::analyze(std::string method) {
     std::map<eventClass, int> offsets;
     offsets[eventClass::cro] = croPosMVA;
     offsets[eventClass::crw] = crwPosMVA;
-    offsets[eventClass::crz] = crzPosMVA;
+    offsets[eventClass::crz3L] = crzPosMVA;
+    offsets[eventClass::crz4L] = crzPosMVA;
+    offsets[eventClass::cro3L] = crzPosMVA;
     offsets[eventClass::ssdl] = dlPosMVA;
     offsets[eventClass::trilep] = mlPosMVA;
     offsets[eventClass::fourlep] = fourlPosMVA;
@@ -280,7 +288,7 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
-            if (nominalClass == eventClass::crz && st != unsigned(selectionType::ChargeMisDD)) {
+            if ((nominalClass == eventClass::crz3L || nominalClass == eventClass::crz4L || nominalClass == eventClass::cro3L) && st != unsigned(selectionType::ChargeMisDD)) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
@@ -290,9 +298,9 @@ void FourTop::analyze(std::string method) {
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
                 singleEntries.push_back({crzPosMVA + classAndScore.first, classAndScore.second});
 
-                mgrAll->at(eventClass::crz)->fillHistograms(processNb, fillVec, weight);
-                mgrAll->at(eventClass::crz)->fill2DHistograms(processNb, fillVec2D, weight);
-                mgrAll->at(eventClass::crz)->fillSingleHistograms(processNb, singleEntries, weight);
+                mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
+                mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
+                mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
 
             } else if (nominalClass == eventClass::crw || nominalClass == eventClass::cro) {
                 std::vector<double> scores = mva_DL->scoreEvent();

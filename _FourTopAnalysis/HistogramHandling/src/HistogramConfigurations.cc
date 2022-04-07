@@ -8,19 +8,16 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
 
     std::map<eventClass, std::string> flagMapping = {
-    {fail, "fail"},
-    {crz, "CRZ"},
-    {cro, "CRO"},
-    {crw, "CRW"},
-    {ssdl, "DL"},
-    {trilep, "3L"},
-    {fourlep, "4L"},
-    {crwInvHT, "CRW-INV-HT"},
-    {crwOSLeps, "CRW-OSDL"},
-    {crzInvHT, "CRZ-INV-HT"},
-    {crzNoB, "CRZ-No-B"},
-    {crzInvBAndJets, "crzInvBAndJets"},
-    {crLowB, "CR-low-B"}};
+            {fail, "fail"},
+            {crz3L, "CRZ"},
+            {crz4L, "CRZ-4L"},
+            {cro, "CRO"},
+            {cro3L, "CRO-3L"},
+            {crw, "CRW"},
+            {ssdl, "DL"},
+            {trilep, "3L"},
+            {fourlep, "4L"}
+    };
 
     std::string flag = flagMapping[evClass];
 
@@ -134,7 +131,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 15, 50, 125),
         };
 
-        if (evClass == eventClass::crz) {
+        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L) {
             histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 20, 0, 200) );
             histInfoVec->push_back( HistInfo( "leptonEtaThird_" + flag, "#eta (l3)", 12, -2.4, 2.4) );
             histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 18, 25, 205) );

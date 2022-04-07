@@ -198,18 +198,34 @@ bool EventFourT::passLowMassVeto() {
 
 bool EventFourT::passZBosonVeto() {
     // Reject OSSF lepton pairs with inv mass close to Z boson mass
-    if (selType == selectionType::ChargeMisDD) return true;
-    if (event->hasOSSFLeptonPair()) {
-        double mass = event->bestZBosonCandidateMass();
-        //if (mass > 76 && mass < 106) return false;
+    if (numberOfLeps() < 3) return true;
+    if ((*mediumLeps)->hasOSSFPair()) {
+        double mass = (*mediumLeps)->bestZBosonCandidateMass();
         if (fabs(mass - particle::mZ) < 7.5) {
-            currentClass = eventClass::crz;
             return false;
         }
     }
 
     return true;
 }
+
+bool EventFourT::passSingleZBosonVeto() {
+    LeptonCollection* tmp = new LeptonCollection(**mediumLeps);
+    std::pair< std::vector< std::shared_ptr< Lepton > >::size_type, std::vector< std::shared_ptr< Lepton > >::size_type > indices = tmp->bestZBosonCandidateIndices();
+    tmp->eraseIndex(indices.first);
+    tmp->eraseIndex(indices.second);
+
+    if (tmp->hasOSSFPair()) {
+        double mass = tmp->bestZBosonCandidateMass();
+        if (fabs(mass - particle::mZ) < 7.5) {
+            delete tmp;
+            return false;
+        }
+    }
+    delete tmp;
+    return true;
+}
+
 
 bool EventFourT::passLeanSelection() {
     //if (! passLeptonSelection());

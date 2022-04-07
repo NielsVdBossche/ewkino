@@ -2,57 +2,24 @@
 
 void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
+    if (! passLeanSelection()) return;
+    if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() != 0) return;
     if (! passLowMassVeto()) return;
     if (! passZBosonVeto()) {
-        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) {
-            if (numberOfJets() < 2 && numberOfLooseBJets() < 1) SetEventClass(eventClass::crzInvBAndJets);
-        } else if (passLeanSelection()) {
-            SetEventClass(eventClass::crz);
-        } else if (! passLeanSelection() && (getHT() > 200 && numberOfLooseBJets() >= 1)) {
-            SetEventClass(eventClass::fail);
-            return;
-        } else if (! passLeanSelection() && getHT() <= 200) {
-            SetEventClass(eventClass::crzInvHT);
-        } else if (! passLeanSelection() && numberOfLooseBJets() < 1) {
-            SetEventClass(eventClass::crzNoB);
-        } else {
-            SetEventClass(eventClass::fail);
-        }
-        return;
-    }
-
-    if (numberOfLooseBJets() <= 1) {
-        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
-        SetEventClass(eventClass::crLowB);
-    }
-
-    if (! passLeanSelection()) {
-        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
-
-        if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfJets() >= 4 && numberOfLooseBJets() == 2) {
-            SetEventClass(crwInvHT);
-        }
+        if (numberOfLeps() == 3) SetEventClass(eventClass::crz3L);
+        if (numberOfLeps() == 4 && passSingleZBosonVeto()) SetEventClass(eventClass::crz4L);
         return;
     }
         
 
-    if (numberOfLeps() < 4 && numberOfLooseBJets() < 2) {
+    if (numberOfLeps() == 2 && (numberOfLooseBJets() < 2 || numberOfJets() < 4 || getHT() < 280)) {
         SetEventClass(eventClass::cro); // adapt to other crs potentially
         return;
     }
     
 
-    if (numberOfLeps() == 2 && numberOfJets() < 4) {
-        SetEventClass(eventClass::cro);
-        return;
-    }
-    if (numberOfLeps() == 3 && numberOfJets() < 3) {
-        SetEventClass(eventClass::cro);
-        return;
-    }
-
-    if (numberOfLeps() == 2 && getHT() < 280) {
-        SetEventClass(eventClass::crwLowHT);
+    if (numberOfLeps() == 3 && (numberOfLooseBJets() < 2 || numberOfJets() < 3)) {
+        SetEventClass(eventClass::cro3L);
         return;
     }
 

@@ -222,14 +222,16 @@ std::vector<HistInfo>* fourTopHists::testHists(eventClass evClass) {
     std::vector< HistInfo >* histInfoVec = new std::vector<HistInfo>;
 
     std::map<eventClass, std::string> flagMapping = {
-    {fail, "fail"},
-    {crz, "CRZ"},
-    {cro, "CRO"},
-    {crw, "CRW"},
-    {ssdl, "DL"},
-    {trilep, "3L"},
-    {fourlep, "4L"}};
-
+            {fail, "fail"},
+            {crz3L, "CRZ"},
+            {crz4L, "CRZ-4L"},
+            {cro, "CRO"},
+            {cro3L, "CRO-3L"},
+            {crw, "CRW"},
+            {ssdl, "DL"},
+            {trilep, "3L"},
+            {fourlep, "4L"}
+    };
     std::string flag = flagMapping[evClass];
 
     *histInfoVec = {

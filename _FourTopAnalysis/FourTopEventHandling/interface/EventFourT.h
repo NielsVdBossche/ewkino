@@ -97,6 +97,7 @@ class EventFourT {
         bool passFullEventSelection();
         bool passLeanSelection();
         bool passZBosonVeto();
+        bool passSingleZBosonVeto();
         bool passLowMassVeto();
 
         bool leptonsArePrompt();

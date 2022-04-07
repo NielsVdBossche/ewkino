@@ -1,3 +1,2 @@
 Rare            2016PreVFP/WGToLNuG_01J_5f_PDFWeights_TuneCP5_13TeV-amcatnloFXFX-pythia8crab_MiniAOD2016preVFP-v2_singlelepton_MC_2016_ULpreVFPv3.root                                                              190.8     
 Rare            2016PreVFP/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFP_Nov.root                                  61526.7
-Rare            ../skims_v2/2016PreVFP/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_Nov.root                            12.178
