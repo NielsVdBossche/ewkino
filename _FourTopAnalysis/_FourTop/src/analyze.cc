@@ -280,10 +280,10 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
-            if (nominalClass == eventClass::crz && st != selectionType::ChargeMisDD) {
+            if (nominalClass == eventClass::crz && st != unsigned(selectionType::ChargeMisDD)) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
-                fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
+                fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
                 fillVec2D = mva_ML->fill2DVector();
 

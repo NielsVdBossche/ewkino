@@ -23,7 +23,10 @@ class ChannelManager {
             {crzInvHT, "CRZ-INV-HT"},
             {crzNoB, "CRZ-No-B"},
             {crzInvBAndJets, "crzInvBAndJets"},
-            {crLowB, "CR-low-B"}};
+            {crLowB, "CR-low-B"},
+            {crwLowHT, "CRW-LowHT"},
+            {cro3L, "CRO-3L"},
+            {cr_1b, "CR-1B"}};
         std::map<eventClass, Channel*> mapping;
         std::vector<std::string> processHistName;
 

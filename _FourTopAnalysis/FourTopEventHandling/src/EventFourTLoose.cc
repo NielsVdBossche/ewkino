@@ -8,7 +8,7 @@ void EventFourTLoose::classifyEvent() {
             if (numberOfJets() < 2 && numberOfLooseBJets() < 1) SetEventClass(eventClass::crzInvBAndJets);
         } else if (passLeanSelection()) {
             SetEventClass(eventClass::crz);
-        } else if (! passLeanSelection() && (getHT() > 200 || numberOfLooseBJets() >= 1)) {
+        } else if (! passLeanSelection() && (getHT() > 200 && numberOfLooseBJets() >= 1)) {
             SetEventClass(eventClass::fail);
             return;
         } else if (! passLeanSelection() && getHT() <= 200) {
@@ -37,17 +37,22 @@ void EventFourTLoose::classifyEvent() {
         
 
     if (numberOfLeps() < 4 && numberOfLooseBJets() < 2) {
+        SetEventClass(eventClass::cro); // adapt to other crs potentially
+        return;
+    }
+    
+
+    if (numberOfLeps() == 2 && numberOfJets() < 4) {
         SetEventClass(eventClass::cro);
         return;
     }
-
-    if ((numberOfLeps() == 2 && numberOfJets() < 4) || (numberOfLeps() == 3 && numberOfJets() < 3)) {
+    if (numberOfLeps() == 3 && numberOfJets() < 3) {
         SetEventClass(eventClass::cro);
         return;
     }
 
     if (numberOfLeps() == 2 && getHT() < 280) {
-        SetEventClass(eventClass::cro);
+        SetEventClass(eventClass::crwLowHT);
         return;
     }
 
