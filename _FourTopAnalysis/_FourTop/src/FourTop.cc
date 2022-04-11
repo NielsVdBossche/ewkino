@@ -210,7 +210,7 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
         // do basic selection
         event.cleanJetsFromFOLeptons();
-        event.jetCollection().selectGoodJets();
+        event.selectGoodJets();
         event.removeTaus();
         event.cleanElectronsFromLooseMuons();
         event.selectTightLeptons();
