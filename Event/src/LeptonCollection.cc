@@ -439,7 +439,7 @@ void LeptonCollection::removeTaus(){
 
 int LeptonCollection::sumCharges() {
     int sum = 0;
-    for( const_iterator l1It = cbegin(); l1It != cend() - 1; ++l1It ){
+    for( const_iterator l1It = cbegin(); l1It != cend(); ++l1It ){
         sum += (*l1It)->charge();
     }
     return sum;
