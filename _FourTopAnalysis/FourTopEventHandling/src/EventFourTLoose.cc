@@ -2,9 +2,19 @@
 
 void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
-    if (! passLeanSelection()) return;
-    if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() != 0) return;
     if (! passLowMassVeto()) return;
+    if (! passLeanSelection()) {
+        if (numberOfLeps() != 3) return;
+        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
+        if (getMET() < 30) return;
+
+        if (numberOfLooseBJets() != 0) return;
+        if (! passZBosonVeto()) {
+            SetEventClass(eventClass::crwz);
+        }
+        return;
+    }
+    if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() != 0) return;
     if (! passZBosonVeto()) {
         if (numberOfLeps() == 3) SetEventClass(eventClass::crz3L);
         if (numberOfLeps() == 4 && passSingleZBosonVeto()) SetEventClass(eventClass::crz4L);
