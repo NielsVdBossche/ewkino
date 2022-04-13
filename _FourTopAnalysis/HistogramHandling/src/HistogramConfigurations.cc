@@ -49,7 +49,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
 
             HistInfo( "HT_" + flag, "H_{T} [GeV]", 100, 0, 1600),
             HistInfo( "HT_over_NJets_" + flag, "H_{T}/N_{jets} [GeV]", 30, 0, 300),
-            HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 100, 0, 500),
+            HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 40, 0, 400),
 
             HistInfo( "Min_dR_Bs_" + flag, "Min. #Delta R(b,b)", 24, 0, 4.8),
             //HistInfo( "SecMin_dR_Bs_" + flag, "Sec. min. #Delta R(b,b)", 12, 0, 4.8),
@@ -57,12 +57,12 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "minDR_B_lep_" + flag, "Min. #Delta R(l,b)", 24, 0, 4.8),
             HistInfo( "secMinDR_B_lep_" + flag, "Sec. min. #Delta R(l,b)", 24, 0, 4.8),
             HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
-            HistInfo( "Nr_of_leps_" + flag, "N_{l}", 5, 0, 5),
+            HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),
 
-            HistInfo( "B-score_PtLeadJet_" + flag, "DeepFlavor score (j1)", 100, -1., 1.),
-            HistInfo( "B-score_PtSubLeadJet_" + flag, "DeepFlavor score (j2)", 100, -1., 1.),
-            HistInfo( "B-score_PtThirdJet_" + flag, "DeepFlavor score (j3)", 100, -1., 1.),
-            HistInfo( "B-score_PtFourthJet_" + flag, "DeepFlavor score (j4)", 100, -1., 1.),
+            HistInfo( "B-score_PtLeadJet_" + flag, "DeepFlavor score (j1)", 51, -0.02, 1.),
+            HistInfo( "B-score_PtSubLeadJet_" + flag, "DeepFlavor score (j2)", 51, -0.02, 1.),
+            HistInfo( "B-score_PtThirdJet_" + flag, "DeepFlavor score (j3)", 51, -0.02, 1.),
+            HistInfo( "B-score_PtFourthJet_" + flag, "DeepFlavor score (j4)", 51, -0.02, 1.),
             
             HistInfo( "mtLeadLepMET_" + flag, "M_{T}(W) [GeV]", 100, 0, 200),
             HistInfo( "mtSubLeadLepMET_" + flag, "M_{T}(W) [GeV]", 100, 0, 200),
@@ -72,22 +72,22 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "m2bb_" + flag, "MT2BB", 100, 0, 100),
             HistInfo( "m2lblb_" + flag, "MT2BLBL", 100, 0, 100),
 
-            HistInfo( "B-score_BTagLeadJet_" + flag, "DeepFlavor score (j1)", 100, -1., 1.),
-            HistInfo( "B-score_BTagSubLeadJet_" + flag, "DeepFlavor score (j2)", 100, -1., 1.),
-            HistInfo( "B-score_BTagThirdJet_" + flag, "DeepFlavor score (j3)", 100, -1., 1.),
-            HistInfo( "B-score_BTagFourthJet_" + flag, "DeepFlavor score (j4)", 100, -1., 1.),
+            HistInfo( "B-score_BTagLeadJet_" + flag, "DeepFlavor score (j1)", 51, -0.02, 1.),
+            HistInfo( "B-score_BTagSubLeadJet_" + flag, "DeepFlavor score (j2)", 51, -0.02, 1.),
+            HistInfo( "B-score_BTagThirdJet_" + flag, "DeepFlavor score (j3)", 51, -0.02, 1.),
+            HistInfo( "B-score_BTagFourthJet_" + flag, "DeepFlavor score (j4)", 51, -0.02, 1.),
 
-            HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 50, 50, 125),
+            HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120),
             HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll}(low) [GeV]", 50, 5, 15),
 
             //HistInfo( "LepJetPtRatio_LeadLep_" + flag, "p_{T} ratio (l1,j)", 100, 0, 2),
             //HistInfo( "LepJetPtRatio_SubLeadLep_" + flag, "p_{T} ratio (l2,j)", 100, 0, 2),
 
-            HistInfo( "BestTopMass_" + flag, "Best M_{top} [GeV]", 50, 100, 300),
-            HistInfo( "BestTopCorrWMass_" + flag, "M_{W} [GeV]", 50, 50, 150),
+            HistInfo( "BestTopMass_" + flag, "Best M_{top} [GeV]", 50, 120, 220),
+            HistInfo( "BestTopCorrWMass_" + flag, "M_{W} [GeV]", 50, 50, 110),
 
-            HistInfo( "SecondBestTopMass_" + flag, "Sec. best M_{top} [GeV]", 50, 100, 300),
-            HistInfo( "SecondBestTopCorrWMass_" + flag, "M_{W} [GeV]", 50, 50, 150),
+            HistInfo( "SecondBestTopMass_" + flag, "Sec. best M_{top} [GeV]", 50, 120, 220),
+            HistInfo( "SecondBestTopCorrWMass_" + flag, "M_{W} [GeV]", 50, 50, 110),
         };
 
         if (evClass == eventClass::trilep || evClass == eventClass::fourlep) {
@@ -123,12 +123,12 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "N_jets_" + flag, "N_{jets}", 15, -0.5, 14.5),
 
             HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 1600),
-            HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 20, 0, 500),
+            HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 20, 0, 400),
 
             HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
-            HistInfo( "Nr_of_leps_" + flag, "N_{l}", 5, 0, 5),
+            HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),
 
-            HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 15, 50, 125),
+            HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120),
         };
 
         if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L) {

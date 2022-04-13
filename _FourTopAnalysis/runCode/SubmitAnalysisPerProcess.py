@@ -8,7 +8,7 @@ import sys
 
 sampleListPath = "../../sampleLists/"
 sampleLists = ["2016PreVFP", "2016PostVFP", "2017", "2018"]
-sampleLists = ["Data16PreVFP", "Data16PostVFP", "Data17", "Data18"]
+# sampleLists = ["Data16PreVFP", "Data16PostVFP", "Data17", "Data18"]
 
 outputPath = sampleListPath + "TmpLists/"
 outputSampleLists = []

@@ -1,2 +1,0 @@
-Rare            2016PostVFP/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFP_Nov.root                                        61526.7
-Rare            ../skims_v2/2016PostVFP/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFP_Nov.root                                          12.178

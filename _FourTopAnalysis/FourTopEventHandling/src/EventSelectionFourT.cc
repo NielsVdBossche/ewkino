@@ -64,12 +64,12 @@ void EventFourT::objectSelection() {
     event->selectFOLeptons();
 
     if (tightLeps->size() == 3) {
-        LeptonCollection looseWPLeptons(*looseLeps);
-        looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
-        if (looseWPLeptons.size() - 3 == 1) {
-            delete tightLeps;
-            tightLeps = new LeptonCollection(looseWPLeptons); 
-        }
+    //    LeptonCollection looseWPLeptons(*looseLeps);
+    //    looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
+    //    if (looseWPLeptons.size() - 3 == 1) {
+    //        delete tightLeps;
+    //        tightLeps = new LeptonCollection(looseWPLeptons); 
+    //    }
     }
 
     *mediumLeps = tightLeps;

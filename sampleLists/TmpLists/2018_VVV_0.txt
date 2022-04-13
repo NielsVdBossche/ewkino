@@ -1,0 +1,2 @@
+VVV            ../skims_v2/2018/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_Nov.root                                                       12.178
+VVV            ../skims_v2/2018/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_Nov.root                                                  4.9173

@@ -1,0 +1,2 @@
+VVV            2016PreVFP/GluGluToContinToZZTo4mu_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFPv4.root                           0.0027
+VVV            2016PreVFP/GluGluToContinToZZTo4tau_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFPv4.root                          0.0027

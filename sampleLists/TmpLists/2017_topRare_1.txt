@@ -1,2 +1,2 @@
-topRare            ../skims_v2/2017/ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_Nov.root                                136.02
+topRare            2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv4.root                                            3.74
 topRare            2017/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv4.root                                    21.585204

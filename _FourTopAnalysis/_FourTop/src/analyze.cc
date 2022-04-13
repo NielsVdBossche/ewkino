@@ -386,7 +386,7 @@ void FourTop::analyze(std::string method) {
                 mgrAll->at(eventClass::fourlep)->fillHistograms(processNb, fillVec, weight);
                 mgrAll->at(eventClass::fourlep)->fill2DHistograms(processNb, fillVec2D, weight);
                 mgrAll->at(eventClass::fourlep)->fillSingleHistograms(processNb, singleEntries, weight);
-            } else if (nominalClass != eventClass::fail) {
+            } else if (nominalClass != eventClass::fail && nominalClass < eventClass::ssdl) {
                 fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
                 
                 mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);

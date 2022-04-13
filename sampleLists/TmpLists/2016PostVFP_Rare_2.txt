@@ -1,2 +1,0 @@
-Rare            2016PostVFP/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016postVFP-v2_singlelepton_MC_2016_ULpostVFPv3.root                                                                                  0.2086
-Rare            2016PostVFP/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016postVFP-v2_singlelepton_MC_2016_ULpostVFPv3.root                                                                                  0.1651
