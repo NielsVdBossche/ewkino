@@ -9,6 +9,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
 
     std::map<eventClass, std::string> flagMapping = {
             {fail, "fail"},
+            {crwz, "CRWZ"},
             {crz3L, "CRZ"},
             {crz4L, "CRZ-4L"},
             {cro, "CRO"},
@@ -96,6 +97,8 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
         histInfoVec->push_back( HistInfo( "leptonPhiThird_" + flag, "#phi (l3)", 12, - M_PI, M_PI) );
         histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 18, 25, 205) );
         histInfoVec->push_back( HistInfo( "leptonMvaTOPThird_" + flag, "score (l3)", 40, -1, 1) );
+        histInfoVec->push_back(HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 36, 78, 150));
+
         //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
 
             if (evClass == eventClass::fourlep) {
@@ -120,7 +123,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "leptonESecond_" + flag, "E(l2) [GeV]", 18, 25, 205),
 
             HistInfo( "N_B_jets_" + flag, "N_{b}", 10, -0.5, 9.5),
-            HistInfo( "N_jets_" + flag, "N_{jets}", 15, -0.5, 14.5),
+            HistInfo( "N_jets_" + flag, "N_{jets}", 1, -0.5, 10.5),
 
             HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 1600),
             HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 20, 0, 400),
@@ -129,12 +132,14 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),
 
             HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120),
+
         };
 
-        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L) {
+        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz) {
             histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 20, 0, 200) );
             histInfoVec->push_back( HistInfo( "leptonEtaThird_" + flag, "#eta (l3)", 12, -2.4, 2.4) );
             histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 18, 25, 205) );
+            histInfoVec->push_back(HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 36, 78, 150));
             //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
         }
     }

@@ -233,6 +233,15 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         fillVal.push_back((*lightLeps)[2].energy());
         fillVal.push_back((*lightLeps)[2].leptonMVATOP());
 
+        double triMass = 0.;
+
+        Lepton* l1 = selec->getLepton(0);
+        Lepton* l2 = selec->getLepton(1);
+        Lepton* l3 = selec->getLepton(2);
+
+        triMass = (*l1 + *l2 + *l3).mass();
+        fillVal.push_back(triMass);
+
         if (fourLep) {
             fillVal.push_back((*lightLeps)[3].pt());
             fillVal.push_back((*lightLeps)[3].eta());
@@ -278,9 +287,6 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
         lightLeps->scalarPtSum(), // LT
         double(lightLeps->size()),
     };
-
-
-
     
     if (selec->getEvent()->hasOSSFLeptonPair()) {
         double mass = selec->getEvent()->bestZBosonCandidateMass();
@@ -294,6 +300,15 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].pt() : 0.);
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].eta() : 0.);
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].energy() : 0.);
+
+        double triMass = 0.;
+
+        Lepton* l1 = selec->getLepton(0);
+        Lepton* l2 = selec->getLepton(1);
+        Lepton* l3 = selec->getLepton(2);
+
+        triMass = (*l1 + *l2 + *l3).mass();
+        fillVal.push_back(triMass);
     }
 
     return fillVal;

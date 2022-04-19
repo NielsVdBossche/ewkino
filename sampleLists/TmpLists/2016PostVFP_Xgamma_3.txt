@@ -1,1 +1,2 @@
 Xgamma            2016PostVFP/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFP_Nov.root                                        61526.7
+Xgamma          ../skims_v2/2016PostVFP/WGToLNuG_TuneCP5_13TeV-madgraphMLM-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFPv4.root                                 412.7

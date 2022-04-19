@@ -1,0 +1,1 @@
+TTX            2018/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                             0.07358
