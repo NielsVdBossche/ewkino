@@ -123,6 +123,7 @@ bool EventFourT::passLeptonSelection() {
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
         if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
+        event->selectTightLeptons();
     } else if (selType == MCPrompt) {
         // tight and prompt and no charge misID
         // or also FO and prompt with negative weight?
@@ -131,11 +132,15 @@ bool EventFourT::passLeptonSelection() {
 
         if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
         if (! leptonsArePrompt()) return false;
+        event->selectTightLeptons();
+
         // check if any lepton is nonprompt or charge misIDd
     } else if (selType == ChargeMisDD) {
         // tight but OS events
         if (tightLeps->size() != 2) return false;
         if (! tightLeps->hasOSPair()) return false;
+        event->selectTightLeptons();
+
     } else if (selType == NPDD) {
         // FO  with at least 1 non tight
         if (foLeps->size() < 2) return false;
@@ -148,6 +153,7 @@ bool EventFourT::passLeptonSelection() {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
+        event->selectTightLeptons();
         if (foLeps->size() != tightLeps->size()) return false;
     } else if (selType == MCNoChargeMisID) {
         if (tightLeps->size() < 2) return false;

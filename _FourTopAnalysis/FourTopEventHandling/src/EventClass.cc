@@ -39,7 +39,7 @@ std::vector<double> EventFourT::fillVector() {
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
     bool useMVA = true;
     std::vector<double> scores = currentMVA->scoreEvent();
-    if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L) {
+    if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass == eventClass::crwz) {
         fillVec = fourTopHists::fillAllLean(true, this);
     } else if (currentClass == eventClass::crw || currentClass == eventClass::cro) {
         fillVec = fourTopHists::fillAllLean(false, this);

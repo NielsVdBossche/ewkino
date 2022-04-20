@@ -123,7 +123,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "leptonESecond_" + flag, "E(l2) [GeV]", 18, 25, 205),
 
             HistInfo( "N_B_jets_" + flag, "N_{b}", 10, -0.5, 9.5),
-            HistInfo( "N_jets_" + flag, "N_{jets}", 1, -0.5, 10.5),
+            HistInfo( "N_jets_" + flag, "N_{jets}", 11, -0.5, 10.5),
 
             HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 1600),
             HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 20, 0, 400),
