@@ -1,1 +1,1 @@
-VVV             ../../lwezenbe/skimmedTuples/HNL/default/UL2016post/Reco/VHToNonbb_M125_TuneCP5_13TeV-amcatnloFXFX_madspin_pythia8.root                                                               0.9561
+VVV             ../../lwezenbe/skimmedTuples/HNL/default/UL2016post/Reco/VHToNonbb_M125_TuneCP5_13TeV-amcatnloFXFX_madspin_pythia8.root                                                               0.9561            forceIs2016PostVFP
