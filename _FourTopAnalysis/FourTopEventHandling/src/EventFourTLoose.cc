@@ -5,9 +5,8 @@ void EventFourTLoose::classifyEvent() {
     if (! passLowMassVeto()) return;
     if (! passLeanSelection()) {
         if (numberOfLeps() != 3) return;
-        if (getMediumLepCol()->numberOfMuons() != 3) return;
-        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
-        if (getMET() < 30) return;
+        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;
+        if (getMET() < 50) return;
 
         if (numberOfLooseBJets() != 0) return;
         if (! passZBosonVeto()) {

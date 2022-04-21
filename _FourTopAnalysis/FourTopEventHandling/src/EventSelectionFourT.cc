@@ -206,7 +206,7 @@ bool EventFourT::passZBosonVeto() {
     if (numberOfLeps() < 3) return true;
     if ((*mediumLeps)->hasOSSFPair()) {
         double mass = (*mediumLeps)->bestZBosonCandidateMass();
-        if (fabs(mass - particle::mZ) < 7.5) {
+        if (fabs(mass - particle::mZ) < 15.) {
             return false;
         }
     }
