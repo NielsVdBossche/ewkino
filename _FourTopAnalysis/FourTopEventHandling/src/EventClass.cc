@@ -54,10 +54,11 @@ std::vector<double> EventFourT::fillVector() {
         fillVec = fourTopHists::fillAllLean(false, this);
     }
 
+    if (currentClass == eventClass::crwz) useMVA = false;
+
     if (useMVA) fillVec.insert(fillVec.end(), scores.begin(), scores.end());
 
     return fillVec;
-
 }
 
 std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
