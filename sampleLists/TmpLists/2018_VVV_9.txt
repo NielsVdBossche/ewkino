@@ -1,0 +1,2 @@
+VVV            ../../lwezenbe/skimmedTuples/HNL/default/UL2018/Reco/GluGluHToZZTo4L_M125_TuneCP5_13TeV_powheg2_JHUGenV7011_pythia8.root                                                                     0.01212
+VVV            ../../lwezenbe/skimmedTuples/HNL/default/UL2018/Reco/GluGluHToZZTo2L2Q_M125_TuneCP5_13TeV_powheg2_JHUGenV7011_pythia8.root                                                                   28.87

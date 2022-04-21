@@ -410,7 +410,7 @@ void FourTop::analyze(std::string method) {
             std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
 
             unsigned uncID = 0;
-            while (selection->getCurrentClass() != eventClass::fail && uncID < shapeUncId::end) {
+            while (uncID < shapeUncId::end) {
                 if ((! uncWrapper && uncID < shapeUncId::JER_1p93) || (onlyCR && unsigned(nominalClass) >= eventClass::ssdl && uncID < shapeUncId::JER_1p93)) {
                     uncID++;
                     continue;
@@ -554,8 +554,8 @@ void FourTop::analyze(std::string method) {
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
                 } else {
-                    if (! onlyCR || unsigned(upClass) < eventClass::ssdl) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                    if (! onlyCR || unsigned(downClass) < eventClass::ssdl) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    if ((! onlyCR || unsigned(upClass) < eventClass::ssdl) && upClass != eventClass::fail) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    if ((! onlyCR || unsigned(downClass) < eventClass::ssdl) && downClass != eventClass::fail) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 }
 
                 uncID = uncID + 1;
