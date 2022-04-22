@@ -296,6 +296,8 @@ void FourTop::analyze(std::string method) {
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
                 singleEntries.push_back({crzPosMVA + classAndScore.first, classAndScore.second});
 
+                if (currentEvent->isMC()) fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+
                 mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
                 mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
@@ -389,6 +391,8 @@ void FourTop::analyze(std::string method) {
             } else if (nominalClass != eventClass::fail && nominalClass < eventClass::ssdl) {
                 fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
                 
+                if (currentEvent->isMC()) fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+
                 mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
                 mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);

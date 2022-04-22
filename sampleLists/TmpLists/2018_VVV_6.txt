@@ -1,2 +1,2 @@
-VVV            2018/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                        0.2086
 VVV            2018/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                        0.1651
+VVV            2018/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1_ext1-v2_singlelepton_MC_2018_Nov.root                                                      0.05565
