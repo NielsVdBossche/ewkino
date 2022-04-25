@@ -21,7 +21,6 @@ VVV            2016PreVFP/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016p
 VVV            2016PreVFP/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016preVFP_ext1-v2_singlelepton_MC_2016_ULpreVFPv3.root                                                                                    0.05565
 # VVV            2016PreVFP/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016preVFP-v2_singlelepton_MC_2016_ULpreVFPv3.root                                                                                         0.05565
 VVV            2016PreVFP/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016preVFP-v2_singlelepton_MC_2016_ULpreVFPv3.root                                                                                         0.01476  
-VVV            ../../lwezenbe/skimmedTuples/HNL/default/UL2016pre/Reco/VHToNonbb_M125_TuneCP5_13TeV-amcatnloFXFX_madspin_pythia8.root                                                                               0.9561          forceIs2016PreVFP
 
 TTX            ../skims_v2/2016PreVFP/ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFP_Nov.root      80.95
 TTX            ../skims_v2/2016PreVFP/ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFP_Nov.root          136.02
