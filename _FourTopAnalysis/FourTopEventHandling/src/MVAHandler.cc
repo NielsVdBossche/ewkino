@@ -104,11 +104,11 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
     }
 
     if (fourLep) {
-        identifier += "_4L";
+        identifier += "_SR-4L";
     } else if (isML) {
-        identifier += "_3L";
+        identifier += "_SR-3L";
     } else {
-        identifier += "_DL";
+        identifier += "_SR-2L";
     }
 
     std::map<MVAClasses, std::string> translator = {

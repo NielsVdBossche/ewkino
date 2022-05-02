@@ -1,2 +1,1 @@
-TTX            2016PostVFP/TTTJ_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v3_singlelepton_MC_2016_ULpostVFP_Nov.root                                                 0.0003974
-TTX            2016PostVFP/TTTW_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v3_singlelepton_MC_2016_ULpostVFPv4.root                                                   0.0007314
+TTX            2016PostVFP/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v1_singlelepton_MC_2016_ULpostVFPv4.root                   21.585204

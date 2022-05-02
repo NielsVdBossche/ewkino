@@ -35,7 +35,7 @@ for sl in sampleLists:
                 sampleDict[processFilename] = [line]
             else:
                 curr = sampleDict[processFilename]
-                if len(curr) >= 2:
+                if len(curr) >= 1:
                     count += 1
                     processFilename = process + "_" + str(count)
                     sampleDict[processFilename] = [line]

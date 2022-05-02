@@ -1,0 +1,1 @@
+ttbar     2018/analysisSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                365.34

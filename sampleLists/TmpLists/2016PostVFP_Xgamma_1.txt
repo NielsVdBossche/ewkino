@@ -1,2 +1,1 @@
-Xgamma          ../skims_v2/2016PostVFP/analysisSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFP_Nov.root     7.509
-Xgamma          2016PostVFP/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8crab_MiniAOD2016postVFP-v2_singlelepton_MC_2016_ULpostVFPv3.root       55.48
+Xgamma          ../skims_v2/2016PostVFP/TTGamma_Hadronic_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFP_Nov.root                          6.162

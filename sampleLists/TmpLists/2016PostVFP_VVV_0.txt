@@ -1,2 +1,1 @@
 VVV            ../skims_v2/2016PostVFP/WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFP_Nov.root                                          12.178
-VVV            ../skims_v2/2016PostVFP/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFP_Nov.root                                     4.9173

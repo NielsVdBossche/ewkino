@@ -13,14 +13,14 @@ class ChannelManager {
         std::map<eventClass, std::string> namingScheme = {
             {fail, "fail"},
             {crwz, "CRWZ"},
-            {crz3L, "CRZ"},
-            {crz4L, "CRZ-4L"},
-            {cro, "CRO"},
-            {cro3L, "CRO-3L"},
-            {crw, "CRW"},
-            {ssdl, "DL"},
-            {trilep, "3L"},
-            {fourlep, "4L"}};
+            {crz3L, "CR-3L-Z"},
+            {crz4L, "CR-4L-Z"},
+            {cro, "CR-2L-23J1B"},
+            {cro3L, "CR-3L-2J1B"},
+            {crw, "CR-2L-45J2B"},
+            {ssdl, "SR-2L"},
+            {trilep, "SR-3L"},
+            {fourlep, "SR-4L"}};
         std::map<eventClass, Channel*> mapping;
         std::vector<std::string> processHistName;
 

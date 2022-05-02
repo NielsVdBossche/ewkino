@@ -34,17 +34,17 @@ void FourTop::analyze(std::string method) {
     size_t croPosMVA = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
     size_t crwPosMVA = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
 
-    mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CRZ", true));
-    mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CRZ-4L", true));
-    mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CRO-3L", true));
-    mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CRO", true));
-    mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CRW", true));
+    mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-Z", true));
+    mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-ZL", true));
+    mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-2J1B", true));
+    mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CR-2L-23J1B", true));
+    mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CR-2L-45J2B", true));
 
-    mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ", true));
-    mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CRZ-4L", true));
-    mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CRO-3L", true));
-    mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CRO", true));
-    mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CRW", true));
+    mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-Z", true));
+    mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-4L-ZL", true));
+    mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-2J1B", true));
+    mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-23J1B", true));
+    mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
 
     size_t dlPosMVA = 0;
     size_t mlPosMVA = 0;
@@ -290,13 +290,17 @@ void FourTop::analyze(std::string method) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
+                if (currentEvent->isMC()) {
+                    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                } else {
+                    fillVec.push_back(0.);
+                }
+
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
                 fillVec2D = mva_ML->fill2DVector();
 
                 std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
                 singleEntries.push_back({crzPosMVA + classAndScore.first, classAndScore.second});
-
-                if (currentEvent->isMC()) fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
 
                 mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
@@ -391,7 +395,11 @@ void FourTop::analyze(std::string method) {
             } else if (nominalClass != eventClass::fail && nominalClass < eventClass::ssdl) {
                 fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
                 
-                if (currentEvent->isMC()) fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                if (currentEvent->isMC()) {
+                    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                } else {
+                    fillVec.push_back(0.);
+                }
 
                 mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
