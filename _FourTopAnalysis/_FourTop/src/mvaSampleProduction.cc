@@ -43,7 +43,6 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     tree->Branch("phi_jet_one",         &phiJetOne,      "phi_jet_one/D");
     tree->Branch("eta_jet_one",         &etaJetOne,      "eta_jet_one/D");
     tree->Branch("btag_jet_one",        &btagJetOne,      "btag_jet_one/D");
-
     tree->Branch("pt_jet_two",          &ptJetTwo,      "pt_jet_two/D");
     tree->Branch("phi_jet_two",         &phiJetTwo,      "phi_jet_two/D");
     tree->Branch("eta_jet_two",         &etaJetTwo,      "eta_jet_two/D");
