@@ -141,8 +141,15 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 22, 0, 220) );
             histInfoVec->push_back(HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 36, 78, 150));
             //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
-            histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
         }
+        histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
+        histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));
+        histInfoVec->push_back(HistInfo( "muonID_" + flag, "muIDWeight", 100, 0.5, 1.5));
+        histInfoVec->push_back(HistInfo( "electronReco_pTBelow20_" + flag, "electronReco_pTBelow20", 100, 0.5, 1.5));
+        histInfoVec->push_back(HistInfo( "electronReco_pTAbove20_" + flag, "electronReco_pTAbove20", 100, 0.5, 1.5));
+        histInfoVec->push_back(HistInfo( "bTag_shape_" + flag, "bTag_shape", 100, 0.5, 1.5));
+        histInfoVec->push_back(HistInfo( "prefire_" + flag, "prefire", 100, 0.5, 1.5));
+
 
     }
     return histInfoVec;

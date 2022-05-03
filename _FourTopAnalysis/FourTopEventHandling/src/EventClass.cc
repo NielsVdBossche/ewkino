@@ -42,8 +42,21 @@ std::vector<double> EventFourT::fillVector() {
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass == eventClass::crwz) {
         fillVec = fourTopHists::fillAllLean(true, this);
         fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
     } else if (currentClass == eventClass::crw || currentClass == eventClass::cro) {
         fillVec = fourTopHists::fillAllLean(false, this);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
     } else if (currentClass == eventClass::ssdl) {
         fillVec = fourTopHists::fillAllHists(false, this);
     } else if (currentClass == eventClass::trilep) {
@@ -53,6 +66,12 @@ std::vector<double> EventFourT::fillVector() {
     } else if (currentClass != eventClass::fail) {
         useMVA = false;
         fillVec = fourTopHists::fillAllLean(false, this);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
+        fillVec.push_back(0.);
         fillVec.push_back(0.);
     }
 

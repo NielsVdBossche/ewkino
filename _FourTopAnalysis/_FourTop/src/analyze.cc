@@ -292,7 +292,19 @@ void FourTop::analyze(std::string method) {
                 fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
                 if (currentEvent->isMC()) {
                     fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
                 } else {
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
                     fillVec.push_back(0.);
                 }
 
@@ -310,6 +322,23 @@ void FourTop::analyze(std::string method) {
                 std::vector<double> scores = mva_DL->scoreEvent();
 
                 fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
+                if (currentEvent->isMC()) {
+                    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
+                } else {
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                }
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
                 fillVec2D = mva_DL->fill2DVector();
 
