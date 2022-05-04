@@ -108,6 +108,8 @@ void FourTop::createMVATrainingSamples() {
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
 
+    delete selection;
+    selection = new EventFourTLoose();
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -119,20 +121,20 @@ void FourTop::createMVATrainingSamples() {
         TFile* currentOutputFile = new TFile(outputFileName.c_str(), "RECREATE");
         currentOutputFile->cd();
 
-        TTree* trainingTree_DL = new TTree("DL_tree", "DL_tree");
-        linkMVAVariables(trainingTree_DL, false);
-        TTree* trainingTree_ML = new TTree("ML_tree", "ML_tree");
-        linkMVAVariables(trainingTree_ML, true);
+        //TTree* trainingTree_DL = new TTree("DL_tree", "DL_tree");
+        //linkMVAVariables(trainingTree_DL, false);
+        //TTree* trainingTree_ML = new TTree("ML_tree", "ML_tree");
+        //linkMVAVariables(trainingTree_ML, true);
 
         TTree* trainingTree_DL_loose = new TTree("DL_tree_loose", "DL_tree_loose");
         linkMVAVariables(trainingTree_DL_loose, false);
         TTree* trainingTree_ML_loose = new TTree("ML_tree_loose", "ML_tree_loose");
         linkMVAVariables(trainingTree_ML_loose, true);
 
-        TTree* trainingTree_ML_Norm = new TTree("ML_tree", "ML_tree_NormalizedVariables");
-        linkMVAVariables(trainingTree_ML_Norm, true);
-        TTree* trainingTree_ML_loose_Norm = new TTree("ML_tree_loose", "ML_tree_loose_NormalizedVariables");
-        linkMVAVariables(trainingTree_ML_loose_Norm, true);
+        //TTree* trainingTree_ML_Norm = new TTree("ML_tree", "ML_tree_NormalizedVariables");
+        //linkMVAVariables(trainingTree_ML_Norm, true);
+        //TTree* trainingTree_ML_loose_Norm = new TTree("ML_tree_loose", "ML_tree_loose_NormalizedVariables");
+        //linkMVAVariables(trainingTree_ML_loose_Norm, true);
 
         std::cout << "Event loop" << std::endl;
 
@@ -159,23 +161,25 @@ void FourTop::createMVATrainingSamples() {
             mvaWeight = currentEvent->weight();
             mvaWeight *= reweighter.totalWeight( *currentEvent );
             
+            selection->classifyEvent();
+            eventClass currClass = selection->getCurrentClass();
             if (selection->passLeanSelection()) {
-                if (selection->numberOfLeps() == 2 && (selection->numberOfLooseBJets() > 2 || (selection->numberOfLooseBJets() == 2 && selection->numberOfJets() >= 6))) {
+                if (currClass == eventClass::ssdl) {
                     fillMVAVariables(false);
                     trainingTree_DL_loose->Fill();
-                } else if (selection->numberOfLeps() == 3 && (selection->numberOfLooseBJets() > 2 || (selection->numberOfLooseBJets() == 2 && selection->numberOfJets() >= 4))) {
+                } else if (currClass == eventClass::trilep) {
                     fillMVAVariables(true);
                     trainingTree_ML_loose->Fill();
-                    fillMVAVariablesNormalized(false);
-                    trainingTree_ML_loose_Norm->Fill();
-                } else if (selection->numberOfLeps() == 4) {
+                    //fillMVAVariablesNormalized(false);
+                    //trainingTree_ML_loose_Norm->Fill();
+                } else if (currClass == eventClass::fourlep) {
                     fillMVAVariables(true);
                     trainingTree_ML_loose->Fill();
-                    fillMVAVariablesNormalized(true);
-                    trainingTree_ML_loose_Norm->Fill();
+                    //fillMVAVariablesNormalized(true);
+                    //trainingTree_ML_loose_Norm->Fill();
                 }
             }
-
+                /*
             if (! selection->passBaselineEventSelection())  {
                 continue;
             }
@@ -205,17 +209,18 @@ void FourTop::createMVATrainingSamples() {
                 fillMVAVariablesNormalized(true);
                 trainingTree_ML_Norm->Fill();
             }
+            */
         }
         
-        std::cout << trainingTree_ML->GetEntries() << std::endl;
-        std::cout << trainingTree_DL->GetEntries() << std::endl;
+        std::cout << trainingTree_ML_loose->GetEntries() << std::endl;
+        std::cout << trainingTree_DL_loose->GetEntries() << std::endl;
 
-        trainingTree_DL->Write(trainingTree_DL->GetName(), TObject::kOverwrite);
-        trainingTree_ML->Write(trainingTree_ML->GetName(), TObject::kOverwrite);
+        //trainingTree_DL->Write(trainingTree_DL->GetName(), TObject::kOverwrite);
+        //trainingTree_ML->Write(trainingTree_ML->GetName(), TObject::kOverwrite);
         trainingTree_DL_loose->Write(trainingTree_DL_loose->GetName(), TObject::kOverwrite);
         trainingTree_ML_loose->Write(trainingTree_ML_loose->GetName(), TObject::kOverwrite);
-        trainingTree_ML_Norm->Write(trainingTree_ML_Norm->GetName(), TObject::kOverwrite);
-        trainingTree_ML_loose_Norm->Write(trainingTree_ML_loose_Norm->GetName(), TObject::kOverwrite);
+        //trainingTree_ML_Norm->Write(trainingTree_ML_Norm->GetName(), TObject::kOverwrite);
+        //trainingTree_ML_loose_Norm->Write(trainingTree_ML_loose_Norm->GetName(), TObject::kOverwrite);
 
         currentOutputFile->Close();
     }
