@@ -11,7 +11,7 @@ commandList = []
 #setups = [["DL_BDT", "DL_NN"], ["ML_BDT", "ML_NN"]]
 setups = [["DL_BDT"], ["ML_BDT"]]
 
-trees = ["DL_tree", "ML_tree"]
+trees = ["DL_tree_loose", "ML_tree_loose"]
 
 ntrees = np.arange(500, 1500, 100)
 depths = [3, 4, 5, 6, 7, 8]
