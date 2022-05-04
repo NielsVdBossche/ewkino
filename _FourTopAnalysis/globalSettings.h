@@ -7,6 +7,7 @@
 enum eventClass {
     fail,
     crwz,
+    cr_conv,
     crz3L,
     crz4L,
     cro,

@@ -20,13 +20,13 @@ void MVAHandler_4T::initReader() {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
         if (lean) {
-            weightFilePath += "FourTopClassification_New_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+            weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
         }
     } else if (currentConfig == TriClass_ML) {
         if (lean) {
-            weightFilePath += "FourTopClassification_New_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+            weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
         }
