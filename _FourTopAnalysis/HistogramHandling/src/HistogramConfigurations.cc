@@ -10,7 +10,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     std::map<eventClass, std::string> flagMapping = {
             {fail, "fail"},
             {crwz, "CRWZ"},
-            {cr_conv, "CR_Conversion"},
+            {cr_conv, "CR-Conversion"},
             {crz3L, "CR-3L-Z"},
             {crz4L, "CR-4L-Z"},
             {cro, "CR-2L-23J1B"},
@@ -136,7 +136,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
 
         };
 
-        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz) {
+        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv) {
             histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 15, 0, 150) );
             histInfoVec->push_back( HistInfo( "leptonEtaThird_" + flag, "#eta (l3)", 12, -2.4, 2.4) );
             histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 22, 0, 220) );
