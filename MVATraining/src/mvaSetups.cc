@@ -11,7 +11,7 @@ TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* out
     return factory;
 }
 
-void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, double shrinkage, int cuts, bool baggedBoost) {
+void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, int cuts, double shrinkage, int minNodeSize, double baggedSampleFraction) {
     std::stringstream optionString;
     std::stringstream nameString;
 
@@ -28,12 +28,12 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
     optionString << ":BoostType=Grad:Shrinkage=" << std::setprecision(2) << shrinkage;
     nameString << "G_";
     
-    if (baggedBoost) {
-        optionString << ":UseBaggedBoost:BaggedSampleFraction=0.50";
-        nameString << "B_";
-    }
+    optionString << ":UseBaggedBoost:BaggedSampleFraction=" << std::setprecision(2) << baggedSampleFraction;
+    nameString << "B_";
 
-    nameString << nTrees << "_" << depth << "_" << std::setprecision(2) << shrinkage << "_" << cuts;
+    optionString << ":MinNodeSize="   << minNodeSize << "%";
+
+    nameString << nTrees << "_" << depth << "_" << cuts << "_" << std::setprecision(2) << shrinkage << "_" <<  minNodeSize << "_" << std::setprecision(2) << baggedSampleFraction;
 
     optionString << ":IgnoreNegWeightsInTraining";
     std::cout << optionString.str() << std::endl;
@@ -71,7 +71,7 @@ void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* datalo
         for (int j=0; j < 4; j++) { //depth
             for (int k=0; k < 3; k++) { // shrink
                 for (int l=0; l < 2; l++) { // cuts
-                    addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
+                    //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
                     //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], true);
                 }
             }

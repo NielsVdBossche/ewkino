@@ -45,13 +45,19 @@ int main(int argc, char const *argv[]) {
 
     // Main part of calling training etc
 
-    std::cout << "READY FOR ADDING METHODS" << std::endl;
     if (conf < mvaConfiguration::NN_DL) {
-        std::cout << "DOING ADDITION OF BDTS" << std::endl;
 
-        mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 0.10, 20, true);
-
-        if (searchSetup == "search") mvaSetupManager::searchBDT(factory, data, setup);
+        if (searchSetup == "search") {
+            int ntrees = std::stoi(argv[5]);
+            int maxDepth = std::stoi(argv[6]);
+            int ncuts = std::stoi(argv[7]);
+            double shrinkage = std::stod(argv[8]);
+            int minNodeSize = std::stoi(argv[9]);
+            double baggedSampleFraction = std::stod(argv[10]);
+            mvaSetupManager::addBDT(factory, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
+        } else {
+            mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 20, 0.10, 5, 0.6);
+        }
         //factory->OptimizeAllMethods("ROCIntegral","FitGA");
         
     } else {
