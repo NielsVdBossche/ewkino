@@ -122,11 +122,11 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "leptonELeading_" + flag, "E(l1) [GeV]", 30, 0, 300),
             HistInfo( "leptonESecond_" + flag, "E(l2) [GeV]", 25, 0, 250),
 
-            HistInfo( "N_B_jets_" + flag, "N_{b}", 10, -0.5, 9.5),
-            HistInfo( "N_jets_" + flag, "N_{jets}", 11, -0.5, 10.5),
+            HistInfo( "N_B_jets_" + flag, "N_{b}", 6, -0.5, 5.5),
+            HistInfo( "N_jets_" + flag, "N_{jets}", 9, -0.5, 8.5),
 
-            HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 1600),
-            HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 20, 0, 400),
+            HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 800),
+            HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 15, 0, 300),
 
             HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
             HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),
@@ -142,6 +142,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             histInfoVec->push_back(HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 36, 78, 150));
             //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
         }
+        
         histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
         histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));
         histInfoVec->push_back(HistInfo( "muonID_" + flag, "muIDWeight", 100, 0.5, 1.5));

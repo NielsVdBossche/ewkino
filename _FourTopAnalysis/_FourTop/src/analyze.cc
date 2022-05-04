@@ -35,13 +35,13 @@ void FourTop::analyze(std::string method) {
     size_t crwPosMVA = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
 
     mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-Z", true));
-    mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-ZL", true));
+    mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-Z", true));
     mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-2J1B", true));
     mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CR-2L-23J1B", true));
     mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CR-2L-45J2B", true));
 
     mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-Z", true));
-    mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-4L-ZL", true));
+    mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-4L-Z", true));
     mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-2J1B", true));
     mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-23J1B", true));
     mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
@@ -426,7 +426,19 @@ void FourTop::analyze(std::string method) {
                 
                 if (currentEvent->isMC()) {
                     fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
+                    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
                 } else {
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
+                    fillVec.push_back(0.);
                     fillVec.push_back(0.);
                 }
 
