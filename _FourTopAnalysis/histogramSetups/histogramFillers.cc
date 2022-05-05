@@ -279,6 +279,8 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
         (*lightLeps)[1].energy(),
 
         double(bJets->size()),
+        double(selec->numberOfMediumBJets()),
+        double(selec->numberOfTightBJets()),
         double(jets->size()),
 
         jets->scalarPtSum(),

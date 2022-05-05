@@ -11,7 +11,7 @@ void EventFourTLoose::classifyEvent() {
 
         if (numberOfLooseBJets() != 0) return;
         if (! getMediumLepCol()->hasOSSFPair()) return;
-        double m3l =  (*getLepton(0) + *getLepton(1) + *getLepton(2)).mass();
+        double m3l = (*getLepton(0) + *getLepton(1) + *getLepton(2)).mass();
         double m2l = getMediumLepCol()->bestZBosonCandidateMass();
         
         if (! passZBosonVeto() && fabs(m3l - particle::mZ) > 15. && getMET() > 50) {
