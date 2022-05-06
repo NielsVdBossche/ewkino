@@ -9,16 +9,16 @@ import itertools
 commandList = []
 
 #setups = [["DL_BDT", "DL_NN"], ["ML_BDT", "ML_NN"]]
-setups = [["DL_BDT"], ["ML_BDT"]]
+setups = [["DL_BDT"]]#, ["ML_BDT"]]
 
-trees = ["DL_tree_loose", "ML_tree_loose"]
+trees = ["DL_tree_loose"]#, "ML_tree_loose"]
 
-ntrees = np.arange(500, 1500, 100)
-depths = [3, 4, 5, 6, 7, 8]
-nCuts = [10, 20, 30]
-shrinkages = np.arange(0.01, 0.1, 0.01)
-minNodeSizes = np.arange(1, 10, 1)
-baggedFractions = np.arange(0.25, 1, 0.25)
+ntrees = [1000, 1500, 2000]
+depths = [3, 4, 5, 6]
+nCuts = [20]
+shrinkages = [0.01, 0.05, 0.10]
+minNodeSizes = [1, 5, 10]
+baggedFractions = [0.25, 0.5, 1.]
 
 
 for setup, tree in zip(setups, trees):
@@ -27,5 +27,7 @@ for setup, tree in zip(setups, trees):
             interstring = ""
             for el in mix:
                 interstring += " " + str(el)
-            command = "./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search" + interstring
-            ct.submitCommandAsCondorJob("trainAllMVA", command)
+            commandList.append("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search" + interstring)
+            
+
+ct.submitCommandsAsCondorCluster("trainAllMVA", commandList)
