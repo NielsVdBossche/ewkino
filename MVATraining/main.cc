@@ -38,7 +38,13 @@ int main(int argc, char const *argv[]) {
 
     TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf);
 
-    TFile* outfile = new TFile(("Classifiers/FourTopClassification_LeanSel_" + setup + ".root").c_str() ,"RECREATE");
+    TFile* outfile;
+
+    if (searchSetup == "search") {
+        outfile = new TFile(("Classifiers/FourTopClassification_LeanSel_Search_nTrees_" + std::string(argv[5]) + "_Depth_" + std::string(argv[6]) + "_nCuts_" + std::string(argv[7]) + "_shrink_" + std::string(argv[8]) + "_minNodeSize" + std::string(argv[9]) + "_baggedFraction_" + std::string(argv[10]) + ".root").c_str() ,"RECREATE");
+    } else {
+        outfile = new TFile(("Classifiers/FourTopClassification_LeanSel_" + setup + ".root").c_str() ,"RECREATE");
+    }
     TMVA::Factory* factory = mvaSetupManager::buildFactory(conf, outfile);
 
     // class manages a dataloader and a factory, as well as settings for the mva's
@@ -46,7 +52,6 @@ int main(int argc, char const *argv[]) {
     // Main part of calling training etc
 
     if (conf < mvaConfiguration::NN_DL) {
-
         if (searchSetup == "search") {
             int ntrees = std::stoi(argv[5]);
             int maxDepth = std::stoi(argv[6]);
