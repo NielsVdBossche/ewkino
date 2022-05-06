@@ -1,5 +1,5 @@
-Xgamma          2017/mvaSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL.root                         2.2204
-Xgamma          2017/mvaSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL.root                     7.4943
+Xgamma          ../skims_v2/2017/mvaSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_Nov.root                       2.2204
+Xgamma          ../skims_v2/2017/mvaSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_Nov.root                     7.4943
 ChargeMisID     2017/mvaSamples/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                                    88.40
 ChargeMisID     2017/mvaSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                             365.34
 TTTT            2017/mvaSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_2017_ULv3.root                                 0.01197
