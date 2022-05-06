@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   trainMVALean.sh
+
+log         =   /user/nivanden/condor/logs/trainNN_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainNN_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainNN_$(ClusterId)_$(Process).out
+
+queue arguments in DL_NN, ML_NN

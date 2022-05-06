@@ -17,7 +17,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
     }
 
 
-    if (config == BDT_DL || config == NN_DL) {
+    if (config == BDT_DL) {
         chain->SetBranchAddress("N_jets",           &dataVector->at(0));
         chain->SetBranchAddress("N_b",              &dataVector->at(1));
         chain->SetBranchAddress("N_b_tight",        &dataVector->at(2));
@@ -55,7 +55,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("MET",              &dataVector->at(34));
     }
 
-    if (config == BDT_ML || config == NN_ML) {
+    if (config == BDT_ML) {
         chain->SetBranchAddress("N_jets",           &dataVector->at(0));
         chain->SetBranchAddress("N_b",              &dataVector->at(1));
         chain->SetBranchAddress("N_b_tight",        &dataVector->at(2));
@@ -94,12 +94,118 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("pt_lep_three",     &dataVector->at(35));
     }
 
+    if (config == NN_DL) {
+        chain->SetBranchAddress("pt_jet_one",          &dataVector->at(0));
+        chain->SetBranchAddress("phi_jet_one",         &dataVector->at(1));
+        chain->SetBranchAddress("eta_jet_one",         &dataVector->at(2));
+        chain->SetBranchAddress("btag_jet_one",        &dataVector->at(3));
+        chain->SetBranchAddress("pt_jet_two",          &dataVector->at(4));
+        chain->SetBranchAddress("phi_jet_two",         &dataVector->at(5));
+        chain->SetBranchAddress("eta_jet_two",         &dataVector->at(6));
+        chain->SetBranchAddress("btag_jet_two",        &dataVector->at(7));
+        chain->SetBranchAddress("pt_jet_three",        &dataVector->at(8));
+        chain->SetBranchAddress("phi_jet_three",       &dataVector->at(9));
+        chain->SetBranchAddress("eta_jet_three",       &dataVector->at(10));
+        chain->SetBranchAddress("btag_jet_three",      &dataVector->at(11));
+        chain->SetBranchAddress("pt_jet_four",         &dataVector->at(12));
+        chain->SetBranchAddress("phi_jet_four",        &dataVector->at(13));
+        chain->SetBranchAddress("eta_jet_four",        &dataVector->at(14));
+        chain->SetBranchAddress("btag_jet_four",       &dataVector->at(15));
+        chain->SetBranchAddress("pt_jet_five",         &dataVector->at(16));
+        chain->SetBranchAddress("phi_jet_five",        &dataVector->at(17));
+        chain->SetBranchAddress("eta_jet_five",        &dataVector->at(18));
+        chain->SetBranchAddress("btag_jet_five",       &dataVector->at(19));
+        chain->SetBranchAddress("pt_jet_six",          &dataVector->at(20));
+        chain->SetBranchAddress("phi_jet_six",         &dataVector->at(21));
+        chain->SetBranchAddress("eta_jet_six",         &dataVector->at(22));
+        chain->SetBranchAddress("btag_jet_six",        &dataVector->at(23));
+        chain->SetBranchAddress("pt_jet_seven",        &dataVector->at(24));
+        chain->SetBranchAddress("phi_jet_seven",       &dataVector->at(25));
+        chain->SetBranchAddress("eta_jet_seven",       &dataVector->at(26));
+        chain->SetBranchAddress("btag_jet_seven",      &dataVector->at(27));
+        chain->SetBranchAddress("pt_jet_eight",        &dataVector->at(28));
+        chain->SetBranchAddress("phi_jet_eight",       &dataVector->at(29));
+        chain->SetBranchAddress("eta_jet_eight",       &dataVector->at(30));
+        chain->SetBranchAddress("btag_jet_eight",      &dataVector->at(31));
+        chain->SetBranchAddress("pt_jet_nine",         &dataVector->at(32));
+        chain->SetBranchAddress("phi_jet_nine",        &dataVector->at(33));
+        chain->SetBranchAddress("eta_jet_nine",        &dataVector->at(34));
+        chain->SetBranchAddress("btag_jet_nine",       &dataVector->at(35));
+        chain->SetBranchAddress("pt_jet_ten",          &dataVector->at(36));
+        chain->SetBranchAddress("phi_jet_ten",         &dataVector->at(37));
+        chain->SetBranchAddress("eta_jet_ten",         &dataVector->at(38));
+        chain->SetBranchAddress("btag_jet_ten",        &dataVector->at(39));
+        chain->SetBranchAddress("pt_lep_one",          &dataVector->at(40));
+        chain->SetBranchAddress("phi_lep_one",         &dataVector->at(41));
+        chain->SetBranchAddress("eta_lep_one",         &dataVector->at(42));
+        chain->SetBranchAddress("flav_lep_one",        &dataVector->at(43));
+        chain->SetBranchAddress("pt_lep_two",          &dataVector->at(44));
+        chain->SetBranchAddress("phi_lep_two",         &dataVector->at(45));
+        chain->SetBranchAddress("eta_lep_two",         &dataVector->at(46));
+        chain->SetBranchAddress("flav_lep_two",        &dataVector->at(47));
+    }
+
+    if (config == NN_ML) {
+        chain->SetBranchAddress("pt_jet_one",          &dataVector->at(0));
+        chain->SetBranchAddress("phi_jet_one",         &dataVector->at(1));
+        chain->SetBranchAddress("eta_jet_one",         &dataVector->at(2));
+        chain->SetBranchAddress("btag_jet_one",        &dataVector->at(3));
+        chain->SetBranchAddress("pt_jet_two",          &dataVector->at(4));
+        chain->SetBranchAddress("phi_jet_two",         &dataVector->at(5));
+        chain->SetBranchAddress("eta_jet_two",         &dataVector->at(6));
+        chain->SetBranchAddress("btag_jet_two",        &dataVector->at(7));
+        chain->SetBranchAddress("pt_jet_three",        &dataVector->at(8));
+        chain->SetBranchAddress("phi_jet_three",       &dataVector->at(9));
+        chain->SetBranchAddress("eta_jet_three",       &dataVector->at(10));
+        chain->SetBranchAddress("btag_jet_three",      &dataVector->at(11));
+        chain->SetBranchAddress("pt_jet_four",         &dataVector->at(12));
+        chain->SetBranchAddress("phi_jet_four",        &dataVector->at(13));
+        chain->SetBranchAddress("eta_jet_four",        &dataVector->at(14));
+        chain->SetBranchAddress("btag_jet_four",       &dataVector->at(15));
+        chain->SetBranchAddress("pt_jet_five",         &dataVector->at(16));
+        chain->SetBranchAddress("phi_jet_five",        &dataVector->at(17));
+        chain->SetBranchAddress("eta_jet_five",        &dataVector->at(18));
+        chain->SetBranchAddress("btag_jet_five",       &dataVector->at(19));
+        chain->SetBranchAddress("pt_jet_six",          &dataVector->at(20));
+        chain->SetBranchAddress("phi_jet_six",         &dataVector->at(21));
+        chain->SetBranchAddress("eta_jet_six",         &dataVector->at(22));
+        chain->SetBranchAddress("btag_jet_six",        &dataVector->at(23));
+        chain->SetBranchAddress("pt_jet_seven",        &dataVector->at(24));
+        chain->SetBranchAddress("phi_jet_seven",       &dataVector->at(25));
+        chain->SetBranchAddress("eta_jet_seven",       &dataVector->at(26));
+        chain->SetBranchAddress("btag_jet_seven",      &dataVector->at(27));
+        chain->SetBranchAddress("pt_jet_eight",        &dataVector->at(28));
+        chain->SetBranchAddress("phi_jet_eight",       &dataVector->at(29));
+        chain->SetBranchAddress("eta_jet_eight",       &dataVector->at(30));
+        chain->SetBranchAddress("btag_jet_eight",      &dataVector->at(31));
+        chain->SetBranchAddress("pt_jet_nine",         &dataVector->at(32));
+        chain->SetBranchAddress("phi_jet_nine",        &dataVector->at(33));
+        chain->SetBranchAddress("eta_jet_nine",        &dataVector->at(34));
+        chain->SetBranchAddress("btag_jet_nine",       &dataVector->at(35));
+        chain->SetBranchAddress("pt_jet_ten",          &dataVector->at(36));
+        chain->SetBranchAddress("phi_jet_ten",         &dataVector->at(37));
+        chain->SetBranchAddress("eta_jet_ten",         &dataVector->at(38));
+        chain->SetBranchAddress("btag_jet_ten",        &dataVector->at(39));
+        chain->SetBranchAddress("pt_lep_one",          &dataVector->at(40));
+        chain->SetBranchAddress("phi_lep_one",         &dataVector->at(41));
+        chain->SetBranchAddress("eta_lep_one",         &dataVector->at(42));
+        chain->SetBranchAddress("flav_lep_one",        &dataVector->at(43));
+        chain->SetBranchAddress("pt_lep_two",          &dataVector->at(44));
+        chain->SetBranchAddress("phi_lep_two",         &dataVector->at(45));
+        chain->SetBranchAddress("eta_lep_two",         &dataVector->at(46));
+        chain->SetBranchAddress("flav_lep_two",        &dataVector->at(47));
+
+        chain->SetBranchAddress("pt_lep_three",        &dataVector->at(48));
+        chain->SetBranchAddress("phi_lep_three",       &dataVector->at(49));
+        chain->SetBranchAddress("eta_lep_three",       &dataVector->at(50));
+        chain->SetBranchAddress("flav_lep_three",      &dataVector->at(51));
+    }
     return {weight, dataVector};
 }
 
 void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* dataloader) {
 
-    if (config == BDT_DL || config == NN_DL) {
+    if (config == BDT_DL) {
         dataloader->AddVariable("N_jets", 'F');
         dataloader->AddVariable("N_b", 'F');
         dataloader->AddVariable("N_b_tight", 'F');
@@ -137,7 +243,7 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
         dataloader->AddVariable("MET",            'F');
     }
 
-    if (config == BDT_ML || config == NN_ML) {    
+    if (config == BDT_ML) {    
         dataloader->AddVariable("N_jets", 'F');
         dataloader->AddVariable("N_b", 'F');
         dataloader->AddVariable("N_b_tight", 'F');
@@ -174,6 +280,113 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
         dataloader->AddVariable("massSecTopW",    'F');
         dataloader->AddVariable("MET",            'F');
         dataloader->AddVariable("pt_lep_three",   'F');
+    }
+
+    if (config == NN_DL) {
+        dataloader->AddVariable("pt_jet_one",     'F');
+        dataloader->AddVariable("phi_jet_one",    'F');
+        dataloader->AddVariable("eta_jet_one",    'F');
+        dataloader->AddVariable("btag_jet_one",   'F');
+        dataloader->AddVariable("pt_jet_two",     'F');
+        dataloader->AddVariable("phi_jet_two",    'F');
+        dataloader->AddVariable("eta_jet_two",    'F');
+        dataloader->AddVariable("btag_jet_two",   'F');
+        dataloader->AddVariable("pt_jet_three",   'F');
+        dataloader->AddVariable("phi_jet_three",  'F');
+        dataloader->AddVariable("eta_jet_three",  'F');
+        dataloader->AddVariable("btag_jet_three", 'F');
+        dataloader->AddVariable("pt_jet_four",    'F');
+        dataloader->AddVariable("phi_jet_four",   'F');
+        dataloader->AddVariable("eta_jet_four",   'F');
+        dataloader->AddVariable("btag_jet_four",  'F');
+        dataloader->AddVariable("pt_jet_five",    'F');
+        dataloader->AddVariable("phi_jet_five",   'F');
+        dataloader->AddVariable("eta_jet_five",   'F');
+        dataloader->AddVariable("btag_jet_five",  'F');
+        dataloader->AddVariable("pt_jet_six",     'F');
+        dataloader->AddVariable("phi_jet_six",    'F');
+        dataloader->AddVariable("eta_jet_six",    'F');
+        dataloader->AddVariable("btag_jet_six",   'F');
+        dataloader->AddVariable("pt_jet_seven",   'F');
+        dataloader->AddVariable("phi_jet_seven",  'F');
+        dataloader->AddVariable("eta_jet_seven",  'F');
+        dataloader->AddVariable("btag_jet_seven", 'F');
+        dataloader->AddVariable("pt_jet_eight",   'F');
+        dataloader->AddVariable("phi_jet_eight",  'F');
+        dataloader->AddVariable("eta_jet_eight",  'F');
+        dataloader->AddVariable("btag_jet_eight", 'F');
+        dataloader->AddVariable("pt_jet_nine",    'F');
+        dataloader->AddVariable("phi_jet_nine",   'F');
+        dataloader->AddVariable("eta_jet_nine",   'F');
+        dataloader->AddVariable("btag_jet_nine",  'F');
+        dataloader->AddVariable("pt_jet_ten",     'F');
+        dataloader->AddVariable("phi_jet_ten",    'F');
+        dataloader->AddVariable("eta_jet_ten",    'F');
+        dataloader->AddVariable("btag_jet_ten",   'F');
+        dataloader->AddVariable("pt_lep_one",     'F');
+        dataloader->AddVariable("phi_lep_one",    'F');
+        dataloader->AddVariable("eta_lep_one",    'F');
+        dataloader->AddVariable("flav_lep_one",   'F');
+        dataloader->AddVariable("pt_lep_two",     'F');
+        dataloader->AddVariable("phi_lep_two",    'F');
+        dataloader->AddVariable("eta_lep_two",    'F');
+        dataloader->AddVariable("flav_lep_two",   'F');
+    }
+
+    if (config == NN_ML) {
+        dataloader->AddVariable("pt_jet_one",     'F');
+        dataloader->AddVariable("phi_jet_one",    'F');
+        dataloader->AddVariable("eta_jet_one",    'F');
+        dataloader->AddVariable("btag_jet_one",   'F');
+        dataloader->AddVariable("pt_jet_two",     'F');
+        dataloader->AddVariable("phi_jet_two",    'F');
+        dataloader->AddVariable("eta_jet_two",    'F');
+        dataloader->AddVariable("btag_jet_two",   'F');
+        dataloader->AddVariable("pt_jet_three",   'F');
+        dataloader->AddVariable("phi_jet_three",  'F');
+        dataloader->AddVariable("eta_jet_three",  'F');
+        dataloader->AddVariable("btag_jet_three", 'F');
+        dataloader->AddVariable("pt_jet_four",    'F');
+        dataloader->AddVariable("phi_jet_four",   'F');
+        dataloader->AddVariable("eta_jet_four",   'F');
+        dataloader->AddVariable("btag_jet_four",  'F');
+        dataloader->AddVariable("pt_jet_five",    'F');
+        dataloader->AddVariable("phi_jet_five",   'F');
+        dataloader->AddVariable("eta_jet_five",   'F');
+        dataloader->AddVariable("btag_jet_five",  'F');
+        dataloader->AddVariable("pt_jet_six",     'F');
+        dataloader->AddVariable("phi_jet_six",    'F');
+        dataloader->AddVariable("eta_jet_six",    'F');
+        dataloader->AddVariable("btag_jet_six",   'F');
+        dataloader->AddVariable("pt_jet_seven",   'F');
+        dataloader->AddVariable("phi_jet_seven",  'F');
+        dataloader->AddVariable("eta_jet_seven",  'F');
+        dataloader->AddVariable("btag_jet_seven", 'F');
+        dataloader->AddVariable("pt_jet_eight",   'F');
+        dataloader->AddVariable("phi_jet_eight",  'F');
+        dataloader->AddVariable("eta_jet_eight",  'F');
+        dataloader->AddVariable("btag_jet_eight", 'F');
+        dataloader->AddVariable("pt_jet_nine",    'F');
+        dataloader->AddVariable("phi_jet_nine",   'F');
+        dataloader->AddVariable("eta_jet_nine",   'F');
+        dataloader->AddVariable("btag_jet_nine",  'F');
+        dataloader->AddVariable("pt_jet_ten",     'F');
+        dataloader->AddVariable("phi_jet_ten",    'F');
+        dataloader->AddVariable("eta_jet_ten",    'F');
+        dataloader->AddVariable("btag_jet_ten",   'F');
+        dataloader->AddVariable("pt_lep_one",     'F');
+        dataloader->AddVariable("phi_lep_one",    'F');
+        dataloader->AddVariable("eta_lep_one",    'F');
+        dataloader->AddVariable("flav_lep_one",   'F');
+        dataloader->AddVariable("pt_lep_two",     'F');
+        dataloader->AddVariable("phi_lep_two",    'F');
+        dataloader->AddVariable("eta_lep_two",    'F');
+        dataloader->AddVariable("flav_lep_two",   'F');
+
+        dataloader->AddVariable("pt_lep_three",   'F');
+        dataloader->AddVariable("phi_lep_three",  'F');
+        dataloader->AddVariable("eta_lep_three",  'F');
+        dataloader->AddVariable("flav_lep_three", 'F');
     }
 }
 

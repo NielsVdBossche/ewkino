@@ -18,5 +18,3 @@ ChargeMisID     2016PostVFP/mvaSamples/TTToSemiLeptonic_TuneCP5_erdON_13TeV-powh
 ChargeMisID     2016PostVFP/mvaSamples/TTToSemiLeptonic_TuneCP5down_13TeV-powheg-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v3_2016_ULpostVFP211028_135213000.root         365.34
 ChargeMisID     2016PostVFP/mvaSamples/TTToSemiLeptonic_TuneCP5up_13TeV-powheg-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v3_2016_ULpostVFP211028_135539000.root           365.34
 
-
-

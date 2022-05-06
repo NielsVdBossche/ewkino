@@ -121,20 +121,10 @@ void FourTop::createMVATrainingSamples() {
         TFile* currentOutputFile = new TFile(outputFileName.c_str(), "RECREATE");
         currentOutputFile->cd();
 
-        //TTree* trainingTree_DL = new TTree("DL_tree", "DL_tree");
-        //linkMVAVariables(trainingTree_DL, false);
-        //TTree* trainingTree_ML = new TTree("ML_tree", "ML_tree");
-        //linkMVAVariables(trainingTree_ML, true);
-
         TTree* trainingTree_DL_loose = new TTree("DL_tree_loose", "DL_tree_loose");
         linkMVAVariables(trainingTree_DL_loose, false);
         TTree* trainingTree_ML_loose = new TTree("ML_tree_loose", "ML_tree_loose");
         linkMVAVariables(trainingTree_ML_loose, true);
-
-        //TTree* trainingTree_ML_Norm = new TTree("ML_tree", "ML_tree_NormalizedVariables");
-        //linkMVAVariables(trainingTree_ML_Norm, true);
-        //TTree* trainingTree_ML_loose_Norm = new TTree("ML_tree_loose", "ML_tree_loose_NormalizedVariables");
-        //linkMVAVariables(trainingTree_ML_loose_Norm, true);
 
         std::cout << "Event loop" << std::endl;
 
@@ -158,69 +148,34 @@ void FourTop::createMVATrainingSamples() {
             if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue;
             if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue;
 
+            if (! selection->passLeptonSelection()) continue;
+
             mvaWeight = currentEvent->weight();
             mvaWeight *= reweighter.totalWeight( *currentEvent );
             
             selection->classifyEvent();
             eventClass currClass = selection->getCurrentClass();
-            if (selection->passLeanSelection()) {
-                if (currClass == eventClass::ssdl) {
-                    fillMVAVariables(false);
-                    trainingTree_DL_loose->Fill();
-                } else if (currClass == eventClass::trilep) {
-                    fillMVAVariables(true);
-                    trainingTree_ML_loose->Fill();
-                    //fillMVAVariablesNormalized(false);
-                    //trainingTree_ML_loose_Norm->Fill();
-                } else if (currClass == eventClass::fourlep) {
-                    fillMVAVariables(true);
-                    trainingTree_ML_loose->Fill();
-                    //fillMVAVariablesNormalized(true);
-                    //trainingTree_ML_loose_Norm->Fill();
-                }
-            }
-                /*
-            if (! selection->passBaselineEventSelection())  {
-                continue;
-            }
 
-            if (! selection->passFullEventSelection()) {
-                // Full event selection should be the same as normal event selection.
-                continue;
-            }
-
-            // Build CRW (might expand these)
-            if (selection->numberOfLeps() == 2 && selection->numberOfJets() < 6 && selection->numberOfMediumBJets() == 2) {
-                continue;
-            }
-
-            // Fill histograms
-            if (selection->numberOfLeps() == 2) {
+            if (currClass == eventClass::ssdl) {
                 fillMVAVariables(false);
-                trainingTree_DL->Fill();
-            } else if (selection->numberOfLeps() == 3) {
+                trainingTree_DL_loose->Fill();
+            } else if (currClass == eventClass::trilep) {
                 fillMVAVariables(true);
-                trainingTree_ML->Fill();
-                fillMVAVariablesNormalized(false);
-                trainingTree_ML_Norm->Fill();
-            } else if (selection->numberOfLeps() == 4) {
+                trainingTree_ML_loose->Fill();
+                //fillMVAVariablesNormalized(false);
+                //trainingTree_ML_loose_Norm->Fill();
+            } else if (currClass == eventClass::fourlep) {
                 fillMVAVariables(true);
-                trainingTree_ML->Fill();
-                fillMVAVariablesNormalized(true);
-                trainingTree_ML_Norm->Fill();
+                trainingTree_ML_loose->Fill();
+                //fillMVAVariablesNormalized(true);
+                //trainingTree_ML_loose_Norm->Fill();
             }
-            */
         }
         
         std::cout << trainingTree_ML_loose->GetEntries() << std::endl;
         std::cout << trainingTree_DL_loose->GetEntries() << std::endl;
-
-        //trainingTree_DL->Write(trainingTree_DL->GetName(), TObject::kOverwrite);
-        //trainingTree_ML->Write(trainingTree_ML->GetName(), TObject::kOverwrite);
         trainingTree_DL_loose->Write(trainingTree_DL_loose->GetName(), TObject::kOverwrite);
         trainingTree_ML_loose->Write(trainingTree_ML_loose->GetName(), TObject::kOverwrite);
-        //trainingTree_ML_Norm->Write(trainingTree_ML_Norm->GetName(), TObject::kOverwrite);
-        //trainingTree_ML_loose_Norm->Write(trainingTree_ML_loose_Norm->GetName(), TObject::kOverwrite);
 
         currentOutputFile->Close();
     }
