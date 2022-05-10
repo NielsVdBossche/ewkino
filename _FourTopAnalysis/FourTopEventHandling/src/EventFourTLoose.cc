@@ -3,7 +3,7 @@
 void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
     //if (! passLowMassVeto()) return;
-
+    if (! passPhotonOverlapRemoval()) return;
     if (! passLeanSelection()) {
         if (numberOfLeps() != 3) return;
         if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;

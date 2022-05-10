@@ -127,6 +127,12 @@ class EventFourT {
         
         // HistogramFillers
         //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
+
+
+        // overlap removal
+        bool hasLeptonFromMEExternalConversion();
+        bool leptonFromMEExternalConversion(Lepton* lepton);
+        bool passPhotonOverlapRemoval();
 };
 
 bool selectLeptonsLooseMVA(const Lepton& lepton);

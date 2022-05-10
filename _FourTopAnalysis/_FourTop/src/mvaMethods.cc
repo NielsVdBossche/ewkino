@@ -97,17 +97,17 @@ void FourTop::fillMVAVariables(bool isML) {
     ptLepOne = lightLeps->at(0)->pt();
     phiLepOne = lightLeps->at(0)->phi();
     etaLepOne = lightLeps->at(0)->eta();
-    flavLepOne = lightLeps->at(0)->isMuon();
+    flavLepOne = (lightLeps->at(0)->isMuon() ? 1. : 0.);
     ptLepTwo = lightLeps->at(1)->pt();
     phiLepTwo = lightLeps->at(1)->phi();
     etaLepTwo = lightLeps->at(1)->eta();
-    flavLepTwo = lightLeps->at(1)->isMuon();
+    flavLepTwo = (lightLeps->at(1)->isMuon() ? 1. : 0.);
 
     if (isML) {
         ptLepThree = lightLeps->at(2)->pt();
         phiLepThree = lightLeps->at(2)->phi();
         etaLepThree = lightLeps->at(2)->eta();
-        flavLepThree = lightLeps->at(2)->isMuon();
+        flavLepThree = (lightLeps->at(2)->isMuon() ? 1. : 0.);
     }
 
     bTagPtLead = (jetCol->size() > 0 ? jetCol->at(0)->deepFlavor() : -1.);

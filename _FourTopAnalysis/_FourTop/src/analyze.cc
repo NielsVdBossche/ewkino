@@ -214,8 +214,8 @@ void FourTop::analyze(std::string method) {
             selection->addNewEvent(currentEvent);
 
             // Apply overlap removal & apply triggers
-            if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
-            if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            // if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            // if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
             if (! treeReader->isData() && useUncertainties) {
                 numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
