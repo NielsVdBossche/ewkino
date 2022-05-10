@@ -68,7 +68,9 @@ def generate_model(num_hidden_layers, nodes_hidden_layer, num_input_nodes=30, nu
     # NOTE: Use following settings for the different tasks
     # Any classification: 'categorical_crossentropy' is recommended loss function
     # Regression: 'mean_squared_error' is recommended loss function
-    model.compile(loss='categorical_crossentropy', optimizer=SGD(learning_rate=0.01, momentum=0.4), metrics=['categorical_accuracy',])
+    opt = SGD(lr=0.01, momentum=0.4)
+
+    model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['categorical_accuracy',])
     
     # Save model
     model.save("Models/" + name + ".h5")
@@ -89,7 +91,7 @@ if __name__ == "__main__":
     # altKerasModel()
     num_hidden_layers = [3, 4]
     nodes_hidden_layer = [256]
-    num_input_nodes = [47, 51]
+    num_input_nodes = [46, 49]
     # num_output_nodes = np.linspace()
     for num_input in num_input_nodes: 
         for num_hid in num_hidden_layers: 

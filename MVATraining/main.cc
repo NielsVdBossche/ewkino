@@ -20,6 +20,13 @@ int main(int argc, char const *argv[]) {
         std::cerr << "Mvatrainer requires at least four arguments: <samplelist.txt> treename setup searchOrNot" << std::endl;
         exit(1);
     }
+
+    std::vector< std::string > argvStr( &argv[0], &argv[0] + argc );
+
+    for (auto el : argvStr) {
+        std::cout << el << " ";
+    }
+    std::cout << std::endl;
     // manage input
     // Pass files to a class using a samplelist to order these in categories
     std::string sampleList = argv[1];

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cd /user/nivanden/CMSSW_10_6_27/src
+cd /user/nivanden/CMSSW_10_6_20/src
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scram runtime -sh`
 export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER) 
 
-cd /user/nivanden/ewkino/MVATraining/
+cd /user/nivanden/ewkino/GenLevelStudies/
+./genLevelExec ../sampleLists/FourTopsOnly.txt 
 
-./trainMVAMethodsExec sampleLists/DLTest.txt "$2" "$1" no

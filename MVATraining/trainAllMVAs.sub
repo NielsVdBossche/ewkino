@@ -1,0 +1,12 @@
+executable = trainAllMVAs3.sh
+arguments = "sampleLists/DLTest.txt DL_tree DL_BDT search"
+
+output = /user/nivanden/condor/output/trainAllMVAs_out_$(ClusterId)_$(ProcId)
+error = /user/nivanden/condor/error/trainAllMVAs_err_$(ClusterId)_$(ProcId)
+log = /user/nivanden/condor/logs/trainAllMVAs_log_$(ClusterId)_$(ProcId)
+
+queue
+
+arguments = "sampleLists/DLTest.txt ML_tree ML_BDT search"
+queue
+

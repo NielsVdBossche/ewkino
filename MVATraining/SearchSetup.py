@@ -27,6 +27,8 @@ for setup, tree in zip(setups, trees):
             interstring = ""
             for el in mix:
                 interstring += " " + str(el)
+
+            print("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search" + interstring)
             commandList.append("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search" + interstring)
             
 

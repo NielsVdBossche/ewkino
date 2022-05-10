@@ -10,10 +10,14 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
 
     std::vector<Double_t>* dataVector = nullptr;
-    if (config == BDT_DL || config == NN_DL) {
+    if (config == BDT_DL) {
         dataVector = new std::vector<Double_t>(35);
-    } else if (config == BDT_ML || config == NN_ML) {
+    } else if (config == BDT_ML) {
         dataVector = new std::vector<Double_t>(36);
+    } else if (config == NN_DL) {
+        dataVector = new std::vector<Double_t>(46);
+    } else if (config == NN_ML) {
+        dataVector = new std::vector<Double_t>(49);
     }
 
 
@@ -138,11 +142,11 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("pt_lep_one",          &dataVector->at(40));
         chain->SetBranchAddress("phi_lep_one",         &dataVector->at(41));
         chain->SetBranchAddress("eta_lep_one",         &dataVector->at(42));
-        chain->SetBranchAddress("flav_lep_one",        &dataVector->at(43));
-        chain->SetBranchAddress("pt_lep_two",          &dataVector->at(44));
-        chain->SetBranchAddress("phi_lep_two",         &dataVector->at(45));
-        chain->SetBranchAddress("eta_lep_two",         &dataVector->at(46));
-        chain->SetBranchAddress("flav_lep_two",        &dataVector->at(47));
+        //chain->SetBranchAddress("flav_lep_one",        &dataVector->at(43));
+        chain->SetBranchAddress("pt_lep_two",          &dataVector->at(43));
+        chain->SetBranchAddress("phi_lep_two",         &dataVector->at(44));
+        chain->SetBranchAddress("eta_lep_two",         &dataVector->at(45));
+        //chain->SetBranchAddress("flav_lep_two",        &dataVector->at(47));
     }
 
     if (config == NN_ML) {
@@ -189,16 +193,16 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         chain->SetBranchAddress("pt_lep_one",          &dataVector->at(40));
         chain->SetBranchAddress("phi_lep_one",         &dataVector->at(41));
         chain->SetBranchAddress("eta_lep_one",         &dataVector->at(42));
-        chain->SetBranchAddress("flav_lep_one",        &dataVector->at(43));
-        chain->SetBranchAddress("pt_lep_two",          &dataVector->at(44));
-        chain->SetBranchAddress("phi_lep_two",         &dataVector->at(45));
-        chain->SetBranchAddress("eta_lep_two",         &dataVector->at(46));
-        chain->SetBranchAddress("flav_lep_two",        &dataVector->at(47));
+        //chain->SetBranchAddress("flav_lep_one",        &dataVector->at(43));
+        chain->SetBranchAddress("pt_lep_two",          &dataVector->at(43));
+        chain->SetBranchAddress("phi_lep_two",         &dataVector->at(44));
+        chain->SetBranchAddress("eta_lep_two",         &dataVector->at(45));
+        //chain->SetBranchAddress("flav_lep_two",        &dataVector->at(47));
 
-        chain->SetBranchAddress("pt_lep_three",        &dataVector->at(48));
-        chain->SetBranchAddress("phi_lep_three",       &dataVector->at(49));
-        chain->SetBranchAddress("eta_lep_three",       &dataVector->at(50));
-        chain->SetBranchAddress("flav_lep_three",      &dataVector->at(51));
+        chain->SetBranchAddress("pt_lep_three",        &dataVector->at(46));
+        chain->SetBranchAddress("phi_lep_three",       &dataVector->at(47));
+        chain->SetBranchAddress("eta_lep_three",       &dataVector->at(48));
+        //chain->SetBranchAddress("flav_lep_three",      &dataVector->at(51));
     }
     return {weight, dataVector};
 }
@@ -326,11 +330,11 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
         dataloader->AddVariable("pt_lep_one",     'F');
         dataloader->AddVariable("phi_lep_one",    'F');
         dataloader->AddVariable("eta_lep_one",    'F');
-        dataloader->AddVariable("flav_lep_one",   'F');
+        //dataloader->AddVariable("flav_lep_one",   'F');
         dataloader->AddVariable("pt_lep_two",     'F');
         dataloader->AddVariable("phi_lep_two",    'F');
         dataloader->AddVariable("eta_lep_two",    'F');
-        dataloader->AddVariable("flav_lep_two",   'F');
+        //dataloader->AddVariable("flav_lep_two",   'F');
     }
 
     if (config == NN_ML) {
@@ -377,16 +381,16 @@ void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* da
         dataloader->AddVariable("pt_lep_one",     'F');
         dataloader->AddVariable("phi_lep_one",    'F');
         dataloader->AddVariable("eta_lep_one",    'F');
-        dataloader->AddVariable("flav_lep_one",   'F');
+       // dataloader->AddVariable("flav_lep_one",   'F');
         dataloader->AddVariable("pt_lep_two",     'F');
         dataloader->AddVariable("phi_lep_two",    'F');
         dataloader->AddVariable("eta_lep_two",    'F');
-        dataloader->AddVariable("flav_lep_two",   'F');
+        //dataloader->AddVariable("flav_lep_two",   'F');
 
         dataloader->AddVariable("pt_lep_three",   'F');
         dataloader->AddVariable("phi_lep_three",  'F');
         dataloader->AddVariable("eta_lep_three",  'F');
-        dataloader->AddVariable("flav_lep_three", 'F');
+        //dataloader->AddVariable("flav_lep_three", 'F');
     }
 }
 

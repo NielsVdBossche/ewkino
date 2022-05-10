@@ -5,6 +5,6 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scram runtime -sh`
 export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER) 
 
-cd /user/nivanden/ewkino/MVATraining/
+cd /user/nivanden/ewkino/MVATraining/KerasModelTrainer
 
-./trainMVAMethodsExec sampleLists/DLTest.txt "$2" "$1" no
+python3 ModelGenerator.py

@@ -1,8 +1,12 @@
 universe    =   vanilla
-executable  =   trainMVALean.sh
+executable  =   trainNN.sh
+arguments = "DL_NN DL_tree_loose"
 
 log         =   /user/nivanden/condor/logs/trainNN_$(ClusterId)_$(Process).log
 error       =   /user/nivanden/condor/error/trainNN_$(ClusterId)_$(Process).err
 output      =   /user/nivanden/condor/output/trainNN_$(ClusterId)_$(Process).out
 
-queue arguments in DL_NN, ML_NN
+queue 
+
+arguments = "ML_NN ML_tree_loose"
+queue 

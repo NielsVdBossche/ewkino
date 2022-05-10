@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   genDistributions.sh
+
+log         =   /user/nivanden/condor/logs/GenStudies_$(ClusterId).log
+error       =   /user/nivanden/condor/error/GenStudies_$(ClusterId).err
+output      =   /user/nivanden/condor/output/GenStudies_$(ClusterId).out
+
+queue
