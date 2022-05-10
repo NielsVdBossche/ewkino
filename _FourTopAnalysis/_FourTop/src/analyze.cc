@@ -150,6 +150,7 @@ void FourTop::analyze(std::string method) {
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
     std::vector<std::string> bTagShapeSystematics;
+    std::vector<std::string> JECSourcesGrouped;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -164,6 +165,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
+        bool useSplitJEC = false;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
@@ -194,6 +196,10 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0 && considerBTagShape) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
+            }
+            if (sampleIndex == 0 && useSplitJEC) {
+                JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariations();
+                mgrAll->addSubUncertainties(shapeUncId::JEC, JECSourcesGrouped);
             }
         }
         
@@ -551,7 +557,7 @@ void FourTop::analyze(std::string method) {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
-                } else if (uncID >= shapeUncId::JER_1p93) {
+                } else if ((uncID >= shapeUncId::JER_1p93 && uncID != shapeUncId::JEC) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
@@ -560,45 +566,76 @@ void FourTop::analyze(std::string method) {
                         weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
                                             / reweighter["bTag_shape"]->weight( *currentEvent );
                     }
+                    std::string empty = "";
 
-                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true);
+                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, empty);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
 
-                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false);
+                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false, empty);
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
 
-                    if (upClass == eventClass::ssdl) {
-                        if (selection->getLepton(0)->charge() > 0) subChannelsUp.push_back("++");
-                        else subChannelsUp.push_back("--");
+                    subChannelsUp = GetSubClasses(upClass);
+                    subChannelsDown = GetSubClasses(downClass);
 
-                        if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsUp.push_back("ee");
-                        else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsUp.push_back("mm");
-                        else subChannelsUp.push_back("em");
-                    } else if (upClass == eventClass::trilep) {
-                        if (selection->getMediumLepCol()->hasOSSFPair()) {
-                            subChannelsUp.push_back("OSSF");
-                        } else {
-                            subChannelsUp.push_back("noOSSF");
+                    if ((! onlyCR || unsigned(upClass) < eventClass::ssdl) && upClass != eventClass::fail) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    if ((! onlyCR || unsigned(downClass) < eventClass::ssdl) && downClass != eventClass::fail) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                } else if (uncID == shapeUncId::JEC && useSplitJEC) {
+                    for (std::string jecSource : JECSourcesGrouped) {
+                        if (considerBTagShape) {
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
-                    }
 
-                    if (downClass == eventClass::ssdl) {
-                        if (selection->getLepton(0)->charge() > 0) subChannelsDown.push_back("++");
-                        else subChannelsDown.push_back("--");
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
+                        fillVecUp = selection->fillVector();
+                        singleEntriesUp = selection->singleFillEntries();
+                        fillVec2DUp = selection->fillVector2D();
 
-                        if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsDown.push_back("ee");
-                        else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsDown.push_back("mm");
-                        else subChannelsDown.push_back("em");
-                    } else if (downClass == eventClass::trilep) {
-                        if (selection->getMediumLepCol()->hasOSSFPair()) {
-                            subChannelsDown.push_back("OSSF");
-                        } else {
-                            subChannelsDown.push_back("noOSSF");
-                        }
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource);
+                        fillVecDown = selection->fillVector();
+                        singleEntriesDown = selection->singleFillEntries();
+                        fillVec2DDown = selection->fillVector2D();
+
+                        subChannelsUp = GetSubClasses(upClass);
+                        subChannelsDown = GetSubClasses(downClass);
+                        //if (upClass == eventClass::ssdl) {
+                        //    if (selection->getLepton(0)->charge() > 0) subChannelsUp.push_back("++");
+                        //    else subChannelsUp.push_back("--");
+
+                        //    if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsUp.push_back("ee");
+                        //    else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsUp.push_back("mm");
+                        //    else subChannelsUp.push_back("em");
+                        //} else if (upClass == eventClass::trilep) {
+                        //    if (selection->getMediumLepCol()->hasOSSFPair()) {
+                        //        subChannelsUp.push_back("OSSF");
+                        //    } else {
+                        //        subChannelsUp.push_back("noOSSF");
+                        //    }
+                        //}
+
+                        //if (downClass == eventClass::ssdl) {
+                        //    if (selection->getLepton(0)->charge() > 0) subChannelsDown.push_back("++");
+                        //    else subChannelsDown.push_back("--");
+
+                        //    if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsDown.push_back("ee");
+                        //    else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsDown.push_back("mm");
+                        //    else subChannelsDown.push_back("em");
+                        //} else if (downClass == eventClass::trilep) {
+                        //    if (selection->getMediumLepCol()->hasOSSFPair()) {
+                        //        subChannelsDown.push_back("OSSF");
+                        //    } else {
+                        //        subChannelsDown.push_back("noOSSF");
+                        //    }
+                        //}
+
+                        if ((! onlyCR || unsigned(upClass) < eventClass::ssdl) && upClass != eventClass::fail) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                        if ((! onlyCR || unsigned(downClass) < eventClass::ssdl) && downClass != eventClass::fail) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                     }
                 }
 
@@ -606,9 +643,6 @@ void FourTop::analyze(std::string method) {
                     uncWrapper->fillAllUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
-                } else {
-                    if ((! onlyCR || unsigned(upClass) < eventClass::ssdl) && upClass != eventClass::fail) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                    if ((! onlyCR || unsigned(downClass) < eventClass::ssdl) && downClass != eventClass::fail) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 }
 
                 uncID = uncID + 1;
@@ -658,4 +692,24 @@ bool FourTop::eventPassesTriggers() {
     }
 
     return true;
+}
+
+std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
+    std::vector<std::string> subClasses;
+    if (currClass == eventClass::ssdl) {
+        if (selection->getLepton(0)->charge() > 0) subClasses.push_back("++");
+        else subClasses.push_back("--");
+
+        if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("ee");
+        else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
+        else subClasses.push_back("em");
+    } else if (currClass == eventClass::trilep) {
+        if (selection->getMediumLepCol()->hasOSSFPair()) {
+            subClasses.push_back("OSSF");
+        } else {
+            subClasses.push_back("noOSSF");
+        }
+    }
+
+    return subClasses;
 }

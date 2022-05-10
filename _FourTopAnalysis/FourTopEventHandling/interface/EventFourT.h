@@ -108,7 +108,7 @@ class EventFourT {
         virtual void classifyEvent();
         //void classifyEventLean();
 
-        eventClass classifyUncertainty(shapeUncId id, bool up);
+        eventClass classifyUncertainty(shapeUncId id, bool up, std::string& variation);
         std::vector<double> fillVector();
         std::vector<std::pair<int, double>> singleFillEntries();
         std::vector<std::pair<double, double>> fillVector2D();

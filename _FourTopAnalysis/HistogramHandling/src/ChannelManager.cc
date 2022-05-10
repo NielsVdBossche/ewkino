@@ -165,8 +165,20 @@ void ChannelManager::fillAllUpHistograms(std::vector<std::string>& subs, eventCl
     mapping[evClass]->fillAllUpHistograms(subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }
 
+void ChannelManager::fillAllSubUpHistograms(std::string& subUnc, std::vector<std::string>& subs, eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (! useUncertainties) return;
+    if (evClass == eventClass::fail) return;
+    mapping[evClass]->fillAllSubUpHistograms(subUnc, subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
+}
+
 void ChannelManager::fillAllDownHistograms(std::vector<std::string>& subs, eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
     if (! useUncertainties) return;
     if (evClass == eventClass::fail) return;
     mapping[evClass]->fillAllDownHistograms(subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
+}
+
+void ChannelManager::fillAllSubDownHistograms(std::string& subUnc, std::vector<std::string>& subs, eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    if (! useUncertainties) return;
+    if (evClass == eventClass::fail) return;
+    mapping[evClass]->fillAllSubDownHistograms(subUnc, subs, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
 }

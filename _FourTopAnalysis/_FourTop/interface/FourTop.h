@@ -111,6 +111,8 @@ class FourTop {
         void initFakerate();
         double ChmisIDWeight();
         double FakeRateWeight();
+
+        std::vector<std::string> GetSubClasses(eventClass currClass);
 };
 
 

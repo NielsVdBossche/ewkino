@@ -57,6 +57,10 @@ class Uncertainty {
         void fillUpOrDownSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weight, bool up, unsigned subProc);
         void fillUpOrDown2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weight, bool up, unsigned subProc);
 
+        void fillSubUpOrDownHistograms(std::string& subUnc, std::vector<double>& fillVec, double weight, bool up, unsigned subProc);
+        void fillSubUpOrDownSingleHistograms(std::string& subUnc, std::vector<std::pair<int, double>>& fillVec, double weight, bool up, unsigned subProc);
+        void fillSubUpOrDown2DHistograms(std::string& subUnc, std::vector<std::pair<double, double>>& fillVec, double weight, bool up, unsigned subProc);
+
         bool GetPrintAllVariations() {return printAllVariations;}
         void SetPrintAllVariations(bool printVars) {printAllVariations = printVars;}
 
@@ -67,9 +71,9 @@ class Uncertainty {
 
         void addSubUncertainties(std::vector<std::string>& subUnc);
 
-        void fillSubHistograms(std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc);
-        void fillSubSingleHistograms(std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
-        void fillSub2DHistograms(std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
+        void fillSubHistograms(std::string& subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc);
+        void fillSubSingleHistograms(std::string& subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
+        void fillSub2DHistograms(std::string& subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
 
         virtual void writeHistograms(unsigned subProc);
         void writeSubHistograms(unsigned subProc);
