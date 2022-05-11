@@ -43,6 +43,8 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
 
                 delete selection;
                 selection = new EventFourTLoose();
+            } else if (stringTools::stringContains(it, "region=")) {
+                searchRegion = stringTools::split(it, "=")[1];
             }
         }
 
@@ -73,6 +75,9 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             oss << timestampOutputName;
         } else {
             oss << std::put_time(&tm, "%Y_%m_%d-%H_%M");
+        }
+        if (searchRegion != "All") {
+            oss << "_" << searchRegion;
         }
         oss << "_" << strippedSampleList << ".root";
 

@@ -145,6 +145,10 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             histInfoVec->push_back(HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 36, 78, 150));
             //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
         }
+
+        if (evClass == eventClass::crz4L) {
+            histInfoVec->push_back( HistInfo("inv_mass_other_leppair", "Mll [GeV]", 20, 0, 200));
+        }
         
         histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
         histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));

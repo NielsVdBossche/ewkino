@@ -43,7 +43,7 @@ class FourTop {
 
         // General settings for analysis run
         std::string yearString = "Combi";
-
+        std::string searchRegion = "All";
         // IO-management
         TFile* outfile;
 

@@ -311,8 +311,24 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
 
         triMass = (*l1 + *l2 + *l3).mass();
         fillVal.push_back(triMass);
-    }
 
+        if (selec->numberOfLeps() == 4) {
+            std::pair<std::size_t, std::size_t> indices = selec->getMediumLepCol()->bestZBosonCandidateIndices();
+            std::vector<size_t> relIndices;
+            for (size_t i=0; i<4; i++) {
+                if (i == indices.first || i == indices.second) continue;
+                relIndices.push_back(i);
+            }
+            if (relIndices.size() > 2) fillVal.push_back(0.);
+            else {
+                Lepton* l1New = selec->getLepton(relIndices[0]);
+                Lepton* l2New = selec->getLepton(relIndices[1]);
+                double twoMass = (*l1New + *l2New).mass();
+                fillVal.push_back(twoMass);
+            }
+        }
+    }
+    
     return fillVal;
 }
 
