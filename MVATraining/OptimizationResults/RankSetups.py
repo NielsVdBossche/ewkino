@@ -46,9 +46,21 @@ def extractResultFromFile(file, method, key):
 
     for el in resultType:
         graph = ROOT.gDirectory.Get(mvaName + "_" + el + "_" + key)
-        output.append(graph.Integral())
 
+        numberOfPoints = graph.GetN()
+        area = 0.
+        for i in range(numberOfPoints-1):
+            x1 = graph.GetPointX(i)
+            x2 = graph.GetPointX(i+1)
+            y1 = graph.GetPointY(i)
+            y2 = graph.GetPointY(i+1)
+            area += (x1-x2) * 0.5 * (y1+y2)
+
+        output.append(area)
+
+    f.Close()
     return output
+
 
 def extractResultFromFiles(key):
     result = dict()
