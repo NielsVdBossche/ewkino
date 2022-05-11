@@ -2,6 +2,7 @@ import ROOT
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools
+import csv
 
 ntrees = [1000, 1500, 2000]
 depths = [3, 4, 5, 6]
@@ -53,7 +54,11 @@ def extractResultFromFiles(key):
     result = dict()
     for mix in itertools.product(ntrees, depths, nCuts, shrinkages, minNodeSizes, baggedFractions):
         filename = basename + str(mix[0]) + "_Depth_" + str(mix[1]) + "_nCuts_" + str(mix[2]) + "_shrink_" + str(mix[3]) + "_minNodeSize" + str(mix[4]) + "_baggedFraction_" + str(mix[5]) + ".root"
-        methodname = "DL_BDTG_B_" + str(mix[0]) + "_" + str(mix[1]) + "_" + str(mix[2]) + "_" + str(mix[3]) + "_" + str(mix[4]) + "_" + str(mix[5])
+        if mix[5] == 1.:
+            methodname = "DL_BDTG_B_" + str(mix[0]) + "_" + str(mix[1]) + "_" + str(mix[2]) + "_" + str(mix[3]) + "_" + str(mix[4]) + "_1" 
+        else:
+            methodname = "DL_BDTG_B_" + str(mix[0]) + "_" + str(mix[1]) + "_" + str(mix[2]) + "_" + str(mix[3]) + "_" + str(mix[4]) + "_" + str(mix[5])
+
         result[methodname] = extractResultFromFile(filename, methodname, key)
 
     return result
@@ -71,11 +76,15 @@ def plot2DResultsAlongVariable(results, varNbX, varNbY, testkey):
     return
 
 def sortByBestPerformer(results, testkey):
-    resultsNew = list(results.items())
-    results_arr = np.array(resultsNew)
-    results_arr[results_arr[:, 2].argsort()]
+    resultsNew = []
+    for res in results.items():
+        tmp = [res[0], res[1][0], res[1][1]]
+        resultsNew.append(tmp)
 
-    np.savetxt(testkey+".csv", results_arr, delimiter=",")
+    with open(testkey+".csv", "wb") as f:
+        writer = csv.writer(f)
+        writer.writerows(resultsNew)
+    
     return
 
 
@@ -92,7 +101,6 @@ if __name__ == "__main__":
     #print(listOfKeys)
     #for key in listOfKeys:
     #    extractResultFromFile(filename, method, key)
-        
     for key in listOfKeys:
         results = extractResultFromFiles(key)
         sortByBestPerformer(results, key)
