@@ -38,16 +38,18 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     ReweighterBTagShape** btagReweighter;
     CombinedReweighter reweighter;
+    CombinedSampleReweighter* sampleReweighter = nullptr;
     if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
         uncTranslateMap = mgrAll->getTranslateUnc(); 
         std::cout << "building reweighter" << std::endl;
         btagReweighter = new ReweighterBTagShape*();
         reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
         if (leanEventSelection) {
-            addBTaggingNormFactors(*btagReweighter, "bTagNorms/Lean");
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
         } else {
-            addBTaggingNormFactors(*btagReweighter, "bTagNorms/Original");
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
         }
+        sampleReweighter = createSampleReweighter("ANWeights/SampleNJetSF/");
     }
     
     if (considerRegion == eventClass::fail) {
@@ -306,6 +308,9 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
+
+            if (sampleReweighter && selection->leptonsArePrompt() && nominalClass > eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+
             if ((nominalClass == eventClass::crz3L || nominalClass == eventClass::crz4L || nominalClass == eventClass::cro3L) && st != unsigned(selectionType::ChargeMisDD) && (considerRegion == eventClass::fail || nominalClass == considerRegion)) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
@@ -618,35 +623,6 @@ void FourTop::analyze(std::string method) {
 
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
-                        //if (upClass == eventClass::ssdl) {
-                        //    if (selection->getLepton(0)->charge() > 0) subChannelsUp.push_back("++");
-                        //    else subChannelsUp.push_back("--");
-
-                        //    if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsUp.push_back("ee");
-                        //    else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsUp.push_back("mm");
-                        //    else subChannelsUp.push_back("em");
-                        //} else if (upClass == eventClass::trilep) {
-                        //    if (selection->getMediumLepCol()->hasOSSFPair()) {
-                        //        subChannelsUp.push_back("OSSF");
-                        //    } else {
-                        //        subChannelsUp.push_back("noOSSF");
-                        //    }
-                        //}
-
-                        //if (downClass == eventClass::ssdl) {
-                        //    if (selection->getLepton(0)->charge() > 0) subChannelsDown.push_back("++");
-                        //    else subChannelsDown.push_back("--");
-
-                        //    if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subChannelsDown.push_back("ee");
-                        //    else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subChannelsDown.push_back("mm");
-                        //    else subChannelsDown.push_back("em");
-                        //} else if (downClass == eventClass::trilep) {
-                        //    if (selection->getMediumLepCol()->hasOSSFPair()) {
-                        //        subChannelsDown.push_back("OSSF");
-                        //    } else {
-                        //        subChannelsDown.push_back("noOSSF");
-                        //    }
-                        //}
 
                         if ((! onlyCR || unsigned(upClass) < eventClass::ssdl || (considerRegion != eventClass::fail && upClass != considerRegion)) && upClass != eventClass::fail) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                         if ((! onlyCR || unsigned(downClass) < eventClass::ssdl || (considerRegion != eventClass::fail && downClass != considerRegion)) && downClass != eventClass::fail) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
@@ -726,4 +702,25 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
     }
 
     return subClasses;
+}
+
+CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
+    return nullptr;
+    CombinedSampleReweighter* sampleReweighter = new CombinedSampleReweighter();
+
+    for (auto& samp : treeReader->sampleVector()) {
+        std::string sampleName = samp.fileName();
+        if (stringTools::stringStartsWith(sampleName, "WZTo") || stringTools::stringStartsWith(sampleName, "WZ_")) {
+            sampleReweighter->addReweighter("WZ", std::make_shared< ReweighterSample >("WZ", dir));
+        } //else if (stringTools::stringStartsWith(sampleName, "ZG")) {
+          //  sampleReweighter->addReweighter("ZG", std::make_shared< ReweighterSample >("ZG", dir));
+        //}
+    }
+
+    if (sampleReweighter->IsEmpty()) {
+        delete sampleReweighter;
+        sampleReweighter = nullptr;
+    }
+
+    return sampleReweighter;
 }

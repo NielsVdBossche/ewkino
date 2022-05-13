@@ -27,6 +27,7 @@
 #include "../../../weights/interface/CombinedReweighter.h"
 #include "../../../weights/interface/ConcreteReweighterFactory.h"
 #include "../../../weights/interface/ReweighterBTagShape.h"
+#include "../../SampleSF/interface/CombinedSampleReweighter.h"
 
 class FourTop {
     private:
@@ -113,6 +114,8 @@ class FourTop {
         double FakeRateWeight();
 
         std::vector<std::string> GetSubClasses(eventClass currClass);
+
+        CombinedSampleReweighter* createSampleReweighter(std::string dir);
 };
 
 
