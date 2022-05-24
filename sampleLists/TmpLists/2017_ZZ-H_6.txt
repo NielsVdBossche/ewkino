@@ -1,0 +1,1 @@
+ZZ-H            2017/GluGluToContinToZZTo2mu2tau_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv4.root                                              0.005423

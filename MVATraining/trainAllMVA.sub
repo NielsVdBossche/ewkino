@@ -1,0 +1,978 @@
+executable = trainAllMVA.sh
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 1 0.25"
+
+output = /user/nivanden/condor/output/trainAllMVA_$(ClusterId)_$(ProcId).out
+error = /user/nivanden/condor/error/trainAllMVA_$(ClusterId)_$(ProcId).err
+log = /user/nivanden/condor/logs/trainAllMVA_$(ClusterId)_$(ProcId).log
+
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 3 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 4 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 5 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1000 6 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 3 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 4 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 5 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 1500 6 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 3 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 4 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 5 20 0.1 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.01 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.05 10 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 1 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 1 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 1 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 5 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 5 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 5 1.0"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 10 0.25"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 10 0.5"
+queue
+
+arguments = "sampleLists/DLTest.txt DL_tree_loose DL_BDT search 2000 6 20 0.1 10 1.0"
+queue
+

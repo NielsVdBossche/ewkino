@@ -382,6 +382,18 @@ void Channel::fillDownHistograms(shapeUncId id, unsigned procNumber, std::vector
     uncHistMap[id]->fillUpOrDown2DHistograms(twoDimFillVec, weight, false, procNumber);
 }
 
+void Channel::fillSubUpHistograms(std::string& subUnc,shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillSubUpOrDownHistograms(subUnc, fillVec, weight, true, procNumber);
+    uncHistMap[id]->fillSubUpOrDownSingleHistograms(subUnc, singleHist, weight, true, procNumber);
+    uncHistMap[id]->fillSubUpOrDown2DHistograms(subUnc, twoDimFillVec, weight, true, procNumber);
+}
+
+void Channel::fillSubDownHistograms(std::string& subUnc,shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillSubUpOrDownHistograms(subUnc, fillVec, weight, false, procNumber);
+    uncHistMap[id]->fillSubUpOrDownSingleHistograms(subUnc, singleHist, weight, false, procNumber);
+    uncHistMap[id]->fillSubUpOrDown2DHistograms(subUnc, twoDimFillVec, weight, false, procNumber);
+}
+
 void Channel::fillAllUpHistograms(std::vector<std::string>& subs, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
     uncHistMap[id]->fillUpOrDownHistograms(fillVec, weight, true, procNumber);
     uncHistMap[id]->fillUpOrDownSingleHistograms(singleHist, weight, true, procNumber);
@@ -399,5 +411,26 @@ void Channel::fillAllDownHistograms(std::vector<std::string>& subs, shapeUncId i
 
     for (auto it : subs) {
         subChannels->at(it)->fillDownHistograms(id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
+    }
+}
+
+
+void Channel::fillAllSubUpHistograms(std::string& subUnc, std::vector<std::string>& subs, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillSubUpOrDownHistograms(subUnc, fillVec, weight, true, procNumber);
+    uncHistMap[id]->fillSubUpOrDownSingleHistograms(subUnc, singleHist, weight, true, procNumber);
+    uncHistMap[id]->fillSubUpOrDown2DHistograms(subUnc, twoDimFillVec, weight, true, procNumber);
+
+    for (auto it : subs) {
+        subChannels->at(it)->fillSubUpHistograms(subUnc, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
+    }
+}
+
+void Channel::fillAllSubDownHistograms(std::string& subUnc, std::vector<std::string>& subs, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight) {
+    uncHistMap[id]->fillSubUpOrDownHistograms(subUnc, fillVec, weight, false, procNumber);
+    uncHistMap[id]->fillSubUpOrDownSingleHistograms(subUnc, singleHist, weight, false, procNumber);
+    uncHistMap[id]->fillSubUpOrDown2DHistograms(subUnc, twoDimFillVec, weight, false, procNumber);
+
+    for (auto it : subs) {
+        subChannels->at(it)->fillSubDownHistograms(subUnc, id, procNumber, fillVec, singleHist, twoDimFillVec, weight);
     }
 }

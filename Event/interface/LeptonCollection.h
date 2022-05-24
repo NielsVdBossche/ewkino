@@ -84,6 +84,8 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
         //remove tau leptons from collection
         void removeTaus();
 
+        int sumCharges();
+
 	// build varied collections
 	LeptonCollection electronScaleUpCollection() const;
         LeptonCollection electronScaleDownCollection() const;

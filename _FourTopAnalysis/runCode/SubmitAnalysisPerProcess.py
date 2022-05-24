@@ -8,6 +8,7 @@ import sys
 
 sampleListPath = "../../sampleLists/"
 sampleLists = ["2016PreVFP", "2016PostVFP", "2017", "2018"]
+# sampleLists = ["Data16PreVFP", "Data16PostVFP", "Data17", "Data18"]
 
 outputPath = sampleListPath + "TmpLists/"
 outputSampleLists = []
@@ -34,7 +35,7 @@ for sl in sampleLists:
                 sampleDict[processFilename] = [line]
             else:
                 curr = sampleDict[processFilename]
-                if len(curr) > 2:
+                if len(curr) >= 1:
                     count += 1
                     processFilename = process + "_" + str(count)
                     sampleDict[processFilename] = [line]

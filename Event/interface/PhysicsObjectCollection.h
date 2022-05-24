@@ -46,6 +46,7 @@ template< typename ObjectType > class PhysicsObjectCollection {
 
         //apply a user specified selection
         void selectObjects( bool (&passSelection)( const ObjectType& ) );
+        void eraseIndex(size_type);
 
         //return a vector of all possible object pairs
         std::vector< std::pair< std::shared_ptr< ObjectType >, std::shared_ptr< ObjectType > > > pairCollection() const;
@@ -106,6 +107,10 @@ template< typename ObjectType > void PhysicsObjectCollection< ObjectType >::sele
             ++it;
         }
     }
+}
+
+template< typename ObjectType > void PhysicsObjectCollection< ObjectType >::eraseIndex(size_type index) {
+    collection.erase(cbegin() + index);
 }
 
 template< typename ObjectType > typename PhysicsObjectCollection< ObjectType >::size_type PhysicsObjectCollection< ObjectType >::count( bool (ObjectType::*passSelection)() const ) const{

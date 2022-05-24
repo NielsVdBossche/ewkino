@@ -194,6 +194,7 @@ bool analysisTools::fileIs2017( const std::string& filePath ){
         || stringTools::stringContains( filePath, "_2017_v" )
         || stringTools::stringStartsWith( stringTools::fileNameFromPath( filePath ), "2017" )
         || stringTools::stringContains(filePath, "Summer20UL17")
+        || stringTools::stringContains(filePath, "Data-UL2017")
     );
 }
 

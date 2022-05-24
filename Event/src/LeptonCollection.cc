@@ -437,6 +437,15 @@ void LeptonCollection::removeTaus(){
     selectObjects( &Lepton::isLightLepton );
 }
 
+int LeptonCollection::sumCharges() {
+    int sum = 0;
+    for( const_iterator l1It = cbegin(); l1It != cend(); ++l1It ){
+        sum += (*l1It)->charge();
+    }
+    return sum;
+}
+
+
 LeptonCollection LeptonCollection::buildVariedElectronCollection(
 		    Electron (Electron::*variedElectron)() const ) const{
     std::vector< std::shared_ptr< Lepton > > lepVector;

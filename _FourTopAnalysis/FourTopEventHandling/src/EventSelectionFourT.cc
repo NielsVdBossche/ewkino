@@ -63,14 +63,13 @@ void EventFourT::objectSelection() {
 
     event->selectFOLeptons();
 
-    if (nLep == 3) {
-        LeptonCollection looseWPLeptons(*looseLeps);
-        looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
-        if (looseWPLeptons.size() - 3 == 1) {
-            delete tightLeps;
-            tightLeps = new LeptonCollection(looseWPLeptons); 
-            nLep = 4;
-        }
+    if (tightLeps->size() == 3) {
+    //    LeptonCollection looseWPLeptons(*looseLeps);
+    //    looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
+    //    if (looseWPLeptons.size() - 3 == 1) {
+    //        delete tightLeps;
+    //        tightLeps = new LeptonCollection(looseWPLeptons); 
+    //    }
     }
 
     *mediumLeps = tightLeps;
@@ -107,7 +106,7 @@ bool EventFourT::passBaselineEventSelection() {
 
 
     // 1 bjets
-    if (bTagJets->size() < 1) return false;
+    if (nMediumB < 1) return false;
 
 
     if (nLep < 4 && ht < 300) return false;
@@ -123,20 +122,25 @@ bool EventFourT::passLeptonSelection() {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (foLeps->size() != tightLeps->size()) return false;
+        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
+        event->selectTightLeptons();
     } else if (selType == MCPrompt) {
         // tight and prompt and no charge misID
         // or also FO and prompt with negative weight?
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (foLeps->size() != tightLeps->size()) return false;
+        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
         if (! leptonsArePrompt()) return false;
+        event->selectTightLeptons();
+
         // check if any lepton is nonprompt or charge misIDd
     } else if (selType == ChargeMisDD) {
         // tight but OS events
         if (tightLeps->size() != 2) return false;
         if (! tightLeps->hasOSPair()) return false;
+        event->selectTightLeptons();
+
     } else if (selType == NPDD) {
         // FO  with at least 1 non tight
         if (foLeps->size() < 2) return false;
@@ -149,17 +153,18 @@ bool EventFourT::passLeptonSelection() {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
+        event->selectTightLeptons();
         if (foLeps->size() != tightLeps->size()) return false;
     } else if (selType == MCNoChargeMisID) {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (foLeps->size() != tightLeps->size()) return false;
+        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
     } else if (selType == MCNoNP) {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (foLeps->size() != tightLeps->size()) return false;
+        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
     }
     
     nLep = (*mediumLeps)->size();
@@ -198,11 +203,10 @@ bool EventFourT::passLowMassVeto() {
 
 bool EventFourT::passZBosonVeto() {
     // Reject OSSF lepton pairs with inv mass close to Z boson mass
-    if (event->hasOSSFLeptonPair()) {
-        double mass = event->bestZBosonCandidateMass();
-        //if (mass > 76 && mass < 106) return false;
-        if (fabs(mass - particle::mZ) < 7.5) {
-            currentClass = eventClass::crz;
+    if (numberOfLeps() < 3) return true;
+    if ((*mediumLeps)->hasOSSFPair()) {
+        double mass = (*mediumLeps)->bestZBosonCandidateMass();
+        if (fabs(mass - particle::mZ) < 15.) {
             return false;
         }
     }
@@ -210,26 +214,32 @@ bool EventFourT::passZBosonVeto() {
     return true;
 }
 
+bool EventFourT::passSingleZBosonVeto() {
+    LeptonCollection* tmp = new LeptonCollection(**mediumLeps);
+    std::pair< std::vector< std::shared_ptr< Lepton > >::size_type, std::vector< std::shared_ptr< Lepton > >::size_type > indices = tmp->bestZBosonCandidateIndices();
+    tmp->eraseIndex(indices.first);
+    tmp->eraseIndex(indices.second);
+
+    if (tmp->hasOSSFPair()) {
+        double mass = tmp->bestZBosonCandidateMass();
+        if (fabs(mass - particle::mZ) < 7.5) {
+            delete tmp;
+            return false;
+        }
+    }
+    delete tmp;
+    return true;
+}
+
+
 bool EventFourT::passLeanSelection() {
-    //if (! passLeptonSelection());
-    //if (nLep < 2) return false; // atm we check our tight leps here, for nonprompt est, this becomes FO
-    //if (nLep == 2 && (*mediumLeps)->hasOSPair()) return false;
-
     if ((**mediumLeps)[0].pt() < 25 || (**mediumLeps)[1].pt() < 20) return false;
-    //if (met < 25) return false;
 
-    //if (nLep == 2 && nJets < 4) return false;
-    //if (nLep == 3 && nJets < 3) return false;
-    //if (nLep == 4 && nJets < 2) return false;
     if (nJets < 2) return false;
 
-    //if (nLep < 4 && event->numberOfLooseBTaggedJets() < 2) return false;
     if (event->numberOfLooseBTaggedJets() < 1) return false;
 
     if (nLep < 4 && ht < 200) return false;
-    //if (nLep == 2 && ht < 280) return false;
-    //if (nLep == 3 && ht < 220) return false;
-    //if (nLep == 4 && ht < 200) return false;
     
     return true;
 }
@@ -255,7 +265,7 @@ bool EventFourT::leptonsAreNotChargeMisMatch() {
     return true;
 }
 
-eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
+eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& variation) {
     //if JER
     if (id == shapeUncId::JER_1p93) {
         if (up) {
@@ -280,7 +290,7 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
             bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
-    } else if (id == shapeUncId::JEC) {
+    } else if (id == shapeUncId::JEC && variation == "") {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
@@ -291,6 +301,18 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up) {
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECDown().pt();
+        }
+    } else if (id == shapeUncId::JEC && variation != "") {
+        if (up) {
+            jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection(variation));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetJECUp(variation).pt();
+        } else {
+            jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection(variation));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetJECDown(variation).pt();
         }
     }
 

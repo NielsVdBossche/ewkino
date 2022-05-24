@@ -97,6 +97,7 @@ class EventFourT {
         bool passFullEventSelection();
         bool passLeanSelection();
         bool passZBosonVeto();
+        bool passSingleZBosonVeto();
         bool passLowMassVeto();
 
         bool leptonsArePrompt();
@@ -107,7 +108,7 @@ class EventFourT {
         virtual void classifyEvent();
         //void classifyEventLean();
 
-        eventClass classifyUncertainty(shapeUncId id, bool up);
+        eventClass classifyUncertainty(shapeUncId id, bool up, std::string& variation);
         std::vector<double> fillVector();
         std::vector<std::pair<int, double>> singleFillEntries();
         std::vector<std::pair<double, double>> fillVector2D();
@@ -126,6 +127,12 @@ class EventFourT {
         
         // HistogramFillers
         //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
+
+
+        // overlap removal
+        bool hasLeptonFromMEExternalConversion();
+        bool leptonFromMEExternalConversion(Lepton* lepton);
+        bool passPhotonOverlapRemoval();
 };
 
 bool selectLeptonsLooseMVA(const Lepton& lepton);

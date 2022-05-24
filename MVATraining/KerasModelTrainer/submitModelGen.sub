@@ -1,0 +1,8 @@
+universe    =   vanilla
+executable  =   modelGen.sh
+
+log         =   /user/nivanden/condor/logs/modelGen_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/modelGen_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/modelGen_$(ClusterId)_$(Process).out
+
+queue 

@@ -1,0 +1,2 @@
+VVV            2017/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                                                                                        0.2086
+VVV            2017/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                                                                                        0.1651

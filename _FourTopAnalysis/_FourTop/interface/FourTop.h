@@ -27,6 +27,7 @@
 #include "../../../weights/interface/CombinedReweighter.h"
 #include "../../../weights/interface/ConcreteReweighterFactory.h"
 #include "../../../weights/interface/ReweighterBTagShape.h"
+#include "../../SampleSF/interface/CombinedSampleReweighter.h"
 
 class FourTop {
     private:
@@ -43,10 +44,10 @@ class FourTop {
 
         // General settings for analysis run
         std::string yearString = "Combi";
-
+        std::string searchRegion = "All";
         // IO-management
         TFile* outfile;
-        
+
         Event* currentEvent = nullptr;
         EventFourT* selection;
 
@@ -55,14 +56,24 @@ class FourTop {
         Double_t n_b_tight, dRleps, aziAngle, ht;
         Double_t massToPt;
         Double_t min_dr_lep_b, sec_min_dr_lep_b;
-        Double_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
-        Double_t ptLepOne, ptLepTwo, ptLepThree;
         Double_t bTagLead, bTagSub, bTagThird, bTagFourth;
         Double_t bTagPtLead, bTagPtSub, bTagPtThird, bTagPtFourth;
-        Double_t ptJetTwo, ptJetThree, ptLepFour;
         Double_t massBestTop, massBestTopW, massSecTop, massSecTopW;
         Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
         Double_t m2bb, m2lblb, mvaWeight;
+
+        Double_t ptJetOne, phiJetOne, etaJetOne, btagJetOne, 
+                    ptJetTwo, phiJetTwo, etaJetTwo, btagJetTwo, 
+                    ptJetThree, phiJetThree, etaJetThree, btagJetThree, 
+                    ptJetFour, phiJetFour, etaJetFour, btagJetFour, ptJetFive, 
+                    phiJetFive, etaJetFive, btagJetFive, ptJetSix, phiJetSix, 
+                    etaJetSix, btagJetSix, ptJetSeven, phiJetSeven, etaJetSeven, 
+                    btagJetSeven, ptJetEight, phiJetEight, etaJetEight, btagJetEight, 
+                    ptJetNine, phiJetNine, etaJetNine, btagJetNine, ptJetTen, 
+                    phiJetTen, etaJetTen, btagJetTen, ptLepOne, phiLepOne, 
+                    etaLepOne, flavLepOne, ptLepTwo, phiLepTwo, etaLepTwo, flavLepTwo,                    
+                    ptLepThree, phiLepThree, etaLepThree, flavLepThree;
+                    
         MVAHandler_4T *mva_DL = nullptr, *mva_ML = nullptr;
 
 
@@ -83,11 +94,11 @@ class FourTop {
         // Event selection components
         void setYearString(std::string year) {yearString = year;}
         std::string getYearString() {return yearString;}
-        
+
         // Main loop functions
         void analyze(std::string method);
         void testRuns();
-  
+
         void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();
 
@@ -101,6 +112,10 @@ class FourTop {
         void initFakerate();
         double ChmisIDWeight();
         double FakeRateWeight();
+
+        std::vector<std::string> GetSubClasses(eventClass currClass);
+
+        CombinedSampleReweighter* createSampleReweighter(std::string dir);
 };
 
 

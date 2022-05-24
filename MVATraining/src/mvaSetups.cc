@@ -2,16 +2,17 @@
 #include "TMVA/PyMethodBase.h"
 
 TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile) {
-    std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
+    //std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
+    std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=";
 
     analysType += "Multiclass";
 
-    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_OrigSel_TEST_", outputFile, analysType.c_str());
+    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_LeanSel", outputFile, analysType.c_str());
 
     return factory;
 }
 
-void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, double shrinkage, int cuts, bool baggedBoost) {
+void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, int cuts, double shrinkage, int minNodeSize, double baggedSampleFraction) {
     std::stringstream optionString;
     std::stringstream nameString;
 
@@ -28,12 +29,12 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
     optionString << ":BoostType=Grad:Shrinkage=" << std::setprecision(2) << shrinkage;
     nameString << "G_";
     
-    if (baggedBoost) {
-        optionString << ":UseBaggedBoost:BaggedSampleFraction=0.50";
-        nameString << "B_";
-    }
+    optionString << ":UseBaggedBoost:BaggedSampleFraction=" << std::setprecision(2) << baggedSampleFraction;
+    nameString << "B_";
 
-    nameString << nTrees << "_" << depth << "_" << std::setprecision(2) << shrinkage << "_" << cuts;
+    optionString << ":MinNodeSize="   << minNodeSize << "%";
+
+    nameString << nTrees << "_" << depth << "_" << cuts << "_" << std::setprecision(2) << shrinkage << "_" <<  minNodeSize << "_" << std::setprecision(2) << baggedSampleFraction;
 
     optionString << ":IgnoreNegWeightsInTraining";
     std::cout << optionString.str() << std::endl;
@@ -44,19 +45,11 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
 
 void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
     if (initsetup == "DL_NN") {
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_2x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_35_3_2_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_3x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_35_3_3_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_35_3_4_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_2x512", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_35_3_2_512.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_3x512", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_35_3_3_512.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_4x512", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_35_3_4_512.h5:NumEpochs=20:BatchSize=256");
+        //factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_3x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_48_3_3_256.h5:NumEpochs=20:BatchSize=256");
+        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_46_3_4_256.h5:NumEpochs=20:BatchSize=256");
     } else {
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_2x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_36_3_2_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_3x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_36_3_3_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_36_3_4_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_2x512", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_36_3_2_512.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_3x512", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_36_3_3_512.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_4x512", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_36_3_4_512.h5:NumEpochs=20:BatchSize=256");
+        //factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_3x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_52_3_3_256.h5:NumEpochs=20:BatchSize=256");
+        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_49_3_4_256.h5:NumEpochs=20:BatchSize=256");
     }
 }
 
@@ -71,7 +64,7 @@ void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* datalo
         for (int j=0; j < 4; j++) { //depth
             for (int k=0; k < 3; k++) { // shrink
                 for (int l=0; l < 2; l++) { // cuts
-                    addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
+                    //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
                     //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], true);
                 }
             }

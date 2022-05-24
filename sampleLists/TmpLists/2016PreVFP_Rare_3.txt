@@ -1,3 +1,0 @@
-Rare            2016PreVFP/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016preVFP_ext1-v2_singlelepton_MC_2016_ULpreVFPv3.root                                                                                    0.05565
-Rare            2016PreVFP/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016preVFP-v2_singlelepton_MC_2016_ULpreVFPv3.root                                                                                         0.05565
-Rare            ../skims_v2/2016PreVFP/ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFP_Nov.root                            0.6204

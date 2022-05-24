@@ -43,6 +43,8 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
 
                 delete selection;
                 selection = new EventFourTLoose();
+            } else if (stringTools::stringContains(it, "region=")) {
+                searchRegion = stringTools::split(it, "=")[1];
             }
         }
 
@@ -72,7 +74,10 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         if (timestampOutputName != "") {
             oss << timestampOutputName;
         } else {
-            oss << std::put_time(&tm, "%d_%m_%Y-%H_%M");
+            oss << std::put_time(&tm, "%Y_%m_%d-%H_%M");
+        }
+        if (searchRegion != "All") {
+            oss << "_" << searchRegion;
         }
         oss << "_" << strippedSampleList << ".root";
 
@@ -104,7 +109,13 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         #endif
         
         std::stringstream time;
-        time << std::put_time(&tm, "%Y_%m_%d-%H_%M"); //);"%d_%m_%Y-%H_%M");
+
+        if (timestampOutputName != "") {
+            time << timestampOutputName;
+        } else {
+            time << std::put_time(&tm, "%Y_%m_%d-%H_%M");
+        }
+        //time << std::put_time(&tm, "%Y_%m_%d-%H_%M"); //);"%d_%m_%Y-%H_%M");
         TObjString timestamp(time.str().c_str());
         outfile->WriteObject(&timestamp, "Timestamp");
         if (argvString.size() > 2) {
@@ -210,7 +221,7 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
         // do basic selection
         event.cleanJetsFromFOLeptons();
-        event.jetCollection().selectGoodJets();
+        event.selectGoodJets();
         event.removeTaus();
         event.cleanElectronsFromLooseMuons();
         event.selectTightLeptons();

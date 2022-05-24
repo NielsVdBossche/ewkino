@@ -20,6 +20,13 @@ int main(int argc, char const *argv[]) {
         std::cerr << "Mvatrainer requires at least four arguments: <samplelist.txt> treename setup searchOrNot" << std::endl;
         exit(1);
     }
+
+    std::vector< std::string > argvStr( &argv[0], &argv[0] + argc );
+
+    for (auto el : argvStr) {
+        std::cout << el << " ";
+    }
+    std::cout << std::endl;
     // manage input
     // Pass files to a class using a samplelist to order these in categories
     std::string sampleList = argv[1];
@@ -38,20 +45,31 @@ int main(int argc, char const *argv[]) {
 
     TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf);
 
-    TFile* outfile = new TFile(("Classifiers/FourTopClassification_OrigSel_TEST_" + setup + ".root").c_str() ,"RECREATE");
+    TFile* outfile;
+
+    if (searchSetup == "search") {
+        outfile = new TFile(("Classifiers/FourTopClassification_LeanSel_Search_nTrees_" + std::string(argv[5]) + "_Depth_" + std::string(argv[6]) + "_nCuts_" + std::string(argv[7]) + "_shrink_" + std::string(argv[8]) + "_minNodeSize" + std::string(argv[9]) + "_baggedFraction_" + std::string(argv[10]) + ".root").c_str() ,"RECREATE");
+    } else {
+        outfile = new TFile(("Classifiers/FourTopClassification_LeanSel_" + setup + ".root").c_str() ,"RECREATE");
+    }
     TMVA::Factory* factory = mvaSetupManager::buildFactory(conf, outfile);
 
     // class manages a dataloader and a factory, as well as settings for the mva's
 
     // Main part of calling training etc
 
-    std::cout << "READY FOR ADDING METHODS" << std::endl;
     if (conf < mvaConfiguration::NN_DL) {
-        std::cout << "DOING ADDITION OF BDTS" << std::endl;
-
-        mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 0.10, 20, true);
-
-        if (searchSetup == "search") mvaSetupManager::searchBDT(factory, data, setup);
+        if (searchSetup == "search") {
+            int ntrees = std::stoi(argv[5]);
+            int maxDepth = std::stoi(argv[6]);
+            int ncuts = std::stoi(argv[7]);
+            double shrinkage = std::stod(argv[8]);
+            int minNodeSize = std::stoi(argv[9]);
+            double baggedSampleFraction = std::stod(argv[10]);
+            mvaSetupManager::addBDT(factory, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
+        } else {
+            mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 20, 0.10, 5, 0.6);
+        }
         //factory->OptimizeAllMethods("ROCIntegral","FitGA");
         
     } else {

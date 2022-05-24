@@ -20,13 +20,13 @@ void MVAHandler_4T::initReader() {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
         if (lean) {
-            weightFilePath += "FourTopClassification_New_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+            weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
         }
     } else if (currentConfig == TriClass_ML) {
         if (lean) {
-            weightFilePath += "FourTopClassification_New_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+            weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -104,11 +104,11 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
     }
 
     if (fourLep) {
-        identifier += "_4L";
+        identifier += "_SR-4L";
     } else if (isML) {
-        identifier += "_3L";
+        identifier += "_SR-3L";
     } else {
-        identifier += "_DL";
+        identifier += "_SR-2L";
     }
 
     std::map<MVAClasses, std::string> translator = {
@@ -129,7 +129,7 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis , 100, 0., 1.));
+        histInfoVec->push_back(HistInfo(name, xaxis , 60, 0.4, 1.));
     }
 
     return histInfoVec;
