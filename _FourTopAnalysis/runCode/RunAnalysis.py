@@ -2,6 +2,7 @@
 import sys
 import os
 from datetime import datetime
+import ClearCondorFiles
 
 def PrepareJobDescription(additionalArguments):
     argstring = "$(Samplelist) $(Method)"
@@ -142,6 +143,8 @@ if __name__ == "__main__":
 
     # print queuestring at end of job description
     os.system('condor_submit AnalysisJob.sub')
+
+    ClearCondorFiles.deleteAllOldCondorfiles()
 
 
 # future plans: also submit job to condor waiting on previous job to finish
