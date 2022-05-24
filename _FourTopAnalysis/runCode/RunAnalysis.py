@@ -67,6 +67,8 @@ if __name__ == "__main__":
             specificEra = option.split('=')[1]
         elif optionLower == "-data":
             runData = True
+        elif "region=" in optionLower:
+            additionalArgs.append(option)
         else:
             print("Unrecognized option: {}. Usage: ./RunAnalysis.py <AnalysisType> [-CR] [-LEAN] [path/to/samplelist] [era=[16Pre, 16Post, 17, 18]]".format(option))
 
