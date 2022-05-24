@@ -11,9 +11,9 @@ def deleteOldFiles(path):
 
 
 def deleteAllOldCondorfiles():
-    subdirs = ["output", "error", "log"]
+    subdirs = ["output", "error", "logs"]
     path = "/user/nivanden/condor/"
     for sub in subdirs:
-        deleteOldFiles(path+sub)
+        deleteOldFiles(path+sub+"/")
 
 
