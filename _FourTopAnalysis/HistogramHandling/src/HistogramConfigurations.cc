@@ -126,7 +126,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "N_LooseB_jets_" + flag, "N_{b}", 6, -0.5, 5.5),
             HistInfo( "N_MediumB_jets_" + flag, "N_{b}", 6, -0.5, 5.5),
             HistInfo( "N_TightB_jets_" + flag, "N_{b}", 6, -0.5, 5.5),
-            HistInfo( "N_jets_" + flag, "N_{jets}", 8, -0.5, 6.5),
+            HistInfo( "N_jets_" + flag, "N_{jets}", 7, -0.5, 6.5),
 
             HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 800),
             HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 15, 0, 300),
