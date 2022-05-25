@@ -24,7 +24,7 @@ double ReweighterSample::weight(const Event& event, const int njet, double (&ret
     if (stringTools::stringStartsWith(sampleName, filterName)) {
         return retrieveValue( nJetDistribution.get(), njet);
     } else {
-        return 1.;
+        return 1.; 
     }
 }
 

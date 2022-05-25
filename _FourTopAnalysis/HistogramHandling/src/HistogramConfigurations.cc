@@ -150,13 +150,13 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             histInfoVec->push_back( HistInfo("inv_mass_other_leppair", "Mll [GeV]", 20, 0, 200));
         }
         
-        histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "muonID_" + flag, "muIDWeight", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "electronReco_pTBelow20_" + flag, "electronReco_pTBelow20", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "electronReco_pTAbove20_" + flag, "electronReco_pTAbove20", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "bTag_shape_" + flag, "bTag_shape", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "prefire_" + flag, "prefire", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "muonID_" + flag, "muIDWeight", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "electronReco_pTBelow20_" + flag, "electronReco_pTBelow20", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "electronReco_pTAbove20_" + flag, "electronReco_pTAbove20", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "bTag_shape_" + flag, "bTag_shape", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "prefire_" + flag, "prefire", 100, 0.5, 1.5));
 
 
     }

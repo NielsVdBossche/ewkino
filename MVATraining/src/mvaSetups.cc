@@ -46,10 +46,10 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
 void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
     if (initsetup == "DL_NN") {
         //factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_3x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_48_3_3_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_46_3_4_256.h5:NumEpochs=20:BatchSize=256");
+        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_46_3_4_256.h5:NumEpochs=40:BatchSize=128");
     } else {
         //factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_3x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_52_3_3_256.h5:NumEpochs=20:BatchSize=256");
-        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_49_3_4_256.h5:NumEpochs=20:BatchSize=256");
+        factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_ML_NN_4x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_49_3_4_256.h5:NumEpochs=40:BatchSize=128");
     }
 }
 

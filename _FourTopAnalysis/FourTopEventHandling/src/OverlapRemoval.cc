@@ -41,35 +41,35 @@ bool EventFourT::passPhotonOverlapRemoval(){
 
     bool usePhotonSample = false;
     // method 1: check for prompt leptons matched to photons without provenanceConversion
-    //if( hasLeptonFromMEExternalConversion( event ) ) usePhotonSample = true;
+    if( hasLeptonFromMEExternalConversion()) usePhotonSample = true;
     // method 2: simply check if all leptons are prompt (note: need to select FO leptons first!)
-    if( leptonsArePrompt()) {
-        // if all leptons are prompt -> use ZG sample
-        usePhotonSample = true;
-        // BUT potential problem in ZG samples with missing phase space (gen level photon cut)
-        // solved for 2016 by using LoosePtlPtg sample (? still checking)
-        // for 2017/2018, these samples have other problems, instead use DY for low pt part
-        //if(event.is2016()) usePhotonSample = true;
-        //else{}
-
-        // Reasoning behind this:
-        // DY has no prompt contribution here, so only nonprompt contribution and this should come from data.
-        // ZG's prompt contribution comes from events where the lepton is also found to be prompt -> lepton comes from photon which is linked to ME
-        // For TTG/ttbar:
-        // ttbar has 3 contributions: tt+photon, tt with NP, tt with charge mis ID-> chargeflip
-        // first is MC, others are dd. 
-        // if we use dd backgrounds, it should be fine to use this prompt differentiation
-        // if we use MC backgrounds, this gets more complicated -> if all leptons are prompt we should still check chargeflips
-        // if a chargeflip occurs we should use TTTo samples
-        // if not (i.e. all leptons are prompt but no flip) -> ttg
-        // if not all leptons prompt we use inclusive
-        if (selType == selectionType::MCAll && leptonsAreNotChargeFlip()) {
-            usePhotonSample = true;
-        } else if (selType == selectionType::MCAll) {
-            usePhotonSample = false;
-        }
-    }
-
+    //if( leptonsArePrompt()) {
+    //    // if all leptons are prompt -> use ZG sample
+    //    usePhotonSample = true;
+    //    // BUT potential problem in ZG samples with missing phase space (gen level photon cut)
+    //    // solved for 2016 by using LoosePtlPtg sample (? still checking)
+    //    // for 2017/2018, these samples have other problems, instead use DY for low pt part
+    //    //if(event.is2016()) usePhotonSample = true;
+    //    //else{}
+//
+    //    // Reasoning behind this:
+    //    // DY has no prompt contribution here, so only nonprompt contribution and this should come from data.
+    //    // ZG's prompt contribution comes from events where the lepton is also found to be prompt -> lepton comes from photon which is linked to ME
+    //    // For TTG/ttbar:
+    //    // ttbar has 3 contributions: tt+photon, tt with NP, tt with charge mis ID-> chargeflip
+    //    // first is MC, others are dd. 
+    //    // if we use dd backgrounds, it should be fine to use this prompt differentiation
+    //    // if we use MC backgrounds, this gets more complicated -> if all leptons are prompt we should still check chargeflips
+    //    // if a chargeflip occurs we should use TTTo samples
+    //    // if not (i.e. all leptons are prompt but no flip) -> ttg
+    //    // if not all leptons prompt we use inclusive
+    //    if (selType == selectionType::MCAll && leptonsAreNotChargeFlip()) {
+    //        usePhotonSample = true;
+    //    } else if (selType == selectionType::MCAll) {
+    //        usePhotonSample = false;
+    //    }
+    //}
+//
     if (isInclusiveSample) {
         return !usePhotonSample;
     } else if(isPhotonSample) {

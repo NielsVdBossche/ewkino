@@ -93,7 +93,7 @@ def sortByBestPerformer(results, testkey):
         tmp = [res[0], res[1][0], res[1][1]]
         resultsNew.append(tmp)
 
-    with open(testkey+".csv", "wb") as f:
+    with open(testkey+".csv", "w") as f:
         writer = csv.writer(f)
         writer.writerows(resultsNew)
     
