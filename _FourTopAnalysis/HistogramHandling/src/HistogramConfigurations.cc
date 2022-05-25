@@ -138,6 +138,12 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
 
         };
 
+        if (evClass != eventClass::crwz && evClass != eventClass::cr_conv) {
+            histInfoVec->push_back(HistInfo( "m2ll_" + flag, "MT2LL", 15, 0, 150));
+            histInfoVec->push_back(HistInfo( "m2bb_" + flag, "MT2BB", 12, 80, 200));
+            histInfoVec->push_back(HistInfo( "m2lblb_" + flag, "MT2BLBL", 15, 0, 150));
+        }
+        
         if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv) {
             histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 15, 0, 150) );
             histInfoVec->push_back( HistInfo( "leptonEtaThird_" + flag, "#eta (l3)", 12, -2.4, 2.4) );
@@ -148,6 +154,10 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
 
         if (evClass == eventClass::crz4L) {
             histInfoVec->push_back( HistInfo("inv_mass_other_leppair", "Mll [GeV]", 20, 0, 200));
+        }
+
+        if (evClass == eventClass::crwz) {
+            histInfoVec->push_back( HistInfo( "mtLepNotInZMET_" + flag, "M_{T}(W) [GeV]", 16, 40, 120));
         }
         
         //histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));

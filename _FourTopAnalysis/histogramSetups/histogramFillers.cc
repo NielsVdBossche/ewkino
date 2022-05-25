@@ -298,6 +298,18 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
 
     }
 
+    if (selec->getCurrentClass() != eventClass::crwz && selec->getCurrentClass() != eventClass::cr_conv) {
+        MVAHandler_4T* mva;
+        if (multilep) {
+            mva = selec->GetMLMVA();
+        } else {
+            mva = selec->GetDLMVA();
+        }
+        fillVal.push_back(mva->m2ll);
+        fillVal.push_back(mva->m2bb);
+        fillVal.push_back(mva->m2lblb);
+    }
+
     if (multilep) {
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].pt() : 0.);
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].eta() : 0.);
@@ -326,6 +338,16 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
                 double twoMass = (*l1New + *l2New).mass();
                 fillVal.push_back(twoMass);
             }
+        }
+
+        if (selec->getCurrentClass() == eventClass::crwz) {
+            std::pair<std::size_t, std::size_t> indices = selec->getMediumLepCol()->bestZBosonCandidateIndices();
+            std::size_t otherIndex = 0;
+            while ((otherIndex == indices.first || otherIndex == indices.second) && otherIndex < 3) {
+                otherIndex++;
+            }
+            Lepton* otherLepton = selec->getLepton(otherIndex);
+            mt(*otherLepton, selec->getEvent()->met());
         }
     }
     
