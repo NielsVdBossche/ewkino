@@ -53,7 +53,7 @@ class ChannelManager {
         void SetPrintAllUncertaintyVariations(bool setting);
 
         // series of functions passing through
-        std::map<shapeUncId, std::string> getTranslateUnc() {return mapping[eventClass::ssdl]->getTranslateUnc();}
+        std::map<shapeUncId, std::string> getTranslateUnc() {return mapping[eventClass::cr_conv]->getTranslateUnc();}
 
         void fillUpHistograms(eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight); 
         void fillDownHistograms(eventClass evClass, shapeUncId id, unsigned procNumber, std::vector<double>& fillVec, std::vector<std::pair<int, double>>& singleHist, std::vector<std::pair<double, double>>& twoDimFillVec, double weight);

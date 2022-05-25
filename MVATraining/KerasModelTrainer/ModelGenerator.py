@@ -68,7 +68,7 @@ def generate_model(num_hidden_layers, nodes_hidden_layer, num_input_nodes=30, nu
     # NOTE: Use following settings for the different tasks
     # Any classification: 'categorical_crossentropy' is recommended loss function
     # Regression: 'mean_squared_error' is recommended loss function
-    opt = SGD(lr=0.01, momentum=0.4)
+    opt = SGD(lr=0.05, momentum=0.4)
 
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['categorical_accuracy',])
     

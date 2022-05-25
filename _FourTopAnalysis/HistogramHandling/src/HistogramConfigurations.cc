@@ -126,7 +126,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "N_LooseB_jets_" + flag, "N_{b}", 6, -0.5, 5.5),
             HistInfo( "N_MediumB_jets_" + flag, "N_{b}", 6, -0.5, 5.5),
             HistInfo( "N_TightB_jets_" + flag, "N_{b}", 6, -0.5, 5.5),
-            HistInfo( "N_jets_" + flag, "N_{jets}", 8, -0.5, 6.5),
+            HistInfo( "N_jets_" + flag, "N_{jets}", 7, -0.5, 6.5),
 
             HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 800),
             HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 15, 0, 300),
@@ -150,13 +150,13 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             histInfoVec->push_back( HistInfo("inv_mass_other_leppair", "Mll [GeV]", 20, 0, 200));
         }
         
-        histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "muonID_" + flag, "muIDWeight", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "electronReco_pTBelow20_" + flag, "electronReco_pTBelow20", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "electronReco_pTAbove20_" + flag, "electronReco_pTAbove20", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "bTag_shape_" + flag, "bTag_shape", 100, 0.5, 1.5));
-        histInfoVec->push_back(HistInfo( "prefire_" + flag, "prefire", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "muonID_" + flag, "muIDWeight", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "electronReco_pTBelow20_" + flag, "electronReco_pTBelow20", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "electronReco_pTAbove20_" + flag, "electronReco_pTAbove20", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "bTag_shape_" + flag, "bTag_shape", 100, 0.5, 1.5));
+        //histInfoVec->push_back(HistInfo( "prefire_" + flag, "prefire", 100, 0.5, 1.5));
 
 
     }

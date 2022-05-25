@@ -9,9 +9,9 @@ import itertools
 commandList = []
 
 #setups = [["DL_BDT", "DL_NN"], ["ML_BDT", "ML_NN"]]
-setups = [["DL_BDT"]]#, ["ML_BDT"]]
+setups = [["ML_BDT"]]#, ["ML_BDT"]]
 
-trees = ["DL_tree_loose"]#, "ML_tree_loose"]
+trees = ["ML_tree_loose"]#, "ML_tree_loose"]
 
 ntrees = [1000, 1500, 2000]
 depths = [3, 4, 5, 6]
@@ -28,7 +28,7 @@ for setup, tree in zip(setups, trees):
             for el in mix:
                 interstring += " " + str(el)
 
-            print("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search" + interstring)
+            #print("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search" + interstring)
             commandList.append("./trainMVAMethodsExec sampleLists/DLTest.txt " + tree + " " + subsetup + " search" + interstring)
             
 

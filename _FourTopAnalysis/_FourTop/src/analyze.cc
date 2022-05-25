@@ -30,6 +30,7 @@ void FourTop::analyze(std::string method) {
         onlyCR = true;
         mgrAll = new ChannelManager(outfile, eventClass::cr_conv);
         considerRegion = eventClass::cr_conv;
+        useUncertainties = false;
     }
     std::map<shapeUncId, std::string> uncTranslateMap; // can we do this so we don't ask it if data
 
@@ -89,7 +90,7 @@ void FourTop::analyze(std::string method) {
             mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
             mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
         }
-    } else if (considerRegion != eventClass::cr_conv || eventClass::crwz) {
+    } else if (considerRegion != eventClass::cr_conv || considerRegion != eventClass::crwz) {
         MVAHandler_4T* handler;
         if (considerRegion == eventClass::crz3L || considerRegion == eventClass::crz4L || considerRegion == eventClass::cro3L) {
             handler = mva_ML;
@@ -190,12 +191,14 @@ void FourTop::analyze(std::string method) {
 
             std::cout << "ttg sample " << ttgOverlapCheck << std::endl;
             std::cout << "zg sample " << zgOverlapCheck << std::endl;
+            if (st == selectionType::MCAll || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
+                std::string currProcName = sampleVec[sampleIndex].processName();
+                mgrAll->changePrimaryProcess(currProcName);
+            }
         }
 
         if (useUncertainties && ! treeReader->isData()) {
             //mgrAll->SetPrintAllUncertaintyVariations(true);
-            std::string currProcName = sampleVec[sampleIndex].processName();
-            mgrAll->changePrimaryProcess(currProcName);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
@@ -315,23 +318,23 @@ void FourTop::analyze(std::string method) {
                 std::vector<double> scores = mva_ML->scoreEvent();
 
                 fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
-                if (currentEvent->isMC()) {
-                    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
-                } else {
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                }
+                //if (currentEvent->isMC()) {
+                //    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
+                //} else {
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //}
 
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
                 fillVec2D = mva_ML->fill2DVector();
@@ -343,30 +346,29 @@ void FourTop::analyze(std::string method) {
                 mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
                 mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
 
-            } else if ((nominalClass == eventClass::crw || nominalClass == eventClass::cro) && nominalClass == considerRegion) {
+            } else if ((nominalClass == eventClass::crw || nominalClass == eventClass::cro) && (considerRegion == eventClass::fail || nominalClass == considerRegion)) {              
                 std::vector<double> scores = mva_DL->scoreEvent();
-
                 fillVec = fourTopHists::fillAllLean(false, selection); // change falses/trues by eventClass
-                if (currentEvent->isMC()) {
-                    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
-                } else {
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                }
+
+                //if (currentEvent->isMC()) {
+                //    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
+                //} else {
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //}
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
                 fillVec2D = mva_DL->fill2DVector();
-
                 std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
 
                 if (nominalClass == eventClass::crw) {
@@ -449,29 +451,30 @@ void FourTop::analyze(std::string method) {
             } else if ((nominalClass != eventClass::fail && nominalClass < eventClass::ssdl) &  (considerRegion == eventClass::fail || nominalClass == considerRegion)) {
                 fillVec = fourTopHists::fillAllLean(true, selection); // change falses/trues by eventClass
                 
-                if (currentEvent->isMC()) {
-                    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
-                    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
-                } else {
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                    fillVec.push_back(0.);
-                }
+                //if (currentEvent->isMC()) {
+                //    fillVec.push_back(reweighter[ "pileup" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronID" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "muonID" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronReco_pTBelow20" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "electronReco_pTAbove20" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "bTag_shape" ]->weight( *currentEvent ));
+                //    fillVec.push_back(reweighter[ "prefire" ]->weight( *currentEvent ));
+                //} else {
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //    fillVec.push_back(0.);
+                //}
 
                 mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
                 mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
             }
 
+            std::cout << "unc" << std::endl;
 
             // TODO: Systematics
             if (currentEvent->isData() || ! useUncertainties || processNb > 0) continue;
@@ -636,8 +639,8 @@ void FourTop::analyze(std::string method) {
                 }
 
                 uncID = uncID + 1;
-            }
 
+            }
         }
         
         // Output management: save histograms to a ROOT file.
