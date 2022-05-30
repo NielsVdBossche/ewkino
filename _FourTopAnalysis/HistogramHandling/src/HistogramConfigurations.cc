@@ -135,6 +135,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),
 
             HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120),
+            HistInfo( "InvMassSpectrumSSEvents_" + flag, "M_{ll}(SS) [GeV]", 30, 60, 120),
 
         };
 

@@ -295,7 +295,15 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
         fillVal.push_back(mass);
     } else {
         fillVal.push_back(0.);
+    }
+    if (selec->getEvent()->hasOSSFLeptonPair()) {
+        fillVal.push_back(0.);
+    } else {
+        Lepton* l1 = selec->getLepton(0);
+        Lepton* l2 = selec->getLepton(1);
 
+        double diMass = (*l1 + *l2).mass();
+        fillVal.push_back(diMass);
     }
 
     if (selec->getCurrentClass() != eventClass::crwz && selec->getCurrentClass() != eventClass::cr_conv) {
