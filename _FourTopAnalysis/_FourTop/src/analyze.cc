@@ -157,6 +157,15 @@ void FourTop::analyze(std::string method) {
         selection->setSelectionType(selectionType::MCNoNP);
         st = selectionType::MCNoNP;
         std::cout << "Running method " << "MCNoNP" << std::endl;
+    } else if (method == "MCAllBJetTest") {
+        initFakerate();
+        processes = {"noAddBs", "AddBs"};
+        st = selectionType::MCAll;
+        selection->setSelectionType(st);
+        useUncertainties = false;
+        isNPControl = true;
+
+        std::cout << "Running method " << "MCAllBJetTest" << std::endl;
     } else {
         std::cout << "Running method " << "MCAll" << std::endl;
     }
@@ -191,7 +200,7 @@ void FourTop::analyze(std::string method) {
 
             std::cout << "ttg sample " << ttgOverlapCheck << std::endl;
             std::cout << "zg sample " << zgOverlapCheck << std::endl;
-            if (st == selectionType::MCAll || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
+            if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
                 mgrAll->changePrimaryProcess(currProcName);
             }
@@ -278,6 +287,10 @@ void FourTop::analyze(std::string method) {
                 } else if (st == selectionType::MCNoNP) {
                     if (! selection->leptonsArePrompt()) continue;
                     if (! selection->leptonsAreNotChargeFlip()) processNb = 1;
+                } else if (st == selectionType::MCAll && isNPControl) {
+                    if (selection->leptonsArePrompt()) continue;
+                    // check if there are additional b quarks somewhere
+                    if (selection->NumberOfBFlavorJets() > 2) processNb = 1;
                 } else {
                     if (! selection->leptonsAreNotChargeFlip()) processNb = 2; 
                     if (! selection->leptonsArePrompt()) processNb = 1;

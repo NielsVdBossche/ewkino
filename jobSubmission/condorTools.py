@@ -108,7 +108,8 @@ def submitCommandsAsCondorCluster(name, commands, stdout=None, stderr=None, log=
     initJobScript(shname, cmssw_version=cmssw_version)
     with open(shname,'a') as script:
         script.write(exe)
-        for i in range(nargs): script.write(' ${}'.format(i+1))
+        # for i in range(nargs): script.write(' ${}'.format(i+1))
+        script.write(' $@')
         script.write('\n')
     # then make the job description
     # first job:

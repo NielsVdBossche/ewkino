@@ -65,6 +65,8 @@ class Jet : public PhysicsObject{
         //print jet information
         virtual std::ostream& print( std::ostream& ) const override;
 
+        unsigned jetHadronFlavor() {return _hadronFlavor;}
+
     private:
         double _deepCSV = 0;
         double _deepFlavor = 0;

@@ -265,6 +265,14 @@ bool EventFourT::leptonsAreNotChargeMisMatch() {
     return true;
 }
 
+int EventFourT::NumberOfBFlavorJets() {
+    int count = 0;
+    for (const auto& jetPtr : *event->getJetCollectionPtr()) {
+        if (fabs(jetPtr->jetHadronFlavor()) == 5) count++;
+    }
+    return count;
+}
+
 eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& variation) {
     //if JER
     if (id == shapeUncId::JER_1p93) {

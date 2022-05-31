@@ -133,6 +133,8 @@ class EventFourT {
         bool hasLeptonFromMEExternalConversion();
         bool leptonFromMEExternalConversion(Lepton* lepton);
         bool passPhotonOverlapRemoval();
+
+        int NumberOfBFlavorJets();
 };
 
 bool selectLeptonsLooseMVA(const Lepton& lepton);
