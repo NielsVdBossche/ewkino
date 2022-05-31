@@ -154,7 +154,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
         }
 
         if (evClass == eventClass::crz4L) {
-            histInfoVec->push_back( HistInfo("inv_mass_other_leppair", "Mll [GeV]", 20, 0, 200));
+            histInfoVec->push_back( HistInfo("inv_mass_other_leppair_" + flag, "Mll [GeV]", 20, 0, 200));
         }
 
         if (evClass == eventClass::crwz) {
