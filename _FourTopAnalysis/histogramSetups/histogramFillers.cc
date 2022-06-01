@@ -296,15 +296,12 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
     } else {
         fillVal.push_back(0.);
     }
-    if (selec->getEvent()->hasOSSFLeptonPair()) {
-        fillVal.push_back(0.);
-    } else {
-        Lepton* l1 = selec->getLepton(0);
-        Lepton* l2 = selec->getLepton(1);
 
-        double diMass = (*l1 + *l2).mass();
-        fillVal.push_back(diMass);
-    }
+    Lepton* l1 = selec->getLepton(0);
+    Lepton* l2 = selec->getLepton(1);
+
+    double diMass = (*l1 + *l2).mass();
+    fillVal.push_back(diMass);
 
     if (selec->getCurrentClass() != eventClass::crwz && selec->getCurrentClass() != eventClass::cr_conv) {
         MVAHandler_4T* mva;
@@ -355,7 +352,8 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
                 otherIndex++;
             }
             Lepton* otherLepton = selec->getLepton(otherIndex);
-            mt(*otherLepton, selec->getEvent()->met());
+            double mtValue = mt(*otherLepton, selec->getEvent()->met());
+            fillVal.push_back(mtValue);
         }
     }
     

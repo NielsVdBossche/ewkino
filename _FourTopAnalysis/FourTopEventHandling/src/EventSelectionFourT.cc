@@ -215,19 +215,21 @@ bool EventFourT::passZBosonVeto() {
 }
 
 bool EventFourT::passSingleZBosonVeto() {
-    LeptonCollection* tmp = new LeptonCollection(**mediumLeps);
-    std::pair< std::vector< std::shared_ptr< Lepton > >::size_type, std::vector< std::shared_ptr< Lepton > >::size_type > indices = tmp->bestZBosonCandidateIndices();
-    tmp->eraseIndex(indices.first);
-    tmp->eraseIndex(indices.second);
+    if (numberOfLeps() != 4) return true;
+    std::pair<std::size_t, std::size_t> indices = getMediumLepCol()->bestZBosonCandidateIndices();
 
-    if (tmp->hasOSSFPair()) {
-        double mass = tmp->bestZBosonCandidateMass();
-        if (fabs(mass - particle::mZ) < 7.5) {
-            delete tmp;
-            return false;
-        }
+    std::vector<size_t> relIndices;
+    for (size_t i=0; i<4; i++) {
+        if (i == indices.first || i == indices.second) continue;
+        relIndices.push_back(i);
     }
-    delete tmp;
+
+    Lepton* l1New = getLepton(relIndices[0]);
+    Lepton* l2New = getLepton(relIndices[1]);
+    double twoMass = (*l1New + *l2New).mass();
+    if (fabs(twoMass - particle::mZ) < 7.5) {
+        return false;
+    }
     return true;
 }
 

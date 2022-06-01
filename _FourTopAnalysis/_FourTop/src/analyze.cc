@@ -721,7 +721,6 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
 }
 
 CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
-    return nullptr;
     CombinedSampleReweighter* sampleReweighter = new CombinedSampleReweighter();
 
     for (auto& samp : treeReader->sampleVector()) {
