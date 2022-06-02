@@ -33,7 +33,7 @@ dataSL = ["TmpLists/Data16PreVFP_Obs_0.txt","TmpLists/Data16PreVFP_Obs_1.txt","T
 #dataSL = ["DATALIAM2017.txt"]
 
 
-sets = {"MCAll" : [mcSL], "nonPromptDD" : [dataSL, mcSL], "ChargeDD" : [dataSL], "MCPrompt" : [mcSL], "nonPromptDDControl" : [mcSL]}
+sets = {"MCAll" : [mcSL], "nonPromptDD" : [dataSL, mcSL], "ChargeDD" : [dataSL], "MCPrompt" : [mcSL], "nonPromptDDControl" : [mcSL], "MCAllBJetTest" : [mcSL]}
 
 wd = "/user/nivanden/ewkino/_FourTopAnalysis"
 

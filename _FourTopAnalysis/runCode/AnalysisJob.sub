@@ -1,5 +1,5 @@
 executable = MainAnalysis.sh
-arguments = $(Samplelist) $(Method) timestamp=2022-05-23_15-21 leanEventSelection CR
+arguments = $(Samplelist) $(Method) timestamp=2022-06-02_10-06 leanEventSelection CR
 
 output = /user/nivanden/condor/output/analysis_exec_$(method)_$(ClusterId)_$(ProcId).out
 error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcId).err
@@ -446,22 +446,5 @@ queue 1 Samplelist, Method from (
 	TmpLists/2018_TTH_0.txt, nonPromptDD
 	TmpLists/2018_TTH_1.txt, nonPromptDD
 	TmpLists/2018_TTTT_0.txt, nonPromptDD
-	TmpLists/Data16PreVFP_Obs_0.txt, Obs
-	TmpLists/Data16PreVFP_Obs_1.txt, Obs
-	TmpLists/Data16PreVFP_Obs_2.txt, Obs
-	TmpLists/Data16PreVFP_Obs_3.txt, Obs
-	TmpLists/Data16PreVFP_Obs_4.txt, Obs
-	TmpLists/Data16PostVFP_Obs_0.txt, Obs
-	TmpLists/Data16PostVFP_Obs_1.txt, Obs
-	TmpLists/Data16PostVFP_Obs_2.txt, Obs
-	TmpLists/Data17_Obs_0.txt, Obs
-	TmpLists/Data17_Obs_1.txt, Obs
-	TmpLists/Data17_Obs_2.txt, Obs
-	TmpLists/Data17_Obs_3.txt, Obs
-	TmpLists/Data17_Obs_4.txt, Obs
-	TmpLists/Data18_Obs_0.txt, Obs
-	TmpLists/Data18_Obs_1.txt, Obs
-	TmpLists/Data18_Obs_2.txt, Obs
-	TmpLists/Data18_Obs_3.txt, Obs
 )
 

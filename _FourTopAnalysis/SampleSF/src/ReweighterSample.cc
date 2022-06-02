@@ -8,9 +8,9 @@
 ReweighterSample::ReweighterSample( const std::string& filterName, const std::string& weightDirectory ) : filterName(filterName) {
     // load njet distribution
     // could put a sample requirement on here? maybe less computations... Or just check it at analysis level which sample it is and directly creating the samplereweighter there
-    std::string filepath = ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/sampleSF/" + filterName + ".root" );
+    std::string filepath = ( stringTools::formatDirectoryName( weightDirectory ) + filterName + ".root" );
     if( !systemTools::fileExists( filepath ) ){
-        throw std::runtime_error( "File " + filepath + " with data pileup weights, necessary for reweighting, is not present." );
+        throw std::runtime_error( "File " + filepath + " with njets SF for process" + filterName + ", necessary for reweighting, is not present." );
     }
 
     TFile* njetReweightingPtr = TFile::Open( filepath.c_str() );
