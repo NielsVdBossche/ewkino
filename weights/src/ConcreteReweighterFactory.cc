@@ -306,7 +306,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
 
 }
 
-CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string& weightDirectory, const std::string& year, const std::vector< Sample >& samples, ReweighterBTagShape** btagReweighter ) const {
+CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string& weightDirectory, const std::string& year, const std::vector< Sample >& samples, ReweighterBTagShape** btagReweighter, bool testRun ) const {
 
     analysisTools::checkYearString( year );
 
@@ -430,11 +430,13 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
                                         "lfstats1","lfstats2","cferr1","cferr2" };
     // step 3: make the reweighter
-    std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
-    //reweighterBTagShape->initialize(samples, 0);
-    *btagReweighter = reweighterBTagShape.get();
-    
-    combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
+    if (! testRun) {
+        std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
+        //reweighterBTagShape->initialize(samples, 0);
+        *btagReweighter = reweighterBTagShape.get();
+        
+        combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
+    }
 
     combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
 

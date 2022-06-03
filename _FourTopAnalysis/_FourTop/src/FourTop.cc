@@ -45,6 +45,10 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 selection = new EventFourTLoose();
             } else if (stringTools::stringContains(it, "region=")) {
                 searchRegion = stringTools::split(it, "=")[1];
+            } else if (stringTools::stringContains(it, "EventInfo")) {
+                printEventTags = true;
+            } else if (stringTools::stringContains(it, "TestCode")) {
+                testRun = true;
             }
         }
 

@@ -2,6 +2,8 @@
 #define fourtop_h
 
 #include "../../globalSettings.h"
+#include <fstream>
+#include <iostream>
 
 #include <TFile.h>
 #include <TMVA/Reader.h>
@@ -41,6 +43,8 @@ class FourTop {
         bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar
         bool leanEventSelection = false;
         bool onlyCR = false;
+        bool printEventTags = false;
+        bool testRun = false;
 
         // General settings for analysis run
         std::string yearString = "Combi";
@@ -98,6 +102,8 @@ class FourTop {
         // Main loop functions
         void analyze(std::string method);
         void testRuns();
+        
+        std::map<eventClass, int> FillHistogramManager(ChannelManager* mgrAll);
 
         void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();

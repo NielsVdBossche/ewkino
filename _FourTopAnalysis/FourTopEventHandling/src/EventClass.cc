@@ -40,39 +40,18 @@ std::vector<double> EventFourT::fillVector() {
     bool useMVA = true;
     std::vector<double> scores = currentMVA->scoreEvent();
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass == eventClass::crwz) {
-        fillVec = fourTopHists::fillAllLean(true, this);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
+        fillVec = fourTopHists::fillAllLean(currentClass, this);
     } else if (currentClass == eventClass::crw || currentClass == eventClass::cro) {
-        fillVec = fourTopHists::fillAllLean(false, this);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
+        fillVec = fourTopHists::fillAllLean(currentClass, this);
     } else if (currentClass == eventClass::ssdl) {
-        fillVec = fourTopHists::fillAllHists(false, this);
+        fillVec = fourTopHists::fillAllHists(this);
     } else if (currentClass == eventClass::trilep) {
-        fillVec = fourTopHists::fillAllHists(true, this);
+        fillVec = fourTopHists::fillAllHists(this);
     } else if (currentClass == eventClass::fourlep) {
-        fillVec = fourTopHists::fillAllHists(true, this, true);
+        fillVec = fourTopHists::fillAllHists(this);
     } else if (currentClass != eventClass::fail) {
         useMVA = false;
-        fillVec = fourTopHists::fillAllLean(false, this);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
-        //fillVec.push_back(0.);
+        fillVec = fourTopHists::fillAllLean(currentClass, this);
     }
 
     if (currentClass == eventClass::crwz) useMVA = false;

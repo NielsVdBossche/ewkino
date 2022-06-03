@@ -26,8 +26,8 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     if (unsigned(evClass) >= eventClass::ssdl) {
         *histInfoVec = {
             HistInfo( "Yield_" + flag, "yield", 1, 0., 1.),
-            HistInfo( "N_mu_" + flag, "N_#mu", 5, -0.5, 4.5),
-            HistInfo( "N_e_" + flag, "N_e", 5, -0.5, 4.5),
+            HistInfo( "N_mu_" + flag, "N_{#mu}", 5, -0.5, 4.5),
+            HistInfo( "N_e_" + flag, "N_{e}", 5, -0.5, 4.5),
             HistInfo( "leptonPtLeading_" + flag, "p_{T}(l1) [GeV]", 28, 20, 300),
             HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 13, 20, 150),
             HistInfo( "leptonEtaLeading_" + flag, "#eta (l1)", 12, -2.4, 2.4), // Might switch to det segmentation
@@ -70,9 +70,15 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "mtSubLeadLepMET_" + flag, "M_{T}(W) [GeV]", 13, 40, 300),
 
             //HistInfo( "m2ll_" + flag, "MT", 100, 0, 100),
-            HistInfo( "m2ll_" + flag, "MT2LL", 15, 0, 150),
-            HistInfo( "m2bb_" + flag, "MT2BB", 12, 80, 200),
-            HistInfo( "m2lblb_" + flag, "MT2BLBL", 15, 0, 150),
+            HistInfo( "m2ll_" + flag, "M_{T2}(l1,l2)", 15, 0, 150),
+            HistInfo( "m2bb_" + flag, "M_{T2}(b1,b2)", 12, 80, 200),
+            HistInfo( "m2lblb_" + flag, "M_{T2}(l1,b1,l2,b2)", 15, 0, 150),
+
+            HistInfo( "DR_Leps_" + flag, "#Delta R(l1,l2)", 24, 0, 4.8),
+            HistInfo( "dPhi_Leps_" + flag, "#Phi (l1,l2)", 12, - M_PI, M_PI),
+            HistInfo( "ptJetFive_" + flag, "p_{T}(j5) [GeV]", 15, 0, 150),
+            HistInfo( "ptJetSix_" + flag, "p_{T}(j6) [GeV]", 15, 0, 150),
+            HistInfo( "MToPT_" + flag, "#frac{M}{p_{T}}", 15, 0, 150),
 
             HistInfo( "B-score_BTagLeadJet_" + flag, "DeepFlavor score (j1)", 26, -0.04, 1.),
             HistInfo( "B-score_BTagSubLeadJet_" + flag, "DeepFlavor score (j2)", 26, -0.04, 1.),
@@ -139,6 +145,10 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
 
         };
 
+        if (evClass == eventClass::cro) {
+            histInfoVec->push_back(HistInfo( "EventFailsCut_" + flag, "", 7, 0.5, 7.5));
+        }
+
         if (evClass != eventClass::crwz && evClass != eventClass::cr_conv) {
             histInfoVec->push_back(HistInfo( "m2ll_" + flag, "MT2LL", 15, 0, 150));
             histInfoVec->push_back(HistInfo( "m2bb_" + flag, "MT2BB", 12, 80, 200));
@@ -160,16 +170,6 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
         if (evClass == eventClass::crwz) {
             histInfoVec->push_back( HistInfo( "mtLepNotInZMET_" + flag, "M_{T}(W) [GeV]", 16, 40, 120));
         }
-        
-        //histInfoVec->push_back(HistInfo( "PileupWeight_" + flag, "PUWeight", 100, 0.5, 1.5));
-        //histInfoVec->push_back(HistInfo( "electronID_" + flag, "elIDWeight", 100, 0.5, 1.5));
-        //histInfoVec->push_back(HistInfo( "muonID_" + flag, "muIDWeight", 100, 0.5, 1.5));
-        //histInfoVec->push_back(HistInfo( "electronReco_pTBelow20_" + flag, "electronReco_pTBelow20", 100, 0.5, 1.5));
-        //histInfoVec->push_back(HistInfo( "electronReco_pTAbove20_" + flag, "electronReco_pTAbove20", 100, 0.5, 1.5));
-        //histInfoVec->push_back(HistInfo( "bTag_shape_" + flag, "bTag_shape", 100, 0.5, 1.5));
-        //histInfoVec->push_back(HistInfo( "prefire_" + flag, "prefire", 100, 0.5, 1.5));
-
-
     }
     return histInfoVec;
 }

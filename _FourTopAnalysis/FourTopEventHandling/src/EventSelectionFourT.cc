@@ -227,7 +227,7 @@ bool EventFourT::passSingleZBosonVeto() {
     Lepton* l1New = getLepton(relIndices[0]);
     Lepton* l2New = getLepton(relIndices[1]);
     double twoMass = (*l1New + *l2New).mass();
-    if (fabs(twoMass - particle::mZ) < 7.5) {
+    if (fabs(twoMass - particle::mZ) < 15.) {
         return false;
     }
     return true;

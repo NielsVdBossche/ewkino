@@ -19,23 +19,11 @@
 // Might move this functionality back to FourTop class itself
 
 namespace fourTopHists {
-    std::vector<HistInfo>* allHistsDL();
-    std::vector<HistInfo>* allHistsML();
-
-
-    // create filling vector?
-    std::vector<double> fillAllHistsDL(Event* event);
-    std::vector<double> fillAllHistsML(Event* event);
-
-    std::vector<HistInfo>* allHists(std::string flag, bool multilep, bool fourLep=false);
-    std::vector<HistInfo>* infoLean(std::string flag, bool multilep);
-
-    std::vector<double> fillAllHists(bool multilep, EventFourT* selec, bool fourLep=false);
-    std::vector<double> fillAllLean(bool multilep, EventFourT* selec);
+    std::vector<double> fillAllHists(EventFourT* selec);
+    std::vector<double> fillAllLean(eventClass evClass, EventFourT* selec);
 
     std::vector<HistInfo>* testHists(eventClass);
     std::vector<double> fillTestHists(eventClass, EventFourT* selec);
-
 }
 
 #endif

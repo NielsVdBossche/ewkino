@@ -6,6 +6,7 @@
 // WP's of MVAs,...
 enum eventClass {
     fail,
+    // dy, // new one whieeee
     crwz,
     cr_conv,
     crz3L,
@@ -27,9 +28,5 @@ enum selectionType {
     NPDD,
     Data
 };
-
-// others
-#define USE_SYSTEMATICS false
-#define NONPROMPT_ESTIMATION false
 
 #endif
