@@ -20,13 +20,15 @@ void MVAHandler_4T::initReader() {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == TriClass_DL) {
         if (lean) {
-            weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
+            weightFilePath += "FourTopClassification_LeanSel_DL_BDTG_B_2000_6_20_0.1_1_1.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
         }
     } else if (currentConfig == TriClass_ML) {
         if (lean) {
-            weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
+            weightFilePath += "FourTopClassification_LeanSel_ML_BDTG_B_1500_5_20_0.08_1_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -149,11 +151,11 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string addition
     }
 
     if (fourLep) {
-        identifier += "_4L";
+        identifier += "_SR-4L";
     } else if (isML) {
-        identifier += "_3L";
+        identifier += "_SR-3L";
     } else {
-        identifier += "_DL";
+        identifier += "_SR-2L";
     }
 
     std::map<MVAClasses, std::string> translator = {

@@ -1,1 +1,1 @@
-VVV            2016PostVFP/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13_ext1-v2_singlelepton_MC_2016_ULpostVFP_Nov.root                                             0.05565
+VVV            2016PostVFP/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2016postVFP-v2_singlelepton_MC_2016_ULpostVFPv3.root                                                                                     0.01476

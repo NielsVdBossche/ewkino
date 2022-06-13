@@ -127,6 +127,7 @@ void FourTop::analyze(std::string method) {
     std::vector<Sample> sampleVec = treeReader->sampleVector();
     std::vector<std::string> bTagShapeSystematics;
     std::vector<std::string> JECSourcesGrouped;
+    std::vector<std::string> wzSFRegions;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -178,6 +179,9 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0 && useSplitJEC) {
                 JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariations();
                 mgrAll->addSubUncertainties(shapeUncId::JEC, JECSourcesGrouped);
+            }
+            if (sampleIndex == 0) {
+                wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6Jet", "7PlusJet"};
             }
         }
         
@@ -472,6 +476,27 @@ void FourTop::analyze(std::string method) {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
+                } else if (uncID == shapeUncId::WZSF) {
+                    if (sampleReweighter) {
+                        for (int i=0; i <= 7; i++) {
+                            if (selection->numberOfJets() == i) {
+                                weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                                weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                            }
+                            std::string wzSFRegion = wzSFRegions[i];
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                        }
+                        weightUp = 1.;
+                        weightDown = 1.;
+                    } else {
+                        for (std::string wzSFRegion : wzSFRegions) {
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec, weight, weight);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntries, weight, weight);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight, weight);
+                        }
+                    }
                 } else if ((uncID >= shapeUncId::JER_1p93 && uncID != shapeUncId::JEC) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
 

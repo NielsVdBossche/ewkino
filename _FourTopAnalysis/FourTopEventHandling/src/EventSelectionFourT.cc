@@ -324,6 +324,18 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& 
             bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECDown(variation).pt();
         }
+    } else if (id == shapeUncId::MET) {
+        if (up) {
+            jets = new JetCollection(*(event->getJetCollectionPtr()));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetUnclusteredUp().pt();
+        } else {
+            jets = new JetCollection(*(event->getJetCollectionPtr()));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetUnclusteredDown().pt();
+        }
     }
 
     nJets = jets->size();
