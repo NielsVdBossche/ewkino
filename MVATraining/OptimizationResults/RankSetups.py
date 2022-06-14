@@ -4,17 +4,17 @@ import matplotlib.pyplot as plt
 import itertools
 import csv
 
-ntrees = [1000, 1500, 2000]
-depths = [3, 4, 5, 6]
+ntrees = [1500, 1800, 2000]
+depths = [4, 5, 6]
 nCuts = [20]
-shrinkages = [0.01, 0.05, 0.10]
-minNodeSizes = [1, 5, 10]
-baggedFractions = [0.25, 0.5, 1.]
+shrinkages = [0.05, 0.08, 0.10]
+minNodeSizes = [1, 2, 3]
+baggedFractions = [0.6, 0.8, 1.]
 
 classes = ["Signal", "Background", "TTV"]
 resultType = ["Train", "Test"]
 
-basename = "/user/nivanden/ewkino/MVATraining/Classifiers/FourTopClassification_LeanSel_Search_ML_BDT_nTrees_"
+basename = "/user/nivanden/ewkino/MVATraining/Classifiers/FourTopClassification_LeanSel_SearchV2_DL_BDT_nTrees_"
 
 def extractParameters(file, method):
     # load a file, extract the relevant output
@@ -67,9 +67,9 @@ def extractResultFromFiles(key):
     for mix in itertools.product(ntrees, depths, nCuts, shrinkages, minNodeSizes, baggedFractions):
         filename = basename + str(mix[0]) + "_Depth_" + str(mix[1]) + "_nCuts_" + str(mix[2]) + "_shrink_" + str(mix[3]) + "_minNodeSize" + str(mix[4]) + "_baggedFraction_" + str(mix[5]) + ".root"
         if mix[5] == 1.:
-            methodname = "ML_BDTG_B_" + str(mix[0]) + "_" + str(mix[1]) + "_" + str(mix[2]) + "_" + str(mix[3]) + "_" + str(mix[4]) + "_1" 
+            methodname = "DL_BDTG_B_" + str(mix[0]) + "_" + str(mix[1]) + "_" + str(mix[2]) + "_" + str(mix[3]) + "_" + str(mix[4]) + "_1" 
         else:
-            methodname = "ML_BDTG_B_" + str(mix[0]) + "_" + str(mix[1]) + "_" + str(mix[2]) + "_" + str(mix[3]) + "_" + str(mix[4]) + "_" + str(mix[5])
+            methodname = "DL_BDTG_B_" + str(mix[0]) + "_" + str(mix[1]) + "_" + str(mix[2]) + "_" + str(mix[3]) + "_" + str(mix[4]) + "_" + str(mix[5])
 
         result[methodname] = extractResultFromFile(filename, methodname, key)
 
@@ -93,7 +93,7 @@ def sortByBestPerformer(results, testkey):
         tmp = [res[0], res[1][0], res[1][1]]
         resultsNew.append(tmp)
 
-    with open("ML"+testkey+".csv", "w") as f:
+    with open("DL"+testkey+".csv", "w") as f:
         writer = csv.writer(f)
         writer.writerows(resultsNew)
     
@@ -106,8 +106,8 @@ if __name__ == "__main__":
     # we can parse output files or read classifiers root files
     # glob outputfiles, read last 100 lines or so. 
 
-    filename = "/user/nivanden/ewkino/MVATraining/Classifiers/FourTopClassification_LeanSel_Search_ML_BDT_nTrees_1000_Depth_3_nCuts_20_shrink_0.1_minNodeSize5_baggedFraction_0.5.root"
-    method = "ML_BDTG_B_1000_3_20_0.1_5_0.5"
+    filename = "/user/nivanden/ewkino/MVATraining/Classifiers/FourTopClassification_LeanSel_SearchV2_DL_BDT_nTrees_1500_Depth_4_nCuts_20_shrink_0.1_minNodeSize1_baggedFraction_0.6.root"
+    method = "DL_BDTG_B_1500_4_20_0.1_1_0.6"
     
     listOfKeys = extractParameters(filename, method)
     #print(listOfKeys)
