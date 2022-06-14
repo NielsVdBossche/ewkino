@@ -67,7 +67,7 @@ TTH             2018/analysisSamples/ttHJetToNonbb_M125_TuneCP5_13TeV_amcatnloFX
 TTH             2018/ttHJetTobb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8crab_MiniAOD2018-v1_singlelepton_MC_2018_ULv3.root                                                                                   0.29277
 TTTT            2018/analysisSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_2018_ULv3.root                                                         0.01197
 
-SSWW              2018/SSWW_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv5.root                                                         0.02794
-WWDS                2018/WWTo2L2Nu_TuneCP5_DoubleScattering_13TeV-pythia8crab_RunIISummer19UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv5.root                                           0.1729
-WWDS                2018/WW_TuneCP5_DoubleScattering_13TeV-pythia8crab_RunIISummer19UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv5.root                                                  1.64
+SSWW              ../skims_v2/2018/SSWW_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv5.root                                                         0.02794
+WWDS                ../skims_v2/2018/WWTo2L2Nu_TuneCP5_DoubleScattering_13TeV-pythia8crab_RunIISummer19UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv5.root                                           0.1729
+WWDS                ../skims_v2/2018/WW_TuneCP5_DoubleScattering_13TeV-pythia8crab_RunIISummer19UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv5.root                                                  1.64
 

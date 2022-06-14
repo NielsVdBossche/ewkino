@@ -182,6 +182,7 @@ void FourTop::analyze(std::string method) {
             }
             if (sampleIndex == 0) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6Jet", "7PlusJet"};
+                mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
             }
         }
         

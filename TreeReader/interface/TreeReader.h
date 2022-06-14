@@ -47,7 +47,7 @@ class TreeReader {
         UInt_t          _nLheWeights;
         Double_t        _lheWeight[148];
         UInt_t          _nPsWeights;
-        Double_t        _psWeight[14];
+        Double_t        _psWeight[46];
         Float_t         _nTrueInt;
         Double_t        _lheHTIncoming;
 	// generator variables

@@ -12,7 +12,7 @@ void FourTop:: testRuns() {
     std::cout << "building reweighter" << std::endl;
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
-    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter );
+    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, true );
 
     addBTaggingNormFactors(*btagReweighter, "bTagNorms/");
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);

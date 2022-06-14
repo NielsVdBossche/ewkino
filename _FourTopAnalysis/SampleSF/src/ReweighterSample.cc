@@ -14,7 +14,7 @@ ReweighterSample::ReweighterSample( const std::string& filterName, const std::st
     }
 
     TFile* njetReweightingPtr = TFile::Open( filepath.c_str() );
-    std::shared_ptr< TH1 > nJetDistribution = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( njetReweightingPtr->Get( "SF" ) ) ); /// fix 
+    nJetDistribution = std::shared_ptr< TH1 >( dynamic_cast< TH1* >( njetReweightingPtr->Get( "SF" ) ) ); /// fix 
     nJetDistribution->SetDirectory( gROOT ); 
     njetReweightingPtr->Close();
 }

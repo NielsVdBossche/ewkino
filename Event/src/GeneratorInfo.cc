@@ -23,7 +23,7 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     }
 
     if( _numberOfPsWeights > maxNumberOfPsWeights ){
-        throw std::out_of_range( "_numberOfPsWeights is larger than 14, which is the maximum array size of _psWeights." );
+        //throw std::out_of_range( "_numberOfPsWeights is larger than 14, which is the maximum array size of _psWeights." );
     }
     for( unsigned i = 0; i < _numberOfPsWeights; ++i ){
         _psWeights[i] = treeReader._psWeight[i];
