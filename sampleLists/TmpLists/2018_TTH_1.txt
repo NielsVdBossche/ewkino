@@ -1,1 +1,1 @@
-TTH             2018/ttHJetTobb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8crab_MiniAOD2018-v1_singlelepton_MC_2018_ULv3.root                                                                                   0.29277
+TTH             2018/ttHJetTobb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8crab_MiniAOD2018-v1_singlelepton_MC_2018_ULv3.root                                                                                   0.4040

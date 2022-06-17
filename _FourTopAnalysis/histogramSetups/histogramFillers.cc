@@ -210,9 +210,11 @@ std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* se
         int count = 0;
         if (selec->numberOfJets() < 4) {
             count += 1;
-        } else if (selec->numberOfLooseBJets() < 2) {
+        }
+        if (selec->numberOfLooseBJets() < 2) {
             count += 2;
-        } else if (selec->getHT() < 280) {
+        }
+        if (selec->getHT() < 280) {
             count += 4;
         }
         fillVal.push_back(count);

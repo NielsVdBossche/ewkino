@@ -1,1 +1,1 @@
-VVV            2017/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2017-v2_singlelepton_MC_2017_ULv3.root                                                                                                        0.2086
+VVV            ../skims_v2/2017/WZZ_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_Nov_MERGED.root                                                               0.05565

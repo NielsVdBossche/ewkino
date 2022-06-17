@@ -1,1 +1,1 @@
-TTZ             2018/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                       0.57028
+TTZ             2018/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8crab_MiniAOD2018-v2_singlelepton_MC_2018_ULv3.root                                                                                                       0.662

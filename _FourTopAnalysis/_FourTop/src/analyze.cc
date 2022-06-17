@@ -310,6 +310,7 @@ void FourTop::analyze(std::string method) {
                 fillVec.insert(fillVec.end(), scores.begin(), scores.end());
                 fillVec2D = mva_DL->fill2DVector();
                 std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
+                subChannels = GetSubClasses(nominalClass);
 
                 singleEntries.push_back({offsets[nominalClass]  + classAndScore.first, classAndScore.second});
                 mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
@@ -502,10 +503,10 @@ void FourTop::analyze(std::string method) {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
-                        weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
-                                            / reweighter["bTag_shape"]->weight( *currentEvent );
-                        weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
-                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                        //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                        //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
                     }
                     std::string empty = "";
 
@@ -612,7 +613,8 @@ bool FourTop::eventPassesTriggers() {
 
 std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
     std::vector<std::string> subClasses;
-    if (currClass == eventClass::ssdl) {
+
+    if (currClass == eventClass::ssdl || (currClass == eventClass::cro && onlyCR)) {
         if (selection->getLepton(0)->charge() > 0) subClasses.push_back("++");
         else subClasses.push_back("--");
 
@@ -654,6 +656,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
     std::map<eventClass, int> offsets;
 
     std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
+    std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
     if (searchRegion == "All") {
         offsets[eventClass::crz3L] = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
@@ -661,6 +664,8 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
         offsets[eventClass::cro3L] = mgrAll->at(eventClass::cro3L)->getHistInfo()->size() + mva_ML->getMaxClass();  
         offsets[eventClass::cro] = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
         offsets[eventClass::crw] = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
+
+        if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
 
         mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-Z", true));
         mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-Z", true));

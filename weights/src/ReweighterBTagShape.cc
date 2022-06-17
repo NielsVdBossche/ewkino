@@ -294,7 +294,7 @@ double ReweighterBTagShape::weight( const Jet& jet, const std::string& variation
     if( !this->considerVariation( jet, variation ) ) sys = "central";
     // check if jet is of correct flavor for this reweighter
     if( jet.hadronFlavor()==5 || jet.hadronFlavor()==4 ){
-	if( !(_flavor=="heavy" || _flavor=="all") ) return 1;
+	    if( !(_flavor=="heavy" || _flavor=="all") ) return 1;
     } else{
         if( !(_flavor=="light" || _flavor=="all") ) return 1;
     }
@@ -314,7 +314,7 @@ double ReweighterBTagShape::weight( const Jet& jet, const std::string& variation
     // this page recommends to use absolute value of eta, but BTagCalibrationStandalone.cc
     // seems to handle negative values of eta more correctly (only taking abs when needed)
     double scaleFactor = bTagSFReader->eval_auto_bounds( sys, jetFlavorEntry( jet ),
-    					jet.eta(), jet.pt(), bTagScore );
+    					jet.absEta(), jet.pt(), bTagScore );
     // printouts for testing
     /*if( scaleFactor==0 ){
 	std::cout << "found scale factor 0 ..." << std::endl;
@@ -407,7 +407,7 @@ double ReweighterBTagShape::weightJecVar( const Event& event,
     double weight = 1.;
     for( const auto& jetPtr: event.getJetCollection(jecVariation) ){
         if(isup) weight *= this->weightUp( *jetPtr, varName );
-	else weight *= this->weightDown( *jetPtr, varName );
+	    else weight *= this->weightDown( *jetPtr, varName );
     }
     return weight;
 }

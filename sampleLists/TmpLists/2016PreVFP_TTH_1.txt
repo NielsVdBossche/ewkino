@@ -1,1 +1,1 @@
-TTH             2016PreVFP/ttHJetTobb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8crab_MiniAOD2016preVFP-v1_singlelepton_MC_2016_ULpreVFPv3.root                                                                 0.29277  
+TTH             2016PreVFP/ttHJetTobb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8crab_MiniAOD2016preVFP-v1_singlelepton_MC_2016_ULpreVFPv3.root                                                                 0.4040
