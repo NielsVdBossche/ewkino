@@ -313,9 +313,9 @@ void FourTop::analyze(std::string method) {
                 subChannels = GetSubClasses(nominalClass);
 
                 singleEntries.push_back({offsets[nominalClass]  + classAndScore.first, classAndScore.second});
-                mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
-                mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
-                mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
+                mgrAll->at(nominalClass)->fillAllHistograms(subChannels, processNb, fillVec, weight);
+                mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
+                mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
             } else if (nominalClass == eventClass::ssdl && ! onlyCR) {  
                 if (printEventTags) eventTagsOutput << currentEvent->runNumber() << "," << currentEvent->eventNumber() << "," << currentEvent->luminosityBlock() << std::endl;
 
