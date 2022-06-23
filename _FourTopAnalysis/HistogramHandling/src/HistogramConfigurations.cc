@@ -147,6 +147,8 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
 
         if (evClass == eventClass::cro) {
             histInfoVec->push_back(HistInfo( "EventFailsCut_" + flag, "", 7, 0.5, 7.5));
+        } else if (evClass == eventClass::cro3L) {
+            histInfoVec->push_back(HistInfo( "EventFailsCut_" + flag, "", 3, 0.5, 3.5));
         }
 
         if (evClass != eventClass::crwz && evClass != eventClass::cr_conv) {

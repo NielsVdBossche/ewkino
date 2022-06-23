@@ -218,6 +218,15 @@ std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* se
             count += 4;
         }
         fillVal.push_back(count);
+    } else if (evClass == eventClass::cro3L) {
+        int count = 0;
+        if (selec->numberOfJets() < 3) {
+            count += 1;
+        }
+        if (selec->numberOfLooseBJets() < 2) {
+            count += 2;
+        }
+        fillVal.push_back(count);
     }
 
     if (evClass != eventClass::crwz && evClass != eventClass::cr_conv) {
