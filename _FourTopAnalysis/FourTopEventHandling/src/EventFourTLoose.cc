@@ -6,6 +6,10 @@ void EventFourTLoose::classifyEvent() {
     if (! passPhotonOverlapRemoval()) return;
     if (! passLeanSelection()) {
         if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() == 0) {
+            if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;
+            if (numberOfLooseBJets() != 0) return;
+            if (! getMediumLepCol()->hasOSSFPair()) return;
+
             if (passZBosonVeto() && ! passSingleZBosonVeto()) {
                 SetEventClass(eventClass::crzz);
             }
