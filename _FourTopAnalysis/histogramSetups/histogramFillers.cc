@@ -241,7 +241,7 @@ std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* se
         fillVal.push_back(mva->m2lblb);
     }
 
-    if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv) {
+    if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].pt() : 0.);
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].eta() : 0.);
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].energy() : 0.);
@@ -255,7 +255,7 @@ std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* se
         triMass = (*l1 + *l2 + *l3).mass();
         fillVal.push_back(triMass);
 
-        if (evClass == eventClass::crz4L) {
+        if (evClass == eventClass::crz4L || evClass == eventClass::crzz) {
             std::pair<std::size_t, std::size_t> indices = selec->getMediumLepCol()->bestZBosonCandidateIndices();
             std::vector<size_t> relIndices;
             for (size_t i=0; i<4; i++) {

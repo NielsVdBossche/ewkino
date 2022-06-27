@@ -13,6 +13,7 @@ class ChannelManager {
         std::map<eventClass, std::string> namingScheme = {
             {fail, "fail"},
             {crwz, "CRWZ"},
+            {crzz, "CRZZ"},
             {cr_conv, "CR-Conversion"},
             {crz3L, "CR-3L-Z"},
             {crz4L, "CR-4L-Z"},

@@ -5,19 +5,24 @@ void EventFourTLoose::classifyEvent() {
     //if (! passLowMassVeto()) return;
     if (! passPhotonOverlapRemoval()) return;
     if (! passLeanSelection()) {
-        if (numberOfLeps() != 3) return;
-        if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;
-        //if (getMET() < 50) return;
+        if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() == 0) {
+            if (passZBosonVeto() && ! passSingleZBosonVeto()) {
+                SetEventClass(eventClass::crzz);
+            }
+        } else if (numberOfLeps() == 3) {
+            if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;
+            //if (getMET() < 50) return;
 
-        if (numberOfLooseBJets() != 0) return;
-        if (! getMediumLepCol()->hasOSSFPair()) return;
-        double m3l = (*getLepton(0) + *getLepton(1) + *getLepton(2)).mass();
-        double m2l = getMediumLepCol()->bestZBosonCandidateMass();
-        
-        if (! passZBosonVeto() && fabs(m3l - particle::mZ) > 15. && getMET() > 50) {
-            SetEventClass(eventClass::crwz);
-        } else if (fabs(m3l - particle::mZ) < 15. && m2l < 75) {
-            SetEventClass(eventClass::cr_conv);
+            if (numberOfLooseBJets() != 0) return;
+            if (! getMediumLepCol()->hasOSSFPair()) return;
+            double m3l = (*getLepton(0) + *getLepton(1) + *getLepton(2)).mass();
+            double m2l = getMediumLepCol()->bestZBosonCandidateMass();
+            
+            if (! passZBosonVeto() && fabs(m3l - particle::mZ) > 15. && getMET() > 50) {
+                SetEventClass(eventClass::crwz);
+            } else if (fabs(m3l - particle::mZ) < 15. && m2l < 75) {
+                SetEventClass(eventClass::cr_conv);
+            }
         }
         return;
     }

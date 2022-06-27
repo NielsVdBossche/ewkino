@@ -10,6 +10,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
     std::map<eventClass, std::string> flagMapping = {
             {fail, "fail"},
             {crwz, "CRWZ"},
+            {crzz, "CRZZ"},
             {cr_conv, "CR-Conversion"},
             {crz3L, "CR-3L-Z"},
             {crz4L, "CR-4L-Z"},
@@ -157,7 +158,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             histInfoVec->push_back(HistInfo( "m2lblb_" + flag, "MT2BLBL", 15, 0, 150));
         }
         
-        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv) {
+        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
             histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 15, 0, 150) );
             histInfoVec->push_back( HistInfo( "leptonEtaThird_" + flag, "#eta (l3)", 12, -2.4, 2.4) );
             histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 22, 0, 220) );
@@ -165,7 +166,7 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
         }
 
-        if (evClass == eventClass::crz4L) {
+        if (evClass == eventClass::crz4L || evClass == eventClass::crzz) {
             histInfoVec->push_back( HistInfo("inv_mass_other_leppair_" + flag, "Mll [GeV]", 20, 0, 200));
         }
 

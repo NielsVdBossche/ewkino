@@ -9,6 +9,7 @@ enum eventClass {
     // dy, // new one whieeee
     crwz,
     cr_conv,
+    crzz,
     crz3L,
     crz4L,
     cro,
