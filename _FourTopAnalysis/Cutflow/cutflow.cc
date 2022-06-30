@@ -312,7 +312,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHist->Fill(11., weight);
             cutflowHistSub->Fill(11., weight);
 
-            if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6) || (nLeps == 3 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 4)) continue;
+            if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6)) continue;
             cutflowHist->Fill(12., weight);
             cutflowHistSub->Fill(12., weight);
 
