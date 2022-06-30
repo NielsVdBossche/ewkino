@@ -160,12 +160,11 @@ std::vector<double> fourTopHists::fillAllHists(EventFourT* selec) {
 std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* selec){
     JetCollection* jets = selec->getJetCol();
     JetCollection* bJets = selec->getBtagJetCol();
-    LightLeptonCollection* lightLeps;
-    if (selec->isEventNormalSelected()) {
-        lightLeps = (LightLeptonCollection*) selec->getMediumLepCol();
-    } else {
-        lightLeps = (LightLeptonCollection*) selec->getAltLeptonCol();
-    }
+    LeptonCollection* lightLeps;
+    lightLeps = selec->getMediumLepCol();
+    
+    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *lightLeps);
 
     //int nb = bJets->size();
     int nlep = lightLeps->size();
@@ -191,6 +190,12 @@ std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* se
 
         lightLeps->scalarPtSum(), // LT
         double(lightLeps->size()),
+
+                // Calculate DR? What is best way...
+        (bJets->size() >= 2. ? mindR_Bjets[0] : 5.),
+
+        mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[0] : 5.,
+        mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.
     };
     
     if (selec->getEvent()->hasOSSFLeptonPair()) {

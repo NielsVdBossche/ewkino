@@ -6,7 +6,7 @@
 
 namespace lumi{
     constexpr double lumi2016 = 36.33;
-    constexpr double lumi2016PreVFP = 19.52;
+    constexpr double lumi2016PreVFP = 19.50;
     constexpr double lumi2016PostVFP = 16.81;
     constexpr double lumi2017 = 41.48;
     constexpr double lumi2018 = 59.83;

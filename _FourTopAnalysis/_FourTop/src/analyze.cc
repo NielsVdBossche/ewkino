@@ -614,7 +614,7 @@ bool FourTop::eventPassesTriggers() {
 std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
     std::vector<std::string> subClasses;
 
-    if (currClass == eventClass::ssdl || (currClass == eventClass::cro && onlyCR)) {
+    if (currClass == eventClass::ssdl || (currClass == eventClass::cro && onlyCR) || (currClass == eventClass::crw && onlyCR)) {
         if (selection->getLepton(0)->charge() > 0) subClasses.push_back("++");
         else subClasses.push_back("--");
 
@@ -657,6 +657,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
 
     std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
+    std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
     if (searchRegion == "All") {
         offsets[eventClass::crz3L] = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
@@ -679,6 +680,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
         mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
         
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
+        if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
 
         if (! onlyCR) {
             std::cout << "SRs are considered" << std::endl;
