@@ -10,7 +10,7 @@ void EventFourTLoose::classifyEvent() {
             if (numberOfLooseBJets() != 0) return;
             if (! getMediumLepCol()->hasOSSFPair()) return;
 
-            if (passZBosonVeto() && ! passSingleZBosonVeto()) {
+            if (! passZBosonVeto() && ! passSingleZBosonVeto()) {
                 SetEventClass(eventClass::crzz);
             }
         } else if (numberOfLeps() == 3) {

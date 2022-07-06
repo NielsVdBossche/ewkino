@@ -274,6 +274,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
             if (tightLeps.size() < 2) continue;
             if (tightLeps.size() == 2 && tightLeps.hasOSSFPair()) continue;
+            if (tightLeps.size() == 4 && tightLeps.sumCharges() != 0) continue;
 
             cutflowHist->Fill(6., weight);
             cutflowHistSub->Fill(6., weight);

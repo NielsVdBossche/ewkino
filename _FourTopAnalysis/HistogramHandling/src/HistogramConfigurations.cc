@@ -67,8 +67,8 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "B-score_PtThirdJet_" + flag, "DF(j_{3})", 26, -0.04, 1.),
             HistInfo( "B-score_PtFourthJet_" + flag, "DF(j_{4})", 26, -0.04, 1.),
             
-            HistInfo( "mtLeadLepMET_" + flag, "M_{T}(W) [GeV]", 13, 40, 300),
-            HistInfo( "mtSubLeadLepMET_" + flag, "M_{T}(W) [GeV]", 13, 40, 300),
+            HistInfo( "mtLeadLepMET_" + flag, "m_{T}(l_{1},#vec{p}_{T}^{miss}) [GeV]", 13, 40, 300),
+            HistInfo( "mtSubLeadLepMET_" + flag, "m_{T}(l_{2}},#vec{p}_{T}^{miss}) [GeV]", 13, 40, 300),
 
             //HistInfo( "m2ll_" + flag, "MT", 100, 0, 100),
             HistInfo( "m2ll_" + flag, "m_{T2}(l1,l2) [GeV]", 15, 0, 150),
