@@ -135,6 +135,8 @@ class TreeReader {
         Double_t        _leptonMvaTTH[nL_max];
         Double_t        _leptonMvatZq[nL_max];
 	Double_t        _leptonMvaTOP[nL_max];
+	Double_t        _leptonMvaTOPUL[nL_max];
+	Double_t        _leptonMvaTOPv2UL[nL_max];
         Bool_t          _lPOGVeto[nL_max];   
         Bool_t          _lPOGLoose[nL_max];   
         Bool_t          _lPOGMedium[nL_max];   
@@ -522,6 +524,8 @@ class TreeReader {
         TBranch        *b__leptonMvaTTH;
         TBranch        *b__leptonMvatZq;
 	TBranch        *b__leptonMvaTOP;
+	TBranch        *b__leptonMvaTOPUL;
+	TBranch        *b__leptonMvaTOPv2UL;
         TBranch        *b__lPOGVeto;   
         TBranch        *b__lPOGLoose;   
         TBranch        *b__lPOGMedium;   

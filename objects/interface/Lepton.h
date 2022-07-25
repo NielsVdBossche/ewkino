@@ -52,6 +52,7 @@ class Lepton : public PhysicsObject {
 
         //lepton id decisions 
         bool isLoose() const{ return selector->isLoose(); }
+        bool isLooseV2() const{ return selector->isLooseV2(); }
         bool isFO() const{ return selector->isFO(); }
         bool isTight() const{ return selector->isTight(); }
         bool isTightCharge() const {return selector->isTightCharge();}

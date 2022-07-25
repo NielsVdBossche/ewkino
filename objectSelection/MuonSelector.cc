@@ -199,3 +199,39 @@ cone correction
 double MuonSelector::coneCorrection() const{
     return ( muonConeCorrectionFactor() / muonPtr->ptRatio() );
 }
+
+// New loose muon selection for new TOPleptonMVA version
+
+
+bool MuonSelector::isLooseV2Base() const{
+    if( muonPtr->uncorrectedPt() <= 5 ) return false;
+    if( muonPtr->absEta() >= 2.4 ) return false; 
+    if( muonPtr->sip3d() >= 15 ) return false;
+    if( muonPtr->relIso0p3() >= 1. ) return false;
+    return true;
+}
+
+bool MuonSelector::isLooseV22016() const{
+    return true;
+}
+
+bool MuonSelector::isLooseV22016PreVFP() const{
+    return true;
+}
+
+
+bool MuonSelector::isLooseV22016PostVFP() const{
+    return true;
+}
+
+
+bool MuonSelector::isLooseV22017() const{
+    return true;
+}
+
+
+bool MuonSelector::isLooseV22018() const{
+    return true;
+}
+
+

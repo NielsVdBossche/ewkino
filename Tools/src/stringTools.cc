@@ -187,3 +187,13 @@ std::vector< std::string > stringTools::split( const std::string& s, std::initia
 std::vector< std::string > stringTools::split( const std::string& s ){
     return stringTools::split( s, {"\t", " "} );
 }
+
+std::string stringTools::mergeString(const std::vector<std::string>& splitString, const std::string& substring) {
+    std::string ret = "";
+    for (auto str : splitString) {
+        ret += str + substring;
+    }
+    ret = ret.substr(0, ret.size()-substring.size());
+
+    return ret;
+}

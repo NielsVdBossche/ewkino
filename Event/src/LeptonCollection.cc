@@ -119,6 +119,9 @@ void LeptonCollection::selectLooseLeptons(){
     selectObjects( &Lepton::isLoose );
 }
 
+void LeptonCollection::selectLooseV2Leptons(){
+    selectObjects( &Lepton::isLooseV2 );
+}
 
 void LeptonCollection::selectFOLeptons(){
     selectObjects( &Lepton::isFO );
@@ -230,6 +233,10 @@ void LeptonCollection::cleanTausFromLightLeptons( bool (Lepton::*passSelection)(
 
 void LeptonCollection::cleanElectronsFromLooseMuons( const double coneSize ){
     return cleanElectronsFromMuons( &Lepton::isLoose, coneSize );
+}
+
+void LeptonCollection::cleanElectronsFromLooseV2Muons( const double coneSize ){
+    return cleanElectronsFromMuons( &Lepton::isLooseV2, coneSize );
 }
 
 

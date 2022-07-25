@@ -32,6 +32,7 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
 
         //select leptons
         void selectLooseLeptons();
+        void selectLooseV2Leptons();
         void selectFOLeptons();
         void selectTightLeptons();
         void selectTightChargeLeptons();
@@ -47,6 +48,7 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
 
         //clean electrons and taus 
         void cleanElectronsFromLooseMuons( const double coneSize = 0.05 );
+        void cleanElectronsFromLooseV2Muons( const double coneSize = 0.05 );
         void cleanElectronsFromFOMuons( const double coneSize = 0.05 );
         void cleanTausFromLooseLightLeptons( const double coneSize = 0.4 );
         void cleanTausFromFOLightLeptons( const double coneSize = 0.4 );

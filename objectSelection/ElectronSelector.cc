@@ -219,3 +219,37 @@ cone correction
 double ElectronSelector::coneCorrection() const{
     return ( electronConeCorrectionFactor() / electronPtr->ptRatio() );
 }
+
+// New loose electron selection for new TOPleptonMVA version
+
+
+bool ElectronSelector::isLooseV2Base() const{
+    if( electronPtr->uncorrectedPt() < 7 ) return false;
+    if( electronPtr->absEta() >= 2.5 ) return false;
+    if( electronPtr->sip3d() >= 15 ) return false;
+    if( electronPtr->relIso0p3() >= 1. ) return false;
+    return true;
+}
+
+bool ElectronSelector::isLooseV22016() const{ 
+    return true;
+}
+
+bool ElectronSelector::isLooseV22016PreVFP() const{ 
+    return true;
+}
+
+bool ElectronSelector::isLooseV22016PostVFP() const{ 
+    return true;
+}
+
+
+bool ElectronSelector::isLooseV22017() const{
+    return true;
+}
+
+
+bool ElectronSelector::isLooseV22018() const{
+    return true;
+}
+

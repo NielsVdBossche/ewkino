@@ -5,8 +5,8 @@
 
 
 bool passLeptonicSkim( Event& event, LeptonCollection::size_type numberOfLeptons ){
-    event.selectLooseLeptons();
-    event.cleanElectronsFromLooseMuons();
+    event.selectLooseV2Leptons();
+    event.cleanElectronsFromLooseV2Muons();
     event.cleanTausFromLooseLightLeptons();
     return ( event.numberOfLeptons() >= numberOfLeptons );
 }
@@ -52,8 +52,8 @@ bool passFourLeptonSkim( Event& event ){
 }
 
 bool passLightLeptonSkimNew(Event& event) {
-    event.selectLooseLeptons();
-    event.cleanElectronsFromLooseMuons();
+    event.selectLooseV2Leptons();
+    event.cleanElectronsFromLooseV2Muons();
     return ( event.numberOfLightLeptons() >= 2 );
 }
 
@@ -70,11 +70,13 @@ bool passFakeRateSkim( Event& event ){
 }
 
 bool passFourTopBaseSkim(Event& event) {
-    event.selectLooseLeptons();
-    event.cleanElectronsFromLooseMuons();
+    event.selectLooseV2Leptons();
+    event.cleanElectronsFromLooseV2Muons();
     event.removeTaus();
     if (event.numberOfLightLeptons() < 2) return false;
     if (event.numberOfLightLeptons() == 2 && event.hasOSLeptonPair()) return false;
+
+    return true;
 }
 
 

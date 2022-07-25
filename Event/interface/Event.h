@@ -101,9 +101,11 @@ class Event {
 
         //lepton selection and cleaning
         void selectLooseLeptons(){ _leptonCollectionPtr->selectLooseLeptons(); }
+        void selectLooseV2Leptons(){ _leptonCollectionPtr->selectLooseV2Leptons(); }
         void selectFOLeptons(){ _leptonCollectionPtr->selectFOLeptons(); }
         void selectTightLeptons(){ _leptonCollectionPtr->selectTightLeptons(); }
        	void cleanElectronsFromLooseMuons( const double coneSize = 0.05 ){ _leptonCollectionPtr->cleanElectronsFromLooseMuons( coneSize ); }
+       	void cleanElectronsFromLooseV2Muons( const double coneSize = 0.05 ){ _leptonCollectionPtr->cleanElectronsFromLooseV2Muons( coneSize ); }
         void cleanElectronsFromFOMuons( const double coneSize = 0.05 ){ _leptonCollectionPtr->cleanElectronsFromFOMuons( coneSize ); }
         void cleanTausFromLooseLightLeptons( const double coneSize = 0.4 ){ _leptonCollectionPtr->cleanTausFromLooseLightLeptons( coneSize ); }
         void cleanTausFromFOLightLeptons( const double coneSize = 0.4 ){ _leptonCollectionPtr->cleanTausFromFOLightLeptons( coneSize ); }

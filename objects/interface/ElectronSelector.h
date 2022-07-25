@@ -25,6 +25,13 @@ class ElectronSelector : public LeptonSelector {
         virtual bool isLoose2017() const override;
         virtual bool isLoose2018() const override;
 
+        virtual bool isLooseV2Base() const override;
+        virtual bool isLooseV22016() const override;
+	virtual bool isLooseV22016PreVFP() const override;
+	virtual bool isLooseV22016PostVFP() const override;
+        virtual bool isLooseV22017() const override;
+        virtual bool isLooseV22018() const override;
+
         virtual bool isFOBase() const override;
         virtual bool isFO2016() const override;
 	virtual bool isFO2016PreVFP() const override;

@@ -8,6 +8,7 @@ class LeptonSelector {
 
     public:
         bool isLoose() const;
+        bool isLooseV2() const;
         bool isFO() const;
         bool isTight() const;
 
@@ -22,6 +23,13 @@ class LeptonSelector {
 	virtual bool isLoose2016PostVFP() const = 0;
         virtual bool isLoose2017() const = 0;
         virtual bool isLoose2018() const = 0;
+
+        virtual bool isLooseV2Base() const = 0;
+        virtual bool isLooseV22016() const = 0;
+	virtual bool isLooseV22016PreVFP() const = 0;
+	virtual bool isLooseV22016PostVFP() const = 0;
+        virtual bool isLooseV22017() const = 0;
+        virtual bool isLooseV22018() const = 0;
 
         virtual bool isFOBase() const = 0;
         virtual bool isFO2016() const = 0;
