@@ -51,13 +51,18 @@ def initJobScript(name, cmssw_version='CMSSW_10_6_27'):
     print('initJobScript created {}'.format(fname))
 
 def makeJobDescription(name, exe, argstring=None, stdout=None, stderr=None, log=None,
-			cpus=1, mem=1024, disk=10240):
+			cpus=1, mem=1024, disk=10240, jdName=None):
     ### create a single job description txt file
     ### note: exe can for example be a runnable bash script
     ### note: argstring is a single string containing the arguments to exe (space-separated)
     # parse arguments:
     name = os.path.splitext(name)[0]
-    fname = name+'.sub'
+
+    if jdName:
+        fname = jdName
+    else:
+        fname = name+'.sub'
+        
     if os.path.exists(fname): os.system('rm {}'.format(fname))
     if stdout is None: stdout = '/user/nivanden/condor/output/' + name+'_$(ClusterId)_$(ProcId).out'
     if stderr is None: stderr = '/user/nivanden/condor/error/' + name+'_$(ClusterId)_$(ProcId).err'
@@ -101,7 +106,7 @@ def submitCommandsAsCondorCluster(name, commands, stdout=None, stderr=None, log=
     # parse arguments
     name = os.path.splitext(name)[0]
     shname = makeUnique(name+'.sh')
-    jdname = name+'.sub'
+    jdname = makeUnique(name+'.sub')
     [exe,argstring] = commands[0].split(' ',1) # exe must be the same for all commands
     nargs = len(argstring.split(' ')) # nargs must be the same for all commands
     # first make the executable
@@ -147,7 +152,7 @@ def submitCommandsAsCondorJobs(name, commands, stdout=None, stderr=None, log=Non
         # parse arguments
         name = os.path.splitext(name)[0]
         shname = makeUnique(name+'.sh')
-        jdname = name+'.sub'
+        jdname = makeUnique(name+'.sub')
         # first make the executable
         initJobScript(shname, cmssw_version=cmssw_version)
         with open(shname,'a') as script:
@@ -157,6 +162,41 @@ def submitCommandsAsCondorJobs(name, commands, stdout=None, stderr=None, log=Non
                             cpus=cpus,mem=mem,disk=disk)
         # finally submit the job
         submitCondorJob(jdname)
+
+def submitCommandsetsAsCondorCluster(name, commands, stdout=None, stderr=None, log=None,
+            cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_27'):
+    ### submit multiple sets of commands as one cluster (one job of the clusterper set)
+    ### commands is a list of lists of strings, each string represents a single command
+    ### the commands can be anything and are not necessarily same executable or number of args.
+    # parse arguments
+    name = os.path.splitext(name)[0]
+    shname = makeUnique(name+'.sh')
+    jdname = makeUnique(name+'.sub')
+    # first make the executable
+    initJobScript(shname, cmssw_version=cmssw_version)
+    with open(shname,'a') as script:
+        commandset = commands[0]
+        for cmd in commandset: script.write(cmd+'\n')
+
+    # then make the job description
+    # first job:
+    makeJobDescription(name,shname,stdout=stdout,stderr=stderr,log=log,
+                            cpus=cpus,mem=mem,disk=disk,jdName=jdname)
+
+    with open(jdname,'a') as jdScript:    
+        for commandset in commands[1:]:
+            # parse arguments
+            name = os.path.splitext(name)[0]
+            shname = makeUnique(name+'.sh')
+            # first make the executable
+            initJobScript(shname, cmssw_version=cmssw_version)
+            with open(shname,'a') as script:
+                for cmd in commandset: script.write(cmd+'\n')
+            # then make the job description
+            jdScript.write('executable = {}\n'.format(shname))
+            jdScript.write('queue\n\n')
+    # finally submit the job
+    submitCondorJob(jdname)
 
 
 def submitScriptAsCondorJob(scriptName):

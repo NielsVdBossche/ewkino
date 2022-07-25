@@ -7,8 +7,8 @@ import time
 
 #import other code from framework
 sys.path.append(os.path.abspath('../'))
-from jobSubmission.condorTools import submitCommandsAsCondorJob, submitCommandsAsCondorCluster
-from skimmerCleaned.python.fileListing import *
+from jobSubmission.condorTools import submitCommandsAsCondorJob, submitCommandsAsCondorCluster, submitCommandsetsAsCondorCluster
+from fileListing import *
 
 # input: /pnfs/iihe/cms/store/user/nivanden/heavyNeutrino/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFPv6/220630_155601/0000/
 # output: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2/220630_155601_0000_singlelep_0.root
@@ -56,20 +56,17 @@ if __name__ == '__main__' :
         root_files = list( listFiles( os.path.join( sample_directory, sub_directory ), '.root' ) )
         
         jobCommands = []
+
         #split_files in lists of files_per_job
         for chunk in listParts( root_files, files_per_job ):
-        
+            
             #make a job script 
             script_name = 'skimmer.sh'
-
             commands = []
             for f in chunk :
-                skim_command = './skimmer {} {} {}\n'.format( f, output_directory, skim_condition )
+                skim_command = './skimmer {} {} {}'.format( f, output_directory, skim_condition )
                 commands.append(skim_command)
-            
-            jobCommands.append(commands)
-            #submitCommandsAsCondorJob(script_name, commands)
+
+            jobCommands.append(commands)                    
         
-        submitCommandsAsCondorCluster(script_name, jobCommands)
-
-
+        submitCommandsetsAsCondorCluster(script_name, jobCommands)
