@@ -64,9 +64,9 @@ def makeJobDescription(name, exe, argstring=None, stdout=None, stderr=None, log=
         fname = name+'.sub'
         
     if os.path.exists(fname): os.system('rm {}'.format(fname))
-    if stdout is None: stdout = '/user/nivanden/condor/output/' + name+'_$(ClusterId)_$(ProcId).out'
-    if stderr is None: stderr = '/user/nivanden/condor/error/' + name+'_$(ClusterId)_$(ProcId).err'
-    if log is None: log = '/user/nivanden/condor/logs/' + name+'_$(ClusterId)_$(ProcId).log'
+    if stdout is None: stdout =  name+'_$(ClusterId)_$(ProcId).out'
+    if stderr is None: stderr =  name+'_$(ClusterId)_$(ProcId).err'
+    if log is None: log = name+'_$(ClusterId)_$(ProcId).log'
     # write file
     with open(fname,'w') as f:
         f.write('executable = {}\n'.format(exe))
