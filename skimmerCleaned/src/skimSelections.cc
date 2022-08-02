@@ -70,8 +70,8 @@ bool passFakeRateSkim( Event& event ){
 }
 
 bool passFourTopBaseSkim(Event& event) {
-    event.selectLooseV2Leptons();
-    event.cleanElectronsFromLooseV2Muons();
+    event.selectLooseLeptons();
+    event.cleanElectronsFromLooseMuons();
     event.removeTaus();
     if (event.numberOfLightLeptons() < 2) return false;
     if (event.numberOfLightLeptons() == 2 && event.hasOSLeptonPair()) return false;
