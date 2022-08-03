@@ -71,9 +71,9 @@ def makeJobDescription(name, exe, argstring=None, stdout=None, stderr=None, log=
     with open(fname,'w') as f:
         f.write('executable = {}\n'.format(exe))
         if argstring is not None: f.write('arguments = "{}"\n\n'.format(argstring))
-        f.write('output = {}\n'.format(stdout))
-        f.write('error = {}\n'.format(stderr))
-        f.write('log = {}\n\n'.format(log))
+        f.write('output = /user/nivanden/condor/output/{}\n'.format(stdout))
+        f.write('error = /user/nivanden/condor/error/{}\n'.format(stderr))
+        f.write('log = /user/nivanden/condor/logs/{}\n\n'.format(log))
         #f.write('request_cpus = {}\n'.format(cpus)) # Don't specify if not necessary
         #f.write('request_memory = {}\n'.format(mem)) # Don't specify if not necessary
         #f.write('request_disk = {}\n\n'.format(disk)) # Don't specify if not necessary
