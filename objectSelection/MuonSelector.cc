@@ -10,12 +10,12 @@
 
 // define here what mva threshold to use in tZq ID's listed below
 double muonMVACut(){
-    return 0.4;
+    return 0.64;
 }
 
 // define here what mva value to use in tZq ID's listed below
 double muonMVAValue(const Muon* muonPtr){
-    return muonPtr->leptonMVATOP();
+    return muonPtr->leptonMVATOPUL();
 }
 
 // define here what b-tagger to use in all tZq ID's listed below
@@ -36,7 +36,7 @@ loose muon selection (common to tZq, ttH and old tZq ID)
 */
 
 bool MuonSelector::isLooseBase() const{
-    if( muonPtr->uncorrectedPt() <= 5 ) return false;
+    if( muonPtr->uncorrectedPt() <= 10 ) return false;
     if( muonPtr->absEta() >= 2.4 ) return false; 
     if( fabs( muonPtr->dxy() ) >= 0.05 ) return false;
     if( fabs( muonPtr->dz() ) >= 0.1 ) return false;

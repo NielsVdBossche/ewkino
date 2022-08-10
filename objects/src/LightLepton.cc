@@ -17,7 +17,9 @@ LightLepton::LightLepton( const TreeReader& treeReader, const unsigned leptonInd
     _closestJetTrackMultiplicity( treeReader._selectedTrackMult[leptonIndex] ),
     _leptonMVAtZq( treeReader._leptonMvatZq[leptonIndex] ),
     _leptonMVAttH( treeReader._leptonMvaTTH[leptonIndex] ),
-    _leptonMVATOP( treeReader._leptonMvaTOP[leptonIndex] )
+    _leptonMVATOP( treeReader._leptonMvaTOP[leptonIndex] ),
+    _leptonMVATOPUL( treeReader._leptonMvaTOPUL[leptonIndex] ),
+    _leptonMVATOPULv2( treeReader._leptonMvaTOPULv2[leptonIndex] )
 {
 
     //catch nan deep CSV values 
@@ -53,7 +55,9 @@ LightLepton::LightLepton( const LightLepton& rhs, LeptonSelector* leptonSelector
     _closestJetTrackMultiplicity( rhs._closestJetTrackMultiplicity ),
     _leptonMVAtZq( rhs._leptonMVAtZq ),
     _leptonMVAttH( rhs._leptonMVAttH ),
-    _leptonMVATOP( rhs._leptonMVATOP)
+    _leptonMVATOP( rhs._leptonMVATOP),
+    _leptonMVATOPUL( rhs._leptonMVATOPUL),
+    _leptonMVATOPULv2( rhs._leptonMVATOPULv2)
     {}
 
 
@@ -70,7 +74,9 @@ LightLepton::LightLepton( LightLepton&& rhs, LeptonSelector* leptonSelector ):
     _closestJetTrackMultiplicity( rhs._closestJetTrackMultiplicity ),
     _leptonMVAtZq( rhs._leptonMVAtZq ),
     _leptonMVAttH( rhs._leptonMVAttH ),
-    _leptonMVATOP( rhs._leptonMVATOP)
+    _leptonMVATOP( rhs._leptonMVATOP),
+    _leptonMVATOPUL( rhs._leptonMVATOPUL),
+    _leptonMVATOPULv2( rhs._leptonMVATOPULv2)
     {}
 
 

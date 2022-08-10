@@ -602,7 +602,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("_leptonMvatZq", _leptonMvatZq, &b__leptonMvatZq);
     _currentTreePtr->SetBranchAddress("_leptonMvaTOP", _leptonMvaTOP, &b__leptonMvaTOP);
     _currentTreePtr->SetBranchAddress("_leptonMvaTOPUL", _leptonMvaTOPUL, &b__leptonMvaTOPUL);
-    _currentTreePtr->SetBranchAddress("_leptonMvaTOPv2UL", _leptonMvaTOPv2UL, &b__leptonMvaTOPv2UL);
+    _currentTreePtr->SetBranchAddress("_leptonMvaTOPv2UL", _leptonMvaTOPULv2, &b__leptonMvaTOPv2UL);
     _currentTreePtr->SetBranchAddress("_lPOGVeto", _lPOGVeto, &b__lPOGVeto);
     _currentTreePtr->SetBranchAddress("_lPOGLoose", _lPOGLoose, &b__lPOGLoose);
     _currentTreePtr->SetBranchAddress("_lPOGMedium", _lPOGMedium, &b__lPOGMedium);
@@ -867,7 +867,7 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     outputTree->Branch("_leptonMvatZq",                 &_leptonMvatZq,                 "_leptonMvatZq[_nLight]/D");
     outputTree->Branch("_leptonMvaTOP",                 &_leptonMvaTOP,                 "_leptonMvaTOP[_nLight]/D");
     outputTree->Branch("_leptonMvaTOPUL",               &_leptonMvaTOPUL,               "_leptonMvaTOPUL[_nLight]/D");
-    outputTree->Branch("_leptonMvaTOPv2UL",             &_leptonMvaTOPv2UL,             "_leptonMvaTOPv2UL[_nLight]/D");
+    outputTree->Branch("_leptonMvaTOPv2UL",             &_leptonMvaTOPULv2,             "_leptonMvaTOPv2UL[_nLight]/D");
     outputTree->Branch("_lPOGVeto",                     &_lPOGVeto,                     "_lPOGVeto[_nL]/O");
     outputTree->Branch("_lPOGLoose",                    &_lPOGLoose,                    "_lPOGLoose[_nL]/O");
     outputTree->Branch("_lPOGMedium",                   &_lPOGMedium,                   "_lPOGMedium[_nL]/O");
@@ -1089,7 +1089,7 @@ void TreeReader::setLeanOutputTree( TTree* outputTree ){
     outputTree->Branch("_lElectronSigmaIetaIeta",       &_lElectronSigmaIetaIeta,       "_lElectronSigmaIetaIeta[_nLight]/D");
     outputTree->Branch("_leptonMvaTOP",                 &_leptonMvaTOP,                 "_leptonMvaTOP[_nLight]/D");
     outputTree->Branch("_leptonMvaTOPUL",               &_leptonMvaTOPUL,               "_leptonMvaTOPUL[_nLight]/D");
-    outputTree->Branch("_leptonMvaTOPv2UL",             &_leptonMvaTOPv2UL,             "_leptonMvaTOPv2UL[_nLight]/D");
+    outputTree->Branch("_leptonMvaTOPv2UL",             &_leptonMvaTOPULv2,             "_leptonMvaTOPv2UL[_nLight]/D");
     outputTree->Branch("_lPOGVeto",                     &_lPOGVeto,                     "_lPOGVeto[_nL]/O");
     outputTree->Branch("_lPOGLoose",                    &_lPOGLoose,                    "_lPOGLoose[_nL]/O");
     outputTree->Branch("_lPOGMedium",                   &_lPOGMedium,                   "_lPOGMedium[_nL]/O");

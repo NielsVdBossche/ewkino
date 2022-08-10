@@ -81,10 +81,10 @@ std::vector<HistInfo>* HistogramConfig::getHistInfo(eventClass evClass) {
             HistInfo( "ptJetSix_" + flag, "p_{T}(j6) [GeV]", 15, 0, 150),
             HistInfo( "MToPT_" + flag, "#frac{M}{p_{T}}", 15, 0, 150),
 
-            HistInfo( "B-score_BTagLeadJet_" + flag, "DF_{1}", 26, -0.04, 1.),
-            HistInfo( "B-score_BTagSubLeadJet_" + flag, "DF_{2}", 26, -0.04, 1.),
-            HistInfo( "B-score_BTagThirdJet_" + flag, "DF_{3}", 26, -0.04, 1.),
-            HistInfo( "B-score_BTagFourthJet_" + flag, "DF_{4}", 26, -0.04, 1.),
+            HistInfo( "B-score_BTagLeadJet_" + flag, "max_{1} DF", 26, -0.04, 1.),
+            HistInfo( "B-score_BTagSubLeadJet_" + flag, "max_{2} DF", 26, -0.04, 1.),
+            HistInfo( "B-score_BTagThirdJet_" + flag, "max_{3} DF", 26, -0.04, 1.),
+            HistInfo( "B-score_BTagFourthJet_" + flag, "max_{4} DF", 26, -0.04, 1.),
 
             HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120),
             HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll}(low) [GeV]", 50, 5, 15),

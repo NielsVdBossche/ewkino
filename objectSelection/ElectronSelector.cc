@@ -13,12 +13,12 @@
 
 // define here what mva threshold to use in tZq ID's listed below
 double electronMVACut(){
-    return 0.4;
+    return 0.81;
 }
 
 // define here what mva value to use in tZq ID's listed below
 double electronMVAValue(const Electron* electronPtr){
-    return electronPtr->leptonMVATOP();
+    return electronPtr->leptonMVATOPUL();
 }
 
 // define here what b-tagger to use in all tZq ID's listed below
@@ -39,7 +39,7 @@ loose electron selection (common for ttH and tZq IDs)
 ----------------------------------------------------------------
 */
 bool ElectronSelector::isLooseBase() const{
-    if( electronPtr->uncorrectedPt() < 7 ) return false;
+    if( electronPtr->uncorrectedPt() < 10) return false;
     //if( electronPtr->uncorrectedPt() < 5 ) return false; // for syncing with TT
     if( electronPtr->absEta() >= 2.5 ) return false;
     if( fabs( electronPtr->dxy() ) >= 0.05 ) return false;
@@ -47,6 +47,12 @@ bool ElectronSelector::isLooseBase() const{
     if( electronPtr->sip3d() >= 8 ) return false;
     if( electronPtr->numberOfMissingHits() >= 2 ) return false;
     if( electronPtr->miniIso() >= 0.4 ) return false;
+
+    if ( std::abs(electronPtr->etaSuperCluster()) > 1.4442 && std::abs(electronPtr->etaSuperCluster()) < 1.566) return false;
+
+    if( !electronPtr->passConversionVeto() ) return false;
+    if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
+
     return true;
 }
 
@@ -100,15 +106,6 @@ FO electron selection for medium 0p4 tZq ID
 bool ElectronSelector::isFOBase() const{
     if( !isLoose() ) return false;
     if( electronPtr->uncorrectedPt() <= 10 ) return false;
-    if( electronPtr->hOverE() >= 0.1 ) return false;
-    if( electronPtr->inverseEMinusInverseP() <= -0.04 ) return false;
-    if( std::abs(electronPtr->etaSuperCluster()) <= 1.479 ){
-        if( electronPtr->sigmaIEtaEta() >= 0.011 ) return false;
-    } else {
-        if( electronPtr->sigmaIEtaEta() >= 0.030 ) return false;
-    }
-    if( !electronPtr->passConversionVeto() ) return false;
-    if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
 
     return true;
 }
