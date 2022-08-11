@@ -52,18 +52,7 @@ for dir in os.listdir(inputBase):
     print(outputDir)
     # decide outputname: strip inputdirname of useless stuff en same for individual files (singlelep, date, 0000/0001 stuff)
     # Handle different files in same dir.. Should be fixed at skimming level... Not because same identifier that they're allowed to be in same subdir. For this, add some uniqueness to naming?
-    inputFileName = ""
-    i = -1
-    while not ".root" in inputFileName:
-        i += 1
-        inputFileName = os.listdir(os.path.join(inputBase, dir))[i]
-
-    # Strip names
-    # Inputpath looks like samplename/00xx_data_time_singlelep_X.root
-    # outputname: samplename + 
-    #if ("singlelepton" in inputFileName):
-    #    outputFileName = inputFileName.split("singlelepton_")[0][:-17] + ".root"
-    outputFileName = inputFileName.split("/")[-2] + ".root" # should cut away date
+    outputFileName = dir + ".root"
 
     # join outputname with outputfolder
     outputPath = os.path.join(outputDir, outputFileName)

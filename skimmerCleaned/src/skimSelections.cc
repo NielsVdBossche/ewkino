@@ -79,6 +79,19 @@ bool passFourTopBaseSkim(Event& event) {
     return true;
 }
 
+bool passFourTopMvaSkim(Event& event) {
+    event.selectLooseLeptons();
+    event.cleanElectronsFromLooseMuons();
+    event.removeTaus();
+    if (event.numberOfLightLeptons() < 2) return false;
+    if (event.numberOfLightLeptons() - event.numberOfTightLeptons() > 1) return false;
+    if (event.numberOfLightLeptons() == 2 && event.hasOSLeptonPair()) return false;
+    if (event.numberOfJets() < 2) return false;
+    if (event.numberOfLooseBTaggedJets() < 1) return false;
+    // might make this tighter in the future
+    return true;
+}
+
 
 skimCondition giveCondition(const std::string& condstring) {
     static std::map< std::string, skimCondition > skimFunctionMap = {
@@ -90,7 +103,8 @@ skimCondition giveCondition(const std::string& condstring) {
         { "fakerate", fakerate },
         { "light_SSdilepton_or_trilep", light_SSdilepton_or_trilep },
         { "lightDileptonSkim", lightDileptonSkim},
-        { "fourTopBase", fourTopBase}
+        { "fourTopBase", fourTopBase},
+        { "fourTopMva", fourTopMva}
     };
 
     auto it = skimFunctionMap.find( condstring );
@@ -112,7 +126,8 @@ bool passSkim( Event& event, skimCondition cond){
         { fakerate, passFakeRateSkim },
         { light_SSdilepton_or_trilep, passLight_SSdilepton_or_trilep },
         { lightDileptonSkim, passLightLeptonSkimNew},
-        { fourTopBase, passFourTopBaseSkim}
+        { fourTopBase, passFourTopBaseSkim},
+        { fourTopMva, passFourTopMvaSkim}
     };
     //auto it = skimFunctionMap.find( cond );
 

@@ -42,13 +42,7 @@ def mergeTuples(mergableDir):
     except OSError as error: 
         print(outputDir + " already exists")
 
-    inputFileName = ""
-    i = -1
-    while not ".root" in inputFileName:
-        i += 1
-        inputFileName = os.listdir(mergableDir)[i]
-
-    outputFileName = inputFileName.split("/")[-2] + ".root" # should cut away date
+    outputFileName = mergableDir.split("/")[-1] + ".root" # should cut away date
 
     # join outputname with outputfolder
     outputPath = os.path.join(outputDir, outputFileName)
