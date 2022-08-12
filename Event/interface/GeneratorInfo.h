@@ -39,12 +39,12 @@ class GeneratorInfo{
         double relativeWeight_FSR_2() const{ return relativeWeightPsVar( 5 ); }
         double relativeWeight_FSR_0p25() const{ return relativeWeightPsVar( 6 ); }
         double relativeWeight_FSR_4() const{ return relativeWeightPsVar( 7 ); }
-        double relativeWeight_ISR_InverseSqrt2() const{ return relativeWeightPsVar( 2 ); }
-        double relativeWeight_ISR_Sqrt2() const{ return relativeWeightPsVar( 4 ); }
-        double relativeWeight_ISR_0p5() const{ return relativeWeightPsVar( 6 ); }
-        double relativeWeight_ISR_2() const{ return relativeWeightPsVar( 8 ); }
-        double relativeWeight_ISR_0p25() const{ return relativeWeightPsVar( 10 ); }
-        double relativeWeight_ISR_4() const{ return relativeWeightPsVar( 12 ); }
+        double relativeWeight_ISR_InverseSqrt2() const{ return relativeWeightPsVar( 24 ); }
+        double relativeWeight_ISR_Sqrt2() const{ return relativeWeightPsVar( 25 ); }
+        double relativeWeight_ISR_0p5() const{ return relativeWeightPsVar( 26 ); }
+        double relativeWeight_ISR_2() const{ return relativeWeightPsVar( 27 ); }
+        double relativeWeight_ISR_0p25() const{ return relativeWeightPsVar( 28 ); }
+        double relativeWeight_ISR_4() const{ return relativeWeightPsVar( 29 ); }
 
         unsigned ttgEventType() const{ return _ttgEventType; }
         unsigned zgEventType() const{ return _zgEventType; }
@@ -62,7 +62,7 @@ class GeneratorInfo{
         static constexpr unsigned maxNumberOfLheWeights = 148;
         unsigned _numberOfLheWeights;
         double _lheWeights[maxNumberOfLheWeights];
-        static constexpr unsigned maxNumberOfPsWeights = 14;
+        static constexpr unsigned maxNumberOfPsWeights = 46;
         unsigned _numberOfPsWeights;
         double _psWeights[maxNumberOfPsWeights];
         double _prefireWeight;

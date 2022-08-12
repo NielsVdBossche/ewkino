@@ -13,6 +13,8 @@
 
 #include <iostream>
 
+#include "../Tools/interface/stringTools.h"
+
 int main(int argc, char const *argv[]) {
     TMVA::PyMethodBase::PyInitialize();
 
@@ -33,14 +35,26 @@ int main(int argc, char const *argv[]) {
     std::string tree = argv[2]; // tree should be dynamical, but don't know if it will be used as input. Maybe in some other way... 
     std::string setup = argv[3];
     std::string searchSetup = argv[4];
-    // extra variable for training true or false?
+    std::string variables = ""; // just make variables the last thing added.
+
+    int el = 0;
+    for (auto arg : argvStr) {
+        el++;
+        if (el < 6) continue;
+        if (stringTools::stringContains(arg, ".txt")) {
+            variables = arg;
+        }
+    }
 
     std::map<std::string, mvaConfiguration> translator = {
+        {"BDT_VAR_DL", mvaConfiguration::BDT_VAR_DL},
+        {"BDT_VAR_ML", mvaConfiguration::BDT_VAR_ML},
         {"DL_BDT", mvaConfiguration::BDT_DL},
         {"ML_BDT", mvaConfiguration::BDT_ML},
         {"DL_NN", mvaConfiguration::NN_DL},
         {"ML_NN", mvaConfiguration::NN_ML}
     };
+
     mvaConfiguration conf = translator[setup];
 
     TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf);

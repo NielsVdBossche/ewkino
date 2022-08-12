@@ -1,1 +1,1 @@
-python skimTuplesCondor.py /pnfs/iihe/cms/store/user/nivanden/heavyNeutrino/ 2016_ULpostVFPv6 /pnfs/iihe/cms/store/user/nivanden/skims_v3/rawSkims/ fourTopBase 50
+python skimTuplesCondor.py /pnfs/iihe/cms/store/user/gmestdac/heavyNeutrinoUL3/ 2018_ULv6 /pnfs/iihe/cms/store/user/nivanden/skims_v4/rawSkims/ fourTopBase 250

@@ -3,7 +3,7 @@
 #include "../../Tools/interface/parseTools.h"
 #include "../../Tools/interface/stringTools.h"
 
-std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree* chain, mvaConfiguration config) {
+std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree* chain, mvaConfiguration config, std::vector<std::string>& variables) {
     Double_t* weight = new Double_t;
     //*weight = 1.; // unless changed elsewhere
     chain->SetBranchAddress("weight", weight);
@@ -20,6 +20,14 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
         dataVector = new std::vector<Double_t>(49);
     }
 
+    if (config == BDT_VAR_DL || config == BDT_VAR_ML) {
+        dataVector = new std::vector<Double_t>(variables.size());
+        int pos = 0;
+        for (auto var : variables) {
+            chain->SetBranchAddress(var.c_str(), &dataVector->at(pos));
+            pos++;
+        }
+    }
 
     if (config == BDT_DL) {
         chain->SetBranchAddress("N_jets",           &dataVector->at(0));
@@ -207,7 +215,13 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
     return {weight, dataVector};
 }
 
-void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* dataloader) {
+void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* dataloader, std::vector<std::string>& variables) {
+
+    if (config == BDT_VAR_DL || config == BDT_VAR_ML) {
+        for (auto var : variables) {
+            dataloader->AddVariable(var, 'F');
+        }
+    }
 
     if (config == BDT_DL) {
         dataloader->AddVariable("N_jets", 'F');
@@ -416,8 +430,26 @@ void mvaDataManager::readChainToLoader(TChain* chain, TString& className, TMVA::
     }
 }
 
+std::vector<std::string> mvaDataManager::readConfigFile(std::string& configFile) {
+    std::vector<std::string> ret;
 
-TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::string& treeName, mvaConfiguration config) {
+    std::ifstream fileStream(configFile);
+    std::string line;
+    std::string mvaName; 
+    
+    while (getline(fileStream, line)) {
+        if (parseTools::skipLine(line)) continue;
+        
+        // potentially also extract a name here. Although rather avoid it
+
+        ret.push_back(line);
+    }
+    return ret;
+}
+
+
+
+TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::string& treeName, mvaConfiguration config, std::string configFile) {
     // Open samplelist,
     // Line by line read samples, ordered per class
     // Structure of samplelist:
@@ -436,7 +468,13 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
     std::string basePath = "/user/nivanden/ewkino/MVATraining/trainingsamples/";
 
     TMVA::DataLoader* dataloader = new TMVA::DataLoader("VeryEpicLoader");
-    prepareLoader(config, dataloader);
+    
+    std::vector<std::string> variables;
+    if (configFile != "") {
+        variables = readConfigFile(configFile);
+    }
+
+    prepareLoader(config, dataloader, variables);
 
     std::ifstream fileStream(sampleList);
     std::string line;
@@ -468,7 +506,7 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
             TFile* input = new TFile(currentFile.c_str(), "open");
             TTree* newClassElement  = (TTree*) input->Get(treeName.c_str());
 
-            std::pair<Double_t*, std::vector<Double_t>*> vars = prepareTTree(newClassElement, config);
+            std::pair<Double_t*, std::vector<Double_t>*> vars = prepareTTree(newClassElement, config, variables);
             
             double ptrain = 0.8;
             if (stream >> splitFraction) {
@@ -487,6 +525,7 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
             }
 
             input->Close();
+            delete vars.second;
         }
 
         //readChainToLoader(newClass, classNameAlt, dataloader, vars);
@@ -496,3 +535,4 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
 
     return dataloader;
 }
+

@@ -23,17 +23,10 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     }
 
     if( _numberOfPsWeights > maxNumberOfPsWeights ){
-        //throw std::out_of_range( "_numberOfPsWeights is larger than 14, which is the maximum array size of _psWeights." );
+        throw std::out_of_range( "_numberOfPsWeights is larger than 14, which is the maximum array size of _psWeights." );
     }
     for( unsigned i = 0; i < _numberOfPsWeights; ++i ){
         _psWeights[i] = treeReader._psWeight[i];
-    }
-
-    //prefire weights are not defined for 2018 events, set them to unity
-    if( treeReader.is2018() ){
-        _prefireWeight = 1.;
-        _prefireWeightDown = 1.;
-        _prefireWeightUp = 1.;
     }
 
     if (treeReader.containsLheInfo()) {
