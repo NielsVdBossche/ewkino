@@ -46,6 +46,7 @@ def initJobScript(name, cmssw_version='CMSSW_10_6_27'):
         script.write('eval `scram runtime -sh`\n')
         script.write('export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER)\n')
         script.write('cd {}\n'.format( cwd ) )
+        script.write('echo "{}"'.format(fname))
     # make executable (seems to be needed from 19/02/2021 onwards)
     os.system('chmod +x '+fname)
     print('initJobScript created {}'.format(fname))
@@ -82,14 +83,14 @@ def makeJobDescription(name, exe, argstring=None, stdout=None, stderr=None, log=
         f.write('queue\n\n')
     print('makeJobDescription created {}'.format(fname))
 
-def submitCondorJob(jobDescription):
+def submitCondorJob(jobDescription, addArgs=""):
     ### submit a job description file as a condor job
     fname = os.path.splitext(jobDescription)[0]+'.sub'
     if not os.path.exists(fname):
         print('### ERROR ###: job description file {} not found'.format(fname))
         sys.exit()
     # maybe later extend this part to account for failed submissions etc!
-    os.system('condor_submit {}'.format(fname))
+    os.system('condor_submit {} {}'.format(fname, addArgs))
 
 def submitCommandAsCondorJob(name, command, stdout=None, stderr=None, log=None,
                         cpus=1, mem=1024, disk=10240, cmssw_version='CMSSW_10_6_27'):
@@ -196,7 +197,7 @@ def submitCommandsetsAsCondorCluster(name, commands, stdout=None, stderr=None, l
             jdScript.write('executable = {}\n'.format(shname))
             jdScript.write('queue\n\n')
     # finally submit the job
-    submitCondorJob(jdname)
+    submitCondorJob(jdname, addArgs='-batch-name="{}"'.format(name))
 
 
 def submitScriptAsCondorJob(scriptName):

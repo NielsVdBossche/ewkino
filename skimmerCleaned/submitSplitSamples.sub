@@ -1,8 +1,9 @@
 universe = vanilla
 executable = splitSamples.py
+arguments  = $(Process)
 
 output	= /user/nivanden/condor/output/splitTuples_$(Process).out
 error	= /user/nivanden/condor/error/splitTuples_$(Process).err
 log	= /user/nivanden/condor/logs/splitTuples_$(Process).log
 
-queue
+queue 5

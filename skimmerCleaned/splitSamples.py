@@ -7,12 +7,29 @@ import os
 import random
 import shutil
 import subprocess
+import sys
 
 base_directory = "/pnfs/iihe/cms/store/user/nivanden/skims_v4/rawSkims/"
 analysisSubDir = "analysisSamples"
 mvaSubDir = "mvaSamples"
 
 finalOutputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v4/"
+
+if (sys.argv[1] == '0'):
+    skimVersion = ["2016_ULpreVFP", "RunIISummer20UL16MiniAODAPV", "MiniAOD2016preVFP", "2016_ULpreVFP_Nov"]
+    outSubdir = "2016PreVFP"
+elif (sys.argv[1] == '1'):
+    skimVersion = ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD-106X", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]
+    outSubdir = "2016PostVFP"
+elif (sys.argv[1] == '4'):
+    skimVersion = ["Run2016"]
+    outSubdir = "2016"
+elif (sys.argv[1] == '2'):
+    skimVersion = ["2017_UL", "RunIISummer20UL17MiniAOD", "MiniAOD2017", "2017_Nov", "Run2017"]
+    outSubdir = "2017"
+elif (sys.argv[1] == '3'):
+    skimVersion = ["2018_UL", "RunIISummer20UL18MiniAOD", "MiniAOD2018", "2018_Nov", "Run2018"]
+    outSubdir = "2018"
 
 def mergeTuples(mergableDir):
     version = mergableDir.split("_version_")[-1]
@@ -61,6 +78,9 @@ folders = [(element, frac) for process, frac in zip(processes, fractions) for el
 for folder, currFrac in folders:
     # make output dirs (direct copy of dir)
     print("Currently working on " + folder.split('/')[-1])
+
+    if not any(skimver in folder for skimver in skimVersion):
+        continue
     
     outputAnalysis = os.path.join(base_directory, analysisSubDir, folder.split('/')[-1])
     try:
