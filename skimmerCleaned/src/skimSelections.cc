@@ -5,8 +5,8 @@
 
 
 bool passLeptonicSkim( Event& event, LeptonCollection::size_type numberOfLeptons ){
-    event.selectLooseV2Leptons();
-    event.cleanElectronsFromLooseV2Muons();
+    event.selectLooseLeptons();
+    event.cleanElectronsFromLooseMuons();
     event.cleanTausFromLooseLightLeptons();
     return ( event.numberOfLeptons() >= numberOfLeptons );
 }
@@ -52,8 +52,8 @@ bool passFourLeptonSkim( Event& event ){
 }
 
 bool passLightLeptonSkimNew(Event& event) {
-    event.selectLooseV2Leptons();
-    event.cleanElectronsFromLooseV2Muons();
+    event.selectLooseLeptons();
+    event.cleanElectronsFromLooseMuons();
     return ( event.numberOfLightLeptons() >= 2 );
 }
 

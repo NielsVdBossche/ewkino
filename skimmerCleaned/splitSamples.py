@@ -103,11 +103,16 @@ for folder, currFrac in folders:
     # list files in folder, copy (by random choice to right subdir)
     for file in os.listdir(folder):
         r = random.random()
-
+        print(os.path.join(folder, file))
+        print(outputAnalysis)
         if (r < 1 - currFrac):
-            shutil.copy2(os.path.join(folder, file), outputAnalysis)
+            # shutil.copy2(os.path.join(folder, file), outputAnalysis)
+            print("cp {} {}".format(os.path.join(folder, file), outputAnalysis))
+            subprocess.call("cp {} {}".format(os.path.join(folder, file), outputAnalysis))
         else:
-            shutil.copy2(os.path.join(folder, file), outputMVA)
+            # shutil.copy2(os.path.join(folder, file), outputMVA)
+            print("cp {} {}".format(os.path.join(folder, file), outputMVA))
+            subprocess.call("cp {} {}".format(os.path.join(folder, file), outputMVA))
 
     # once files are moved, merge samples from these new folders to subfolders in respective years.
 

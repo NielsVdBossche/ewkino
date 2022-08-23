@@ -197,7 +197,7 @@ def submitCommandsetsAsCondorCluster(name, commands, stdout=None, stderr=None, l
             jdScript.write('executable = {}\n'.format(shname))
             jdScript.write('queue\n\n')
     # finally submit the job
-    submitCondorJob(jdname, addArgs='-batch-name="{}"'.format(name))
+    submitCondorJob(jdname, addArgs='-batch-name "{}"'.format(name))
 
 
 def submitScriptAsCondorJob(scriptName):
