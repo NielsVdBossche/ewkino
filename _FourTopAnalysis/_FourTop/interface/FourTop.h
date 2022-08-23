@@ -41,10 +41,15 @@ class FourTop {
         int zgOverlapCheck; // 0: neither, 1: DY, 2: ZG
 
         bool infuseNonPrompt = false; // Boolean to allow 1 loose lepton for ttbar
-        bool leanEventSelection = false;
+        bool leanEventSelection = true;
         bool onlyCR = false;
+        bool bdtOutput = true;
         bool printEventTags = false;
         bool testRun = false;
+        bool useUncertainties = true;
+        std::string plotString = "Nominal";
+        eventClass considerRegion = eventClass::fail;
+        selectionType st = selectionType::MCAll;
 
         // General settings for analysis run
         std::string yearString = "Combi";
@@ -104,6 +109,7 @@ class FourTop {
         void testRuns();
         
         std::map<eventClass, int> FillHistogramManager(ChannelManager* mgrAll);
+        ChannelManager* GenerateChannelManager();
 
         void cutFlow(std::string& sortingMode);
         void createMVATrainingSamples();
@@ -113,6 +119,7 @@ class FourTop {
         void fillMVAVariablesNormalized(bool is4L);
 
         bool eventPassesTriggers();
+        bool FillRegion(eventClass nominalClass, selectionType st, eventClass considerRegion);
 
         void initDdChargeMisID(double* corr);
         void initFakerate();

@@ -1,10 +1,13 @@
 #ifndef CHANNELMANAGER_H
 #define CHANNELMANAGER_H
 
+#include <functional>
+
 #include "../../globalSettings.h"
 
 #include "Channel.h"
 #include "HistogramConfigurations.h"
+
 
 class ChannelManager {
     private:
@@ -28,13 +31,16 @@ class ChannelManager {
 
         bool useUncertainties = true;
     public:
-        ChannelManager(TFile* outputFile);
+        ChannelManager(TFile* outputFile, bool generateChannels=true);
         ChannelManager(TFile* outputFile, eventClass classToPlots);
         ChannelManager(TFile* outputFile, std::map<eventClass, std::string> naming);
         ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass));
 
         std::string GetName(eventClass evClass) {return namingScheme[evClass];}
         ~ChannelManager();
+        
+        void addChannels(std::map< eventClass, std::function<std::vector<HistInfo>*(const eventClass)>>& histInfoGenMap);
+        void addChannel(eventClass evClass, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass));
 
         Channel* at(eventClass ev) {return mapping[ev];}
         Channel* operator[](eventClass ev) {return mapping[ev];}

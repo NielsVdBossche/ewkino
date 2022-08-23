@@ -1,1 +1,1 @@
-ZZ-H            2017/GluGluToContinToZZTo4e_TuneCP5_13TeV-mcfm701-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv4.root                                                   0.0027
+ZZ-H            ../skims_v4/2017/GluGluToContinToZZTo4mu_TuneCP5_13TeV-mcfm701-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                                 0.0027

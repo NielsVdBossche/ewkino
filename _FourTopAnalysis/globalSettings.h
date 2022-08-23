@@ -30,4 +30,13 @@ enum selectionType {
     Data
 };
 
+enum fillingConfiguration {
+    minimal,
+    minimalNoBDTOutput,
+    onlyVariables,
+    fullNoBDTOutput,
+    full
+};
+
+
 #endif

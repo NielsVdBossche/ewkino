@@ -1,1 +1,1 @@
-TTTT            2018/analysisSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_2018_ULv3.root                                                         0.01197
+TTTT            ../skims_v4/2018/analysisSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root                                                    0.01197

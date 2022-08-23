@@ -18,7 +18,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    selection = new EventFourT();
+    selection = new EventFourTLoose();
 
     if (mode < 2) {
         std::string outputFileName = "Output/" + outputName + "_";
@@ -37,18 +37,20 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 onlyCR = true;
             } else if (stringTools::stringContains(it, "timestamp=")) {
                 timestampOutputName = stringTools::split(it, "=")[1];
-            } else if (stringTools::stringContains(it, "lean") || stringTools::stringContains(it, "loose")) {
-                leanEventSelection = true;
-                outputFileName += "LooseAn_";
+            } else if (stringTools::stringContains(it, "tight") || stringTools::stringContains(it, "tight")) {
+                leanEventSelection = false;
+                outputFileName += "OriginalAn_";
 
                 delete selection;
-                selection = new EventFourTLoose();
+                selection = new EventFourT();
             } else if (stringTools::stringContains(it, "region=")) {
                 searchRegion = stringTools::split(it, "=")[1];
             } else if (stringTools::stringContains(it, "EventInfo")) {
                 printEventTags = true;
             } else if (stringTools::stringContains(it, "TestCode")) {
                 testRun = true;
+            } else if (stringTools::stringContains(it, "plotString=")) {
+                plotString = stringTools::split(it, "=")[1];
             }
         }
 

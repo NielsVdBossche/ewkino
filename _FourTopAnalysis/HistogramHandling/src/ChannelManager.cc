@@ -4,18 +4,18 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
-ChannelManager::ChannelManager(TFile* outputFile) : outfile(outputFile) {
-    // ask for outputfile as well?
+ChannelManager::ChannelManager(TFile* outputFile, bool generateChannels) : outfile(outputFile) {
+    if (! generateChannels) return;
 
     for (auto it : namingScheme) {
         if (it.first == eventClass::fail) continue;
-        std::vector<HistInfo>* histInfoVec = HistogramConfig::getHistInfo(it.first);
+        std::vector<HistInfo>* histInfoVec = HistogramConfig::getNominalHists(it.first);
         mapping[it.first] = new Channel(it.second, histInfoVec);
     }
 }
 
 ChannelManager::ChannelManager(TFile* outputFile, eventClass classToPlot) : outfile(outputFile) {
-    std::vector<HistInfo>* histInfoVec = HistogramConfig::getHistInfo(classToPlot);
+    std::vector<HistInfo>* histInfoVec = HistogramConfig::getNominalHists(classToPlot);
     std::string name = namingScheme[classToPlot];
     mapping[classToPlot] = new Channel(name, histInfoVec);
 }
@@ -25,7 +25,7 @@ ChannelManager::ChannelManager(TFile* outputFile, std::map<eventClass, std::stri
     // ask for outputfile as well?
 
     for (auto it : names) {
-        std::vector<HistInfo>* histInfoVec = HistogramConfig::getHistInfo(it.first);
+        std::vector<HistInfo>* histInfoVec = HistogramConfig::getNominalHists(it.first);
         mapping[it.first] = new Channel(it.second, histInfoVec);
     }
 }
@@ -40,6 +40,18 @@ ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histI
 
 ChannelManager::~ChannelManager() {
 
+}
+
+void ChannelManager::addChannels(std::map< eventClass, std::function<std::vector<HistInfo>*(const eventClass)>>& histInfoGenMap) {
+    for (auto it : histInfoGenMap) {
+        std::vector<HistInfo>* histInfoVec = it.second(it.first);
+        mapping[it.first] = new Channel(namingScheme[it.first], histInfoVec);
+    }
+}
+
+void ChannelManager::addChannel(eventClass evClass, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass)) {
+    std::vector<HistInfo>* histInfoVec = histInfoGenerator(evClass);
+    mapping[evClass] = new Channel(namingScheme[evClass], histInfoVec);
 }
 
 void ChannelManager::newSample(std::string& sampleName) {

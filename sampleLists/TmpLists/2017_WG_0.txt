@@ -1,1 +1,1 @@
-WG          ../skims_v2/2017/WGToLNuG_TuneCP5_13TeV-madgraphMLM-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv4.root                                                 412.7
+WG              ../skims_v4/2017/WGToLNuG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                                    192.3

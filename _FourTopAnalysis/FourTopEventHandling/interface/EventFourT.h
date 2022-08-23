@@ -44,19 +44,23 @@ class EventFourT {
         double ht, met;
 
         bool isNormalSelected;
-
+        bool bdtOutput = true;
+        
         TopReconstructionNew* topReco;
         std::vector<double> scoresMVA;
         
         MVAHandler_4T* dl_MVA, *ml_MVA;
 
         std::map<eventClass, int> offsets;
-
+        
+        std::function<std::vector<double>(const eventClass, EventFourT*)> histFiller = HistogramConfig::fillNominalHists;
     public:
 
         EventFourT();
         virtual ~EventFourT() {cleanSelection();};
 
+        void setFillerFunction(std::function<std::vector<double>(const eventClass, EventFourT*)> newHistFiller) {histFiller = newHistFiller;};
+        void setPrintBDTOutput(bool newSettings) {bdtOutput = newSettings;}
         void setSelectionType(selectionType st) {selType = st;}
         
         void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}

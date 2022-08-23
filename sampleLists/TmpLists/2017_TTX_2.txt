@@ -1,1 +1,1 @@
-TTX            2017/TTTW_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v3_singlelepton_MC_2017_ULv4.root                                                                    0.0007314
+TTX             ../skims_v4/2017/ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root              80.95

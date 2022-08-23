@@ -13,12 +13,14 @@
 
 // define here what mva threshold to use in tZq ID's listed below
 double electronMVACut(){
-    return 0.81;
+    // return 0.81;
+    return 0.4;
 }
 
 // define here what mva value to use in tZq ID's listed below
 double electronMVAValue(const Electron* electronPtr){
-    return electronPtr->leptonMVATOPUL();
+    return electronPtr->leptonMVATOP();
+    // return electronPtr->leptonMVATOPUL();
 }
 
 // define here what b-tagger to use in all tZq ID's listed below
@@ -49,9 +51,6 @@ bool ElectronSelector::isLooseBase() const{
     if( electronPtr->miniIso() >= 0.4 ) return false;
 
     if ( std::abs(electronPtr->etaSuperCluster()) > 1.4442 && std::abs(electronPtr->etaSuperCluster()) < 1.566) return false;
-
-    if( !electronPtr->passConversionVeto() ) return false;
-    if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
 
     return true;
 }
@@ -106,6 +105,16 @@ FO electron selection for medium 0p4 tZq ID
 bool ElectronSelector::isFOBase() const{
     if( !isLoose() ) return false;
     if( electronPtr->uncorrectedPt() <= 10 ) return false;
+
+    if( electronPtr->hOverE() >= 0.1 ) return false;
+    if( electronPtr->inverseEMinusInverseP() <= -0.04 ) return false;
+    if( std::abs(electronPtr->etaSuperCluster()) <= 1.479 ){
+        if( electronPtr->sigmaIEtaEta() >= 0.011 ) return false;
+    } else {
+        if( electronPtr->sigmaIEtaEta() >= 0.030 ) return false;
+    }
+    if( !electronPtr->passConversionVeto() ) return false;
+    if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
 
     return true;
 }

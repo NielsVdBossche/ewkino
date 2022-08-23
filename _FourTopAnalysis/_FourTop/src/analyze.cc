@@ -8,30 +8,24 @@ void FourTop::analyze(std::string method) {
     std::map<eventClass, int> offsets;
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
-    selectionType st = selectionType::MCAll;
-    bool useUncertainties = true;
+
     bool isNPControl = false;
     double chMisCorr = 0.;
-
-    //std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
-    //std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
-
-    eventClass considerRegion = eventClass::fail;
 
     if (onlyCR) {
         std::cout << "ANALYZING ONLY CR" << std::endl;
     } else {
         std::cout << "ANALYZING SR + CR" << std::endl;
     }
-    ChannelManager* mgrAll;
-    if (searchRegion == "All") {
-        mgrAll = new ChannelManager(outfile);
-    } else if (searchRegion == "ConvCR") {
-        onlyCR = true;
-        mgrAll = new ChannelManager(outfile, eventClass::cr_conv);
-        considerRegion = eventClass::cr_conv;
-        useUncertainties = false;
-    }
+    ChannelManager* mgrAll = GenerateChannelManager();
+    //if (searchRegion == "All") {
+    //    mgrAll = new ChannelManager(outfile);
+    //} else if (searchRegion == "ConvCR") {
+    //    onlyCR = true;
+    //    mgrAll = new ChannelManager(outfile, eventClass::cr_conv);
+    //    considerRegion = eventClass::cr_conv;
+    //    useUncertainties = false;
+    //}
     std::map<shapeUncId, std::string> uncTranslateMap; // can we do this so we don't ask it if data
 
     // reweighter creation
@@ -142,7 +136,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        bool useSplitJEC = false;
+        bool useSplitJEC = true;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
@@ -285,94 +279,27 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
-
             if (sampleReweighter && selection->leptonsArePrompt() && nominalClass > eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
 
-            if ((nominalClass == eventClass::crz3L || nominalClass == eventClass::crz4L || nominalClass == eventClass::cro3L) && st != unsigned(selectionType::ChargeMisDD) && (considerRegion == eventClass::fail || nominalClass == considerRegion)) {
-                std::vector<double> scores = mva_ML->scoreEvent();
+            // make a bool for filling checks. 
+            // 
 
-                fillVec = fourTopHists::fillAllLean(nominalClass, selection); // change falses/trues by eventClass
+            // if signal region && onlyCR: skip
+            // if chargeMisDD && not dilep: skip
+            // if region != considerRegion && considerRegion != fail: skip
 
-                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
-                fillVec2D = mva_ML->fill2DVector();
+            if (FillRegion(nominalClass, st, considerRegion)) {
+                fillVec = selection->fillVector();
+                singleEntries = selection->singleFillEntries();
+                fillVec2D = selection->fillVector2D();
 
-                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
-                singleEntries.push_back({offsets[nominalClass] + classAndScore.first, classAndScore.second});
-
-                mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
-                mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
-                mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
-
-            } else if ((nominalClass == eventClass::crw || nominalClass == eventClass::cro) && (considerRegion == eventClass::fail || nominalClass == considerRegion)) {              
-                std::vector<double> scores = mva_DL->scoreEvent();
-                fillVec = fourTopHists::fillAllLean(nominalClass, selection); // change falses/trues by eventClass
-
-                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
-                fillVec2D = mva_DL->fill2DVector();
-                std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
                 subChannels = GetSubClasses(nominalClass);
 
-                singleEntries.push_back({offsets[nominalClass]  + classAndScore.first, classAndScore.second});
+                // make function bundling this behaviour.
                 mgrAll->at(nominalClass)->fillAllHistograms(subChannels, processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
                 mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
-            } else if (nominalClass == eventClass::ssdl && ! onlyCR) {  
-                if (printEventTags) eventTagsOutput << currentEvent->runNumber() << "," << currentEvent->eventNumber() << "," << currentEvent->luminosityBlock() << std::endl;
-
-                std::vector<double> scores = mva_DL->scoreEvent();
-
-                fillVec = fourTopHists::fillAllHists(selection);
-                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
-
-                fillVec2D = mva_DL->fill2DVector();
-
-                std::pair<MVAClasses, double> classAndScore = mva_DL->getClassAndScore();   
-                singleEntries.push_back({offsets[ssdl]  + classAndScore.first, classAndScore.second});
-
-                subChannels = GetSubClasses(nominalClass);
-
-                mgrAll->at(eventClass::ssdl)->fillAllHistograms(subChannels, processNb, fillVec, weight);
-                mgrAll->at(eventClass::ssdl)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
-                mgrAll->at(eventClass::ssdl)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
-            } else if (nominalClass == eventClass::trilep && ! onlyCR  && st != selectionType::ChargeMisDD) {
-                if (printEventTags) eventTagsOutput << currentEvent->runNumber() << "," << currentEvent->eventNumber() << "," << currentEvent->luminosityBlock() << std::endl;
-                std::vector<double> scores = mva_ML->scoreEvent();
-
-                fillVec = fourTopHists::fillAllHists(selection);
-                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
-
-                fillVec2D = mva_ML->fill2DVector();
-
-                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();   
-                singleEntries.push_back({offsets[trilep]  + classAndScore.first, classAndScore.second});
-
-                subChannels = GetSubClasses(nominalClass);
-
-                mgrAll->at(eventClass::trilep)->fillAllHistograms(subChannels, processNb, fillVec, weight);
-                mgrAll->at(eventClass::trilep)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
-                mgrAll->at(eventClass::trilep)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
-            } else if (nominalClass == eventClass::fourlep && ! onlyCR) {
-                std::vector<double> scores = mva_ML->scoreEvent();
-
-                fillVec = fourTopHists::fillAllHists(selection);
-                fillVec.insert(fillVec.end(), scores.begin(), scores.end());
-
-                fillVec2D = mva_ML->fill2DVector();
-
-                std::pair<MVAClasses, double> classAndScore = mva_ML->getClassAndScore();  
-                singleEntries.push_back({offsets[fourlep]  + classAndScore.first, classAndScore.second});
-                
-                mgrAll->at(eventClass::fourlep)->fillHistograms(processNb, fillVec, weight);
-                mgrAll->at(eventClass::fourlep)->fill2DHistograms(processNb, fillVec2D, weight);
-                mgrAll->at(eventClass::fourlep)->fillSingleHistograms(processNb, singleEntries, weight);
-            } else if ((nominalClass != eventClass::fail && nominalClass < eventClass::ssdl) &  (considerRegion == eventClass::fail || nominalClass == considerRegion)) {
-                fillVec = fourTopHists::fillAllLean(nominalClass, selection); // change falses/trues by eventClass
-
-                mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
-                mgrAll->at(nominalClass)->fill2DHistograms(processNb, fillVec2D, weight);
-                mgrAll->at(nominalClass)->fillSingleHistograms(processNb, singleEntries, weight);
             }
-
 
             // Systematics
             if (currentEvent->isData() || ! useUncertainties || processNb > 0) continue;
@@ -523,8 +450,8 @@ void FourTop::analyze(std::string method) {
                     subChannelsUp = GetSubClasses(upClass);
                     subChannelsDown = GetSubClasses(downClass);
 
-                    if ((! onlyCR || unsigned(upClass) < eventClass::ssdl || (considerRegion != eventClass::fail && upClass != considerRegion)) && upClass != eventClass::fail) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                    if ((! onlyCR || unsigned(downClass) < eventClass::ssdl || (considerRegion != eventClass::fail && downClass != considerRegion)) && downClass != eventClass::fail) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    if (FillRegion(upClass, st, considerRegion)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    if (FillRegion(downClass, st, considerRegion)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (considerBTagShape) {
@@ -547,8 +474,8 @@ void FourTop::analyze(std::string method) {
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
-                        if ((! onlyCR || unsigned(upClass) < eventClass::ssdl || (considerRegion != eventClass::fail && upClass != considerRegion)) && upClass != eventClass::fail) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                        if ((! onlyCR || unsigned(downClass) < eventClass::ssdl || (considerRegion != eventClass::fail && downClass != considerRegion)) && downClass != eventClass::fail) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (FillRegion(upClass, st, considerRegion)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                        if (FillRegion(downClass, st, considerRegion)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                     }
                 }
 
@@ -652,6 +579,91 @@ CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
     return sampleReweighter;
 }
 
+ChannelManager* FourTop::GenerateChannelManager() {
+    // rules for generation of channelmanager.
+    ChannelManager* ret = nullptr;
+
+    // if plotstring == min
+    // if plotstring == bdtvariables 
+    // if plotstring == nominal
+    // if plotstring contains NoBDTOutput
+
+    if (stringTools::stringContains(plotString, "NoBDTOutput")) {
+        bdtOutput = false;
+        selection->setPrintBDTOutput(false);
+    }
+
+    std::function<std::vector<HistInfo>*(const eventClass)> histGenerator;
+    std::function<std::vector<double>(const eventClass, EventFourT*)> histFiller;
+
+    if (stringTools::stringContains(plotString, "Nominal")) {
+        histGenerator = HistogramConfig::getNominalHists;
+        ret = new ChannelManager(outfile, HistogramConfig::getNominalHists);
+        histFiller = HistogramConfig::fillNominalHists;
+    } else if (stringTools::stringContains(plotString, "Minimal")) {
+        ret = new ChannelManager(outfile, HistogramConfig::getMinimalHists);
+        histGenerator = HistogramConfig::getMinimalHists;
+        histFiller = HistogramConfig::fillMinimalHists;
+    } else if (stringTools::stringContains(plotString, "OnlyBDTVariables")) {
+        ret = new ChannelManager(outfile, HistogramConfig::getAllBDTVarsHists);
+        histGenerator = HistogramConfig::getAllBDTVarsHists;
+        histFiller = HistogramConfig::fillAllBDTVarsHists;
+    }
+
+
+    //if (searchRegion == "All") {
+    //    ret = new ChannelManager(outfile);
+    //} else if (searchRegion == "ConvCR") {
+    //    onlyCR = true;
+    //    ret = new ChannelManager(outfile, eventClass::cr_conv);
+    //    considerRegion = eventClass::cr_conv;
+    //    useUncertainties = false;
+    //}
+    // still lacking: which channels (e.g. onlyCR or only one region) && subchannels: yes or no?
+    // three different setups to start off. Nominal should just keep what we are doing I think?
+    // also needs to build a fillmap
+
+    //std::map<eventClass, std::string> flagMapping = {
+    //    {fail, "fail"},
+    //    {crwz, "CRWZ"},
+    //    {crzz, "CRZZ"},
+    //    {cr_conv, "CR-Conversion"},
+    //    {crz3L, "CR-3L-Z"},
+    //    {crz4L, "CR-4L-Z"},
+    //    {cro, "CR-2L-23J1B"},
+    //    {cro3L, "CR-3L-2J1B"},
+    //    {crw, "CR-2L-45J2B"},
+    //    {ssdl, "SR-2L"},
+    //    {trilep, "SR-3L"},
+    //    {fourlep, "SR-4L"}
+    //};
+//
+//
+    //if (searchRegion == "All") {
+    //    considerRegion = eventClass::fail;
+    //} else if (searchRegion == "ConvCR") {
+    //    considerRegion = eventClass::cr_conv;
+    //}
+//
+    //std::map<eventClass, std::vector<HistInfo>*> infoMap;
+    ////std::map<eventClass, std::function<std::vector<double>(const eventClass)>> histFillerLinks;
+//
+    //if (stringTools::stringContains(plotString, "Nominal")) {
+//
+    //} else if (stringTools::stringContains(plotString, "Minimal")) {
+    //    
+    //} else if (stringTools::stringContains(plotString, "OnlyBDTVariables")) {
+//
+    //}
+//
+    //if (stringTools::stringContains(plotString, "NoBDTOutput")) {
+    //
+    //}
+
+    return ret;
+}
+
+
 std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) {
     std::map<eventClass, int> offsets;
 
@@ -660,60 +672,72 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
     std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
     if (searchRegion == "All") {
-        offsets[eventClass::crz3L] = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
-        offsets[eventClass::crz4L] = mgrAll->at(eventClass::crz4L)->getHistInfo()->size() + mva_ML->getMaxClass();
-        offsets[eventClass::cro3L] = mgrAll->at(eventClass::cro3L)->getHistInfo()->size() + mva_ML->getMaxClass();  
-        offsets[eventClass::cro] = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
-        offsets[eventClass::crw] = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
+        if (bdtOutput) {
+            offsets[eventClass::crz3L] = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
+            offsets[eventClass::crz4L] = mgrAll->at(eventClass::crz4L)->getHistInfo()->size() + mva_ML->getMaxClass();
+            offsets[eventClass::cro3L] = mgrAll->at(eventClass::cro3L)->getHistInfo()->size() + mva_ML->getMaxClass();  
+            offsets[eventClass::cro] = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
+            offsets[eventClass::crw] = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
 
+            mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-Z", true));
+            mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-Z", true));
+            mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-2J1B", true));
+            mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CR-2L-23J1B", true));
+            mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CR-2L-45J2B", true));
 
-        mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-Z", true));
-        mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-Z", true));
-        mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-2J1B", true));
-        mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CR-2L-23J1B", true));
-        mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CR-2L-45J2B", true));
-
-        mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-Z", true));
-        mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-4L-Z", true));
-        mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-2J1B", true));
-        mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-23J1B", true));
-        mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
+            mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-Z", true));
+            mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-4L-Z", true));
+            mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-2J1B", true));
+            mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-23J1B", true));
+            mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
+        }
         
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
         if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
 
         if (! onlyCR) {
             std::cout << "SRs are considered" << std::endl;
+            if (bdtOutput) { 
+                offsets[eventClass::ssdl] = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
+                offsets[eventClass::trilep] = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
+                offsets[eventClass::fourlep] = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
 
-            offsets[eventClass::ssdl] = mgrAll->at(eventClass::ssdl)->getHistInfo()->size() + mva_DL->getMaxClass();
-            offsets[eventClass::trilep] = mgrAll->at(eventClass::trilep)->getHistInfo()->size() + mva_ML->getMaxClass();
-            offsets[eventClass::fourlep] = mgrAll->at(eventClass::fourlep)->getHistInfo()->size() + mva_ML->getMaxClass();
-
-            mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
-            mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
-            mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
-            mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
-            mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
-            mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
+                mgrAll->at(eventClass::ssdl)->updateHistInfo(mva_DL->createHistograms(""));
+                mgrAll->at(eventClass::trilep)->updateHistInfo(mva_ML->createHistograms(""));
+                mgrAll->at(eventClass::fourlep)->updateHistInfo(mva_ML->createHistograms("", true));
+                mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
+                mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
+                mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
+            }
 
             mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
             mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
         }
-    } //else if (searchRegion != "ConvCR") {
-
-        // refine code once necessary
-        //MVAHandler_4T* handler;
-        //if (considerRegion == eventClass::crz3L || considerRegion == eventClass::crz4L || considerRegion == eventClass::cro3L) {
-        //    handler = mva_ML;
-        //} else {
-        //    handler = mva_DL;
-        //}
-        //std::string regionName = mgrAll->GetName(considerRegion);
-        //offsets[considerRegion] = mgrAll->at(considerRegion)->getHistInfo()->size() + handler->getMaxClass();
-
-        //mgrAll->at(considerRegion)->updateHistInfo(handler->createHistograms("_" + regionName));
-        //mgrAll->at(considerRegion)->set2DHistInfo(handler->create2DHistograms("_" + regionName));
-    //}
+    } 
+    if (! bdtOutput) {
+        offsets = {
+            {eventClass::crwz, 0},
+            {eventClass::cr_conv, 0},
+            {eventClass::crzz, 0},
+            {eventClass::crz3L, 0},
+            {eventClass::crz4L, 0},
+            {eventClass::cro, 0},
+            {eventClass::cro3L, 0},
+            {eventClass::crw, 0},
+            {eventClass::ssdl, 0},
+            {eventClass::trilep, 0},
+            {eventClass::fourlep, 0}
+        };
+    }
 
     return offsets;
+}
+
+bool FourTop::FillRegion(eventClass nominalClass, selectionType st, eventClass considerRegion) {
+    if (nominalClass == eventClass::fail) return false;
+    if (st == selectionType::ChargeMisDD && (nominalClass != eventClass::ssdl || nominalClass != eventClass::cro || nominalClass != eventClass::crw)) return false;
+    if (onlyCR && unsigned(nominalClass) >= eventClass::ssdl) return false;
+    if (considerRegion != eventClass::fail && nominalClass != considerRegion) return false;
+
+    return true;
 }
