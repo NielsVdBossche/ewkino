@@ -86,8 +86,19 @@ bool passFourTopMvaSkim(Event& event) {
     if (event.numberOfLightLeptons() < 2) return false;
     if (event.numberOfLightLeptons() - event.numberOfTightLeptons() > 1) return false;
     if (event.numberOfLightLeptons() == 2 && event.hasOSLeptonPair()) return false;
-    if (event.numberOfJets() < 2) return false;
-    if (event.numberOfLooseBTaggedJets() < 1) return false;
+    if (event.numberOfLightLeptons() == 4) {
+        if (event.numberOfJets() < 2) return false;
+        if (event.numberOfLooseBTaggedJets() < 1) return false;
+    } else if (event.numberOfLightLeptons() == 3) {
+        if (event.numberOfJets() < 3) return false;
+        if (event.numberOfLooseBTaggedJets() < 2) return false;
+        if (event.HT() < 200) return false; 
+    } else if (event.numberOfLightLeptons() == 2) {
+        if (event.numberOfJets() < 4) return false;
+        if (event.numberOfLooseBTaggedJets() < 2) return false;
+        if (event.numberOfLooseBTaggedJets() == 2 && event.numberOfJets() < 6) return false;
+        if (event.HT() < 200) return false; 
+    }
     // might make this tighter in the future
     return true;
 }
