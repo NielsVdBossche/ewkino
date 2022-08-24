@@ -46,7 +46,7 @@ def initJobScript(name, cmssw_version='CMSSW_10_6_27'):
         script.write('eval `scram runtime -sh`\n')
         script.write('export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER)\n')
         script.write('cd {}\n'.format( cwd ) )
-        script.write('echo "{}"'.format(fname))
+        script.write('echo "{}\n"'.format(fname))
     # make executable (seems to be needed from 19/02/2021 onwards)
     os.system('chmod +x '+fname)
     print('initJobScript created {}'.format(fname))
