@@ -10,14 +10,12 @@
 
 // define here what mva threshold to use in tZq ID's listed below
 double muonMVACut(){
-    // return 0.64;
-    return 0.4;
+    return 0.64;
 }
 
 // define here what mva value to use in tZq ID's listed below
 double muonMVAValue(const Muon* muonPtr){
-    // return muonPtr->leptonMVATOPUL();
-    return muonPtr->leptonMVATOP();
+    return muonPtr->leptonMVATOPUL();
 }
 
 // define here what b-tagger to use in all tZq ID's listed below
