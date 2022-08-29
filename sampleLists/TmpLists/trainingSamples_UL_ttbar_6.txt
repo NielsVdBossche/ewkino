@@ -1,1 +1,1 @@
-ttbar           ../skims_v4/2016PostVFP/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFPv6.root                         365.34
+ttbar           ../skims_v4/2016PostVFP/mvaSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFPv6.root                         365.34
