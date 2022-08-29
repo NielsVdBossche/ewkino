@@ -60,7 +60,11 @@ bool selectLeptonsLooseMVA(const LightLepton& lepton) {
 }
 
 bool selectLeptonsMVA(const LightLepton& lepton) {
-    return (lepton.leptonMVATOP() > 0.40);
+    if (lepton.isElectron()) {
+        return (lepton.leptonMVATOPUL() > 0.81);
+    } else {
+        return (lepton.leptonMVATOPUL() > 0.64);
+    }
 }
 
 bool selectLeptonsChargeConsistency(const LightLepton& lepton) {
@@ -77,6 +81,19 @@ void FourTop::cutFlow(std::string& sortingMode) {
     bool sortOnGenerator = false;
     if (sortingMode == "GeneratorInfo") {
         sortOnGenerator = true;
+    }
+
+
+    // reweighting
+    std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
+    ReweighterBTagShape** btagReweighter;
+    CombinedReweighter reweighter;
+    CombinedSampleReweighter* sampleReweighter = nullptr;
+    if (!sortOnGenerator) {
+        std::cout << "building reweighter" << std::endl;
+        btagReweighter = new ReweighterBTagShape*();
+        reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, testRun );
+        addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
     }
 
     std::string channelDL = "DL";
@@ -165,7 +182,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 LightLeptonCollection* lightLeps = currentEvent->looseLeptonCollection().lightLeptonCollectionPtr();
                 lightLeps->selectObjects(selectLeptonsLooseMVA);
                 if (nTightLeps == 3) {
-                    nLeps = nTightLeps + (lightLeps->size() - nTightLeps);
+                    // nLeps = nTightLeps + (lightLeps->size() - nTightLeps);
                 }
             }
             if (nTightLeps >= 2) {     
@@ -199,6 +216,8 @@ void FourTop::cutFlow(std::string& sortingMode) {
             }
             
             weight = currentEvent->weight();
+            if (!sortOnGenerator) weight *= reweighter.totalWeight( *currentEvent );
+
             currentHistSet->at(5)->Fill(currentEvent->numberOfLooseLeptons(), weight);
 
             if (nLeps < 2 || (nLeps == 2 && !sameCharge)) continue;

@@ -105,7 +105,7 @@ bool ElectronSelector::isFOBase() const{
     if( electronPtr->uncorrectedPt() <= 10 ) return false;
 
     if( !electronPtr->passConversionVeto() ) return false;
-    //if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
+    if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
 
     return true;
 }

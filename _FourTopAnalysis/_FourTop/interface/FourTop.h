@@ -47,7 +47,7 @@ class FourTop {
         bool printEventTags = false;
         bool testRun = false;
         bool useUncertainties = true;
-        std::string plotString = "Nominal";
+        std::string plotString = "Minimal";
         eventClass considerRegion = eventClass::fail;
         selectionType st = selectionType::MCAll;
 
