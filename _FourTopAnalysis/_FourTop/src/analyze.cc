@@ -125,7 +125,7 @@ void FourTop::analyze(std::string method) {
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
-        currentEvent = treeReader->buildEventPtr(0);
+        currentEvent = treeReader->buildEventPtr(0, false, false, false, true );
 
         std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
@@ -171,7 +171,9 @@ void FourTop::analyze(std::string method) {
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
             if (sampleIndex == 0 && useSplitJEC) {
+                std::cout << "split JEC" << std::endl;
                 JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariations();
+
                 mgrAll->addSubUncertainties(shapeUncId::JEC, JECSourcesGrouped);
             }
             if (sampleIndex == 0) {
@@ -202,7 +204,7 @@ void FourTop::analyze(std::string method) {
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr( entry );
+            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true );
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
@@ -310,7 +312,6 @@ void FourTop::analyze(std::string method) {
 
             // Systematics
             if (currentEvent->isData() || ! useUncertainties || processNb > 0) continue;
-            std::cout << "unc" << std::endl;
 
             //// Start filling histograms
             // loop uncertainties
@@ -462,10 +463,10 @@ void FourTop::analyze(std::string method) {
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (considerBTagShape) {
-                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
-                                                / reweighter["bTag_shape"]->weight( *currentEvent );
-                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
-                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
