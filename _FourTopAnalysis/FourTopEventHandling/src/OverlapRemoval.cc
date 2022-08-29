@@ -15,8 +15,8 @@ bool EventFourT::hasLeptonFromMEExternalConversion(){
 
 bool EventFourT::leptonFromMEExternalConversion( Lepton* lepton ){
     // from Willem's ewkinoAnalysis code
-    if( !( lepton->matchPdgId() == 22 ) ) return false;
-    if( !( lepton->isPrompt() && lepton->provenanceConversion() == 0 ) ) return false;
+    if( !( lepton->matchPdgId() == 22 ) ) return false; // is matching gen part een photon
+    if( !( lepton->isPrompt() && lepton->provenanceConversion() == 0 ) ) return false; // is het matchend photon ook een direct photon -> not fragmentation, not nonprompt, but independent photon from ME
     return true;
 }
 

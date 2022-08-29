@@ -80,7 +80,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         if (timestampOutputName != "") {
             oss << timestampOutputName;
         } else {
-            oss << std::put_time(&tm, "%Y_%m_%d-%H_%M");
+            oss << std::put_time(&tm, "%Y-%m-%d_%H-%M");
         }
         if (searchRegion != "All") {
             oss << "_" << searchRegion;
