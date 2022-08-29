@@ -119,7 +119,7 @@ class FourTop {
         void fillMVAVariablesNormalized(bool is4L);
 
         bool eventPassesTriggers();
-        bool FillRegion(eventClass nominalClass, selectionType st, eventClass considerRegion);
+        bool FillRegion(eventClass nominalClass, selectionType st);
 
         void initDdChargeMisID(double* corr);
         void initFakerate();

@@ -35,6 +35,7 @@ class ChannelManager {
         ChannelManager(TFile* outputFile, eventClass classToPlots);
         ChannelManager(TFile* outputFile, std::map<eventClass, std::string> naming);
         ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass));
+        ChannelManager(TFile* outputFile, eventClass classToPlots, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass));
 
         std::string GetName(eventClass evClass) {return namingScheme[evClass];}
         ~ChannelManager();

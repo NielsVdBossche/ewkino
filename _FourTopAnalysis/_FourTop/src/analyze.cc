@@ -295,7 +295,7 @@ void FourTop::analyze(std::string method) {
             // if chargeMisDD && not dilep: skip
             // if region != considerRegion && considerRegion != fail: skip
 
-            if (FillRegion(nominalClass, st, considerRegion)) {
+            if (FillRegion(nominalClass, st)) {
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
                 fillVec2D = selection->fillVector2D();
@@ -457,8 +457,8 @@ void FourTop::analyze(std::string method) {
                     subChannelsUp = GetSubClasses(upClass);
                     subChannelsDown = GetSubClasses(downClass);
 
-                    if (FillRegion(upClass, st, considerRegion)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                    if (FillRegion(downClass, st, considerRegion)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                    if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (considerBTagShape) {
@@ -481,8 +481,8 @@ void FourTop::analyze(std::string method) {
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
-                        if (FillRegion(upClass, st, considerRegion)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                        if (FillRegion(downClass, st, considerRegion)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                        if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                     }
                 }
 
@@ -588,12 +588,24 @@ CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
 
 ChannelManager* FourTop::GenerateChannelManager() {
     // rules for generation of channelmanager.
-    ChannelManager* ret = nullptr;
 
-    // if plotstring == min
-    // if plotstring == bdtvariables 
-    // if plotstring == nominal
-    // if plotstring contains NoBDTOutput
+    std::map<std::string, eventClass> regionMap = {
+        {"CR-2L-23J1B", eventClass::cro},
+        {"CR-2L-45J2B", eventClass::crw},
+        {"CR-3L-2J1B", eventClass::cro3L},
+        {"CR-3L-Z", eventClass::crz3L},
+        {"CR-4L-Z", eventClass::crz4L},
+        {"CR-Conversion", eventClass::cr_conv},
+        {"CRWZ", eventClass::crwz},
+        {"SR-2L", eventClass::ssdl},
+        {"SR-3L", eventClass::trilep},
+        {"SR-4L", eventClass::fourlep},
+    };
+    if (searchRegion != "All") {
+        considerRegion = regionMap[searchRegion];
+    }
+
+    ChannelManager* ret = nullptr;
 
     if (stringTools::stringContains(plotString, "NoBDTOutput")) {
         bdtOutput = false;
@@ -602,71 +614,36 @@ ChannelManager* FourTop::GenerateChannelManager() {
 
     std::function<std::vector<HistInfo>*(const eventClass)> histGenerator;
     std::function<std::vector<double>(const eventClass, EventFourT*)> histFiller;
-
-    if (stringTools::stringContains(plotString, "Nominal")) {
-        histGenerator = HistogramConfig::getNominalHists;
-        ret = new ChannelManager(outfile, HistogramConfig::getNominalHists);
-        histFiller = HistogramConfig::fillNominalHists;
-    } else if (stringTools::stringContains(plotString, "Minimal")) {
-        ret = new ChannelManager(outfile, HistogramConfig::getMinimalHists);
-        histGenerator = HistogramConfig::getMinimalHists;
-        histFiller = HistogramConfig::fillMinimalHists;
-    } else if (stringTools::stringContains(plotString, "OnlyBDTVariables")) {
-        ret = new ChannelManager(outfile, HistogramConfig::getAllBDTVarsHists);
-        histGenerator = HistogramConfig::getAllBDTVarsHists;
-        histFiller = HistogramConfig::fillAllBDTVarsHists;
+    if (considerRegion == eventClass::fail) {
+        if (stringTools::stringContains(plotString, "Nominal")) {
+            histGenerator = HistogramConfig::getNominalHists;
+            ret = new ChannelManager(outfile, HistogramConfig::getNominalHists);
+            histFiller = HistogramConfig::fillNominalHists;
+        } else if (stringTools::stringContains(plotString, "Minimal")) {
+            ret = new ChannelManager(outfile, HistogramConfig::getMinimalHists);
+            histGenerator = HistogramConfig::getMinimalHists;
+            histFiller = HistogramConfig::fillMinimalHists;
+        } else if (stringTools::stringContains(plotString, "OnlyBDTVariables")) {
+            ret = new ChannelManager(outfile, HistogramConfig::getAllBDTVarsHists);
+            histGenerator = HistogramConfig::getAllBDTVarsHists;
+            histFiller = HistogramConfig::fillAllBDTVarsHists;
+        }
+    } else {
+        if (stringTools::stringContains(plotString, "Nominal")) {
+            histGenerator = HistogramConfig::getNominalHists;
+            ret = new ChannelManager(outfile, considerRegion, HistogramConfig::getNominalHists);
+            histFiller = HistogramConfig::fillNominalHists;
+        } else if (stringTools::stringContains(plotString, "Minimal")) {
+            ret = new ChannelManager(outfile, considerRegion, HistogramConfig::getMinimalHists);
+            histGenerator = HistogramConfig::getMinimalHists;
+            histFiller = HistogramConfig::fillMinimalHists;
+        } else if (stringTools::stringContains(plotString, "OnlyBDTVariables")) {
+            ret = new ChannelManager(outfile, considerRegion, HistogramConfig::getAllBDTVarsHists);
+            histGenerator = HistogramConfig::getAllBDTVarsHists;
+            histFiller = HistogramConfig::fillAllBDTVarsHists;
+        }
     }
-
     selection->setFillerFunction(histFiller);
-
-    //if (searchRegion == "All") {
-    //    ret = new ChannelManager(outfile);
-    //} else if (searchRegion == "ConvCR") {
-    //    onlyCR = true;
-    //    ret = new ChannelManager(outfile, eventClass::cr_conv);
-    //    considerRegion = eventClass::cr_conv;
-    //    useUncertainties = false;
-    //}
-    // still lacking: which channels (e.g. onlyCR or only one region) && subchannels: yes or no?
-    // three different setups to start off. Nominal should just keep what we are doing I think?
-    // also needs to build a fillmap
-
-    //std::map<eventClass, std::string> flagMapping = {
-    //    {fail, "fail"},
-    //    {crwz, "CRWZ"},
-    //    {crzz, "CRZZ"},
-    //    {cr_conv, "CR-Conversion"},
-    //    {crz3L, "CR-3L-Z"},
-    //    {crz4L, "CR-4L-Z"},
-    //    {cro, "CR-2L-23J1B"},
-    //    {cro3L, "CR-3L-2J1B"},
-    //    {crw, "CR-2L-45J2B"},
-    //    {ssdl, "SR-2L"},
-    //    {trilep, "SR-3L"},
-    //    {fourlep, "SR-4L"}
-    //};
-//
-//
-    //if (searchRegion == "All") {
-    //    considerRegion = eventClass::fail;
-    //} else if (searchRegion == "ConvCR") {
-    //    considerRegion = eventClass::cr_conv;
-    //}
-//
-    //std::map<eventClass, std::vector<HistInfo>*> infoMap;
-    ////std::map<eventClass, std::function<std::vector<double>(const eventClass)>> histFillerLinks;
-//
-    //if (stringTools::stringContains(plotString, "Nominal")) {
-//
-    //} else if (stringTools::stringContains(plotString, "Minimal")) {
-    //    
-    //} else if (stringTools::stringContains(plotString, "OnlyBDTVariables")) {
-//
-    //}
-//
-    //if (stringTools::stringContains(plotString, "NoBDTOutput")) {
-    //
-    //}
 
     return ret;
 }
@@ -675,11 +652,26 @@ ChannelManager* FourTop::GenerateChannelManager() {
 std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) {
     std::map<eventClass, int> offsets;
 
+    std::map<eventClass, std::string> namingScheme = {
+            {fail, "fail"},
+            {crwz, "CRWZ"},
+            {crzz, "CRZZ"},
+            {cr_conv, "CR-Conversion"},
+            {crz3L, "_CR-3L-Z"},
+            {crz4L, "_CR-4L-Z"},
+            {cro, "_CR-2L-23J1B"},
+            {cro3L, "_CR-3L-2J1B"},
+            {crw, "_CR-2L-45J2B"},
+            {ssdl, ""},
+            {trilep, ""},
+            {fourlep, ""}};
+
     std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
-    if (searchRegion == "All") {
+
+    if (considerRegion == eventClass::fail) {
         if (bdtOutput) {
             offsets[eventClass::crz3L] = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
             offsets[eventClass::crz4L] = mgrAll->at(eventClass::crz4L)->getHistInfo()->size() + mva_ML->getMaxClass();
@@ -721,7 +713,24 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
             mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
         }
-    } 
+    } else {
+        if (bdtOutput && considerRegion >= unsigned(eventClass::crz3L)) {
+            if (considerRegion == eventClass::cro || considerRegion == eventClass::crw || considerRegion == eventClass::ssdl) {
+                offsets[considerRegion] = mgrAll->at(considerRegion)->getHistInfo()->size() + mva_DL->getMaxClass();
+                mgrAll->at(considerRegion)->updateHistInfo(mva_DL->createHistograms(namingScheme[considerRegion], true));
+                mgrAll->at(considerRegion)->set2DHistInfo(mva_DL->create2DHistograms(namingScheme[considerRegion], true));
+            } else {
+                offsets[considerRegion] = mgrAll->at(considerRegion)->getHistInfo()->size() + mva_ML->getMaxClass();
+                mgrAll->at(considerRegion)->updateHistInfo(mva_ML->createHistograms(namingScheme[considerRegion], true));
+                mgrAll->at(considerRegion)->set2DHistInfo(mva_ML->create2DHistograms(namingScheme[considerRegion], true));
+            }
+        }
+
+        if (considerRegion == eventClass::cro) mgrAll->at(considerRegion)->addSubChannels(croSubChannels);
+        else if (considerRegion == eventClass::crw) mgrAll->at(considerRegion)->addSubChannels(crwSubChannels);
+        else if (considerRegion == eventClass::ssdl) mgrAll->at(considerRegion)->addSubChannels(dlSubChannels);
+        else if (considerRegion == eventClass::trilep) mgrAll->at(considerRegion)->addSubChannels(trilepSubChannels);
+    }
     if (! bdtOutput) {
         offsets = {
             {eventClass::crwz, 0},
@@ -741,7 +750,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
     return offsets;
 }
 
-bool FourTop::FillRegion(eventClass nominalClass, selectionType st, eventClass considerRegion) {
+bool FourTop::FillRegion(eventClass nominalClass, selectionType st) {
     if (nominalClass == eventClass::fail) return false;
     if (st == selectionType::ChargeMisDD && (nominalClass != eventClass::ssdl || nominalClass != eventClass::cro || nominalClass != eventClass::crw)) return false;
     if (onlyCR && unsigned(nominalClass) >= eventClass::ssdl) return false;
