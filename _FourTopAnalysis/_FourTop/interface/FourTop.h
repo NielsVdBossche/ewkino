@@ -69,7 +69,7 @@ class FourTop {
         Double_t bTagPtLead, bTagPtSub, bTagPtThird, bTagPtFourth;
         Double_t massBestTop, massBestTopW, massSecTop, massSecTopW;
         Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
-        Double_t m2bb, m2lblb, mvaWeight;
+        Double_t m2bb, m2lblb, mvaWeight, anWeight, mcWeight;
 
         Double_t ptJetOne, phiJetOne, etaJetOne, btagJetOne, 
                     ptJetTwo, phiJetTwo, etaJetTwo, btagJetTwo, 

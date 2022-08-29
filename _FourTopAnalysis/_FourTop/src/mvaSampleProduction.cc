@@ -3,7 +3,9 @@
 void FourTop::linkMVAVariables(TTree* tree, bool isML) {
 
     //std::vector<double>* variableVector = selection->;
-    tree->Branch("weight",          &mvaWeight,     "weight/D");
+    tree->Branch("weight_an",          &anWeight,     "weight_an/D");
+    tree->Branch("weight_mc",          &mcWeight,     "weight_mc/D");
+    tree->Branch("weight_non",         &mvaWeight,     "weight_non/D");
 
     tree->Branch("N_jets",          &n_jets_f,      "N_jets/D");
     tree->Branch("N_b",             &n_bjets_f,     "N_b/D");
@@ -145,14 +147,19 @@ void FourTop::createMVATrainingSamples() {
                 continue;
             }
 
-            if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue;
-            if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue;
+            // if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue;
+            // if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue;
 
             if (! selection->passLeptonSelection()) continue;
 
-            mvaWeight = currentEvent->weight();
-            mvaWeight *= reweighter.totalWeight( *currentEvent );
-            
+            // mvaWeight = currentEvent->weight();
+            // mvaWeight *= reweighter.totalWeight( *currentEvent );
+
+            anWeight = currentEvent->weight();
+            anWeight *= reweighter.totalWeight( *currentEvent );
+            mcWeight = treeReader->_weight;
+            mvaWeight = 1.;
+
             selection->classifyEvent();
             eventClass currClass = selection->getCurrentClass();
 
