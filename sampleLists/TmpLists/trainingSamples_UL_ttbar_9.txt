@@ -1,1 +1,1 @@
-ttbar            TTTo2L2Nu_mtop166p5_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_fourTopBase_MC_ttbar_2016_ULpreVFP.root                          88.40
+ttbar            ../skims_v5/2016PreVFP/TTTo2L2Nu_mtop166p5_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_fourTopBase_MC_ttbar_2016_ULpreVFP.root                          88.40
