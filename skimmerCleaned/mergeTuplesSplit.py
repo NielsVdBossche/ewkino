@@ -4,6 +4,11 @@ import os
 import sys
 import subprocess
 
+sys.path.append(os.path.abspath('../'))
+from jobSubmission.condorTools import submitCommandsAsCondorCluster
+
+
+
 # input: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2/220630_155601_0000_singlelep_0.root
 # output: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/year/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2.root
 
@@ -38,6 +43,7 @@ if (len(sys.argv) >= 3):
 
 processes = ["ST_t", "WW", "WZ", "ZZ", "DY_", "WZZ", "GluGlu", "TTWJetsToQQ"]
 
+commands = []
 for dir in os.listdir(inputBase):
     print(dir)
 
@@ -61,5 +67,7 @@ for dir in os.listdir(inputBase):
     print(os.path.join(inputBase, dir))
 
     # call hadd output inputs (star?)
-    subprocess.call("hadd -f {} {}/*.root".format(outputPath, os.path.join(inputBase, dir)), shell=True)
-    #break # temporary for testing
+
+    commands.append("hadd -f {} {}/*.root".format(outputPath, os.path.join(inputBase, dir)))
+
+submitCommandsAsCondorCluster("hadd", commands)
