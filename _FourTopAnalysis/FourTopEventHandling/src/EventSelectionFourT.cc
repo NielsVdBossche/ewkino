@@ -277,6 +277,10 @@ int EventFourT::NumberOfBFlavorJets() {
 
 eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& variation) {
     //if JER
+
+    delete jets;
+    delete bTagJets;
+    
     if (id == shapeUncId::JER_1p93) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_UpCollection());
