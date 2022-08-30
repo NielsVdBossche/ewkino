@@ -22,9 +22,7 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
     
     std::cout << optionString.str() << std::endl;
     std::cout << nameString.str() << std::endl;
-    std::cout << "IDK WHAT IS GOIGN WRONG" << std::endl;
     
-
 
     optionString << ":BoostType=Grad:Shrinkage=" << std::setprecision(2) << shrinkage;
     nameString << "G_";
@@ -53,9 +51,7 @@ void mvaSetupManager::addBDT_CV(TMVA::CrossValidation* factory, TMVA::DataLoader
     
     std::cout << optionString.str() << std::endl;
     std::cout << nameString.str() << std::endl;
-    std::cout << "IDK WHAT IS GOIGN WRONG" << std::endl;
     
-
 
     optionString << ":BoostType=Grad:Shrinkage=" << std::setprecision(2) << shrinkage;
     nameString << "G_";

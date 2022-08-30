@@ -60,7 +60,7 @@ int main(int argc, char const *argv[]) {
 
     mvaConfiguration conf = translator[setup];
 
-    TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf);
+    TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf, variables);
 
     TFile* outfile;
 
