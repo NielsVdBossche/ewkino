@@ -25,7 +25,7 @@ enum mvaConfiguration {
 namespace mvaDataManager {
 
     void prepareLoader(mvaConfiguration config, TMVA::DataLoader* dataloader, std::vector<std::string>& variables);
-    TMVA::DataLoader* buildDataLoader(std::string& sampleList, std::string& treeName, mvaConfiguration config, std::string configFile="");
+    TMVA::DataLoader* buildDataLoader(std::string& sampleList, std::string& treeName, mvaConfiguration config, std::string configFile="", bool useCV=false);
 
     // All other helpful functions
     std::pair<Double_t*, std::vector<Double_t>*> prepareTTree(TTree* chain, mvaConfiguration config, std::vector<std::string>& variables);

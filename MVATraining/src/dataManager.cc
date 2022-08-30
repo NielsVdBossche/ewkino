@@ -449,7 +449,7 @@ std::vector<std::string> mvaDataManager::readConfigFile(std::string& configFile)
 
 
 
-TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::string& treeName, mvaConfiguration config, std::string configFile) {
+TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::string& treeName, mvaConfiguration config, std::string configFile, bool useCV) {
     // Open samplelist,
     // Line by line read samples, ordered per class
     // Structure of samplelist:
@@ -516,11 +516,14 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
             for (int i=0; i < newClassElement->GetEntries(); i++) {
                 newClassElement->GetEntry(i);
                 //std::cout << *vars.first << std::endl;
-                float rnd = r->Rndm();
-                if (rnd < ptrain) {
-                    dataloader->AddTrainingEvent(className, *vars.second, *vars.first);
-                } else {
-                    dataloader->AddTestEvent(className, *vars.second, *vars.first);
+                if (useCV) dataloader->AddTrainingEvent(className, *vars.second, *vars.first);
+                else {
+                    float rnd = r->Rndm();
+                    if (rnd < ptrain) {
+                        dataloader->AddTrainingEvent(className, *vars.second, *vars.first);
+                    } else {
+                        dataloader->AddTestEvent(className, *vars.second, *vars.first);
+                    }
                 }
             }
 

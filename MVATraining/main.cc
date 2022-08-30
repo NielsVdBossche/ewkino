@@ -36,6 +36,7 @@ int main(int argc, char const *argv[]) {
     std::string setup = argv[3];
     std::string searchSetup = argv[4];
     std::string variables = ""; // just make variables the last thing added.
+    bool useCV = false;
 
     int el = 0;
     for (auto arg : argvStr) {
@@ -43,6 +44,8 @@ int main(int argc, char const *argv[]) {
         if (el < 6) continue;
         if (stringTools::stringContains(arg, ".txt")) {
             variables = arg;
+        } else if (stringTools::stringContains(arg, "CV")) {
+            useCV = true;
         }
     }
 
@@ -66,7 +69,10 @@ int main(int argc, char const *argv[]) {
     } else {
         outfile = new TFile(("Classifiers/FourTopClassification_LeanSel_" + setup + ".root").c_str() ,"RECREATE");
     }
-    TMVA::Factory* factory = mvaSetupManager::buildFactory(conf, outfile);
+    TMVA::Factory* factory;
+    TMVA::CrossValidation* cv;
+    if (!useCV) factory = mvaSetupManager::buildFactory(conf, outfile);
+    else cv = mvaSetupManager::useCrossValidation(data, outfile, conf);
 
     // class manages a dataloader and a factory, as well as settings for the mva's
 
@@ -80,9 +86,12 @@ int main(int argc, char const *argv[]) {
             double shrinkage = std::stod(argv[8]);
             int minNodeSize = std::stoi(argv[9]);
             double baggedSampleFraction = std::stod(argv[10]);
-            mvaSetupManager::addBDT(factory, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
+            if (!useCV) mvaSetupManager::addBDT(factory, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
+            else mvaSetupManager::addBDT_CV(cv, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
         } else {
-            mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 20, 0.10, 5, 0.6);
+            if (!useCV) mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 20, 0.10, 5, 0.6);
+            else mvaSetupManager::addBDT_CV(cv, data, setup, 1000, 3, 20, 0.10, 5, 0.6);
+
         }
         //factory->OptimizeAllMethods("ROCIntegral","FitGA");
         
@@ -91,19 +100,18 @@ int main(int argc, char const *argv[]) {
     }
 
     std::cout << "Methods booked!!" << std::endl;
+    if (useCV) {
+        cv->Evaluate();
+    } else {
+        factory->TrainAllMethods();
+        factory->TestAllMethods();
+        factory->EvaluateAllMethods();
+        TCanvas* rocPlot = factory->GetROCCurve(data);
+        rocPlot->Print(("rocCurve_" + setup + ".png").c_str());
+    }
 
-    
-    factory->TrainAllMethods();
-	
-	factory->TestAllMethods();
-	
-	factory->EvaluateAllMethods();
-
-    TCanvas* rocPlot = factory->GetROCCurve(data);
-    rocPlot->Print(("rocCurve_" + setup + ".png").c_str());
-
-	outfile->Write();
-	outfile->Close();
+    outfile->Write();
+    outfile->Close();
 
     return 0;
 }

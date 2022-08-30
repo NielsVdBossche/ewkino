@@ -43,6 +43,37 @@ void mvaSetupManager::addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloade
     // optionString << ":SeparationType=GiniIndex";
 }
 
+void mvaSetupManager::addBDT_CV(TMVA::CrossValidation* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, int cuts, double shrinkage, int minNodeSize, double baggedSampleFraction) {
+    std::stringstream optionString;
+    std::stringstream nameString;
+
+    optionString << "!H:!V:NTrees=" << nTrees << ":MaxDepth=" << depth << ":nCuts=" << cuts;
+
+    nameString << initsetup;
+    
+    std::cout << optionString.str() << std::endl;
+    std::cout << nameString.str() << std::endl;
+    std::cout << "IDK WHAT IS GOIGN WRONG" << std::endl;
+    
+
+
+    optionString << ":BoostType=Grad:Shrinkage=" << std::setprecision(2) << shrinkage;
+    nameString << "G_";
+    
+    optionString << ":UseBaggedBoost:BaggedSampleFraction=" << std::setprecision(2) << baggedSampleFraction;
+    nameString << "B_";
+
+    optionString << ":MinNodeSize="   << minNodeSize << "%";
+
+    nameString << nTrees << "_" << depth << "_" << cuts << "_" << std::setprecision(2) << shrinkage << "_" <<  minNodeSize << "_" << std::setprecision(2) << baggedSampleFraction;
+
+    optionString << ":IgnoreNegWeightsInTraining";
+    std::cout << optionString.str() << std::endl;
+    factory->BookMethod(TMVA::Types::kBDT, nameString.str().c_str(), optionString.str().c_str());
+
+    // optionString << ":SeparationType=GiniIndex";
+}
+
 void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
     if (initsetup == "DL_NN") {
         //factory->BookMethod(dataloader, TMVA::Types::kPyKeras, "PyKeras_DL_NN_3x256", "H:!V:VarTransform=D,G:FilenameModel=KerasModelTrainer/Models/keras_48_3_3_256.h5:NumEpochs=20:BatchSize=256");
@@ -53,21 +84,25 @@ void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader
     }
 }
 
-void mvaSetupManager::searchBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
-    bool baggedBoost = false;
-    int nTrees[] = {200, 500, 1000, 2000};
-    int depths[] = {2, 3, 4, 5};
-    double shrinkages[] = {0.1, 0.5, 1.};
-    int cuts[] = {20, 50};
+TMVA::CrossValidation* mvaSetupManager::useCrossValidation(TMVA::DataLoader* dataloader, TFile* outputFile, mvaConfiguration config) {
+    TString optstring = "!V:!Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Multiclass:NumFolds=10";
+    TMVA::CrossValidation* cv = new TMVA::CrossValidation("k-fold_cv_4T", dataloader, outputFile, optstring);
 
-    for (int i=0; i < 4; i++) { // trees
-        for (int j=0; j < 4; j++) { //depth
-            for (int k=0; k < 3; k++) { // shrink
-                for (int l=0; l < 2; l++) { // cuts
-                    //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], false);
-                    //addBDT(factory, dataloader, initsetup, nTrees[i], depths[j], shrinkages[k], cuts[l], true);
-                }
-            }
+    return cv;
+}
+
+void mvaSetupManager::evaluateCV(TMVA::CrossValidation* cv) {
+    size_t iMethod = 0;
+    for (auto && result : cv->GetResults()) {
+        std::cout << "Summary for method "
+                    << cv->GetMethods()[iMethod++].GetValue<TString>("MethodName")
+                    << std::endl;
+        for (UInt_t iFold = 0; iFold<cv->GetNumFolds(); ++iFold) {
+            std::cout << "\tFold " << iFold << ": "
+                        << "ROC int: " << result.GetROCValues()[iFold]
+                        << ", "
+                        << "BkgEff@SigEff=0.3: " << result.GetEff30Values()[iFold]
+                        << std::endl;
         }
     }
 }
