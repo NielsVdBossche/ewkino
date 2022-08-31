@@ -191,15 +191,8 @@ void FourTop::analyze(std::string method) {
             eventTagsOutput.open("Output/EventTags_" + samplename + ".txt");
         }
 
-        bool isZZTo4L = false;
-
-        if (stringTools::stringContains(treeReader->currentSample().fileName(), "ZZTo4LTuneCP5")) {
-            isZZTo4L = true;
-        }
-
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             if (testRun && entry > 10000) break;
-            if (isZZTo4L && entry > 1000000) break;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
@@ -482,8 +475,8 @@ void FourTop::analyze(std::string method) {
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
-                        if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                        if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSource, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                        if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSource, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                     }
                 }
 

@@ -9,7 +9,7 @@ void FourTop::fillMVAVariables(bool isML) {
     lightLeps = (LightLeptonCollection*) selection->getMediumLepCol();
 
     std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
-    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *selection->getMediumLepCol());
 
     n_jets_f         =  selection->getJetCol()->size();
     n_bjets_f        =  bJets->size();
@@ -137,6 +137,8 @@ void FourTop::fillMVAVariables(bool isML) {
     m2bb = (n_bjets_f >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
     m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
 
+    n_mu = selection->getMediumLepCol()->numberOfMuons();
+    chargeSum = selection->getMediumLepCol()->sumCharges();
 }
 
 

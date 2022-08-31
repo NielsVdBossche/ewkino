@@ -90,7 +90,8 @@ int main(int argc, char const *argv[]) {
             else mvaSetupManager::addBDT_CV(cv, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
         } else {
             if (!useCV) mvaSetupManager::addBDT(factory, data, setup, 1000, 3, 20, 0.10, 5, 0.6);
-            else mvaSetupManager::addBDT_CV(cv, data, setup, 1000, 3, 20, 0.10, 5, 0.6);
+            else if (conf == BDT_VAR_DL || conf == BDT_DL) mvaSetupManager::addBDT_CV(cv, data, setup, 2000, 6, 20, 0.10, 1, 1.);
+            else mvaSetupManager::addBDT_CV(cv, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
 
         }
         //factory->OptimizeAllMethods("ROCIntegral","FitGA");
@@ -102,6 +103,7 @@ int main(int argc, char const *argv[]) {
     std::cout << "Methods booked!!" << std::endl;
     if (useCV) {
         cv->Evaluate();
+        mvaSetupManager::evaluateCV(cv);
     } else {
         factory->TrainAllMethods();
         factory->TestAllMethods();
