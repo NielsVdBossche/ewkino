@@ -5,8 +5,12 @@ void FourTop::linkMVAVariables(TTree* tree, bool isML) {
     //std::vector<double>* variableVector = selection->;
     tree->Branch("weight_an",          &anWeight,     "weight_an/D");
     tree->Branch("weight_mc",          &mcWeight,     "weight_mc/D");
-    tree->Branch("weight_non",         &mvaWeight,     "weight_non/D");
+    tree->Branch("weight_rew",         &mvaWeight,     "weight_rew/D");
+    tree->Branch("weight_non",         &nonWeight,     "weight_non/D");
 
+    tree->Branch("n_mu"      ,         &n_mu     ,    "n_mu/D");
+    tree->Branch("chargeSum" ,         &chargeSum,    "chargeSum/D");
+    
     tree->Branch("N_jets",          &n_jets_f,      "N_jets/D");
     tree->Branch("N_b",             &n_bjets_f,     "N_b/D");
     tree->Branch("N_b_tight",       &n_b_tight,     "N_b_tight/D");
@@ -158,7 +162,10 @@ void FourTop::createMVATrainingSamples() {
             anWeight = currentEvent->weight();
             anWeight *= reweighter.totalWeight( *currentEvent );
             mcWeight = treeReader->_weight;
-            mvaWeight = 1.;
+            mvaWeight = 1. * reweighter.totalWeight( *currentEvent );
+            if (mcWeight < 0.) mvaWeight *= -1.;
+
+            nonWeight = 1.;
 
             selection->classifyEvent();
             eventClass currClass = selection->getCurrentClass();

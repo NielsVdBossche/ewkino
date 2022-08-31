@@ -61,6 +61,7 @@ class FourTop {
         EventFourT* selection;
 
         // BDT Variables
+        Double_t n_mu, chargeSum;
         Double_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose, met;
         Double_t n_b_tight, dRleps, aziAngle, ht;
         Double_t massToPt;
@@ -69,7 +70,7 @@ class FourTop {
         Double_t bTagPtLead, bTagPtSub, bTagPtThird, bTagPtFourth;
         Double_t massBestTop, massBestTopW, massSecTop, massSecTopW;
         Double_t m2ll, mtLeadLepMET, mtSubLeadLepMET;
-        Double_t m2bb, m2lblb, mvaWeight, anWeight, mcWeight;
+        Double_t m2bb, m2lblb, mvaWeight, anWeight, mcWeight, nonWeight;
 
         Double_t ptJetOne, phiJetOne, etaJetOne, btagJetOne, 
                     ptJetTwo, phiJetTwo, etaJetTwo, btagJetTwo, 

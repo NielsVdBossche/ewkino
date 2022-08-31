@@ -7,7 +7,7 @@ import sys
 #from jobSubmission.condorTools import submitCommandsAsCondorJob
 
 sampleListPath = "../../sampleLists/"
-sampleLists = ["2016PreVFP", "2016PostVFP", "2017", "2018"]
+sampleLists = ["trainingSamples_UL"]
 # sampleLists = ["Data16PreVFP", "Data16PostVFP", "Data17", "Data18"]
 
 outputPath = sampleListPath + "TmpLists/"
