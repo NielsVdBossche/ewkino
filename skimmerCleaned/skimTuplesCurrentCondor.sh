@@ -1,2 +1,3 @@
-python skimTuplesCondor.py /pnfs/iihe/cms/store/user/gmestdac/heavyNeutrinoUL3/ fourTopBase_MC_ttbar_2016_ULpostVFP /pnfs/iihe/cms/store/user/nivanden/skims_v5/rawSkims/ fourTopMva 500
-python skimTuplesCondor.py /pnfs/iihe/cms/store/user/gmestdac/heavyNeutrinoUL3/ fourTopBase_MC_ttbar_2016_ULpreVFP /pnfs/iihe/cms/store/user/nivanden/skims_v5/rawSkims/ fourTopMva 500
+python skimTuplesCondor.py /pnfs/iihe/cms/store/user/lwezenbe/heavyNeutrino/ singlelepton_data_UL2017V2 /pnfs/iihe/cms/store/user/nivanden/skims_v5/rawSkims/ lightDileptonSkim 150
+python skimTuplesCondor.py /pnfs/iihe/cms/store/user/lwezenbe/heavyNeutrino/ singlelepton_data_UL2016V2 /pnfs/iihe/cms/store/user/nivanden/skims_v5/rawSkims/ lightDileptonSkim 150
+python skimTuplesCondor.py /pnfs/iihe/cms/store/user/lwezenbe/heavyNeutrino/ singlelepton_data_UL2018V2 /pnfs/iihe/cms/store/user/nivanden/skims_v5/rawSkims/ lightDileptonSkim 150

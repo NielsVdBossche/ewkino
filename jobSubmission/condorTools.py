@@ -160,7 +160,7 @@ def submitCommandsAsCondorJobs(name, commands, stdout=None, stderr=None, log=Non
             for cmd in commandset: script.write(cmd+'\n')
         # then make the job description
         makeJobDescription(name,shname,stdout=stdout,stderr=stderr,log=log,
-                            cpus=cpus,mem=mem,disk=disk)
+                            cpus=cpus,mem=mem,disk=disk,jdName=jdname)
         # finally submit the job
         submitCondorJob(jdname)
 

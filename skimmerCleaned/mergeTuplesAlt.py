@@ -7,8 +7,8 @@ import subprocess
 # input: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2/220630_155601_0000_singlelep_0.root
 # output: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/year/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2.root
 
-inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v5/rawSkims/"
-outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v5/"
+inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v4/rawSkims/"
+outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v4/"
 
 skimVersion = []
 outSubdir = ""
@@ -36,7 +36,7 @@ if (len(sys.argv) >= 3):
     if (sys.argv[2] == "TTTrainingSamples"):
         outSubdir += "/mvaSamples"
 
-processes = ["ST_t", "WW", "WZ", "ZZ", "DY_", "WZZ", "GluGlu", "TTWJetsToQQ"]
+processes = ["DoubleEG", "DoubleMuon", "EGamma", "MuonEG", "SingleElectron", "SingleMuon"]
 
 for dir in os.listdir(inputBase):
     print(dir)
@@ -44,8 +44,8 @@ for dir in os.listdir(inputBase):
     if not any(skimver in dir for skimver in skimVersion):
         continue
 
-    #if not any(process in dir for process in processes):
-    #    continue
+    if not any(process in dir for process in processes):
+        continue
     
     # join path outputbase + folder
     outputDir  = os.path.join(outputBase, outSubdir)
