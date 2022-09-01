@@ -16,7 +16,7 @@
 #include "../Tools/interface/stringTools.h"
 
 int main(int argc, char const *argv[]) {
-    TMVA::PyMethodBase::PyInitialize();
+    ///TMVA::PyMethodBase::PyInitialize();
 
     if (argc < 5) {
         std::cerr << "Mvatrainer requires at least four arguments: <samplelist.txt> treename setup searchOrNot" << std::endl;

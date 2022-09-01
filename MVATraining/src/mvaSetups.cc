@@ -3,8 +3,12 @@
 
 TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile) {
     //std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
-    std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=";
-
+    std::string analysType;
+    if (config == NN_DL || config == NN_ML) {
+        analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=";
+    } else {
+        analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
+    }
     analysType += "Multiclass";
 
     TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_LeanSel", outputFile, analysType.c_str());
@@ -81,7 +85,7 @@ void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader
 }
 
 TMVA::CrossValidation* mvaSetupManager::useCrossValidation(TMVA::DataLoader* dataloader, TFile* outputFile, mvaConfiguration config) {
-    TString optstring = "!V:!Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Multiclass:NumFolds=10";
+    TString optstring = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=Multiclass:NumFolds=5";
     TMVA::CrossValidation* cv = new TMVA::CrossValidation("k-fold_cv_4T", dataloader, outputFile, optstring);
 
     return cv;
