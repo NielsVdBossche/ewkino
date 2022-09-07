@@ -33,11 +33,11 @@ void eventLoop(TreeReader* treeReader) {
             // if FO leptons should also be considered, switch to event.cleanJetsFromFOLeptons();
             event.cleanJetsFromTightLeptons();
 
-            // pt tresholds for triggers
-            if (event.lepton(0).pt() < 25 || event.lepton(0).pt() < 20) continue;
 
             // if only tight leptons are desired:
             event.selectTightLeptons();
+            // pt tresholds for triggers
+            if (event.lepton(0).pt() < 25 || event.lepton(0).pt() < 20) continue;
 
             JetCollection bTaggedJets = event.looseBTagCollection();
 
