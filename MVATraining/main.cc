@@ -90,7 +90,7 @@ int main(int argc, char const *argv[]) {
             else mvaSetupManager::addBDT_CV(cv, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
         } else {
             if (!useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT(factory, data, setup, 2000, 6, 20, 0.10, 1, 1.);
-            else if (!useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT(factory, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
+            else if (!useCV && (conf == BDT_VAR_ML || conf == BDT_ML)) mvaSetupManager::addBDT(factory, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
             else if (useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT_CV(cv, data, setup, 2000, 6, 20, 0.10, 1, 1.);
             else mvaSetupManager::addBDT_CV(cv, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
 
