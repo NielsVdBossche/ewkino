@@ -159,7 +159,7 @@ void FourTop::analyze(std::string method) {
             std::cout << "finding available PS scale variations...\n";
             Event event = treeReader->buildEvent(0);
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
-            if(numberOfPSVariations==14) hasValidPSs = true;
+            if(numberOfPSVariations>=30) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
 
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
@@ -177,7 +177,7 @@ void FourTop::analyze(std::string method) {
                 mgrAll->addSubUncertainties(shapeUncId::JEC, JECSourcesGrouped);
             }
             if (sampleIndex == 0) {
-                wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6Jet", "7PlusJet"};
+                wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
             }
         }
@@ -227,7 +227,6 @@ void FourTop::analyze(std::string method) {
             selection->classifyEvent();
             unsigned processNb = 0;
             double weight = currentEvent->weight();
-            
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
                 weight *= reweighter.totalWeight( *currentEvent );
 
@@ -408,8 +407,8 @@ void FourTop::analyze(std::string method) {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                 } else if (uncID == shapeUncId::WZSF) {
                     if (sampleReweighter) {
-                        for (int i=0; i <= 7; i++) {
-                            if (selection->numberOfJets() == i) {
+                        for (int i=0; i < 7; i++) {
+                            if (selection->numberOfJets() == i || (i == 6 && selection->numberOfJets() >= 6)) {
                                 weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
                                 weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
                             }
@@ -746,7 +745,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
 
 bool FourTop::FillRegion(eventClass nominalClass, selectionType st) {
     if (nominalClass == eventClass::fail) return false;
-    if (st == selectionType::ChargeMisDD && (nominalClass != eventClass::ssdl || nominalClass != eventClass::cro || nominalClass != eventClass::crw)) return false;
+    if (st == selectionType::ChargeMisDD && !(nominalClass == eventClass::ssdl || nominalClass == eventClass::cro || nominalClass == eventClass::crw)) return false;
     if (onlyCR && unsigned(nominalClass) >= eventClass::ssdl) return false;
     if (considerRegion != eventClass::fail && nominalClass != considerRegion) return false;
 

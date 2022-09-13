@@ -47,6 +47,7 @@ if __name__ == "__main__":
     customSamplelist = False
     runData = False
     customSamplelistName = ""
+    specificSample = ""
     specificEra = "1"
     
     runType = sys.argv[1].lower()
@@ -70,6 +71,8 @@ if __name__ == "__main__":
             runData = True
         elif "region=" in optionLower:
             additionalArgs.append(option)
+        elif "samples=" in optionLower:
+            specificSample = option.split('=')[1]
         else:
             print("Unrecognized option: {}. Usage: ./RunAnalysis.py <AnalysisType> [-CR] [-LEAN] [path/to/samplelist] [era=[16Pre, 16Post, 17, 18]]".format(option))
 
@@ -107,7 +110,7 @@ if __name__ == "__main__":
     
     queueString = "queue 1 Samplelist, Method from (\n"
     requiredMethods = matches[runType]
-
+    i = 0
     if not customSamplelist:
         requiredSamplelists = sets
         
@@ -117,10 +120,12 @@ if __name__ == "__main__":
             for x in requiredSamplelists[method]:
                 for sl in x:
                     if not specificEra in sl: continue
-
+                    if not specificSample in sl: continue
+                    i += 1
                     queueString += "\t" 
                     queueString += sl + ", " + method
                     queueString += "\n"
+        print("submitting {} samples".format(i))
 
     else:
         for method in requiredMethods:
