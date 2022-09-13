@@ -1,5 +1,6 @@
 #include "../interface/mvaSetups.h"
 #include "TMVA/PyMethodBase.h"
+#include "TMVA/MethodCategory.h"
 
 TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile) {
     //std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
@@ -73,6 +74,30 @@ void mvaSetupManager::addBDT_CV(TMVA::CrossValidation* factory, TMVA::DataLoader
 
     // optionString << ":SeparationType=GiniIndex";
 }
+
+void mvaSetupManager::addBDTs_SplitB(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::vector<std::string>& variables) {
+    TMVA::IMethod* category = factory->BookMethod(dataloader, TMVA::Types::kCategory, "Category", "<options>" );
+    TMVA::MethodCategory* mcategory = dynamic_cast<TMVA::MethodCategory*>(category);
+    
+    TCut cut1 = "N_b<2";
+    TCut cut2 = "N_b>2";
+    TCut cut3 = cut1 && cut2;
+    std::string opts = "!H:!V:NTrees=1000:MaxDepth=5:nCuts=20:BoostType=Grad:Shrinkage=0.08:UseBaggedBoost:BaggedSampleFraction=0.6:MinNodeSize=1%:IgnoreNegWeightsInTraining";
+
+    std::string variablesStr = "";
+    for (auto it : variables) {
+        if (it == "N_b") continue;
+        variablesStr += it;
+        variablesStr += ":";
+    }
+
+    std::string variablesStrFin = variablesStr.substr(0, variablesStr.size()-1);
+
+    mcategory->AddMethod(cut1, variablesStrFin, TMVA::Types::kBDT, "lessThan2MedBs", opts.c_str());
+    mcategory->AddMethod(cut2, variablesStrFin, TMVA::Types::kBDT, "2MedBs", opts.c_str());
+    mcategory->AddMethod(cut3, variablesStrFin, TMVA::Types::kBDT, "moreThan2MedBs", opts.c_str());
+}
+
 
 void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup) {
     if (initsetup == "DL_NN") {

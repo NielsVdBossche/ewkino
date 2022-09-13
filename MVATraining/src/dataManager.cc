@@ -217,7 +217,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
 
 void mvaDataManager::prepareLoader(mvaConfiguration config, TMVA::DataLoader* dataloader, std::vector<std::string>& variables) {
 
-    if (config == BDT_VAR_DL || config == BDT_VAR_ML) {
+    if (config == BDT_VAR_DL || config == BDT_VAR_ML || config == BDT_DL_SPLIT) {
         for (auto var : variables) {
             dataloader->AddVariable(var, 'F');
         }
@@ -533,9 +533,39 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
 
         //readChainToLoader(newClass, classNameAlt, dataloader, vars);
     }
-    
+    //if (config == BDT_DL_SPLIT) {
+    //    return dataloader;
+    //    TCut cut1 = "N_b<2";
+    //    TCut cut2 = "N_b>2";
+    //    TCut cut3 = cut1 && cut2;
+    //    dataloader->PrepareTrainingAndTestTree(cut1,cut1,"SplitMode=Random:NormMode=EqualNumEvents:!V");
+    //
+    //} else {
     dataloader->PrepareTrainingAndTestTree("","","SplitMode=Random:NormMode=EqualNumEvents:!V");
+    //}
 
     return dataloader;
 }
 
+
+std::vector<TMVA::DataLoader*> mvaDataManager::buildDataLoaderCut(std::string& sampleList, std::string& treeName, mvaConfiguration config, std::string configFile, bool useCV) {
+    std::vector<TMVA::DataLoader*> retvec;
+
+    TCut cut1 = "N_b<2";
+    TCut cut2 = "N_b>2";
+    TCut cut3 = cut1 && cut2;
+
+    for (int i=0; i<3; i++) {
+        TMVA::DataLoader *loader = mvaDataManager::buildDataLoader(sampleList, treeName, config, configFile, useCV);
+
+        if (i == 0) {
+            loader->PrepareTrainingAndTestTree(cut1,cut1,"SplitMode=Random:NormMode=EqualNumEvents:!V");
+        } else if (i == 1) {
+            loader->PrepareTrainingAndTestTree(cut2,cut2,"SplitMode=Random:NormMode=EqualNumEvents:!V");
+        } else if (i == 2) {
+            loader->PrepareTrainingAndTestTree(cut3,cut3,"SplitMode=Random:NormMode=EqualNumEvents:!V");
+        }       
+    }
+
+    return retvec;
+}

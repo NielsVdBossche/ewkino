@@ -55,7 +55,8 @@ int main(int argc, char const *argv[]) {
         {"DL_BDT", mvaConfiguration::BDT_DL},
         {"ML_BDT", mvaConfiguration::BDT_ML},
         {"DL_NN", mvaConfiguration::NN_DL},
-        {"ML_NN", mvaConfiguration::NN_ML}
+        {"ML_NN", mvaConfiguration::NN_ML},
+        {"BDT_DL_SPLIT", mvaConfiguration::BDT_DL_SPLIT}
     };
 
     mvaConfiguration conf = translator[setup];
@@ -77,7 +78,11 @@ int main(int argc, char const *argv[]) {
     // class manages a dataloader and a factory, as well as settings for the mva's
 
     // Main part of calling training etc
-
+    std::vector<std::string> variableVector;
+    if (variables != "") {
+        variableVector = mvaDataManager::readConfigFile(variables);
+    }
+    
     if (conf < mvaConfiguration::NN_DL) {
         if (searchSetup == "search") {
             int ntrees = std::stoi(argv[5]);
@@ -92,7 +97,8 @@ int main(int argc, char const *argv[]) {
             if (!useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT(factory, data, setup, 2000, 6, 20, 0.10, 1, 1.);
             else if (!useCV && (conf == BDT_VAR_ML || conf == BDT_ML)) mvaSetupManager::addBDT(factory, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
             else if (useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT_CV(cv, data, setup, 2000, 6, 20, 0.10, 1, 1.);
-            else mvaSetupManager::addBDT_CV(cv, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
+            else if (useCV) mvaSetupManager::addBDT_CV(cv, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
+            else if (conf == BDT_DL_SPLIT) mvaSetupManager::addBDTs_SplitB(factory, data, variableVector);
 
         }
         //factory->OptimizeAllMethods("ROCIntegral","FitGA");
@@ -111,6 +117,7 @@ int main(int argc, char const *argv[]) {
         factory->EvaluateAllMethods();
         TCanvas* rocPlot = factory->GetROCCurve(data);
         rocPlot->Print(("rocCurve_" + setup + ".png").c_str());
+        factory->EvaluateAllVariables(data);
     }
 
     outfile->Write();
