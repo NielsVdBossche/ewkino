@@ -340,28 +340,28 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     // note: these files are not present in the repository, replace by code below in order for the reweighter to work!
     /*TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/leptonSF_m_" + year + "_3lTight.root" ).c_str() );
     std::shared_ptr< TH2 > muonSFHist( dynamic_cast< TH2* >( muonSFFile->Get( "SFglobal" ) ) ); */
-    TFile* muonSFFile = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_UL" + year + ".root" ).c_str());
+    TFile* muonSFFile = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_ALL_UL" + year + ".root" ).c_str());
     
-    std::shared_ptr< TCanvas > muonSFHist_nomCanv( dynamic_cast< TCanvas* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
-    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFHist_nomCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
+    //std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFHist_nomCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
     muonSFHist_nom->SetDirectory( gROOT );
-    muonSFFile->Close();
     
-    TFile* muonSFFileSyst = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst_UL" + year + ".root" ).c_str());
+    //TFile* muonSFFileSyst = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst_UL" + year + ".root" ).c_str());
 
-    std::shared_ptr< TCanvas > muonSFHist_systCanv( dynamic_cast< TCanvas* >( muonSFFileSyst->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
-    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFHist_systCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
+    //std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFHist_systCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
     muonSFHist_syst->SetDirectory( gROOT );
 
-    muonSFFileSyst->Close();
+    //muonSFFileSyst->Close();
 
-    TFile* muonSFFileStat = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat_UL" + year + ".root" ).c_str());
+    //TFile* muonSFFileStat = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat_UL" + year + ".root" ).c_str());
 
-    std::shared_ptr< TCanvas > muonSFHist_statCanv( dynamic_cast< TCanvas* >( muonSFFileStat->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
-    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFHist_statCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
+    //std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFHist_statCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
     muonSFHist_stat->SetDirectory( gROOT );
-    muonSFFileStat->Close();
+    //muonSFFileStat->Close();
     
+    muonSFFile->Close();
     
     MuonReweighter muonReweighter_nom( muonSFHist_nom, new TightSelector );
     combinedReweighter.addReweighter("muonID",std::make_shared<ReweighterMuons>(muonReweighter_nom));
