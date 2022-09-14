@@ -11,11 +11,13 @@
 // define here what mva threshold to use in tZq ID's listed below
 double muonMVACut(){
     return 0.64;
+    //return 0.4;
 }
 
 // define here what mva value to use in tZq ID's listed below
 double muonMVAValue(const Muon* muonPtr){
     return muonPtr->leptonMVATOPUL();
+    //return muonPtr->leptonMVATOP();
 }
 
 // define here what b-tagger to use in all tZq ID's listed below
@@ -26,7 +28,7 @@ double muonJetBTagValue(const Muon* muonPtr){
 }
 
 double muonConeCorrectionFactor(){
-    return 0.67;
+    return 0.66;
 }
 
 /*
@@ -97,7 +99,7 @@ FO muon selection for medium 0.4 tZq ID
 
 bool MuonSelector::isFOBase() const{
     if( !isLoose() ) return false;
-    if( muonPtr->uncorrectedPt() <= 10 ) return false;
+    //if( muonPtr->uncorrectedPt() <= 10 ) return false;
     // put tunable FO-cuts below
     //if( muonMVAValue(muonPtr) <= muonMVACut() ){
     //}
@@ -106,8 +108,7 @@ bool MuonSelector::isFOBase() const{
 
 bool MuonSelector::isFO2016() const{
     if( muonMVAValue(muonPtr) <= muonMVACut() ){
-        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.02, 40., 0.015, 
-		muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->closestJetDeepFlavor() > 0.025) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
     return true;
@@ -115,8 +116,7 @@ bool MuonSelector::isFO2016() const{
 
 bool MuonSelector::isFO2016PreVFP() const{
     if( muonMVAValue(muonPtr) <= muonMVACut() ){
-        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.02, 40., 0.015, 
-		muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->closestJetDeepFlavor() > 0.025) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
     return true;
@@ -124,8 +124,7 @@ bool MuonSelector::isFO2016PreVFP() const{
 
 bool MuonSelector::isFO2016PostVFP() const{
     if( muonMVAValue(muonPtr) <= muonMVACut() ){
-        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.02, 40., 0.015, 
-		muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->closestJetDeepFlavor() > 0.025) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
     return true;
@@ -134,8 +133,7 @@ bool MuonSelector::isFO2016PostVFP() const{
 
 bool MuonSelector::isFO2017() const{
     if( muonMVAValue(muonPtr) <= muonMVACut() ){
-        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.025, 40., 0.015, 
-                muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->closestJetDeepFlavor() > 0.025) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
     return true;
@@ -144,8 +142,7 @@ bool MuonSelector::isFO2017() const{
 
 bool MuonSelector::isFO2018() const{
     if( muonMVAValue(muonPtr) <= muonMVACut() ){
-        if( muonPtr->closestJetDeepFlavor() > muonSlidingDeepFlavorThreshold( 20., 0.025, 40., 0.015, 
-                muonPtr->uncorrectedPt()) ) return false;
+        if( muonPtr->closestJetDeepFlavor() > 0.025) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
     return true;

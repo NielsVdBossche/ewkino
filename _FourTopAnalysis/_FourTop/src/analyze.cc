@@ -159,7 +159,7 @@ void FourTop::analyze(std::string method) {
             std::cout << "finding available PS scale variations...\n";
             Event event = treeReader->buildEvent(0);
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
-            if(numberOfPSVariations>=30) hasValidPSs = true;
+            if(numberOfPSVariations>=44) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
 
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;

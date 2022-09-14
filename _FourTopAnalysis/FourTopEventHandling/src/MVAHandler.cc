@@ -131,7 +131,7 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis , 60, 0.4, 1.));
+        histInfoVec->push_back(HistInfo(name, xaxis , 240, 0.4, 1.));
     }
 
     return histInfoVec;

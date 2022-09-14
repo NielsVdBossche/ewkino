@@ -13,12 +13,14 @@
 
 // define here what mva threshold to use in tZq ID's listed below
 double electronMVACut(){
-     return 0.81;
+    return 0.81;
+    //return 0.4;
 }
 
 // define here what mva value to use in tZq ID's listed below
 double electronMVAValue(const Electron* electronPtr){
     return electronPtr->leptonMVATOPUL();
+    //return electronPtr->leptonMVATOP();
 }
 
 // define here what b-tagger to use in all tZq ID's listed below
@@ -30,7 +32,7 @@ double electronJetBTagValue(const Electron* electronPtr){
 
 // define here what cone correction factor to use
 double electronConeCorrectionFactor(){
-    return 0.67;
+    return 0.72;
 }
 
 /*
@@ -40,7 +42,6 @@ loose electron selection (common for ttH and tZq IDs)
 */
 bool ElectronSelector::isLooseBase() const{
     if( electronPtr->uncorrectedPt() < 10) return false;
-    //if( electronPtr->uncorrectedPt() < 5 ) return false; // for syncing with TT
     if( electronPtr->absEta() >= 2.5 ) return false;
     if( fabs( electronPtr->dxy() ) >= 0.05 ) return false;
     if( fabs( electronPtr->dz() ) >= 0.1 ) return false;
@@ -102,7 +103,6 @@ FO electron selection for medium 0p4 tZq ID
 
 bool ElectronSelector::isFOBase() const{
     if( !isLoose() ) return false;
-    if( electronPtr->uncorrectedPt() <= 10 ) return false;
 
     if( !electronPtr->passConversionVeto() ) return false;
     if( !electronPtr->passChargeConsistency() ) return false; // for testing if this fixes closure
@@ -112,11 +112,9 @@ bool ElectronSelector::isFOBase() const{
 
 bool ElectronSelector::isFO2016() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-
-	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+        if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
-
     }
     return true;
 }
@@ -125,11 +123,9 @@ bool ElectronSelector::isFO2016() const{
 
 bool ElectronSelector::isFO2016PreVFP() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-
-	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+        if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
-
     }
     return true;
 }
@@ -137,33 +133,27 @@ bool ElectronSelector::isFO2016PreVFP() const{
 
 bool ElectronSelector::isFO2016PostVFP() const {
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-
-	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
+        if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;	
-
     }
     return true;
 }
 
 bool ElectronSelector::isFO2017() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-
-	if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
-        if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
+        if( electronPtr->ptRatio() < 0.4 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
-
     }
     return true;
 }
 
 bool ElectronSelector::isFO2018() const{
     if( electronMVAValue(electronPtr) < electronMVACut() ){
-
-        if( electronPtr->closestJetDeepFlavor() > 0.5 ) return false;
-	if( electronPtr->ptRatio() < 0.5 ) return false;
+        if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
+        if( electronPtr->ptRatio() < 0.4 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
-
     }
     return true;
 }
