@@ -6,9 +6,10 @@ void FourTop::initDdChargeMisID(double* corr) {
     if (yearString == "2016PreVFP" || yearString == "2016PostVFP") {
         year = "2016";
         //objName = "chamidRate2016";
-        *corr = 0.966;
-    } else if (yearString == "2017") *corr = 1.509;
-    else if (yearString == "2018") *corr = 1.515;
+        // preUL: *corr = 0.966;
+        *corr = 0.921;
+    } else if (yearString == "2017") *corr = 1.46; // preUL 1.509
+    else if (yearString == "2018") *corr = 1.451; // preUL 1.515
 
     std::string fullPath = "DatadrivenInput/charge/chamid_" + year + "_DYpile_onZ-nLep2-lepsPrompt_ptEtaNEWbinning.root";
 

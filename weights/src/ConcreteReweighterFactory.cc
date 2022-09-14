@@ -3,6 +3,7 @@
 //include ROOT classes
 #include "TFile.h"
 #include "TH2.h"
+#include "TCanvas.h"
 
 //include other parts of framework
 #include "../../Tools/interface/analysisTools.h"
@@ -339,6 +340,49 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     // note: these files are not present in the repository, replace by code below in order for the reweighter to work!
     /*TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/leptonSF_m_" + year + "_3lTight.root" ).c_str() );
     std::shared_ptr< TH2 > muonSFHist( dynamic_cast< TH2* >( muonSFFile->Get( "SFglobal" ) ) ); */
+    TFile* muonSFFile = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_UL" + year + ".root" ).c_str());
+    
+    std::shared_ptr< TCanvas > muonSFHist_nomCanv( dynamic_cast< TCanvas* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFHist_nomCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
+    muonSFHist_nom->SetDirectory( gROOT );
+    muonSFFile->Close();
+    
+    TFile* muonSFFileSyst = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst_UL" + year + ".root" ).c_str());
+
+    std::shared_ptr< TCanvas > muonSFHist_systCanv( dynamic_cast< TCanvas* >( muonSFFileSyst->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFHist_systCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
+    muonSFHist_syst->SetDirectory( gROOT );
+
+    muonSFFileSyst->Close();
+
+    TFile* muonSFFileStat = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat_UL" + year + ".root" ).c_str());
+
+    std::shared_ptr< TCanvas > muonSFHist_statCanv( dynamic_cast< TCanvas* >( muonSFFileStat->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFHist_statCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
+    muonSFHist_stat->SetDirectory( gROOT );
+    muonSFFileStat->Close();
+    
+    
+    MuonReweighter muonReweighter_nom( muonSFHist_nom, new TightSelector );
+    combinedReweighter.addReweighter("muonID",std::make_shared<ReweighterMuons>(muonReweighter_nom));
+    MuonReweighter muonReweighter_syst( muonSFHist_syst, new TightSelector );
+    combinedReweighter.addReweighter("muonIDSyst",std::make_shared<ReweighterMuons>(muonReweighter_syst));
+    MuonReweighter muonReweighter_stat( muonSFHist_stat, new TightSelector );
+    combinedReweighter.addReweighter("muonIDStat",std::make_shared<ReweighterMuons>(muonReweighter_stat));
+    muonSFFile->Close();
+
+    for(int i = 0; i <= muonSFHist_nom->GetNbinsX()+1; ++i){
+        for(int j = 0; j <= muonSFHist_nom->GetNbinsY()+1; ++j){
+            // process values
+            muonSFHist_nom->SetBinError(i,j,0.);
+            muonSFHist_syst->SetBinError(i,j,muonSFHist_syst->GetBinContent(i,j));
+            muonSFHist_syst->SetBinContent(i,j,1.);
+            // muonSFHist_stat->SetBinError(i,j,muonSFHist_stat->GetBinContent(i,j));
+            muonSFHist_stat->SetBinContent(i,j,1.);
+        }
+    }
+
+    /*
     TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/PRE_UL_muonTOPLeptonMVAMedium040" + year + ".root" ).c_str() );
 
     std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( 
@@ -370,11 +414,13 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     combinedReweighter.addReweighter("muonIDStat",std::make_shared<ReweighterMuons>(muonReweighter_stat));
     muonSFFile->Close();
 
+    */
+
     //make electron ID Reweighter
     // note: these files are not present in the repository, replace by code below in order for the reweighter to work!
     /*TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/leptonSF_e_" + year + "_3lTight.root" ).c_str() );
     std::shared_ptr< TH2 > electronSFHist( dynamic_cast< TH2* >( eleSFFile->Get( "SFglobal" ) ) ); */
-    TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/PRE_UL_SF_EG_" + year + ".root" ).c_str() );
+    TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/egammaEffi.txt_EGM2D_TOPULMVA_UL" + year + ".root" ).c_str() );
     // load the scalefactor histogram and set the errors to zero,
     // load the systematic errors and set the bin contents to one,
     // (note: the histogram syst contains the relative uncertainties as bin contents (?))

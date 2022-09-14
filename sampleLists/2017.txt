@@ -50,8 +50,8 @@ VVV             ../skims_v4/2017/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunI
 VVV             ../skims_v4/2017/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6_ext1-v2_singlelepton_MC_2017_ULv6.root                                               0.05565
 VVV             ../skims_v4/2017/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6_ext1-v2_singlelepton_MC_2017_ULv6.root                                               0.01476
 
-W               ../skims_v4/2017/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                                          61526.7
-WG              ../skims_v4/2017/WGToLNuG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                                    192.3
+# W               ../skims_v4/2017/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                                          61526.7
+# WG              ../skims_v4/2017/WGToLNuG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                                    192.3
 # WG              ../skims_v4/2017/WGToLNuG_TuneCP5_13TeV-madgraphMLM-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                                          
 
 WZ              ../skims_v4/2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v3_singlelepton_MC_2017_ULv6.root                                           4.9173
@@ -68,7 +68,7 @@ ZG              ../skims_v4/2017/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythi
 # ZZ-H            ../skims_v4/2017/ZH_ZToQQ_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                               
 # ZZ-H            ../skims_v4/2017/ZZ_TuneCP5_13TeV-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                                                              
 # ZZ-H            ../skims_v4/2017/ZZTo4L_M-1toInf_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6.root                                          
-ZZ-H            ../skims_v4/2017/GluGluHToZZTo4L_M125_TuneCP5_13TeV_powheg2_JHUGenV7011_pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                        28.87
+ZZ-H            ../skims_v4/2017/GluGluHToZZTo4L_M125_TuneCP5_13TeV_powheg2_JHUGenV7011_pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                        0.01212
 ZZ-H            ../skims_v4/2017/GluGluToContinToZZTo2e2mu_TuneCP5_13TeV-mcfm701-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                               0.005423
 ZZ-H            ../skims_v4/2017/GluGluToContinToZZTo2e2nu_TuneCP5_13TeV-mcfm701-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                               0.005423
 ZZ-H            ../skims_v4/2017/GluGluToContinToZZTo2e2tau_TuneCP5_13TeV-mcfm701-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                              0.005423
