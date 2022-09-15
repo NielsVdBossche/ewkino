@@ -1,1 +1,1 @@
-Obs     ../skims_v5/2016/Merged_crab_Run2016B-21Feb2020_ver2_UL2016_HIPM-v1_singlelepton_data_UL2016V2
+Obs     ../skims_v5/2016/Merged_crab_Run2016B-21Feb2020_ver2_UL2016_HIPM-v1_singlelepton_data_UL2016V2.root
