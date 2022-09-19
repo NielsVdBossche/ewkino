@@ -6,7 +6,8 @@
 // WP's of MVAs,...
 enum eventClass {
     fail,
-    // dy, // new one whieeee
+    dy, // new one whieeee
+    ttbar,
     crwz,
     cr_conv,
     crzz,

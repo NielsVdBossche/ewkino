@@ -34,6 +34,7 @@ class EventFourT {
         LeptonCollection* altLeps; 
 
         eventClass currentClass = fail;
+        eventClass relevantRegion = fail;
         // selection type: makes difference in weight calculation and lepton selection
         selectionType selType = MCAll;
 
@@ -137,6 +138,8 @@ class EventFourT {
         bool hasLeptonFromMEExternalConversion();
         bool leptonFromMEExternalConversion(Lepton* lepton);
         bool passPhotonOverlapRemoval();
+
+        selectionType GetST() {return selType;}
 
         int NumberOfBFlavorJets();
 };

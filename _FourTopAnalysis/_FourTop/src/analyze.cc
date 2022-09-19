@@ -603,6 +603,8 @@ ChannelManager* FourTop::GenerateChannelManager() {
     // rules for generation of channelmanager.
 
     std::map<std::string, eventClass> regionMap = {
+        {"DY", eventClass::dy},
+        {"TTBar", eventClass::ttbar},
         {"CR-2L-23J1B", eventClass::cro},
         {"CR-2L-45J2B", eventClass::crw},
         {"CR-3L-2J1B", eventClass::cro3L},
@@ -667,6 +669,8 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
 
     std::map<eventClass, std::string> namingScheme = {
             {fail, "fail"},
+            {dy, "DY"},
+            {ttbar, "TTBar"},
             {crwz, "CRWZ"},
             {crzz, "CRZZ"},
             {cr_conv, "CR-Conversion"},
