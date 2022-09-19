@@ -1,0 +1,1 @@
+W           ../skims_OSDL/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFPv6.root

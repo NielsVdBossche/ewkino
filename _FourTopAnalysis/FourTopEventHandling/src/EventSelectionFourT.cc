@@ -119,6 +119,13 @@ bool EventFourT::passLeptonSelection() {
 
     if (selType == MCAll) {
         // normal tight lepton selection, no prompt or charge requirements
+        if (relevantRegion == eventClass::ttbar || relevantRegion == eventClass::dy) {
+            if (tightLeps->size() != 2) return false;
+            if (! tightLeps->hasOSPair()) return false;
+            nLep = (*mediumLeps)->size();
+
+            return true;
+        }
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 

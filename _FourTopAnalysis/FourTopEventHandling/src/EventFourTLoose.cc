@@ -4,6 +4,16 @@ void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
     //if (! passLowMassVeto()) return;
     if (! passPhotonOverlapRemoval()) return;
+    if (numberOfLeps() == 2 && getMediumLepCol()->hasOSPair() && (GetST() == selectionType::MCAll || GetST() == selectionType::MCPrompt)) {
+        if (getMediumLepCol()->hasOSSFPair()) {
+            SetEventClass(eventClass::dy);
+            return;
+        } else {
+            if (getMET() < 30) return;
+            if (numberOfMediumBJets() < 1) return;
+            SetEventClass(eventClass::ttbar);
+        }
+    }
     if (! passLeanSelection()) {
         if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() == 0) {
             if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;
@@ -30,6 +40,7 @@ void EventFourTLoose::classifyEvent() {
         }
         return;
     }
+    
     if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() != 0) return;
     if (! passZBosonVeto()) {
         if (numberOfLeps() == 3) SetEventClass(eventClass::crz3L);

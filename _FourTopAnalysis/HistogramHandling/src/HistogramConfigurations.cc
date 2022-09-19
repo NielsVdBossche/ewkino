@@ -11,6 +11,8 @@ std::vector<HistInfo>* HistogramConfig::getNominalHists(const eventClass evClass
 
     std::map<eventClass, std::string> flagMapping = {
             {fail, "fail"},
+            {dy, "DY"},
+            {ttbar, "TTBar"},
             {crwz, "CRWZ"},
             {crzz, "CRZZ"},
             {cr_conv, "CR-Conversion"},
@@ -188,6 +190,8 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
 
     std::map<eventClass, std::string> flagMapping = {
         {fail, "fail"},
+        {dy, "DY"},
+        {ttbar, "TTBar"},
         {crwz, "CRWZ"},
         {crzz, "CRZZ"},
         {cr_conv, "CR-Conversion"},
@@ -223,6 +227,13 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         }
     }
 
+    if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
+        histInfoVec->push_back(HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll} [GeV]", 20, 50, 150));
+        histInfoVec->push_back(HistInfo( "N_MediumB_jets_" + flag, "N_{b}", 6, -0.5, 5.5));
+        histInfoVec->push_back(HistInfo( "deltaR_HighPT_MedB_" + flag, "#Delta R(b1,b2)", 24, 0, 4.8));
+        histInfoVec->push_back(HistInfo( "deltaR_HighPT_Jets_" + flag, "#Delta R(j1,j2)", 24, 0, 4.8));
+    }
+
     return histInfoVec;
 }
 
@@ -231,6 +242,8 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
 
     std::map<eventClass, std::string> flagMapping = {
         {fail, "fail"},
+        {dy, "DY"},
+        {ttbar, "TTBar"},
         {crwz, "CRWZ"},
         {crzz, "CRZZ"},
         {cr_conv, "CR-Conversion"},
@@ -276,6 +289,19 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
             fillVal.push_back(event->getLepton(3)->pt());
         }
     }
+
+    if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
+        Lepton* l1 = event->getLepton(0);
+        Lepton* l2 = event->getLepton(1);
+        double osLepMass = (*l1 + *l2).mass();
+
+        fillVal.push_back(osLepMass);
+        fillVal.push_back(event->numberOfMediumBJets());
+
+        fillVal.push_back(deltaR(*event->getJetCol()->mediumBTagCollection().at(0), *event->getJetCol()->mediumBTagCollection().at(1)));
+        fillVal.push_back(deltaR(*event->getJet(0), *event->getJet(1)));
+    }
+
     return fillVal;
 }
 

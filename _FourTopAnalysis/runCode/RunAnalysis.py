@@ -29,11 +29,13 @@ ddtypes = ["all", "np", "ch"]
 
 mcSL = ["TmpLists/2016PreVFP_SSWW_0.txt","TmpLists/2016PreVFP_ttbar_0.txt","TmpLists/2016PreVFP_ttbar_1.txt","TmpLists/2016PreVFP_ttbar_2.txt","TmpLists/2016PreVFP_ttG_0.txt","TmpLists/2016PreVFP_ttG_1.txt","TmpLists/2016PreVFP_ttG_2.txt","TmpLists/2016PreVFP_TTH_0.txt","TmpLists/2016PreVFP_TTH_1.txt","TmpLists/2016PreVFP_TTTT_0.txt","TmpLists/2016PreVFP_TTVV_0.txt","TmpLists/2016PreVFP_TTVV_1.txt","TmpLists/2016PreVFP_TTVV_2.txt","TmpLists/2016PreVFP_TTVV_3.txt","TmpLists/2016PreVFP_TTVV_4.txt","TmpLists/2016PreVFP_TTVV_5.txt","TmpLists/2016PreVFP_TTW_0.txt","TmpLists/2016PreVFP_TTW_1.txt","TmpLists/2016PreVFP_TTZ_0.txt","TmpLists/2016PreVFP_TTZ_1.txt","TmpLists/2016PreVFP_TTX_0.txt","TmpLists/2016PreVFP_TTX_1.txt","TmpLists/2016PreVFP_TTX_2.txt","TmpLists/2016PreVFP_TTX_3.txt","TmpLists/2016PreVFP_TTX_4.txt","TmpLists/2016PreVFP_TTX_5.txt","TmpLists/2016PreVFP_TTX_6.txt","TmpLists/2016PreVFP_TTX_7.txt","TmpLists/2016PreVFP_TTX_8.txt","TmpLists/2016PreVFP_VVV_0.txt","TmpLists/2016PreVFP_VVV_1.txt","TmpLists/2016PreVFP_VVV_2.txt","TmpLists/2016PreVFP_VVV_3.txt","TmpLists/2016PreVFP_VVV_4.txt","TmpLists/2016PreVFP_WZ_0.txt","TmpLists/2016PreVFP_WZ_1.txt","TmpLists/2016PreVFP_Z_0.txt","TmpLists/2016PreVFP_Z_1.txt","TmpLists/2016PreVFP_ZG_0.txt","TmpLists/2016PreVFP_ZZ-H_0.txt","TmpLists/2016PreVFP_ZZ-H_1.txt","TmpLists/2016PreVFP_ZZ-H_2.txt","TmpLists/2016PreVFP_ZZ-H_3.txt","TmpLists/2016PreVFP_ZZ-H_4.txt","TmpLists/2016PreVFP_ZZ-H_5.txt","TmpLists/2016PreVFP_ZZ-H_6.txt","TmpLists/2016PreVFP_ZZ-H_7.txt","TmpLists/2016PreVFP_ZZ-H_8.txt","TmpLists/2016PostVFP_SSWW_0.txt","TmpLists/2016PostVFP_ttbar_0.txt","TmpLists/2016PostVFP_ttbar_1.txt","TmpLists/2016PostVFP_ttbar_2.txt","TmpLists/2016PostVFP_ttG_0.txt","TmpLists/2016PostVFP_ttG_1.txt","TmpLists/2016PostVFP_ttG_2.txt","TmpLists/2016PostVFP_TTH_0.txt","TmpLists/2016PostVFP_TTH_1.txt","TmpLists/2016PostVFP_TTTT_0.txt","TmpLists/2016PostVFP_TTVV_0.txt","TmpLists/2016PostVFP_TTVV_1.txt","TmpLists/2016PostVFP_TTVV_2.txt","TmpLists/2016PostVFP_TTVV_3.txt","TmpLists/2016PostVFP_TTVV_4.txt","TmpLists/2016PostVFP_TTVV_5.txt","TmpLists/2016PostVFP_TTW_0.txt","TmpLists/2016PostVFP_TTW_1.txt","TmpLists/2016PostVFP_TTZ_0.txt","TmpLists/2016PostVFP_TTZ_1.txt","TmpLists/2016PostVFP_TTX_0.txt","TmpLists/2016PostVFP_TTX_1.txt","TmpLists/2016PostVFP_TTX_2.txt","TmpLists/2016PostVFP_TTX_3.txt","TmpLists/2016PostVFP_TTX_4.txt","TmpLists/2016PostVFP_TTX_5.txt","TmpLists/2016PostVFP_TTX_6.txt","TmpLists/2016PostVFP_TTX_7.txt","TmpLists/2016PostVFP_TTX_8.txt","TmpLists/2016PostVFP_VVV_0.txt","TmpLists/2016PostVFP_VVV_1.txt","TmpLists/2016PostVFP_VVV_2.txt","TmpLists/2016PostVFP_VVV_3.txt","TmpLists/2016PostVFP_VVV_4.txt","TmpLists/2016PostVFP_WZ_0.txt","TmpLists/2016PostVFP_WZ_1.txt","TmpLists/2016PostVFP_Z_0.txt","TmpLists/2016PostVFP_Z_1.txt","TmpLists/2016PostVFP_ZG_0.txt","TmpLists/2016PostVFP_ZZ-H_0.txt","TmpLists/2016PostVFP_ZZ-H_1.txt","TmpLists/2016PostVFP_ZZ-H_2.txt","TmpLists/2016PostVFP_ZZ-H_3.txt","TmpLists/2016PostVFP_ZZ-H_4.txt","TmpLists/2016PostVFP_ZZ-H_5.txt","TmpLists/2016PostVFP_ZZ-H_6.txt","TmpLists/2016PostVFP_ZZ-H_7.txt","TmpLists/2016PostVFP_ZZ-H_8.txt","TmpLists/2016PostVFP_ZZ-H_9.txt","TmpLists/2016PostVFP_ZZ-H_10.txt","TmpLists/2016PostVFP_ZZ-H_11.txt","TmpLists/2017_SSWW_0.txt","TmpLists/2017_ttbar_0.txt","TmpLists/2017_ttbar_1.txt","TmpLists/2017_ttbar_2.txt","TmpLists/2017_ttG_0.txt","TmpLists/2017_ttG_1.txt","TmpLists/2017_ttG_2.txt","TmpLists/2017_TTH_0.txt","TmpLists/2017_TTH_1.txt","TmpLists/2017_TTTT_0.txt","TmpLists/2017_TTVV_0.txt","TmpLists/2017_TTVV_1.txt","TmpLists/2017_TTVV_2.txt","TmpLists/2017_TTVV_3.txt","TmpLists/2017_TTVV_4.txt","TmpLists/2017_TTVV_5.txt","TmpLists/2017_TTW_0.txt","TmpLists/2017_TTW_1.txt","TmpLists/2017_TTZ_0.txt","TmpLists/2017_TTZ_1.txt","TmpLists/2017_TTX_0.txt","TmpLists/2017_TTX_1.txt","TmpLists/2017_TTX_2.txt","TmpLists/2017_TTX_3.txt","TmpLists/2017_TTX_4.txt","TmpLists/2017_TTX_5.txt","TmpLists/2017_TTX_6.txt","TmpLists/2017_TTX_7.txt","TmpLists/2017_TTX_8.txt","TmpLists/2017_VVV_0.txt","TmpLists/2017_VVV_1.txt","TmpLists/2017_VVV_2.txt","TmpLists/2017_VVV_3.txt","TmpLists/2017_VVV_4.txt","TmpLists/2017_WZ_0.txt","TmpLists/2017_Z_0.txt","TmpLists/2017_Z_1.txt","TmpLists/2017_ZG_0.txt","TmpLists/2017_ZZ-H_0.txt","TmpLists/2017_ZZ-H_1.txt","TmpLists/2017_ZZ-H_2.txt","TmpLists/2017_ZZ-H_3.txt","TmpLists/2017_ZZ-H_4.txt","TmpLists/2017_ZZ-H_5.txt","TmpLists/2017_ZZ-H_6.txt","TmpLists/2017_ZZ-H_7.txt","TmpLists/2017_ZZ-H_8.txt","TmpLists/2017_ZZ-H_9.txt","TmpLists/2017_ZZ-H_10.txt","TmpLists/2017_ZZ-H_11.txt","TmpLists/2017_ZZ-H_12.txt","TmpLists/2017_ZZ-H_13.txt","TmpLists/2018_SSWW_0.txt","TmpLists/2018_ttbar_0.txt","TmpLists/2018_ttbar_1.txt","TmpLists/2018_ttbar_2.txt","TmpLists/2018_ttG_0.txt","TmpLists/2018_ttG_1.txt","TmpLists/2018_ttG_2.txt","TmpLists/2018_TTH_0.txt","TmpLists/2018_TTH_1.txt","TmpLists/2018_TTTT_0.txt","TmpLists/2018_TTVV_0.txt","TmpLists/2018_TTVV_1.txt","TmpLists/2018_TTVV_2.txt","TmpLists/2018_TTVV_3.txt","TmpLists/2018_TTVV_4.txt","TmpLists/2018_TTVV_5.txt","TmpLists/2018_TTW_0.txt","TmpLists/2018_TTW_1.txt","TmpLists/2018_TTZ_0.txt","TmpLists/2018_TTZ_1.txt","TmpLists/2018_TTX_0.txt","TmpLists/2018_TTX_1.txt","TmpLists/2018_TTX_2.txt","TmpLists/2018_TTX_3.txt","TmpLists/2018_TTX_4.txt","TmpLists/2018_TTX_5.txt","TmpLists/2018_TTX_6.txt","TmpLists/2018_TTX_7.txt","TmpLists/2018_TTX_8.txt","TmpLists/2018_VVV_0.txt","TmpLists/2018_VVV_1.txt","TmpLists/2018_VVV_2.txt","TmpLists/2018_VVV_3.txt","TmpLists/2018_VVV_4.txt","TmpLists/2018_VVV_5.txt","TmpLists/2018_VVV_6.txt","TmpLists/2018_WZ_0.txt","TmpLists/2018_WZ_1.txt","TmpLists/2018_Z_0.txt","TmpLists/2018_Z_1.txt","TmpLists/2018_ZG_0.txt","TmpLists/2018_ZZ-H_0.txt","TmpLists/2018_ZZ-H_1.txt","TmpLists/2018_ZZ-H_2.txt","TmpLists/2018_ZZ-H_3.txt","TmpLists/2018_ZZ-H_4.txt","TmpLists/2018_ZZ-H_5.txt","TmpLists/2018_ZZ-H_6.txt","TmpLists/2018_ZZ-H_7.txt","TmpLists/2018_ZZ-H_8.txt","TmpLists/2018_ZZ-H_9.txt","TmpLists/2018_ZZ-H_10.txt","TmpLists/2018_ZZ-H_11.txt","TmpLists/2018_ZZ-H_12.txt"]
 
+mcSL_OSDL = ["TmpLists/OSDL_2016PreVFP_DY_0.txt","TmpLists/OSDL_2016PreVFP_DY_1.txt","TmpLists/OSDL_2016PreVFP_ttG_0.txt","TmpLists/OSDL_2016PreVFP_ttG_1.txt","TmpLists/OSDL_2016PreVFP_ttG_2.txt","TmpLists/OSDL_2016PreVFP_ttbar_0.txt","TmpLists/OSDL_2016PreVFP_ttbar_1.txt","TmpLists/OSDL_2016PreVFP_W_0.txt","TmpLists/OSDL_2016PreVFP_WW_0.txt","TmpLists/OSDL_2016PreVFP_ZG_0.txt","TmpLists/OSDL_2016PreVFP_ZZ_0.txt","TmpLists/OSDL_2016PreVFP_ZZ_1.txt","TmpLists/OSDL_2016PostVFP_DY_0.txt","TmpLists/OSDL_2016PostVFP_DY_1.txt","TmpLists/OSDL_2016PostVFP_ttG_0.txt","TmpLists/OSDL_2016PostVFP_ttG_1.txt","TmpLists/OSDL_2016PostVFP_ttG_2.txt","TmpLists/OSDL_2016PostVFP_ttbar_0.txt","TmpLists/OSDL_2016PostVFP_ttbar_1.txt","TmpLists/OSDL_2016PostVFP_W_0.txt","TmpLists/OSDL_2016PostVFP_WW_0.txt","TmpLists/OSDL_2016PostVFP_ZG_0.txt","TmpLists/OSDL_2016PostVFP_ZZ_0.txt","TmpLists/OSDL_2016PostVFP_ZZ_1.txt","TmpLists/OSDL_2017_DY_0.txt","TmpLists/OSDL_2017_DY_1.txt","TmpLists/OSDL_2017_ttG_0.txt","TmpLists/OSDL_2017_ttG_1.txt","TmpLists/OSDL_2017_ttG_2.txt","TmpLists/OSDL_2017_ttbar_0.txt","TmpLists/OSDL_2017_ttbar_1.txt","TmpLists/OSDL_2017_W_0.txt","TmpLists/OSDL_2017_WW_0.txt","TmpLists/OSDL_2017_ZG_0.txt","TmpLists/OSDL_2017_ZZ_0.txt","TmpLists/OSDL_2017_ZZ_1.txt","TmpLists/OSDL_2018_DY_0.txt","TmpLists/OSDL_2018_DY_1.txt","TmpLists/OSDL_2018_ttG_0.txt","TmpLists/OSDL_2018_ttG_1.txt","TmpLists/OSDL_2018_ttG_2.txt","TmpLists/OSDL_2018_ttbar_0.txt","TmpLists/OSDL_2018_ttbar_1.txt","TmpLists/OSDL_2018_W_0.txt","TmpLists/OSDL_2018_WW_0.txt","TmpLists/OSDL_2018_WW_1.txt","TmpLists/OSDL_2018_WW_2.txt","TmpLists/OSDL_2018_ZG_0.txt","TmpLists/OSDL_2018_ZZ_0.txt"]
 dataSL = ["TmpLists/Data16PreVFP_Obs_0.txt","TmpLists/Data16PreVFP_Obs_1.txt","TmpLists/Data16PreVFP_Obs_2.txt","TmpLists/Data16PreVFP_Obs_3.txt","TmpLists/Data16PreVFP_Obs_4.txt","TmpLists/Data16PostVFP_Obs_0.txt","TmpLists/Data16PostVFP_Obs_1.txt","TmpLists/Data16PostVFP_Obs_2.txt","TmpLists/Data17_Obs_0.txt","TmpLists/Data17_Obs_1.txt","TmpLists/Data17_Obs_2.txt","TmpLists/Data17_Obs_3.txt","TmpLists/Data17_Obs_4.txt","TmpLists/Data18_Obs_0.txt","TmpLists/Data18_Obs_1.txt","TmpLists/Data18_Obs_2.txt","TmpLists/Data18_Obs_3.txt"]
 #dataSL = ["DATALIAM2017.txt"]
 
 
 sets = {"MCAll" : [mcSL], "nonPromptDD" : [dataSL, mcSL], "ChargeDD" : [dataSL], "MCPrompt" : [mcSL], "nonPromptDDControl" : [mcSL], "MCAllBJetTest" : [mcSL]}
+sets_OSDL = {"MCAll" : [mcSL_OSDL]}
 
 wd = "/user/nivanden/ewkino/_FourTopAnalysis"
 
@@ -49,6 +51,8 @@ if __name__ == "__main__":
     customSamplelistName = ""
     specificSample = ""
     specificEra = "1"
+
+    useOSDL = False
     
     runType = sys.argv[1].lower()
     
@@ -73,39 +77,13 @@ if __name__ == "__main__":
             additionalArgs.append(option)
         elif "samples=" in optionLower:
             specificSample = option.split('=')[1]
+        elif "osdl" in optionLower:
+            useOSDL = True
         else:
             print("Unrecognized option: {}. Usage: ./RunAnalysis.py <AnalysisType> [-CR] [-LEAN] [path/to/samplelist] [era=[16Pre, 16Post, 17, 18]]".format(option))
 
     
     
-
-    # add some default arguments depening on contents of argv
-    # add methods to specify queueing in htcondor
-    # generally: change descripton file generation compared to usual stuff -> possible to use arguments
-    # arguments should be included in queue part -> write it in a way that works
-
-    # kinda works kinda don't
-    # idk work more on this
-
-    # add more complete options for runTypes, more similar to runcode. Based on the option, figure out which samplelists to use
-    # Based on supplied runtype, the actual runtype for the code should be obtained.
-    
-
-    # submissionscript should be same as now basically -> Makes this way less complicated and just use 1 script for all submissions?
-    # AnalysisSubmission.sh with ./analysisExec that takes arbitrary number of inputs -> possible: https://stackoverflow.com/questions/10307280/how-to-define-a-shell-script-with-variable-number-of-arguments
-    # Then all add these in the command basically. Main code: make sure CR can be wherever we want
-    # Static things in job description:
-    # arguments = $(samplelist) $(method)
-    # additionally provide other arguments like CR, like LooseEventSelection
-    # queue samplelist, method from (
-    # x.txt, y
-    # z.txt, y
-    # )
-    # ^ general structure for the queue command -> only thing we really have to change inbetween is queue command and arguments
-    # Possible runtypes: mcall -> just everything mc; ddXXX: datadriven backgrounds -> run all background estimation as datadriven! (maybe: ddAll, ddNP, ddCh); NPDD only datadriven np bkg estimation (no other things are running); 
-    # chargeDD: same as NPDD but for chargemisID; 
-    # add extra option: -Data: run data in obs mode alongside it
-
     PrepareJobDescription(additionalArgs)
     
     queueString = "queue 1 Samplelist, Method from (\n"
@@ -114,6 +92,9 @@ if __name__ == "__main__":
     if not customSamplelist:
         requiredSamplelists = sets
         
+        if useOSDL:
+            requiredSamplelists = sets_OSDL
+
         # if not dd x -> do stuff different to npdd, chdd
 
         for method in requiredMethods:
