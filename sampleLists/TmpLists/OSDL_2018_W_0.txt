@@ -1,1 +1,1 @@
-W               ../skims_OSDL/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root              61526.7
+W               ../skims_OSDL/2018/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root              61526.7
