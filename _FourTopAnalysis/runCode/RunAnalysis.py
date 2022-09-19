@@ -23,7 +23,7 @@ def PrepareJobDescription(additionalArguments):
 runTypesCode = ["MCAll", "MCPrompt", "ChargeDD", "nonPromptDD", "nonPromptDDControl", "Obs", "MCNoChargeMisID", "MCNoNP"]
 runTypes = ["mcall", "dd", "npdd", "chdd", "npcontrol", "mcnp"]
 
-matches = {"mcall" : ["MCAll"], "npdd" : ["nonPromptDD", "MCAll"], "chdd" : ["ChargeDD"], "dd" : ["MCPrompt", "ChargeDD", "nonPromptDD"], "npcontrol" : {"nonPromptDD", "nonPromptDDControl"}, "mcnp" : ["MCAllBJetTest"]}
+matches = {"mcall" : ["MCAll"], "npdd_ext" : ["nonPromptDD", "MCAll"], "chdd" : ["ChargeDD"], "dd" : ["MCPrompt", "ChargeDD", "nonPromptDD"], "npcontrol" : {"nonPromptDD", "nonPromptDDControl"}, "mcnp" : ["MCAllBJetTest"], "npdd" : ["nonPromptDD"]}
 
 ddtypes = ["all", "np", "ch"]
 
