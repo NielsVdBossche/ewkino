@@ -38,7 +38,7 @@ ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histI
     }
 }
 
-ChannelManager::ChannelManager(TFile* outputFile, eventClass classToPlots, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass)) {
+ChannelManager::ChannelManager(TFile* outputFile, eventClass classToPlots, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass)) : outfile(outputFile) {
     if (classToPlots == eventClass::fail) return;
     std::vector<HistInfo>* histInfoVec = histInfoGenerator(classToPlots);
     std::string regionName = namingScheme[classToPlots];

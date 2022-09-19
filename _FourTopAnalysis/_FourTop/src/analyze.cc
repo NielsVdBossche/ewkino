@@ -18,6 +18,7 @@ void FourTop::analyze(std::string method) {
         std::cout << "ANALYZING SR + CR" << std::endl;
     }
     ChannelManager* mgrAll = GenerateChannelManager();
+    
     //if (searchRegion == "All") {
     //    mgrAll = new ChannelManager(outfile);
     //} else if (searchRegion == "ConvCR") {
@@ -775,3 +776,4 @@ bool FourTop::FillRegion(eventClass nominalClass, selectionType st) {
 
     return true;
 }
+                                 
