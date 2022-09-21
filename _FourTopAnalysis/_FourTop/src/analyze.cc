@@ -486,10 +486,10 @@ void FourTop::analyze(std::string method) {
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (considerBTagShape) {
-                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
