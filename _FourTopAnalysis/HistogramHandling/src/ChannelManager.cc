@@ -39,9 +39,11 @@ ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histI
 }
 
 ChannelManager::ChannelManager(TFile* outputFile, eventClass classToPlots, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass)) : outfile(outputFile) {
+    std::cout << "mgr gen" << std::endl;
     if (classToPlots == eventClass::fail) return;
     std::vector<HistInfo>* histInfoVec = histInfoGenerator(classToPlots);
     std::string regionName = namingScheme[classToPlots];
+    std::cout << regionName << std::endl;
     mapping[classToPlots] = new Channel(regionName, histInfoVec);
 }
 
@@ -129,6 +131,7 @@ void ChannelManager::SetPrintAllUncertaintyVariations(bool setting) {
 
 void ChannelManager::writeNominalHistograms(std::string& uniqueSampleName) {
     for (unsigned i=0; i<processHistName.size(); i++) {
+
         gDirectory->cd(processHistName[i].c_str());
         if (! gDirectory->GetDirectory(uniqueSampleName.c_str())) {
             gDirectory->mkdir(uniqueSampleName.c_str());

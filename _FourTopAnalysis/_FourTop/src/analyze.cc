@@ -313,7 +313,12 @@ void FourTop::analyze(std::string method) {
 
             //// Start filling histograms
             // loop uncertainties
-            Channel* uncWrapper = (selection->getCurrentClass() != eventClass::fail ? mgrAll->at(selection->getCurrentClass()) : nullptr);
+            Channel* uncWrapper;
+            if ((selection->getCurrentClass() != eventClass::fail && considerRegion == eventClass::fail) || (considerRegion != eventClass::fail && selection->getCurrentClass() == considerRegion)) {
+                uncWrapper = mgrAll->at(selection->getCurrentClass());
+            } else {
+                uncWrapper = nullptr;
+            }
 
             std::vector<double> fillVecUp = fillVec;
             std::vector<double> fillVecDown = fillVec;
@@ -733,6 +738,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
         }
     } else {
         if (bdtOutput && considerRegion >= unsigned(eventClass::crz3L)) {
+            //std::cout << "bdt output" << std::endl;
             if (considerRegion == eventClass::cro || considerRegion == eventClass::crw || considerRegion == eventClass::ssdl) {
                 offsets[considerRegion] = mgrAll->at(considerRegion)->getHistInfo()->size() + mva_DL->getMaxClass();
                 mgrAll->at(considerRegion)->updateHistInfo(mva_DL->createHistograms(namingScheme[considerRegion], true));
@@ -776,4 +782,3 @@ bool FourTop::FillRegion(eventClass nominalClass, selectionType st) {
 
     return true;
 }
-                                 
