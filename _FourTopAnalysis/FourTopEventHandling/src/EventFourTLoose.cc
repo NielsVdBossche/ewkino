@@ -4,7 +4,7 @@ void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
     //if (! passLowMassVeto()) return;
     if (! passPhotonOverlapRemoval()) return;
-    if (numberOfLeps() == 2 && getMediumLepCol()->hasOSPair() && (GetST() == selectionType::MCAll || GetST() == selectionType::MCPrompt)) {
+    if (numberOfLeps() == 2 && getMediumLepCol()->hasOSPair() && (GetRelRegion() == eventClass::ttbar || GetRelRegion() == eventClass::dy)) {
         if (getMediumLepCol()->hasOSSFPair()) {
             SetEventClass(eventClass::dy);
             return;

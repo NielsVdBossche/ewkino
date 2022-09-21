@@ -298,8 +298,11 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         fillVal.push_back(osLepMass);
         fillVal.push_back(event->numberOfMediumBJets());
 
-        fillVal.push_back(deltaR(*event->getJetCol()->mediumBTagCollection().at(0), *event->getJetCol()->mediumBTagCollection().at(1)));
-        fillVal.push_back(deltaR(*event->getJet(0), *event->getJet(1)));
+        if (event->numberOfMediumBJets() >= 2) fillVal.push_back(deltaR(*event->getJetCol()->mediumBTagCollection().at(0), *event->getJetCol()->mediumBTagCollection().at(1)));
+        else fillVal.push_back(5.);
+
+        if (event->numberOfJets() >= 2) fillVal.push_back(deltaR(*event->getJet(0), *event->getJet(1)));
+        else fillVal.push_back(5.);
     }
 
     return fillVal;
