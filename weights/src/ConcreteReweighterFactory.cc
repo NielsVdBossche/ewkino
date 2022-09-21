@@ -342,13 +342,13 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     std::shared_ptr< TH2 > muonSFHist( dynamic_cast< TH2* >( muonSFFile->Get( "SFglobal" ) ) ); */
     TFile* muonSFFile = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_ALL_UL" + year + ".root" ).c_str());
     
-    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFFile->Get( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
     //std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFHist_nomCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
     muonSFHist_nom->SetDirectory( gROOT );
     
     //TFile* muonSFFileSyst = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst_UL" + year + ".root" ).c_str());
 
-    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFFile->Get( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
     //std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFHist_systCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
     muonSFHist_syst->SetDirectory( gROOT );
 
@@ -356,7 +356,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
 
     //TFile* muonSFFileStat = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat_UL" + year + ".root" ).c_str());
 
-    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFFile->Get( "cNUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
+    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFFile->Get( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
     //std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFHist_statCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
     muonSFHist_stat->SetDirectory( gROOT );
     //muonSFFileStat->Close();
