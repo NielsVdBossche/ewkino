@@ -14,8 +14,8 @@ Muon::Muon( const TreeReader& treeReader, const unsigned leptonIndex ):
     _isMediumPOGMuon( treeReader._lPOGMedium[leptonIndex] ),
     _isTightPOGMuon( treeReader._lPOGTight[leptonIndex] )
 {
-    //setLorentzVector( treeReader._lPtCorr[ leptonIndex ], eta(), phi(), 
-    //            treeReader._lECorr[ leptonIndex ] );
+    setLorentzVector( treeReader._lPtCorr[ leptonIndex ], eta(), phi(), 
+                treeReader._lECorr[ leptonIndex ] );
 
 }
 

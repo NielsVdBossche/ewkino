@@ -72,7 +72,10 @@ ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
                                            "jesPileUpDataMC", "jesPileUpPtBB", "jesPileUpPtEC1",
                                            "jesPileUpPtEC2", "jesPileUpPtHF", "jesPileUpPtRef",
                                            "jesFlavorQCD", "jesFragmentation", "jesSinglePionECAL",
-                                           "jesSinglePionHCAL", "jesTimePtEta"};
+                                           "jesSinglePionHCAL", "jesTimePtEta",
+                                           "jesAbsolute", "jesAbsolute_2018", "jesBBEC1", "jesBBEC1_2018",
+                                           "jesEC2", "jesEC2_2018", "jesFlavorQCD", "jesHF",
+                                           "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018"};
     std::vector<std::string> allowedsys = {"hf", "lf", "hfstats1", "hfstats2",
                                            "lfstats1", "lfstats2", "cferr1", "cferr2"};
     // (note: allowedsys must be a subcollection of allowedvar, excluding jec variations)
@@ -215,7 +218,10 @@ bool ReweighterBTagShape::considerVariation(const Jet &jet,
                                 "jesPileUpDataMC", "jesPileUpPtBB", "jesPileUpPtEC1",
                                 "jesPileUpPtEC2", "jesPileUpPtHF", "jesPileUpPtRef",
                                 "jesFlavorQCD", "jesFragmentation", "jesSinglePionECAL",
-                                "jesSinglePionHCAL", "jesTimePtEta"};
+                                "jesSinglePionHCAL", "jesTimePtEta",
+                                "jesAbsolute", "jesAbsolute_2018", "jesBBEC1", "jesBBEC1_2018",
+                                "jesEC2", "jesEC2_2018", "jesFlavorQCD", "jesHF",
+                                "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018"};
     }
     for (std::string var : forbidden_variations)
     {
