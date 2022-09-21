@@ -207,17 +207,48 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
 
     std::string flag = flagMapping[evClass];
 
+    std::pair<double, double> minMaxNjets = {-0.5, 6.5};
+    std::pair<double, double> minMaxNBjets = {-0.5, 4.5};
+    std::pair<double, double> minMaxHT = {0, 800};
+    std::pair<double, double> minMaxNMu = {-0.5, 5.5};
+    if (evClass == eventClass::crw) {
+        minMaxNjets = {3.5,5.5};
+        minMaxNBjets = {1.5,2.5};
+        minMaxHT = {200,1000};
+        minMaxNMu = {-0.5, 2.5};
+    } else if (evClass == eventClass::cro) {
+        minMaxNjets = {1.5,6.5};
+        minMaxNBjets = {0.5,4.5};
+        minMaxHT = {250,1050};
+        minMaxNMu = {-0.5, 2.5};
+    } else if (evClass == eventClass::crz3L) {
+        minMaxNjets = {1.5, 8.5};
+        minMaxNBjets = {0.5, 6.5};
+        minMaxHT = {200, 1000};
+        minMaxNMu = {-0.5, 3.5};
+    } else if (evClass == eventClass::cro3L) {
+        minMaxNjets = {1.5, 6.5};
+        minMaxNBjets = {0.5, 3.5};
+        minMaxHT = {200, 1000};
+        minMaxNMu = {-0.5, 3.5};
+    } else if (evClass == eventClass::crz4L) {
+        minMaxNjets = {1.5, 6.5};
+        minMaxNBjets = {0.5, 4.5};
+        minMaxHT = {0, 1000};
+        minMaxNMu = {-0.5, 4.5};
+    }
+
     *histInfoVec = {
         HistInfo( "Yield_" + flag, "yield", 1, 0., 1.),
         HistInfo( "leptonPtLeading_" + flag, "p_{T}(l1) [GeV]", 15, 0, 300),
         HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 18, 20, 200),
-        HistInfo( "N_jets_" + flag, "N_{jets}", 7, -0.5, 6.5),
-        HistInfo( "N_Bjets_" + flag, "N_{b}", 7, -0.5, 6.5),
-        HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, 0, 800),
+        HistInfo( "N_jets_" + flag, "N_{jets}", int(minMaxNjets.second -  minMaxNjets.first), minMaxNjets.first, minMaxNjets.second),
+        HistInfo( "N_Bjets_" + flag, "N_{b}", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
+        HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, minMaxHT.first, minMaxHT.second),
         HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 15, 0, 300),
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
         HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),        
-        HistInfo( "N_mu_" + flag, "N_{#mu}", 6, -0.5, 5.5),
+        HistInfo( "N_mu_" + flag, "N_{#mu}", int(minMaxNMu.second -  minMaxNMu.first), minMaxNMu.first, minMaxNMu.second),
     };
 
     if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
