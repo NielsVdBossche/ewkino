@@ -230,8 +230,11 @@ void FourTop::analyze(std::string method) {
             // Add lepton selection boolean call here!
 
             if (! selection->passLeptonSelection()) continue;
+            if (testRun) std::cout << "pass lepton selection" << std::endl;
             selection->classifyEvent();
             unsigned processNb = 0;
+            if (testRun) std::cout << "process nb " << processNb << std::endl;
+
             double weight = currentEvent->weight();
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
                 weight *= reweighter.totalWeight( *currentEvent );
@@ -296,6 +299,8 @@ void FourTop::analyze(std::string method) {
             // if region != considerRegion && considerRegion != fail: skip
 
             if (FillRegion(nominalClass, st)) {
+                if (testRun) std::cout << "is fill " << std::endl;
+
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
                 fillVec2D = selection->fillVector2D();
@@ -624,6 +629,7 @@ ChannelManager* FourTop::GenerateChannelManager() {
     };
     if (searchRegion != "All") {
         considerRegion = regionMap[searchRegion];
+        selection->SetRelRegion(considerRegion);
     }
 
     ChannelManager* ret = nullptr;

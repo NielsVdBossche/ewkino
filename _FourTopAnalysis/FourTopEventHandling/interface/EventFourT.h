@@ -140,6 +140,8 @@ class EventFourT {
         bool passPhotonOverlapRemoval();
 
         selectionType GetST() {return selType;}
+        eventClass GetRelRegion() {return relevantRegion;}
+        void SetRelRegion(eventClass region) {relevantRegion = region;}
 
         int NumberOfBFlavorJets();
 };
