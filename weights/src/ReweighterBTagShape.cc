@@ -448,7 +448,10 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
     {
         std::string msg = "### ERROR ### in ReweighterBTagShape::weightJecVar:";
         msg += " jec variation '" + jecVariation + "' (corresponding to '" + varName + "') not valid";
-        throw std::invalid_argument(msg);
+        std::cerr << msg << std::endl;
+        std::cerr << "returning nominal weight" << std::endl;
+        return this->weight(event, "central");
+        //throw std::invalid_argument(msg);
     }
     double weight = 1.;
     for (const auto &jetPtr : event.getJetCollection(jecVariation))

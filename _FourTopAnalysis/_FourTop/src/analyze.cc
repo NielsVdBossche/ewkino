@@ -485,6 +485,7 @@ void FourTop::analyze(std::string method) {
                     if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
                     for (std::string jecSource : JECSourcesGrouped) {
+                        if (stringTools::stringContains(jecSource, "Total")) continue;
                         if (considerBTagShape) {
                             std::string sourceUp = jecSource + "Up";
                             std::string sourceDown = jecSource + "Down";
