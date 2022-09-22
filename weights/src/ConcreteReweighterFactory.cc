@@ -459,9 +459,9 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
 
     std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
                                         "lfstats1","lfstats2","cferr1","cferr2",
-                                        "jesAbsolute", "jesAbsolute_2018", "jesBBEC1", "jesBBEC1_2018",
-                                        "jesEC2", "jesEC2_2018", "jesFlavorQCD", "jesHF",
-                                        "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018" };
+                                        "jesAbsolute", "jesBBEC1", 
+                                        "jesEC2", "jesFlavorQCD", "jesHF",
+                                        "jesRelativeBal"};
     std::vector<std::string> variations_stat = {"jesAbsolute_", "jesBBEC1_", "jesEC2_",
                                         "jesHF_", "jesRelativeSample_"};
 
