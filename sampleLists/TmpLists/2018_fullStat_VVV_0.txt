@@ -1,0 +1,1 @@
+VVV             ../skims_v4/2018/WWTo1L1Nu2Q_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root                                         45.68	

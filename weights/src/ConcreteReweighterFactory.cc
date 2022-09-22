@@ -457,14 +457,38 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     // step 1: set correct csv file
     std::string bTagSFFileName;
 
+    std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
+                                        "lfstats1","lfstats2","cferr1","cferr2",
+                                        "jesAbsolute", "jesAbsolute_2018", "jesBBEC1", "jesBBEC1_2018",
+                                        "jesEC2", "jesEC2_2018", "jesFlavorQCD", "jesHF",
+                                        "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018" };
+    std::vector<std::string> variations_stat = {"jesAbsolute_", "jesBBEC1_", "jesEC2_",
+                                        "jesHF_", "jesRelativeSample_"};
+
     if (year == "2016PreVFP") {
         bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2016";
+            variations.push_back(var);
+        }
     } else if( year == "2016PostVFP" ){
         bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2016";
+            variations.push_back(var);
+        }
     } else if( year == "2017" ){
         bTagSFFileName = "reshaping_deepJet_106XUL17_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2017";
+            variations.push_back(var);
+        }
     } else {
         bTagSFFileName = "reshaping_deepJet_106XUL18_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2018";
+            variations.push_back(var);
+        }
     }
 
     std::cout << "bTag SF file: " << bTagSFFileName << std::endl;
@@ -473,11 +497,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     // step 2: set other parameters
     std::string flavor = "all";
     std::string bTagAlgo = "deepFlavor";
-    std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
-                                        "lfstats1","lfstats2","cferr1","cferr2",
-                                        "jesAbsolute", "jesAbsolute_2018", "jesBBEC1", "jesBBEC1_2018",
-                                        "jesEC2", "jesEC2_2018", "jesFlavorQCD", "jesHF",
-                                        "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018" };
+
     // step 3: make the reweighter
     if (! testRun) {
         std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );

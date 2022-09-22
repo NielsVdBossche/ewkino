@@ -486,9 +486,12 @@ void FourTop::analyze(std::string method) {
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (considerBTagShape) {
-                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                            std::string sourceUp = jecSource + "Up";
+                            std::string sourceDown = jecSource + "Down";
+
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
-                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, jecSource) 
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 

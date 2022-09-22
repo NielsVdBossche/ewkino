@@ -75,7 +75,13 @@ ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
                                            "jesSinglePionHCAL", "jesTimePtEta",
                                            "jesAbsolute", "jesAbsolute_2018", "jesBBEC1", "jesBBEC1_2018",
                                            "jesEC2", "jesEC2_2018", "jesFlavorQCD", "jesHF",
-                                           "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018"};
+                                           "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018",
+                                           "jesAbsolute_2017", "jesBBEC1_2017", "jesEC2_2017",
+                                           "jesHF_2017", "jesRelativeSample_2017",
+                                           "jesAbsolute_2016", "jesBBEC1_2016", "jesEC2_2016",
+                                           "jesHF_2016", "jesRelativeSample_2016"};
+
+
     std::vector<std::string> allowedsys = {"hf", "lf", "hfstats1", "hfstats2",
                                            "lfstats1", "lfstats2", "cferr1", "cferr2"};
     // (note: allowedsys must be a subcollection of allowedvar, excluding jec variations)

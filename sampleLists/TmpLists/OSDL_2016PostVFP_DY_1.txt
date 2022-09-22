@@ -1,1 +1,1 @@
-DY          ../skims_OSDL/2016PostVFP/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFPv6.root              6077.22
+DY          ../skims_OSDL/2016PostVFP/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFPv6_1pp.root              6077.22

@@ -1,1 +1,1 @@
-ZG          ../skims_OSDL/2016PreVFP/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFPv6.root               55.48
+ZG          ../skims_OSDL/2016PreVFP/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFPv6_1pp.root               55.48

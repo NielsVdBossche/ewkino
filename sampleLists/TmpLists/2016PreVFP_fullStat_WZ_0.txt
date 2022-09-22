@@ -1,0 +1,1 @@
+WZ          ../skims_v4/2016PreVFP/WZTo2Q2L_mllmin4p0_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFPv6.root                                  6.419

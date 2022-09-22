@@ -1,1 +1,1 @@
-ZZ-H        ../skims_v4/2016PostVFP/ZZTo4L_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v1_singlelepton_MC_additions_reduced.root                                                          1.256
+ZZ-H        ../skims_v4/2016PostVFP/ZZTo4L_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v1_singlelepton_MC_additions_05pp.root                                                          1.256
