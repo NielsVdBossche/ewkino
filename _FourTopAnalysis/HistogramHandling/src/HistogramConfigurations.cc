@@ -262,7 +262,9 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         histInfoVec->push_back(HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll} [GeV]", 20, 50, 150));
         histInfoVec->push_back(HistInfo( "N_MediumB_jets_" + flag, "N_{b}", 6, -0.5, 5.5));
         histInfoVec->push_back(HistInfo( "deltaR_HighPT_MedB_" + flag, "#Delta R(b1,b2)", 24, 0, 4.8));
+        histInfoVec->push_back(HistInfo( "min_deltaR_MedB_" + flag, "#Delta R(b1,b2)", 24, 0, 4.8));
         histInfoVec->push_back(HistInfo( "deltaR_HighPT_Jets_" + flag, "#Delta R(j1,j2)", 24, 0, 4.8));
+        histInfoVec->push_back(HistInfo( "min_deltaR_Jets_" + flag, "#Delta R(j1,j2)", 24, 0, 4.8));
     }
 
     return histInfoVec;
@@ -322,6 +324,10 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
     }
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
+        JetCollection bJets = event->getJetCol()->mediumBTagCollection();
+        std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
+        std::vector<double> mindR_jets = calculators::mindRInJetCollection(*event->getJetCol());
+
         Lepton* l1 = event->getLepton(0);
         Lepton* l2 = event->getLepton(1);
         double osLepMass = (*l1 + *l2).mass();
@@ -329,11 +335,21 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         fillVal.push_back(osLepMass);
         fillVal.push_back(event->numberOfMediumBJets());
 
-        if (event->numberOfMediumBJets() >= 2) fillVal.push_back(deltaR(*event->getJetCol()->mediumBTagCollection().at(0), *event->getJetCol()->mediumBTagCollection().at(1)));
-        else fillVal.push_back(5.);
+        if (event->numberOfMediumBJets() >= 2) {
+            fillVal.push_back(deltaR(*event->getJetCol()->mediumBTagCollection().at(0), *event->getJetCol()->mediumBTagCollection().at(1)));
+            mindR_Bjets[0];
+        } else {
+            fillVal.push_back(5.);
+            fillVal.push_back(5.);
+        }
 
-        if (event->numberOfJets() >= 2) fillVal.push_back(deltaR(*event->getJet(0), *event->getJet(1)));
-        else fillVal.push_back(5.);
+        if (event->numberOfJets() >= 2) {
+            fillVal.push_back(deltaR(*event->getJet(0), *event->getJet(1)));
+            mindR_jets[0];
+        } else {
+            fillVal.push_back(5.);
+            fillVal.push_back(5.);
+        }
     }
 
     return fillVal;

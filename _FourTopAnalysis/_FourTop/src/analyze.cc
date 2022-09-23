@@ -172,6 +172,9 @@ void FourTop::analyze(std::string method) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
+            if (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy) {
+                useSplitJEC = false;
+            }
             if (sampleIndex == 0 && useSplitJEC) {
                 std::cout << "split JEC" << std::endl;
                 JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariations();

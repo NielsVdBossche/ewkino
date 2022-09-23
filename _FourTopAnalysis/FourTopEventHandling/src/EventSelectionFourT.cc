@@ -157,6 +157,14 @@ bool EventFourT::passLeptonSelection() {
         *mediumLeps = foLeps;
         nLep = (*mediumLeps)->size();
     } else if (selType == Data) {
+        if (relevantRegion == eventClass::ttbar || relevantRegion == eventClass::dy) {
+            event->selectTightLeptons();
+            if (tightLeps->size() != 2) return false;
+            if (! tightLeps->hasOSPair()) return false;
+            nLep = (*mediumLeps)->size();
+
+            return true;
+        }
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
