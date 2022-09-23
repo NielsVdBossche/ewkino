@@ -461,7 +461,7 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
         else
             weight *= this->weightDown(*jetPtr, varName);
     }
-    return weight;
+    return weight  / getNormFactor(event);
 }
 
 /// help function for calculating normalization factors ///

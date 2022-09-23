@@ -464,10 +464,10 @@ void FourTop::analyze(std::string method) {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
-                        //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
-                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                        //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
-                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                        weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                        weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                                            / reweighter["bTag_shape"]->weight( *currentEvent );
                     }
                     std::string empty = "";
 
