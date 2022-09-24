@@ -5,7 +5,7 @@
 #endif
 
 void FourTop:: testRuns() {
-    ChannelManager* mgrAll = new ChannelManager(outfile, fourTopHists::testHists);
+    //ChannelManager* mgrAll = new ChannelManager(outfile, fourTopHists::testHists);
     std::shared_ptr< SampleCrossSections > xsecs;
 
     // reweighter creation
@@ -14,11 +14,8 @@ void FourTop:: testRuns() {
     ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
     CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, true );
 
-    addBTaggingNormFactors(*btagReweighter, "bTagNorms/");
+    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
     //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
-
-    std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
-    mgrAll->initHistogramStacks(processes, false);
 
     std::cout << "event loop" << std::endl;
 
@@ -32,18 +29,10 @@ void FourTop:: testRuns() {
         std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
 
-        if (! treeReader->isData()) {
-            // check if TTbar or TTGamma sample
-            ttgOverlapCheck = treeReader->currentSamplePtr()->ttgOverlap();
-
-            Event event = treeReader->buildEvent(0);
-        }
-
-        std::string currProcName = sampleVec[sampleIndex].processName();
-        mgrAll->changePrimaryProcess(currProcName);
-        
-        std::string uniqueName = sampleVec[sampleIndex].uniqueName();
-        mgrAll->newSample(uniqueName);
+        TH1D* njets = new TH1D("njets_pass_nom", "njets_pass_nom;N;yield", 10, -0.5, 9.5);
+        TH1D* njets_var = new TH1D("njets_pass_reweight", "njets_pass_reweight;N;yield", 10, -0.5, 9.5);
+        TH1D* yield = new TH1D("yield_pass_nom", "yield_pass_nom;yield;yield", 1, -0.5, 0.5);
+        TH1D* yield_var = new TH1D("yield_pass_reweight", "yield_pass_reweight;yield;yield", 1, -0.5, 0.5);
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -52,70 +41,30 @@ void FourTop:: testRuns() {
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr( entry );
-
-
-            // Check triggers here
-            if (! eventPassesTriggers()) continue;
-
             selection->addNewEvent(currentEvent);
 
-            // Apply overlap removal & apply triggers
-            if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
+            if (! eventPassesTriggers()) continue;
 
-            // Remove mass resonances
-            if (! selection->passLowMassVeto()) {
-                continue;
-            }
+            if (! selection->passLeptonSelection()) continue;
             selection->classifyEvent();
-            // TEMP! Remove for full stuff
-            //if (selection->getCurrentClass() == eventClass::fail) continue;
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() ){
                 weight *= reweighter.totalWeight( *currentEvent );
             }
 
-            // Basic non-prompt handling (using MC to estimate the contribution):
-            std::vector<double> fillVec;
-            std::vector<std::pair<double, double>> fillVec2D;
-            std::vector<std::pair<int, double>> singleEntries;
-            std::vector<std::string> subChannels;
-
-            unsigned processNb = 0;
-
-            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (leptonPtr->isChargeFlip()) {
-                    processNb = 2;
-                    break;
-                }
-            }
-            for (const auto& leptonPtr : *selection->getMediumLepCol()) {
-                if (! leptonPtr->isPrompt()) {
-                    processNb = 1;
-                    break;
-                }
-            }
-
             // fill all histograms
-            eventClass nominalClass = selection->getCurrentClass();
-            fillVec = fourTopHists::fillTestHists(nominalClass, selection);
-            if (nominalClass == eventClass::crz3L || nominalClass == eventClass::crz4L || nominalClass == eventClass::cro3L) {
-                mgrAll->at(nominalClass)->fillHistograms(processNb, fillVec, weight);
-            } else if (nominalClass == eventClass::crw || nominalClass == eventClass::cro) {
-                if (nominalClass == eventClass::crw) {
-                    mgrAll->at(eventClass::crw)->fillHistograms(processNb, fillVec, weight);
-                } else {
-                    mgrAll->at(eventClass::cro)->fillHistograms(processNb, fillVec, weight);
-                }
-            } else if (nominalClass == eventClass::ssdl) {   
-                mgrAll->at(eventClass::ssdl)->fillHistograms(processNb, fillVec, weight);
-            } else if (nominalClass == eventClass::trilep) {
-                mgrAll->at(eventClass::trilep)->fillHistograms(processNb, fillVec, weight);
-            } else if (nominalClass == eventClass::fourlep) {
-                mgrAll->at(eventClass::fourlep)->fillHistograms(processNb, fillVec, weight);
-            }
+            //eventClass nominalClass = selection->getCurrentClass();
+            if (selection->numberOfJets() < 2) continue;
+            if (selection->numberOfLeps() && selection->getHT() < 200) continue;
 
+            njets->Fill(selection->numberOfJets(), weight);
+            yield->Fill(0., weight);
+           
+            weight *= dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "lf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
 
+            njets_var->Fill(selection->numberOfJets(), weight);
+            yield_var->Fill(0., weight);
         }
         
         // Output management: save histograms to a ROOT file.
@@ -125,24 +74,11 @@ void FourTop:: testRuns() {
         std::cout << "output" << std::endl;
         
         outfile->cd();
-        outfile->cd("Nominal");
-    
-        std::string outdir = stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(treeReader->currentSample().fileName()));
-
-        mgrAll->writeNominalHistograms(outdir);
-
-        //gDirectory->mkdir("analytics");
-        //gDirectory->cd("analytics");
-
-        std::cout << "writing uncertainties" << std::endl;
-
-        outfile->cd();
-        outfile->cd("Uncertainties");
-
-        mgrAll->writeUncertaintyHistograms(outdir);
+        njets->Write(njets->GetName(), TObject::kOverwrite);
+        yield->Write(yield->GetName(), TObject::kOverwrite);
+        njets_var->Write(njets_var->GetName(), TObject::kOverwrite);
+        yield_var->Write(yield_var->GetName(), TObject::kOverwrite);
     }
-    std::string anotherName = "something";
-    mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
 
     outfile->Close();
 }
