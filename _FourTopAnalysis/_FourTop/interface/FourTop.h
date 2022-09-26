@@ -99,7 +99,7 @@ class FourTop {
         // Prepare
         void createMVAHandlers();
         void addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir);
-        void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory);
+        void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory, std::string& var);
 
         // Event selection components
         void setYearString(std::string year) {yearString = year;}

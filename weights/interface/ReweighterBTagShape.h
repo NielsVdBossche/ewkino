@@ -30,9 +30,12 @@ class ReweighterBTagShape: public Reweighter{
 	bool considerVariation( const Jet& jet, const std::string& variation ) const;
 
 	void setNormFactors( const Sample& sample, std::map<int,double> normFactors );
-	double getNormFactor( const Event&, const std::string& jecVariation="nominal" ) const;
+	void setNormFactors( const Sample& sample, std::map<int,double> normFactors, std::string& variation );
+	double getNormFactor( const Event&, const std::string& jecVariation="nominal", const std::string& systematic = "central") const;
 	std::map<std::string,std::map<int,double>> getNormFactors() const;
 	void printNormFactors() const;
+	
+	double weightVariation( const Event& event, const std::string& variation ) const;
 	
 	double weight( const Jet& jet ) const;
 	double weightUp( const Jet& jet, const std::string& systematic ) const;
@@ -58,7 +61,7 @@ class ReweighterBTagShape: public Reweighter{
 	std::string _bTagAlgo;
 	std::vector<std::string> _variations;
 	std::vector<std::string> _systematics;
-	std::map<std::string,std::map<int,double>> _normFactors;
+	std::map<std::string,std::map<int,double>> _normFactors; // samp + variation
 
 	double weight( const Jet& jet, const std::string& variation ) const;
 	double weight( const Event& event, const std::string& variation ) const;

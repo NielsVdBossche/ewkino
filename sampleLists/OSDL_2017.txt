@@ -19,3 +19,5 @@ W           ../skims_OSDL/2017/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_crab
 ZG          ../skims_OSDL/2017/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_ULv6_1pp.root                55.48
 WW          ../skims_OSDL/2017/WW_TuneCP5_13TeV-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6_1pp.root                                         75.8
 ZZ          ../skims_OSDL/2017/ZZ_TuneCP5_13TeV-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6_1pp.root                                         12.14
+
+TTZ         ../skims_OSDL/2017/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6_2pp.root                         0.28872

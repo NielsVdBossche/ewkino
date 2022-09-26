@@ -236,6 +236,8 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         minMaxNBjets = {0.5, 4.5};
         minMaxHT = {0, 1000};
         minMaxNMu = {-0.5, 4.5};
+    } else if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
+        minMaxNjets = {2.5, 8.5};
     }
 
     *histInfoVec = {

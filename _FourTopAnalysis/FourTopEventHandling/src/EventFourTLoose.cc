@@ -6,12 +6,17 @@ void EventFourTLoose::classifyEvent() {
     if (! passPhotonOverlapRemoval()) return;
     if (numberOfLeps() == 2 && getMediumLepCol()->hasOSPair() && (GetRelRegion() == eventClass::ttbar || GetRelRegion() == eventClass::dy)) {
         if (getMediumLepCol()->hasOSSFPair()) {
+            if (numberOfJets() < 2) return;
+            if (numberOfMediumBJets() < 1) return;
+
             SetEventClass(eventClass::dy);
             return;
         } else {
             if (getMET() < 30) return;
-            if (numberOfMediumBJets() < 1) return;
+            if (numberOfMediumBJets() < 2) return;
+            if (numberOfJets() < 3) return;
             SetEventClass(eventClass::ttbar);
+            return;
         }
     }
     if (! passLeanSelection()) {
