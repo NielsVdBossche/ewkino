@@ -187,6 +187,7 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
             double normFactor = bTagNormFactorsHist->GetBinContent(i);
             if (fabs(normFactor) > 1e-6) {
                 normFactors[i-1] = normFactor;
+                std::cout << i-1 << " jets " << normFactor << std::endl;
             }
         }
 
@@ -226,23 +227,21 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         Event event = tempTree.buildEvent(entry);
 
         // do basic selection
-        event.cleanJetsFromFOLeptons();
-        event.selectGoodJets();
         event.removeTaus();
+        event.selectLooseLeptons();
         event.cleanElectronsFromLooseMuons();
+        event.cleanJetsFromFOLeptons();
+        
+        event.selectGoodJets();
+
+        if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
         event.selectTightLeptons();
 
         if (event.numberOfLeptons() < 2) continue;
         if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
-        
-        if (leanEventSelection) {
-            if (event.numberOfJets() < 2) continue;
-            if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
 
-        } else {
-            if (event.numberOfJets() < 3) continue;
-            if (event.numberOfLeptons() < 4 && event.HT() < 300) continue;
-        }
+        if (event.numberOfJets() < 2) continue;
+        if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
 
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = reweighter->weight(event);
@@ -250,12 +249,18 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
         // add it to the map
         averageOfWeights->Fill(njets, btagreweight);
-        nEntries->Fill(njets, 1);
+        nEntries->Fill(njets, 1.);
     }
 
     // divide sum by number to get average
+    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
+        std::cout << averageOfWeights->GetBinContent(i) << "/" << nEntries->GetBinContent(i) << std::endl;
+    }
     averageOfWeights->Divide(nEntries.get());
 
+    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
+        std::cout << " = " << averageOfWeights->GetBinContent(i) << std::endl;
+    }
     std::cout << "done with event loop" << std::endl;
     
     // write out to histogram

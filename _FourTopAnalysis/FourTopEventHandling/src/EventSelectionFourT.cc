@@ -129,7 +129,7 @@ bool EventFourT::passLeptonSelection() {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
+        if (foLeps->size() != tightLeps->size()) return false;
         event->selectTightLeptons();
     } else if (selType == MCPrompt) {
         // tight and prompt and no charge misID
@@ -137,7 +137,7 @@ bool EventFourT::passLeptonSelection() {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
+        if (foLeps->size() != tightLeps->size()) return false;
         if (! leptonsArePrompt()) return false;
         event->selectTightLeptons();
 
@@ -174,12 +174,12 @@ bool EventFourT::passLeptonSelection() {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
+        if (foLeps->size() != tightLeps->size()) return false;
     } else if (selType == MCNoNP) {
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
 
-        if (tightLeps->size() < 4  && foLeps->size() != tightLeps->size()) return false;
+        if (foLeps->size() != tightLeps->size()) return false;
     }
     
     nLep = (*mediumLeps)->size();
