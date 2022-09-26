@@ -248,20 +248,12 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
             if (event.lepton(0).charge() == event.lepton(1).charge()) continue;
             if (event.numberOfJets() < 2) continue;
         } else {
-        if (event.numberOfLeptons() < 2) continue;
-        if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
+            if (event.numberOfLeptons() < 2) continue;
+            if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
 
-<<<<<<< HEAD
-        if (event.numberOfJets() < 2) continue;
-        if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
-
-=======
-        } else {
-            if (event.numberOfJets() < 3) continue;
-            if (event.numberOfLeptons() < 4 && event.HT() < 300) continue;
+            if (event.numberOfJets() < 2) continue;
+            if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
         }
-        }
->>>>>>> 374e8f5c03f04ef35cafa35d2de2dc614304f838
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = reweighter->weightVariation(event, var);
         int njets = event.jetCollection().goodJetCollection().size();
