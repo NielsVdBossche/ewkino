@@ -17,3 +17,5 @@ WW          ../skims_OSDL/2016PostVFP/WW_TuneCP5_13TeV-pythia8_crab_RunIISummer2
 ZG          ../skims_OSDL/2016PostVFP/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFPv6_1pp.root               55.48	
 ZZ          ../skims_OSDL/2016PostVFP/ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v1_singlelepton_MC_2016_ULpostVFPv6_1pp.root                          0.6204
 ZZ          ../skims_OSDL/2016PostVFP/ZZTo4L_M-1toInf_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v1_singlelepton_MC_2016_ULpostVFPv6_1pp.root                    1.256
+
+TTZ         ../skims_OSDL/2016PostVFP/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2_singlelepton_MC_2016_ULpostVFPv6_2pp.root         0.28872

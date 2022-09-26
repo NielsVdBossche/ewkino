@@ -168,34 +168,40 @@ void FourTop::createMVAHandlers() {
 
 void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir) {
     std::vector<Sample> sampleVector = treeReader->sampleVector();
-
+    std::vector<std::string> variations = {"central", "up_hf", "up_lf", "up_hfstats1", "up_hfstats2",
+                                           "up_lfstats1", "up_lfstats2", "up_cferr1", "up_cferr2",
+                                           "down_hf", "down_lf", "down_hfstats1", "down_hfstats2",
+                                           "down_lfstats1", "down_lfstats2", "down_cferr1", "down_cferr2"};
     for (auto samp : sampleVector) {
         std::string sampleNormfactorsPath = stringTools::formatDirectoryName(dir) + stringTools::fileNameFromPath(samp.fileName());
 
         if( !systemTools::fileExists( sampleNormfactorsPath ) ){
-            generateBTaggingNormFactorsSample( reweighter, samp, dir );
+            for (auto var : variations) {
+                generateBTaggingNormFactorsSample( reweighter, samp, dir, var );
+            }
         }
 
         // loading in
         TFile* btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
 
-        std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get("bTagNormFactors")));
+        for (auto var : variations) {
+            std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get(("bTagNormFactors_" + var).c_str())));
 
-        std::map<int, double> normFactors;
+            std::map<int, double> normFactors;
 
-        for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
-            double normFactor = bTagNormFactorsHist->GetBinContent(i);
-            if (fabs(normFactor) > 1e-6) {
-                normFactors[i-1] = normFactor;
-                std::cout << i-1 << " jets " << normFactor << std::endl;
+            for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
+                double normFactor = bTagNormFactorsHist->GetBinContent(i);
+                if (fabs(normFactor) > 1e-6) {
+                    normFactors[i-1] = normFactor;
+                }
             }
-        }
 
-        reweighter->setNormFactors(samp, normFactors);
+            reweighter->setNormFactors(samp, normFactors, var);
+        }
     }
 }
 
-void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory) {
+void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory, std::string& var) {
     // calculate the average of b-tag weights in a given sample
     // the return type is a map of jet multiplicity to average of weights
     // input arguments:
@@ -237,14 +243,27 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
         event.selectTightLeptons();
 
+        if (considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
+            if (event.numberOfLeptons() == 2) continue;
+            if (event.lepton(0).charge() == event.lepton(1).charge()) continue;
+            if (event.numberOfJets() < 2) continue;
+        } else {
         if (event.numberOfLeptons() < 2) continue;
         if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
 
+<<<<<<< HEAD
         if (event.numberOfJets() < 2) continue;
         if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
 
+=======
+        } else {
+            if (event.numberOfJets() < 3) continue;
+            if (event.numberOfLeptons() < 4 && event.HT() < 300) continue;
+        }
+        }
+>>>>>>> 374e8f5c03f04ef35cafa35d2de2dc614304f838
         // determine (nominal) b-tag reweighting and number of jets
-        double btagreweight = reweighter->weight(event);
+        double btagreweight = reweighter->weightVariation(event, var);
         int njets = event.jetCollection().goodJetCollection().size();
 
         // add it to the map
@@ -265,8 +284,8 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     
     // write out to histogram
     std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
-    TFile* normFile = TFile::Open( outputFilePath.c_str(), "RECREATE" );
+    TFile* normFile = TFile::Open( outputFilePath.c_str(), "UPDATE" );
     normFile->cd();
-    averageOfWeights->Write("bTagNormFactors", TObject::kOverwrite);
+    averageOfWeights->Write(("bTagNormFactors_" + var).c_str(), TObject::kOverwrite);
     normFile->Close();
 }

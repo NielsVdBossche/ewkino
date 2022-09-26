@@ -104,9 +104,16 @@ ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
 
     // initialize normalization factors
     for (Sample sample : samples)
-    {
-        std::string sampleName = sample.fileName();
+    {      
+        std::string sampleName = sample.fileName() + "central";
         _normFactors[sampleName][0] = 1.;
+        for (auto sys : allowedsys) {
+            std::string variation = sample.fileName() + "up_" + sys;
+            _normFactors[variation][0] = 1.;
+            variation = sample.fileName() + "down_" + sys;
+            _normFactors[variation][0] = 1.;
+
+        }
         // (initialize one element at 0 jets for each sample;
         // events with higher jet multiplicities will fall back to this default value)
     }
@@ -261,14 +268,34 @@ void ReweighterBTagShape::setNormFactors(const Sample &sample,
     std::cout << "done setting norm factors" << std::endl;
 }
 
-double ReweighterBTagShape::getNormFactor(const Event &event,
-                                          const std::string &jecVariation) const
+void ReweighterBTagShape::setNormFactors(const Sample &sample, const std::map<int, double> normFactors, std::string& variation )
+{
+    // set the normalization factors
+    // input arguments:
+    // - sample: a Sample object for which to set the normalization
+    // - normFactors: a map of jet multiplicity to averages-of-weights
+    //                note: it is initialized to {0: 1.} in the constructor,
+    //		      which implies the normalization factor will be 1 for each event.
+
+    std::cout << "setting norm factors" << std::endl;
+
+    std::string entry = sample.fileName() + variation;
+    if (_normFactors.find(entry) == _normFactors.end())
+    {
+        throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample!");
+    }
+
+    _normFactors[entry] = normFactors;
+    std::cout << "done setting norm factors" << std::endl;
+}
+
+double ReweighterBTagShape::getNormFactor(const Event &event, const std::string &jecVariation, const std::string& systematic) const
 {
     // get the normalization factor for an event
     // note: the normalization factor depends on the sample to which the event belongs
     //       and on the jet multiplicity of the event.
     // note: jecVariation has a default value: 'nominal', i.e. no variation of JEC
-    std::string sampleName = event.sample().fileName();
+    std::string sampleName = event.sample().fileName() + systematic;
     // check validity of sample to which event belongs
     if (_normFactors.find(sampleName) == _normFactors.end())
     {
@@ -305,6 +332,11 @@ void ReweighterBTagShape::printNormFactors() const
         }
     }
 }
+
+double ReweighterBTagShape::weightVariation( const Event& event, const std::string& variation ) const {
+    return this->weight(event, variation);
+}
+
 
 /// member functions for weights ///
 
@@ -388,7 +420,7 @@ double ReweighterBTagShape::weight(const Event &event, const std::string &variat
         weight *= this->weight(*jetPtr, variation);
     }
     // take into account normalization
-    double normweight = weight / getNormFactor(event);
+    double normweight = weight / getNormFactor(event, "nominal", variation);
     // prints for testing
     // std::cout << "raw weight: " << weight << std::endl;
     // std::cout << "normalized weight: " << normweight << std::endl;
@@ -461,7 +493,7 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
         else
             weight *= this->weightDown(*jetPtr, varName);
     }
-    return weight  / getNormFactor(event);
+    return weight  / getNormFactor(event, jecVariation, "central");
 }
 
 /// help function for calculating normalization factors ///
