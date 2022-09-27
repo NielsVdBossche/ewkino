@@ -237,7 +237,8 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         minMaxHT = {0, 1000};
         minMaxNMu = {-0.5, 4.5};
     } else if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
-        minMaxNjets = {2.5, 8.5};
+        minMaxNjets = {1.5, 8.5};
+        minMaxNBjets = {0.5, 5.5};
     }
 
     *histInfoVec = {
@@ -296,9 +297,77 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
 
     // only bdt variables here
 
-    *histInfoVec = {
+    if (unsigned(evClass) >= eventClass::ssdl) {
+        std::pair<double, double> minMaxNjets = {-0.5, 6.5};
+        std::pair<double, double> minMaxNBjets = {-0.5, 4.5};
+        std::pair<double, double> minMaxHT = {0, 800};
+        std::pair<double, double> minMaxNMu = {-0.5, 5.5};
+        if (evClass == eventClass::ssdl) {
+            minMaxNjets = {3.5,10.5};
+            minMaxNBjets = {2.5,6.5};
+            //minMaxHT = {250,1300};
+            //minMaxNMu = {-0.5, 2.5};
+        } else if (evClass == eventClass::trilep) {
+            minMaxNjets = {2.5, 9.5};
+            minMaxNBjets = {2.5,6.5};
+        } else if (evClass == eventClass::fourlep) {
+            minMaxNjets = {1.5, 6.5};
+            minMaxNBjets = {2.5,6.5};
+        }
 
-    };
+        *histInfoVec = {
+            HistInfo("Yield_"+flag, "Yield", 1, 0., 1.),
+            HistInfo("NJets_"+flag, "", int(minMaxNjets.second -  minMaxNjets.first), minMaxNjets.first, minMaxNjets.second),
+            HistInfo("NB_Loose_"+flag, "", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
+            HistInfo("NB_Medium_"+flag, "", 7, -0.5, 6.5),
+            HistInfo("NB_Tight_"+flag, "", 7, -0.5, 6.5),
+
+            HistInfo("minDR_bb_"+flag, "min #Delta R(b,b)", 12, 0, 4.8),
+            HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 12, 0, 4.8),
+            HistInfo("DPhi_l1l2_"+flag, "#Delta#Phi (l1,l2)", 12, - M_PI, M_PI),
+            HistInfo("HT_"+flag, "H_{T} [GeV]", 26, 0, 1300),
+            HistInfo("PT_miss_"+flag, "p_{T}^{miss} [GeV]", 30, 0, 300),
+            HistInfo("max_M_over_PT_jet_"+flag, "#frac{M}{p_{T}}", 15, 0, 150),
+            HistInfo("minDR_lb_"+flag, "min_{1} #Delta R(l,b)", 12, 0, 4.8),
+            HistInfo("sec_minDR_lb_"+flag, "min_{2} #Delta R(l,b)", 12, 0, 4.8),
+
+            HistInfo("pt_j1_"+flag, "p_{T}(j1) [GeV]", 19, 25, 500),
+            HistInfo("pt_j2_"+flag, "p_{T}(j2) [GeV]", 11, 25, 300),
+            HistInfo("pt_j3_"+flag, "p_{T}(j3) [GeV]", 20, 0, 200),
+            HistInfo("pt_j4_"+flag, "p_{T}(j4) [GeV]", 15, 0, 150),
+            HistInfo("pt_j5_"+flag, "p_{T}(j5) [GeV]", 15, 0, 150),
+            HistInfo("pt_j6_"+flag, "p_{T}(j6) [GeV]", 15, 0, 150),
+            HistInfo("pt_l1_"+flag, "p_{T}(l1) [GeV]", 28, 20, 300),
+            HistInfo("pt_l2_"+flag, "p_{T}(l2) [GeV]", 13, 20, 150),
+
+            HistInfo("max_DF_1_"+flag, "max_{1} DF", 26, -0.04, 1.),
+            HistInfo("max_DF_2_"+flag, "max_{2} DF", 26, -0.04, 1.),
+            HistInfo("max_DF_3_"+flag, "max_{3} DF", 26, -0.04, 1.),
+            HistInfo("max_DF_4_"+flag, "max_{4} DF", 26, -0.04, 1.),
+            HistInfo("DF_J1_"+flag, "DF(j_{1})", 26, -0.04, 1.),
+            HistInfo("DF_J2_"+flag, "DF(j_{2})", 26, -0.04, 1.),
+            HistInfo("DF_J3_"+flag, "DF(j_{3})", 26, -0.04, 1.),
+            HistInfo("DF_J4_"+flag, "DF(j_{4})", 26, -0.04, 1.),
+
+            HistInfo("mtop_1_"+flag, "m(t_{1}) [GeV]", 10, 120, 220),
+            HistInfo("mW_1_"+flag, "m(W_{1}) [GeV]", 8, 60, 100),
+            HistInfo("mtop_2_"+flag, "m(t_{2}) [GeV]", 16, 140, 220),
+            HistInfo("mW_2_"+flag, "m(W_{2}) [GeV]", 8, 60, 100),
+
+            HistInfo("MT_l1_"+flag, "m_{T}(l_{1}) [GeV]", 13, 40, 300),
+            HistInfo("MT_l2_"+flag, "m_{T}(l_{2}) [GeV]", 13, 40, 300),
+            HistInfo("MT2_ll_"+flag, "m_{T2}(l) [GeV]", 15, 0, 150),
+            HistInfo("MT2_bb_"+flag, "m_{T2}(b) [GeV]", 12, 80, 200),
+            HistInfo("MT2_lblb_"+flag, "m_{T2}(l+b) [GeV]", 15, 0, 150),
+        };
+        if (evClass == eventClass::trilep || evClass == eventClass::fourlep) {
+            histInfoVec->push_back( HistInfo("pt_l3_"+flag, "p_{T}(l3) [GeV]", 11, 10, 120) );
+        }
+    } else {
+        *histInfoVec = {
+            HistInfo("Yield_"+flag, "Yield", 1, 0., 1.)
+        };
+    }
 
     return histInfoVec;
 }
@@ -638,9 +707,70 @@ std::vector<double> HistogramConfig::fillNominalHists(const eventClass evClass, 
 }
 
 std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClass, EventFourT* event) {
-    std::vector<double> fillVal = {
+    std::vector<double> fillVal;
+    if (unsigned(evClass) >= eventClass::ssdl) {
+        MVAHandler_4T* mva;
+        if (evClass == eventClass::ssdl) {
+            mva = event->GetDLMVA();
+        } else {
+            mva = event->GetMLMVA();
+        }
+        fillVal = {
+            0.5,
+            double(event->numberOfJets()),
+            double(event->numberOfLooseBJets()),
+            double(event->numberOfMediumBJets()),
+            double(event->numberOfTightBJets()),
 
-    };
+            mva->deltaRBjets,
+            mva->dRleps,
+            mva->aziAngle,
+            event->getHT(),
+            event->getMET(),
+            mva->massToPt,
+            mva->min_dr_lep_b,
+            mva->sec_min_dr_lep_b,
+
+            (event->numberOfJets() >= 1 ? event->getJet(0)->pt() : 0.),
+            (event->numberOfJets() >= 2 ? event->getJet(1)->pt() : 0.),
+            (event->numberOfJets() >= 3 ? event->getJet(2)->pt() : 0.),
+            (event->numberOfJets() >= 4 ? event->getJet(3)->pt() : 0.),
+            (event->numberOfJets() >= 5 ? event->getJet(4)->pt() : 0.),
+            (event->numberOfJets() >= 6 ? event->getJet(5)->pt() : 0.),
+
+            event->getLepton(0)->pt(),
+            event->getLepton(1)->pt(),
+
+            mva->bTagLead,
+            mva->bTagSub,
+            mva->bTagThird,
+            mva->bTagFourth,
+            mva->bTagPtLead,
+            mva->bTagPtSub,
+            mva->bTagPtThird,
+            mva->bTagPtFourth,
+
+            mva->massBestTop,
+            mva->massBestTopW,
+            mva->massSecTop,
+            mva->massSecTopW,
+
+            mva->mtLeadLepMET,
+            mva->mtSubLeadLepMET,
+            mva->m2ll,
+            mva->m2bb,
+            mva->m2lblb
+        };
+        if (evClass == eventClass::trilep || evClass == eventClass::fourlep) {
+            fillVal.push_back(event->getLepton(2)->pt());
+        }
+
+    } else {
+        fillVal = {
+            0.5,
+        };
+    }
+    
 
     return fillVal;
 }
