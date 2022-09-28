@@ -242,7 +242,6 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
                 std::string fullJecName = upOrDown + "_jes" + var;
 
                 std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileJec->Get(("bTagNormFactors_" + fullJecName).c_str())));
-
                 int tr = 0;
                 while (! bTagNormFactorsHist && tr < 10) {
                     btagNormFactorFileJec->Close();
@@ -323,10 +322,13 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         event.selectTightLeptons();
 
         if (considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
+            //std::cout << "in alt sel" << std::endl;
             if (event.numberOfLeptons() == 2) continue;
             if (event.lepton(0).charge() == event.lepton(1).charge()) continue;
             if (njets < 2) continue;
         } else {
+            //std::cout << "in nom sel" << std::endl;
+
             if (event.numberOfLeptons() < 2) continue;
             if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
 
@@ -347,16 +349,8 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     }
 
     // divide sum by number to get average
-    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-        std::cout << averageOfWeights->GetBinContent(i) << "/" << nEntries->GetBinContent(i) << std::endl;
-    }
     averageOfWeights->Divide(nEntries.get());
 
-    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-        std::cout << " = " << averageOfWeights->GetBinContent(i) << std::endl;
-    }
-    std::cout << "done with event loop" << std::endl;
-    
     // write out to histogram
     //std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
     TFile* normFile = TFile::Open( normFilePath.c_str(), "UPDATE" );
