@@ -215,7 +215,13 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
 
         for (auto var : variations) {
             std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get(("bTagNormFactors_" + var).c_str())));
-
+            int tr = 0;
+            while (! bTagNormFactorsHist && tr < 10) {
+                btagNormFactorFile->Close();
+                btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
+                bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get(("bTagNormFactors_" + var).c_str())));
+                tr++;
+            }
             std::map<int, double> normFactors;
 
             for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
@@ -227,11 +233,23 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
 
             reweighter->setNormFactors(samp, normFactors, var);
         }
+
+        btagNormFactorFile->Close();
+
+        TFile* btagNormFactorFileJec = TFile::Open(sampleNormfactorsJecVarPath.c_str());
         for (auto var : jec_variations) {
             for (std::string upOrDown : {"up", "down"}) {
                 std::string fullJecName = upOrDown + "_jes" + var;
 
-                std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get(("bTagNormFactors_" + fullJecName).c_str())));
+                std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileJec->Get(("bTagNormFactors_" + fullJecName).c_str())));
+
+                int tr = 0;
+                while (! bTagNormFactorsHist && tr < 10) {
+                    btagNormFactorFileJec->Close();
+                    btagNormFactorFileJec = TFile::Open(sampleNormfactorsJecVarPath.c_str());
+                    bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileJec->Get(("bTagNormFactors_" + var).c_str())));
+                    tr++;
+                }
 
                 std::map<int, double> normFactors;
 
@@ -245,6 +263,7 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
                 reweighter->setNormFactors(samp, normFactors, fullJecName);
             }
         }
+        btagNormFactorFileJec->Close();
     }
 }
 
