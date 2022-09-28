@@ -314,8 +314,10 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         event.cleanElectronsFromLooseMuons();
         event.cleanJetsFromFOLeptons();
         int njets = event.numberOfGoodJets();
+        double ht = event.HT();
         if (jec) {
             njets = event.getJetCollection(jecVariation).size();
+            ht = event.getJetCollection(jecVariation).scalarPtSum();
         }
 
         if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
@@ -333,10 +335,10 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
             if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
 
             if (njets < 2) continue;
-            if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
+            if (event.numberOfLeptons() < 4 && ht < 200) continue;
         }
         // determine (nominal) b-tag reweighting and number of jets
-        double btagreweight;
+        double btagreweight = 1.5;
         if (jec) {
             btagreweight = reweighter->weightJecVar(event, jecVariation);
         } else {
@@ -349,7 +351,13 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     }
 
     // divide sum by number to get average
+    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
+        std::cout << averageOfWeights->GetBinContent(i) << "/" << nEntries->GetBinContent(i) << std::endl;
+    }
     averageOfWeights->Divide(nEntries.get());
+    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
+        std::cout << " = " << averageOfWeights->GetBinContent(i) << std::endl;
+    }
 
     // write out to histogram
     //std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
