@@ -566,6 +566,7 @@ void FourTop::analyze(std::string method) {
 }
 
 bool FourTop::eventPassesTriggers() {
+    if (!currentEvent->passMetFilters()) return false;
     if (currentEvent->isMC()) {
         return (currentEvent->passTriggers_e()   || currentEvent->passTriggers_m()   || 
                 currentEvent->passTriggers_em()  || currentEvent->passTriggers_mm()  || currentEvent->passTriggers_ee()  || 

@@ -172,12 +172,41 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
                                            "up_lfstats1", "up_lfstats2", "up_cferr1", "up_cferr2",
                                            "down_hf", "down_lf", "down_hfstats1", "down_hfstats2",
                                            "down_lfstats1", "down_lfstats2", "down_cferr1", "down_cferr2"};
+
+    std::vector<std::string> jec_variations_stat = {"Absolute_", "BBEC1_", "EC2_",
+                                                    "HF_", "RelativeSample_"};// list of relevant JEC variations for each we want stuff added.    
+    
     for (auto samp : sampleVector) {
+        std::vector<std::string> jec_variations = {"Absolute", "BBEC1", "EC2", "FlavorQCD", "HF", "RelativeBal"};
+        if (samp.is2016() || samp.is2016PostVFP() || samp.is2016PreVFP()) {
+            for (auto var : jec_variations_stat) {
+                var += "2016";
+                variations.push_back(var);
+            }
+        } else if (samp.is2017()) {
+            for (auto var : jec_variations_stat) {
+                var += "2017";
+                variations.push_back(var);
+            }
+        } else if (samp.is2018()) {
+            for (auto var : jec_variations_stat) {
+                var += "2018";
+                variations.push_back(var);
+            }
+        }
+
         std::string sampleNormfactorsPath = stringTools::formatDirectoryName(dir) + stringTools::fileNameFromPath(samp.fileName());
+        std::string sampleNormfactorsJecVarPath = stringTools::formatDirectoryName(dir) + stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(samp.fileName())) + "_JEC.root";
 
         if( !systemTools::fileExists( sampleNormfactorsPath ) ){
             for (auto var : variations) {
-                generateBTaggingNormFactorsSample( reweighter, samp, dir, var );
+                generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsPath, var, false, false );
+            }
+        }
+        if( !systemTools::fileExists( sampleNormfactorsJecVarPath ) ){
+            for (auto var : jec_variations) {
+                generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, false );
+                generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, true );
             }
         }
 
@@ -198,10 +227,28 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
 
             reweighter->setNormFactors(samp, normFactors, var);
         }
+        for (auto var : jec_variations) {
+            for (std::string upOrDown : {"up", "down"}) {
+                std::string fullJecName = upOrDown + "_jes" + var;
+
+                std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get(("bTagNormFactors_" + fullJecName).c_str())));
+
+                std::map<int, double> normFactors;
+
+                for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
+                    double normFactor = bTagNormFactorsHist->GetBinContent(i);
+                    if (fabs(normFactor) > 1e-6) {
+                        normFactors[i-1] = normFactor;
+                    }
+                }
+                // up and down variations!!
+                reweighter->setNormFactors(samp, normFactors, fullJecName);
+            }
+        }
     }
 }
 
-void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normDirectory, std::string& var) {
+void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::string& var, bool jec, bool up) {
     // calculate the average of b-tag weights in a given sample
     // the return type is a map of jet multiplicity to average of weights
     // input arguments:
@@ -217,9 +264,20 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     TreeReader tempTree;
     tempTree.initSampleFromFile( inputFilePath );
 
+    std::string jecVariation = var;
+    std::string bTagVar = var;
+    if (jec) {
+        if (up) {
+            bTagVar = "up_jes" + var;  
+            jecVariation = var + "Up";
+        } else {
+            bTagVar = "down_jes" + var;
+            jecVariation = var + "Down";
+        }
+    }
     // initialize the output map
-    std::shared_ptr<TH1D> averageOfWeights = std::make_shared<TH1D>(("bTagNormFactors" + samp.fileName()).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
-    std::shared_ptr<TH1D> nEntries = std::make_shared<TH1D>("nEntries", "nEntries;Jets;Entries", 30, 0, 30);
+    std::shared_ptr<TH1D> averageOfWeights = std::make_shared<TH1D>(("bTagNormFactors" + samp.fileName() + bTagVar).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
+    std::shared_ptr<TH1D> nEntries = std::make_shared<TH1D>(("nEntries" + bTagVar).c_str(), "nEntries;Jets;Entries", 30, 0, 30);
 
     // loop over events
     long unsigned availableEntries = tempTree.numberOfEntries();
@@ -237,8 +295,10 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         event.selectLooseLeptons();
         event.cleanElectronsFromLooseMuons();
         event.cleanJetsFromFOLeptons();
-        
-        event.selectGoodJets();
+        int njets = event.numberOfGoodJets();
+        if (jec) {
+            njets = event.getJetCollection(jecVariation).size();
+        }
 
         if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
         event.selectTightLeptons();
@@ -246,17 +306,21 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         if (considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
             if (event.numberOfLeptons() == 2) continue;
             if (event.lepton(0).charge() == event.lepton(1).charge()) continue;
-            if (event.numberOfJets() < 2) continue;
+            if (njets < 2) continue;
         } else {
             if (event.numberOfLeptons() < 2) continue;
             if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
 
-            if (event.numberOfJets() < 2) continue;
+            if (njets < 2) continue;
             if (event.numberOfLeptons() < 4 && event.HT() < 200) continue;
         }
         // determine (nominal) b-tag reweighting and number of jets
-        double btagreweight = reweighter->weightVariation(event, var);
-        int njets = event.jetCollection().goodJetCollection().size();
+        double btagreweight;
+        if (jec) {
+            btagreweight = reweighter->weightJecVar(event, jecVariation);
+        } else {
+            btagreweight = reweighter->weightVariation(event, bTagVar);
+        }
 
         // add it to the map
         averageOfWeights->Fill(njets, btagreweight);
@@ -275,9 +339,9 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     std::cout << "done with event loop" << std::endl;
     
     // write out to histogram
-    std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
-    TFile* normFile = TFile::Open( outputFilePath.c_str(), "UPDATE" );
+    //std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
+    TFile* normFile = TFile::Open( normFilePath.c_str(), "UPDATE" );
     normFile->cd();
-    averageOfWeights->Write(("bTagNormFactors_" + var).c_str(), TObject::kOverwrite);
+    averageOfWeights->Write(("bTagNormFactors_" + bTagVar).c_str(), TObject::kOverwrite);
     normFile->Close();
 }
