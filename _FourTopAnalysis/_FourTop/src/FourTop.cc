@@ -186,7 +186,13 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
 
         for (auto var : variations) {
             std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get(("bTagNormFactors_" + var).c_str())));
-
+            int tr = 0;
+            while (! bTagNormFactorsHist && tr < 10) {
+                btagNormFactorFile->Close();
+                btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
+                bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get(("bTagNormFactors_" + var).c_str())));
+                tr++;
+            }
             std::map<int, double> normFactors;
 
             for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
@@ -198,6 +204,7 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
 
             reweighter->setNormFactors(samp, normFactors, var);
         }
+        btagNormFactorFile->Close();
     }
 }
 
@@ -244,10 +251,13 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         event.selectTightLeptons();
 
         if (considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
+            //std::cout << "in alt sel" << std::endl;
             if (event.numberOfLeptons() == 2) continue;
             if (event.lepton(0).charge() == event.lepton(1).charge()) continue;
             if (event.numberOfJets() < 2) continue;
         } else {
+            //std::cout << "in nom sel" << std::endl;
+
             if (event.numberOfLeptons() < 2) continue;
             if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
 
@@ -264,16 +274,8 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     }
 
     // divide sum by number to get average
-    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-        std::cout << averageOfWeights->GetBinContent(i) << "/" << nEntries->GetBinContent(i) << std::endl;
-    }
     averageOfWeights->Divide(nEntries.get());
 
-    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-        std::cout << " = " << averageOfWeights->GetBinContent(i) << std::endl;
-    }
-    std::cout << "done with event loop" << std::endl;
-    
     // write out to histogram
     std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
     TFile* normFile = TFile::Open( outputFilePath.c_str(), "UPDATE" );
