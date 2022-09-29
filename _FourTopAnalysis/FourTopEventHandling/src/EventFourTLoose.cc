@@ -50,6 +50,7 @@ void EventFourTLoose::classifyEvent() {
     if (! passZBosonVeto()) {
         if (numberOfLeps() == 3) SetEventClass(eventClass::crz3L);
         if (numberOfLeps() == 4 && passSingleZBosonVeto()) SetEventClass(eventClass::crz4L);
+        if (numberOfLeps() == 4 && !passSingleZBosonVeto()) SetEventClass(eventClass::crzz);
         return;
     }
         

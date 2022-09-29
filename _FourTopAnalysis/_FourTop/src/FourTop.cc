@@ -199,15 +199,17 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
         std::string sampleNormfactorsJecVarPath = stringTools::formatDirectoryName(dir) + stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(samp.fileName())) + "_JEC.root";
 
         if( !systemTools::fileExists( sampleNormfactorsPath ) ){
-            for (auto var : variations) {
-                generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsPath, var, false, false );
-            }
+            generateAllBTaggingNormFactorsSample(reweighter, samp, sampleNormfactorsPath, variations, false);
+            //for (auto var : variations) {
+            //    generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsPath, var, false, false );
+            //}
         }
         if( !systemTools::fileExists( sampleNormfactorsJecVarPath ) ){
-            for (auto var : jec_variations) {
-                generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, false );
-                generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, true );
-            }
+            generateAllBTaggingNormFactorsSample(reweighter, samp, sampleNormfactorsJecVarPath, jec_variations, true);
+            //for (auto var : jec_variations) {
+            //    generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, false );
+            //    generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, true );
+            //}
         }
 
         // loading in
@@ -372,5 +374,140 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     TFile* normFile = TFile::Open( normFilePath.c_str(), "UPDATE" );
     normFile->cd();
     averageOfWeights->Write(("bTagNormFactors_" + bTagVar).c_str(), TObject::kOverwrite);
+    normFile->Close();
+}
+
+
+void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::vector<std::string>& variations, bool jec) {
+    // calculate the average of b-tag weights in a given sample
+    // the return type is a map of jet multiplicity to average of weights
+    // input arguments:
+    // - sample: a Sample object
+    // - numberOfEntries: number of entries to consider for the average of weights
+    //   note: defaults to 0, in which case all entries in the file are used
+    // note: for the averaging, each entry in the input sample is counted as 1, 
+    //       regardless of lumi, cross-section, generator weight or other reweighting factors!
+
+    // make a TreeReader
+    std::string inputFilePath = samp.filePath();
+    std::cout << "making TreeReader..." << std::endl;
+    TreeReader tempTree;
+    tempTree.initSampleFromFile( inputFilePath );
+
+    // initialize the output map
+    std::map<std::string, std::shared_ptr<TH1D>> averageOfWeightsMap;
+    std::map<std::string, std::shared_ptr<TH1D>> nEntriesMap;
+
+    std::vector<std::string> jecVarForSelection;
+    std::vector<std::string> bTagVar;
+    
+    for (std::string var : variations) {
+        if (jec) {
+            std::string jecVar = "up_jes" + var;
+            jecVarForSelection.push_back(var+"Up");
+            bTagVar.push_back(jecVar);
+
+            std::shared_ptr<TH1D> averageOfWeights = std::make_shared<TH1D>(("bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
+            std::shared_ptr<TH1D> nEntries = std::make_shared<TH1D>(("nEntries" + jecVar).c_str(), "nEntries;Jets;Entries", 30, 0, 30);
+
+            averageOfWeights->Fill(0., 1.);
+            nEntries->Fill(0., 1.);
+
+            averageOfWeightsMap[jecVar] = averageOfWeights;
+            nEntriesMap[jecVar] = nEntries;
+
+            jecVar = "down_jes" + var;
+            jecVarForSelection.push_back(var+"Down");
+            bTagVar.push_back(jecVar);
+
+            std::shared_ptr<TH1D> averageOfWeights_down = std::make_shared<TH1D>(("bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
+            std::shared_ptr<TH1D> nEntries_down = std::make_shared<TH1D>(("nEntries" + jecVar).c_str(), "nEntries;Jets;Entries", 30, 0, 30);
+
+            averageOfWeights_down->Fill(0., 1.);
+            nEntries_down->Fill(0., 1.);
+
+            averageOfWeightsMap[jecVar] = averageOfWeights_down;
+            nEntriesMap[jecVar] = nEntries_down;
+        } else {
+            std::shared_ptr<TH1D> averageOfWeights = std::make_shared<TH1D>(("bTagNormFactors" + samp.fileName() + var).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
+            std::shared_ptr<TH1D> nEntries = std::make_shared<TH1D>(("nEntries" + var).c_str(), "nEntries;Jets;Entries", 30, 0, 30);
+
+            averageOfWeights->Fill(0., 1.);
+            nEntries->Fill(0., 1.);
+
+            averageOfWeightsMap[var] = averageOfWeights;
+            nEntriesMap[var] = nEntries;
+        }
+    }
+    
+    if (! jec) bTagVar = variations;
+
+
+    // loop over events
+    long unsigned availableEntries = tempTree.numberOfEntries();
+
+    std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
+
+    for (long unsigned entry = 0; entry < availableEntries; ++entry) {
+        //if (entry>1000) break;
+        Event event;
+        if (jec) event = tempTree.buildEvent(entry, false, false, false, true);
+        else event = tempTree.buildEvent(entry);
+
+        // do basic selection
+        event.removeTaus();
+        event.selectLooseLeptons();
+        event.cleanElectronsFromLooseMuons();
+        event.cleanJetsFromFOLeptons();
+
+        if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
+        event.selectTightLeptons();
+
+        if (considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
+            if (event.numberOfLeptons() == 2) continue;
+            if (event.lepton(0).charge() == event.lepton(1).charge()) continue;
+        } else {
+            if (event.numberOfLeptons() < 2) continue;
+            if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
+        }
+
+        int njets = event.numberOfGoodJets();
+        double ht = event.HT();
+        for (unsigned i=0; i < bTagVar.size(); i++) {
+            std::string bVar = bTagVar[i];
+
+            if (jec) {
+                njets = event.getJetCollection(jecVarForSelection[i]).size();
+                ht = event.getJetCollection(jecVarForSelection[i]).scalarPtSum();
+            }
+
+            if (njets < 2) continue;
+            if (considerRegion != eventClass::dy || considerRegion != eventClass::ttbar) {
+                if (event.numberOfLeptons() < 4 && ht < 200) continue;
+            }
+
+            double btagreweight;
+            if (jec) {
+                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i]);
+            } else {
+                btagreweight = reweighter->weightVariation(event, bVar);
+            }
+
+            averageOfWeightsMap[bVar]->Fill(njets, btagreweight);
+            nEntriesMap[bVar]->Fill(njets, 1.);
+        }
+    }
+
+    TFile* normFile = TFile::Open( normFilePath.c_str(), "RECREATE" );
+
+    for (unsigned i=0; i < bTagVar.size(); i++) {
+        normFile->cd();
+        std::string bVar = bTagVar[i];
+
+        averageOfWeightsMap[bVar]->Divide(nEntriesMap[bVar].get());
+        averageOfWeightsMap[bVar]->Write(("bTagNormFactors_" + bVar).c_str(), TObject::kOverwrite);
+
+    }
+
     normFile->Close();
 }

@@ -238,9 +238,12 @@ bool EventFourT::passSingleZBosonVeto() {
         if (i == indices.first || i == indices.second) continue;
         relIndices.push_back(i);
     }
-
+    
     Lepton* l1New = getLepton(relIndices[0]);
     Lepton* l2New = getLepton(relIndices[1]);
+
+    if ((l1New->isElectron() && !l2New->isElectron()) || (l1New->isMuon() && !l2New->isMuon())) return true;
+    
     double twoMass = (*l1New + *l2New).mass();
     if (fabs(twoMass - particle::mZ) < 15.) {
         return false;
