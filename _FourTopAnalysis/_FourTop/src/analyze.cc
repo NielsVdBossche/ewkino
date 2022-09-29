@@ -44,7 +44,6 @@ void FourTop::analyze(std::string method) {
             addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
         } else if (leanEventSelection && !testRun) {
             addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
-    
         } else if (!testRun) {
             addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
         }

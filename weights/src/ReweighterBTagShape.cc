@@ -109,7 +109,7 @@ ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
         for (auto sys : allowedvar) {
             std::string variation = "up_" + sys;
             _normFactors[sampleName][variation][0] = 1.;
-            variation = sample.fileName() + "down_" + sys;
+            variation = "down_" + sys;
             _normFactors[sampleName][variation][0] = 1.;
 
         }
@@ -233,7 +233,11 @@ bool ReweighterBTagShape::considerVariation(const Jet &jet,
                                 "jesSinglePionHCAL", "jesTimePtEta",
                                 "jesAbsolute", "jesAbsolute_2018", "jesBBEC1", "jesBBEC1_2018",
                                 "jesEC2", "jesEC2_2018", "jesFlavorQCD", "jesHF",
-                                "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018"};
+                                "jesHF_2018", "jesRelativeBal", "jesRelativeSample_2018",
+                                "jesAbsolute_2017", "jesBBEC1_2017", "jesEC2_2017",
+                                "jesHF_2017", "jesRelativeSample_2017",
+                                "jesAbsolute_2016", "jesBBEC1_2016", "jesEC2_2016",
+                                "jesHF_2016", "jesRelativeSample_2016"};
     }
     for (std::string var : forbidden_variations)
     {
@@ -294,7 +298,7 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
     // note: the normalization factor depends on the sample to which the event belongs
     //       and on the jet multiplicity of the event.
     // note: jecVariation has a default value: 'nominal', i.e. no variation of JEC
-    std::string sampleName = event.sample().fileName() + systematic;
+    std::string sampleName = event.sample().fileName();
     // check validity of sample to which event belongs
     if (_normFactors.find(sampleName) == _normFactors.end())
     {
@@ -305,13 +309,17 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
     // retrieve the normalization factor
     // note: if no normalization factor was initialized for this jet multiplicity,
     //	     the value for lower jet multiplicities is retrieved instead.
+    //std::cout << njets << " njets & syst " << systematic << " for jec var "<< jecVariation << std::endl;
     for (int n = njets; n >= 0; n--)
-    {
+    {   
+        //std::cout << "get norm factor" << std::endl;
         if (_normFactors.at(sampleName).at(systematic).find(n) != _normFactors.at(sampleName).at(systematic).end())
         {
+            //std::cout << "found norm factor" << std::endl;
             return _normFactors.at(sampleName).at(systematic).at(n);
         }
     }
+
     throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape got event for which no norm factor could be retrieved.");
 }
 
@@ -468,14 +476,17 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
     // special case JECUp and JECDown (for single variations) are also allowed
     std::string jecVar = stringTools::removeOccurencesOf(jecVariation, "JEC");
     std::string varName;
+    std::string jesVarName;
     bool isup = true;
     if (stringTools::stringEndsWith(jecVar, "Up"))
     {
         varName = "jes" + jecVar.substr(0, jecVar.size() - 2);
+        jesVarName = "up_" + varName;
     }
     else if (stringTools::stringEndsWith(jecVar, "Down"))
     {
         varName = "jes" + jecVar.substr(0, jecVar.size() - 4);
+        jesVarName = "down_" + varName;
         isup = false;
     }
     if (!hasVariation(varName))
@@ -495,7 +506,7 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
         else
             weight *= this->weightDown(*jetPtr, varName);
     }
-    return weight  / getNormFactor(event, jecVariation, varName);
+    return weight  / getNormFactor(event, jecVariation, jesVarName);
 }
 
 /// help function for calculating normalization factors ///

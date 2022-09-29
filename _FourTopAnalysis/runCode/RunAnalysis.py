@@ -21,9 +21,9 @@ def PrepareJobDescription(additionalArguments):
 
 
 runTypesCode = ["MCAll", "MCPrompt", "ChargeDD", "nonPromptDD", "nonPromptDDControl", "Obs", "MCNoChargeMisID", "MCNoNP"]
-runTypes = ["mcall", "dd", "npdd", "chdd", "npcontrol", "mcnp"]
+runTypes = ["mcall", "dd", "npdd", "chdd", "npcontrol", "mcnp", "mcprompt", "data_only"]
 
-matches = {"mcall" : ["MCAll"], "npdd_ext" : ["nonPromptDD", "MCAll"], "chdd" : ["ChargeDD"], "dd" : ["MCPrompt", "ChargeDD", "nonPromptDD"], "npcontrol" : {"nonPromptDD", "nonPromptDDControl"}, "mcnp" : ["MCAllBJetTest"], "npdd" : ["nonPromptDD"]}
+matches = {"mcall" : ["MCAll"], "npdd_ext" : ["nonPromptDD", "MCAll"], "chdd" : ["ChargeDD"], "dd" : ["MCPrompt", "ChargeDD", "nonPromptDD"], "npcontrol" : {"nonPromptDD", "nonPromptDDControl"}, "mcnp" : ["MCAllBJetTest"], "npdd" : ["nonPromptDD"], "mcprompt" : ["MCPrompt"], "data_only" : []}
 
 ddtypes = ["all", "np", "ch"]
 
@@ -82,6 +82,8 @@ if __name__ == "__main__":
             useOSDL = True
         elif "fullstat" in optionLower:
             sets = {"MCAll" : [mcSL_fullStat], "nonPromptDD" : [dataSL, mcSL_fullStat], "ChargeDD" : [dataSL], "MCPrompt" : [mcSL_fullStat], "nonPromptDDControl" : [mcSL_fullStat], "MCAllBJetTest" : [mcSL_fullStat]}
+        elif "plotstring=" in optionLower:
+            additionalArgs.append(option)
         else:
             print("Unrecognized option: {}. Usage: ./RunAnalysis.py <AnalysisType> [-CR] [-LEAN] [path/to/samplelist] [era=[16Pre, 16Post, 17, 18]]".format(option))
 

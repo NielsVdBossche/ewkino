@@ -181,17 +181,17 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
         if (samp.is2016() || samp.is2016PostVFP() || samp.is2016PreVFP()) {
             for (auto var : jec_variations_stat) {
                 var += "2016";
-                variations.push_back(var);
+                jec_variations.push_back(var);
             }
         } else if (samp.is2017()) {
             for (auto var : jec_variations_stat) {
                 var += "2017";
-                variations.push_back(var);
+                jec_variations.push_back(var);
             }
         } else if (samp.is2018()) {
             for (auto var : jec_variations_stat) {
                 var += "2018";
-                variations.push_back(var);
+                jec_variations.push_back(var);
             }
         }
 
@@ -306,7 +306,8 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     nEntries->Fill(0., 1.);
 
     for (long unsigned entry = 0; entry < availableEntries; ++entry) {
-        Event event = tempTree.buildEvent(entry);
+        //if (entry>1000) break;
+        Event event = tempTree.buildEvent(entry, false, false, false, true);
 
         // do basic selection
         event.removeTaus();
@@ -315,9 +316,14 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         event.cleanJetsFromFOLeptons();
         int njets = event.numberOfGoodJets();
         double ht = event.HT();
+        //std::cout << ht << " ht orig " << std::endl;
+        //std::cout << njets << " njet orig " << std::endl;
+
         if (jec) {
             njets = event.getJetCollection(jecVariation).size();
             ht = event.getJetCollection(jecVariation).scalarPtSum();
+            //std::cout << ht << " ht var " << std::endl;
+            //std::cout << njets << " njet var " << std::endl;
         }
 
         if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
@@ -336,6 +342,8 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
             if (njets < 2) continue;
             if (event.numberOfLeptons() < 4 && ht < 200) continue;
+            //std::cout << "pass nom sel" << std::endl;
+
         }
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = 1.5;
@@ -351,13 +359,13 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     }
 
     // divide sum by number to get average
-    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-        std::cout << averageOfWeights->GetBinContent(i) << "/" << nEntries->GetBinContent(i) << std::endl;
-    }
+    //for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
+    //    std::cout << averageOfWeights->GetBinContent(i) << "/" << nEntries->GetBinContent(i) << std::endl;
+    //}
     averageOfWeights->Divide(nEntries.get());
-    for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-        std::cout << " = " << averageOfWeights->GetBinContent(i) << std::endl;
-    }
+    //for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
+    //    std::cout << " = " << averageOfWeights->GetBinContent(i) << std::endl;
+    //}
 
     // write out to histogram
     //std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
