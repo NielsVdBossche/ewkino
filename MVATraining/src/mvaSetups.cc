@@ -2,6 +2,8 @@
 #include "TMVA/PyMethodBase.h"
 #include "TMVA/MethodCategory.h"
 
+#include <ctime>
+
 TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile) {
     //std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
     std::string analysType;
@@ -12,7 +14,13 @@ TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* out
     }
     analysType += "Multiclass";
 
-    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_LeanSelUL", outputFile, analysType.c_str());
+    std::ostringstream oss;
+
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    oss << std::put_time(&tm, "%Y-%m-%d_%H-%M");
+
+    TMVA::Factory* factory = new TMVA::Factory("FourTopClassification_UL_" + oss.str() + "_", outputFile, analysType.c_str());
 
     return factory;
 }
