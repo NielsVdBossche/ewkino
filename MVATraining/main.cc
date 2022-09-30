@@ -4,6 +4,7 @@
 #include <TMVA/DataLoader.h>
 #include <TMVA/Factory.h>
 #include <TMVA/PyMethodBase.h>
+#include <ctime>
 
 #include <TROOT.h>
 #include <TTree.h>
@@ -64,11 +65,16 @@ int main(int argc, char const *argv[]) {
     TMVA::DataLoader* data = mvaDataManager::buildDataLoader(sampleList, tree, conf, variables);
 
     TFile* outfile;
+    std::ostringstream oss;
+
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    oss << std::put_time(&tm, "%Y-%m-%d_%H-%M");
 
     if (searchSetup == "search") {
         outfile = new TFile(("Classifiers/FourTopClassificationUL_LeanSel_Search_" + setup + "_nTrees_" + std::string(argv[5]) + "_Depth_" + std::string(argv[6]) + "_nCuts_" + std::string(argv[7]) + "_shrink_" + std::string(argv[8]) + "_minNodeSize" + std::string(argv[9]) + "_baggedFraction_" + std::string(argv[10]) + ".root").c_str() ,"RECREATE");
     } else {
-        outfile = new TFile(("Classifiers/FourTopClassificationUL_LeanSel_" + setup + ".root").c_str() ,"RECREATE");
+        outfile = new TFile(("Classifiers/FourTopClassificationUL_LeanSel_" + oss.str() + "_" + setup + ".root").c_str() ,"RECREATE");
     }
     TMVA::Factory* factory;
     TMVA::CrossValidation* cv;
