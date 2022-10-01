@@ -21,15 +21,15 @@ void EventFourTLoose::classifyEvent() {
     }
     if (! passLeanSelection()) {
         if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() == 0) {
-            if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;
-            if (numberOfLooseBJets() != 0) return;
+            if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
+            //if (numberOfLooseBJets() != 0) return;
             if (! getMediumLepCol()->hasOSSFPair()) return;
 
             if (! passZBosonVeto() && ! passSingleZBosonVeto()) {
                 SetEventClass(eventClass::crzz);
             }
         } else if (numberOfLeps() == 3) {
-            if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 15) return;
+            if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
             //if (getMET() < 50) return;
 
             if (numberOfLooseBJets() != 0) return;
