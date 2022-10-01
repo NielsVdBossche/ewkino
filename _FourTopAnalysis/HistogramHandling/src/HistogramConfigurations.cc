@@ -256,6 +256,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
 
     if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
         histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 11, 10, 120) );
+        histInfoVec->push_back( HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll} [GeV]", 30, 60, 120));
         if (evClass == eventClass::crz4L || evClass == eventClass::crzz || evClass == eventClass::fourlep) {
             histInfoVec->push_back( HistInfo( "leptonPtFour_" + flag, "p_{T}(l4) [GeV]", 18, 10, 100) );
         }
@@ -326,7 +327,7 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
             HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 12, 0, 4.8),
             HistInfo("DPhi_l1l2_"+flag, "#Delta#Phi (l1,l2)", 12, - M_PI, M_PI),
             HistInfo("HT_"+flag, "H_{T} [GeV]", 26, 0, 1300),
-            HistInfo("PT_miss_"+flag, "p_{T}^{miss} [GeV]", 30, 0, 300),
+            HistInfo("PT_miss_"+flag, "p_{T}^{miss} [GeV]", 30, 0.1, 0.4),
             HistInfo("max_M_over_PT_jet_"+flag, "#frac{M}{p_{T}}", 15, 0, 150),
             HistInfo("minDR_lb_"+flag, "min_{1} #Delta R(l,b)", 12, 0, 4.8),
             HistInfo("sec_minDR_lb_"+flag, "min_{2} #Delta R(l,b)", 12, 0, 4.8),
@@ -389,6 +390,7 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
 
     if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
         fillVal.push_back(event->getLepton(2)->pt());
+        fillVal.push_back(event->getEvent()->bestZBosonCandidateMass());
         if (evClass == eventClass::crz4L || evClass == eventClass::crzz || evClass == eventClass::fourlep) {
             fillVal.push_back(event->getLepton(3)->pt());
         }
