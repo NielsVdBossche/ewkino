@@ -116,7 +116,7 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
     std::map<MVAClasses, std::string> translator = {
         {TTTT, "Signal"},
         {TTBar, "TTBar"},
-        {TTW, "TTW"},
+        {TTW, "TTV"},
         {TTZH, "TTZH"}
     }; // Review names when appropriate
 

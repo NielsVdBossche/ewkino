@@ -38,7 +38,7 @@ std::vector<double> EventFourT::fillVector() {
     //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
     bool useMVA = true;
-    std::vector<double> scores = currentMVA->scoreEvent();
+    scoresMVA = currentMVA->scoreEvent();
     
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass == eventClass::crwz) {
         fillVec = histFiller(currentClass, this);
@@ -57,7 +57,9 @@ std::vector<double> EventFourT::fillVector() {
 
     if (currentClass == eventClass::crwz) useMVA = false;
 
-    if (useMVA && bdtOutput) fillVec.insert(fillVec.end(), scores.begin(), scores.end());
+    if (useMVA && bdtOutput) {
+        fillVec.insert(fillVec.end(), scoresMVA.begin(), scoresMVA.end());
+    }
 
     return fillVec;
 }
@@ -71,7 +73,7 @@ std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
 
     if (bdtOutput) {
         std::pair<MVAClasses, double> classAndScore = currentMVA->getClassAndScore();
-        int offset = offsets[currentClass];  
+        int offset = offsets[currentClass];
         singleEntries.push_back({offset + classAndScore.first, classAndScore.second});
     }
     return singleEntries;

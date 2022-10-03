@@ -262,6 +262,10 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         }
     }
 
+    if (evClass < eventClass::ssdl) {
+        histInfoVec->push_back(HistInfo("TriClass_Fit_" + flag, "", 3, -0.5, 2.5));
+    }
+
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
         histInfoVec->push_back(HistInfo( "InvMassSpectrumLowMassEvents_" + flag, "M_{ll} [GeV]", 20, 50, 150));
         histInfoVec->push_back(HistInfo( "N_MediumB_jets_" + flag, "N_{b}", 7, 0.5, 7.5));
@@ -390,11 +394,25 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
 
     if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
         fillVal.push_back(event->getLepton(2)->pt());
-        fillVal.push_back(event->getEvent()->bestZBosonCandidateMass());
+        if (event->getEvent()->hasOSSFLightLeptonPair()) {
+            fillVal.push_back(event->getEvent()->bestZBosonCandidateMass());
+        } else {
+            fillVal.push_back(0.);
+        }
         if (evClass == eventClass::crz4L || evClass == eventClass::crzz || evClass == eventClass::fourlep) {
             fillVal.push_back(event->getLepton(3)->pt());
         }
     }
+
+    if (evClass < eventClass::ssdl) {
+        if (event->getMVAScores()[2] > event->getMVAScores()[0]) {
+            if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(1.);
+            else fillVal.push_back(2.);
+        } else {
+            fillVal.push_back(0.);
+        }
+    }
+
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
         JetCollection bJets = event->getJetCol()->mediumBTagCollection();
