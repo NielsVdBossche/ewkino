@@ -257,6 +257,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
         histInfoVec->push_back( HistInfo( "leptonPtThird_" + flag, "p_{T}(l3) [GeV]", 11, 10, 120) );
         histInfoVec->push_back( HistInfo( "InvMassSpectrumOSEvents_" + flag, "M_{ll} [GeV]", 30, 60, 120));
+        if (evClass == eventClass::cr_conv) histInfoVec->push_back( HistInfo( "InvMassSpectrumtrilep_" + flag, "M_{lll} [GeV]", 30, 60, 120));
         if (evClass == eventClass::crz4L || evClass == eventClass::crzz || evClass == eventClass::fourlep) {
             histInfoVec->push_back( HistInfo( "leptonPtFour_" + flag, "p_{T}(l4) [GeV]", 18, 10, 100) );
         }
@@ -322,10 +323,10 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
 
         *histInfoVec = {
             HistInfo("Yield_"+flag, "Yield", 1, 0., 1.),
-            HistInfo("NJets_"+flag, "", int(minMaxNjets.second -  minMaxNjets.first), minMaxNjets.first, minMaxNjets.second),
-            HistInfo("NB_Loose_"+flag, "", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
-            HistInfo("NB_Medium_"+flag, "", 7, -0.5, 6.5),
-            HistInfo("NB_Tight_"+flag, "", 7, -0.5, 6.5),
+            HistInfo("NJets_"+flag, "N_{jets}", int(minMaxNjets.second -  minMaxNjets.first), minMaxNjets.first, minMaxNjets.second),
+            HistInfo("NB_Loose_"+flag, "N_{b}^{loose}", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
+            HistInfo("NB_Medium_"+flag, "N_{b}^{medium}", 7, -0.5, 6.5),
+            HistInfo("NB_Tight_"+flag, "N_{b}^{tight}", 7, -0.5, 6.5),
 
             HistInfo("minDR_bb_"+flag, "min #Delta R(b,b)", 12, 0, 4.8),
             HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 12, 0, 4.8),
@@ -399,6 +400,17 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         } else {
             fillVal.push_back(0.);
         }
+        if (evClass == eventClass::cr_conv) {
+            double triMass = 0.;
+
+            Lepton* l1 = event->getLepton(0);
+            Lepton* l2 = event->getLepton(1);
+            Lepton* l3 = event->getLepton(2);
+
+            triMass = (*l1 + *l2 + *l3).mass();
+            fillVal.push_back(triMass);
+        }
+
         if (evClass == eventClass::crz4L || evClass == eventClass::crzz || evClass == eventClass::fourlep) {
             fillVal.push_back(event->getLepton(3)->pt());
         }
