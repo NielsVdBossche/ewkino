@@ -75,6 +75,9 @@ std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
         std::pair<MVAClasses, double> classAndScore = currentMVA->getClassAndScore();
         int offset = offsets[currentClass];
         singleEntries.push_back({offset + classAndScore.first, classAndScore.second});
+        if (currentClass == eventClass::fourlep && classAndScore.first == MVAClasses::TTBar) {
+            singleEntries.push_back({offset + MVAClasses::TTW, scoresMVA[2]}); // good enough
+        }
     }
     return singleEntries;
 }
