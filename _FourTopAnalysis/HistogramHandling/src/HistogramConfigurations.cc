@@ -431,11 +431,6 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
     }
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
-        JetCollection bJets = event->getJetCol()->mediumBTagCollection();
-        std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
-        JetCollection jets = *event->getJetCol();
-        std::vector<double> mindR_jets = calculators::mindRInJetCollection(jets);
-
         Lepton* l1 = event->getLepton(0);
         Lepton* l2 = event->getLepton(1);
         double osLepMass = (*l1 + *l2).mass();
@@ -444,6 +439,8 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         fillVal.push_back(event->numberOfMediumBJets());
 
         if (event->numberOfMediumBJets() >= 2) {
+            JetCollection bJets = event->getJetCol()->mediumBTagCollection();
+            std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
             fillVal.push_back(deltaR(bJets[0], bJets[1]));
             mindR_Bjets[0];
         } else {
@@ -452,6 +449,8 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         }
 
         if (event->numberOfJets() >= 2) {
+            JetCollection jets = *event->getJetCol();
+            std::vector<double> mindR_jets = calculators::mindRInJetCollection(jets);
             fillVal.push_back(deltaR(jets[0], jets[1]));
             mindR_jets[0];
         } else {

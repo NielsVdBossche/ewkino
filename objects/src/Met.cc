@@ -163,3 +163,27 @@ std::ostream& Met::print( std::ostream& os ) const{
     os << " / pt_JECDown = " << _pt_JECDown << " / phi_JECDown = " << _phi_JECDown << " / pt_JECUp = " << _pt_JECUp << " / phi_JECUp = " << _phi_JECUp << " / pt_UnclDown = " << _pt_UnclDown << " / phi_UnclDown = " << _phi_UnclDown << " / pt_UnclUp = " << _pt_UnclUp << " / phi_UnclUp = " << _phi_UnclUp;
     return os;
 }
+
+Met Met::getVariedMet(JetCollection nomJets, std::string variation, unsigned flavor, bool up) const {
+    // rough approach
+    // generate lorentzvector corresponding to met
+    LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
+
+    for (const auto& jetPtr : nomJets) {
+        double ptNom = jetPtr->pt();
+        if (jetPtr->hadronFlavor() != flavor) continue;
+        
+        std::shared_ptr<Jet> varJet;
+        if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECUp( variation ));
+        else varJet = std::make_shared< Jet >(jetPtr->JetJECDown( variation ));
+
+        double ptdiff = ptNom - varJet->pt();
+
+        ret += LorentzVector(ptdiff, 0., jetPtr->phi(), ptdiff);
+    }
+
+    Met variedMet( *this );
+    variedMet.setLorentzVector(ret.pt(), eta(), ret.phi(), ret.pt() );
+    return variedMet;
+}
+
