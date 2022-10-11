@@ -124,6 +124,8 @@ void FourTop::analyze(std::string method) {
     std::vector<Sample> sampleVec = treeReader->sampleVector();
     std::vector<std::string> bTagShapeSystematics;
     std::vector<std::string> JECSourcesGrouped;
+    std::vector<std::string> JECQCDComponents;
+    std::vector<unsigned> JECQCDComponents_flavor;
     std::vector<std::string> wzSFRegions;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
@@ -182,6 +184,11 @@ void FourTop::analyze(std::string method) {
                 JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariations();
 
                 mgrAll->addSubUncertainties(shapeUncId::JEC, JECSourcesGrouped);
+
+                JECQCDComponents = {"light", "charm", "bottom"};
+                JECQCDComponents_flavor = {0, 4, 5};
+                mgrAll->addSubUncertainties(shapeUncId::JECFlavorQCD, JECQCDComponents);
+
             }
             if (sampleIndex == 0) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
@@ -462,7 +469,7 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight, weight);
                         }
                     }
-                } else if ((uncID >= shapeUncId::JER_1p93 && uncID != shapeUncId::JEC) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
+                } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
@@ -516,6 +523,37 @@ void FourTop::analyze(std::string method) {
 
                         if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSource, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                         if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSource, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    }
+                } else if (uncID == shapeUncId::JECFlavorQCD && useSplitJEC) {
+                    for (int i = 0; i < 3; i++) {
+                        std::string source = JECQCDComponents[i];
+                        std::string jecVar = "FlavorQCD";
+                        unsigned flavor = JECQCDComponents_flavor[i];
+                        if (considerBTagShape) {
+                            std::string sourceUp = "FlavorQCDUp";
+                            std::string sourceDown = "FlavorQCDDown";
+                            
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                        }
+
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecVar, flavor);
+                        fillVecUp = selection->fillVector();
+                        singleEntriesUp = selection->singleFillEntries();
+                        fillVec2DUp = selection->fillVector2D();
+
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecVar, flavor);
+                        fillVecDown = selection->fillVector();
+                        singleEntriesDown = selection->singleFillEntries();
+                        fillVec2DDown = selection->fillVector2D();
+
+                        subChannelsUp = GetSubClasses(upClass);
+                        subChannelsDown = GetSubClasses(downClass);
+
+                        if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(source, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                        if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(source, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                     }
                 }
 

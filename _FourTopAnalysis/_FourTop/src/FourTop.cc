@@ -174,7 +174,9 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
                                            "down_lfstats1", "down_lfstats2", "down_cferr1", "down_cferr2"};
 
     std::vector<std::string> jec_variations_stat = {"Absolute_", "BBEC1_", "EC2_",
-                                                    "HF_", "RelativeSample_"};// list of relevant JEC variations for each we want stuff added.    
+                                                    "HF_", "RelativeSample_"};// list of relevant JEC variations for each we want stuff added.
+
+    std::vector<std::string> flavorQCDVariations = {"FlavorQCD_0", "FlavorQCD_4", "FlavorQCD_5"};
     
     for (auto samp : sampleVector) {
         std::vector<std::string> jec_variations = {"Absolute", "BBEC1", "EC2", "FlavorQCD", "HF", "RelativeBal"};
@@ -197,21 +199,17 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
 
         std::string sampleNormfactorsPath = stringTools::formatDirectoryName(dir) + stringTools::fileNameFromPath(samp.fileName());
         std::string sampleNormfactorsJecVarPath = stringTools::formatDirectoryName(dir) + stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(samp.fileName())) + "_JEC.root";
+        std::string sampleNormfactorsFlavorQCDVarPath = stringTools::formatDirectoryName(dir) + stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(samp.fileName())) + "_FlQCDSplit.root";
 
         if( !systemTools::fileExists( sampleNormfactorsPath ) ){
             generateAllBTaggingNormFactorsSample(reweighter, samp, sampleNormfactorsPath, variations, false);
-            //for (auto var : variations) {
-            //    generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsPath, var, false, false );
-            //}
         }
         if( !systemTools::fileExists( sampleNormfactorsJecVarPath ) ){
             generateAllBTaggingNormFactorsSample(reweighter, samp, sampleNormfactorsJecVarPath, jec_variations, true);
-            //for (auto var : jec_variations) {
-            //    generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, false );
-            //    generateBTaggingNormFactorsSample( reweighter, samp, sampleNormfactorsJecVarPath, var, true, true );
-            //}
         }
-
+        if( !systemTools::fileExists( sampleNormfactorsFlavorQCDVarPath ) ){
+            generateAllBTaggingNormFactorsSample(reweighter, samp, sampleNormfactorsFlavorQCDVarPath, flavorQCDVariations, true);
+        }
         // loading in
         TFile* btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
 
@@ -265,6 +263,35 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
             }
         }
         btagNormFactorFileJec->Close();
+
+        TFile* btagNormFactorFileFlavorQCD = TFile::Open(sampleNormfactorsFlavorQCDVarPath.c_str());
+        for (auto var : flavorQCDVariations) {
+            for (std::string upOrDown : {"up", "down"}) {
+                std::string fullJecName = upOrDown + "_jes" + var;
+
+                std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileFlavorQCD->Get(("bTagNormFactors_" + fullJecName).c_str())));
+                int tr = 0;
+                while (! bTagNormFactorsHist && tr < 10) {
+                    btagNormFactorFileFlavorQCD->Close();
+                    btagNormFactorFileFlavorQCD = TFile::Open(sampleNormfactorsFlavorQCDVarPath.c_str());
+                    bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileFlavorQCD->Get(("bTagNormFactors_" + var).c_str())));
+                    tr++;
+                }
+
+                std::map<int, double> normFactors;
+
+                for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
+                    double normFactor = bTagNormFactorsHist->GetBinContent(i);
+                    if (fabs(normFactor) > 1e-6) {
+                        normFactors[i-1] = normFactor;
+                    }
+                }
+                // up and down variations!!
+                reweighter->setNormFactors(samp, normFactors, fullJecName);
+            }
+        }
+        btagNormFactorFileFlavorQCD->Close();
+
     }
 }
 
@@ -318,14 +345,10 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         event.cleanJetsFromFOLeptons();
         int njets = event.numberOfGoodJets();
         double ht = event.HT();
-        //std::cout << ht << " ht orig " << std::endl;
-        //std::cout << njets << " njet orig " << std::endl;
 
         if (jec) {
             njets = event.getJetCollection(jecVariation).size();
             ht = event.getJetCollection(jecVariation).scalarPtSum();
-            //std::cout << ht << " ht var " << std::endl;
-            //std::cout << njets << " njet var " << std::endl;
         }
 
         if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
@@ -400,8 +423,12 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
     std::vector<std::string> jecVarForSelection;
     std::vector<std::string> bTagVar;
-    
+    std::vector<unsigned> flavors = {0, 0, 4, 4, 5, 5};
+    bool flavorQCD_Vars = false;
     for (std::string var : variations) {
+        if (stringTools::stringContains(var, "FlavorQCD_") && jec) {
+            flavorQCD_Vars = true;
+        }
         if (jec) {
             std::string jecVar = "up_jes" + var;
             jecVarForSelection.push_back(var+"Up");
@@ -473,10 +500,21 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
         int njets = event.numberOfGoodJets();
         double ht = event.HT();
+
         for (unsigned i=0; i < bTagVar.size(); i++) {
             std::string bVar = bTagVar[i];
-
-            if (jec) {
+            JetCollection currentJets;
+            if (jec && ! flavorQCD_Vars) {
+                currentJets = event.getJetCollection(jecVarForSelection[i]);
+                njets = currentJets.size();
+                ht = currentJets.scalarPtSum();
+            } else if (jec && flavorQCD_Vars) {
+                bool up = i % 2 == 0;
+                if (up) {
+                    currentJets = event.jetCollection().JECUpGroupedFlavorQCD(flavors[i]);
+                } else {
+                    currentJets = event.jetCollection().JECDownGroupedFlavorQCD(flavors[i]);
+                }
                 njets = event.getJetCollection(jecVarForSelection[i]).size();
                 ht = event.getJetCollection(jecVarForSelection[i]).scalarPtSum();
             }
@@ -487,8 +525,10 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             }
 
             double btagreweight;
-            if (jec) {
+            if (jec && ! flavorQCD_Vars) {
                 btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i]);
+            } else if (flavorQCD_Vars) {
+                btagreweight = reweighter->weightJecVar_FlavorFilter(event, "FlavorQCD", flavors[i]);
             } else {
                 btagreweight = reweighter->weightVariation(event, bVar);
             }
@@ -506,7 +546,6 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
         averageOfWeightsMap[bVar]->Divide(nEntriesMap[bVar].get());
         averageOfWeightsMap[bVar]->Write(("bTagNormFactors_" + bVar).c_str(), TObject::kOverwrite);
-
     }
 
     normFile->Close();

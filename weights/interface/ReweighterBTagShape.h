@@ -32,6 +32,7 @@ class ReweighterBTagShape: public Reweighter{
 	void setNormFactors( const Sample& sample, std::map<int,double> normFactors );
 	void setNormFactors( const Sample& sample, std::map<int,double> normFactors, std::string& variation );
 	double getNormFactor( const Event&, const std::string& jecVariation="nominal", const std::string& systematic = "central") const;
+	double getNormFactor_FlavorFilter( const Event&, unsigned flavor, const std::string& jecVariation="nominal", const std::string& systematic = "central") const;
 	std::map<std::string, std::map<std::string, std::map<int, double>>>  getNormFactors() const;
 	void printNormFactors() const;
 	
@@ -46,6 +47,7 @@ class ReweighterBTagShape: public Reweighter{
 	double weightUp( const Event& event, const std::string& systematic ) const;
         double weightDown( const Event&, const std::string& systematic ) const;
 	double weightJecVar( const Event& event, const std::string& jecVariation ) const;
+	double weightJecVar_FlavorFilter(const Event &event, const std::string &jecVariation, unsigned flavor) const;
 	double weightNoNorm( const Event& event) const;
 	std::vector<std::string> availableVariations() const{ return _variations; }
 	std::vector<std::string> availableSystematics() const{ return _systematics; }

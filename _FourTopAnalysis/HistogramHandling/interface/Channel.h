@@ -14,7 +14,7 @@ class Channel {
     private:
         std::map<shapeUncId, std::string> translateUnc = { {muonIDSys, "muonIDSyst"}, {muonIDStat, "muonIDStat"}, {EleIDSys, "electronIDSyst"}, {EleIDStat, "electronIDStat"}, {prefire, "prefire"},
                                                            {pileup, "pileup"}, {electronReco, "electronReco"}, {qcdScale, "qcdScale"}, {pdfShapeVar, "pdfShapeVar"}, {bTagShape, "bTagShape"},
-                                                           {isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, {fsrNorm, "fsrNorm"}, {WZSF, "WZSF_Stat"}, {JER_1p93, "JER_1p93"}, {JER_2p5, "JER_2p5"}, {JEC, "JEC"}, {MET, "MET"} };
+                                                           {isrShape, "isrShape"}, {fsrShape, "fsrShape"}, {isrNorm, "isrNorm"}, {fsrNorm, "fsrNorm"}, {WZSF, "WZSF_Stat"}, {JER_1p93, "JER_1p93"}, {JER_2p5, "JER_2p5"}, {JEC, "JEC"}, {JECFlavorQCD, "JECFlavorQCD"}, {MET, "MET"} };
         std::string ChannelName;
         std::string SubChannelName = "";
         HistogramSet* nominalHistograms;

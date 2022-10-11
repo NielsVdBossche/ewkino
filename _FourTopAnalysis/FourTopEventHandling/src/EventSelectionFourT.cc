@@ -293,7 +293,7 @@ int EventFourT::NumberOfBFlavorJets() {
     return count;
 }
 
-eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& variation) {
+eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& variation, unsigned flavor) {
     //if JER
 
     delete jets;
@@ -357,6 +357,18 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& 
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetUnclusteredDown().pt();
+        }
+    } else if (id == shapeUncId::JECFlavorQCD) {
+        if (up) {
+            jets = new JetCollection(event->getJetCollectionPtr()->JECUpGroupedFlavorQCD(flavor));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().pt(); // event->met().MetJECUp(variation).pt();
+        } else {
+            jets = new JetCollection(event->getJetCollectionPtr()->JECDownGroupedFlavorQCD(flavor));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().pt(); // event->met().MetJECDown(variation).pt();
         }
     }
 
