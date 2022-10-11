@@ -15,6 +15,7 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
         variations = 6;
     } else if (id == shapeUncId::pdfShapeVar) {
         variations = 100;
+        //SetPrintAllVariations(true);
     }
 
     for (int i=0; i < variations; i++) {

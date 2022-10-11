@@ -239,6 +239,8 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     } else if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
         minMaxNjets = {1.5, 12.5};
         minMaxNBjets = {0.5, 7.5};
+    } else if (evClass == eventClass::crzz) {
+        minMaxNjets = {-0.5, 4.5};
     }
 
     *histInfoVec = {
@@ -310,15 +312,18 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
         std::pair<double, double> minMaxNMu = {-0.5, 5.5};
         if (evClass == eventClass::ssdl) {
             minMaxNjets = {3.5,10.5};
-            minMaxNBjets = {2.5,6.5};
-            //minMaxHT = {250,1300};
+            minMaxNBjets = {1.5,6.5};
+            minMaxHT = {250.,1300.};
             //minMaxNMu = {-0.5, 2.5};
         } else if (evClass == eventClass::trilep) {
             minMaxNjets = {2.5, 9.5};
-            minMaxNBjets = {2.5,6.5};
+            minMaxNBjets = {1.5,6.5};
+            minMaxHT = {200.,1250.};
+
         } else if (evClass == eventClass::fourlep) {
             minMaxNjets = {1.5, 6.5};
-            minMaxNBjets = {2.5,6.5};
+            minMaxNBjets = {0.5,6.5};
+            minMaxHT = {0.,1050.};
         }
 
         *histInfoVec = {
@@ -331,9 +336,9 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
             HistInfo("minDR_bb_"+flag, "min #Delta R(b,b)", 12, 0, 4.8),
             HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 12, 0, 4.8),
             HistInfo("DPhi_l1l2_"+flag, "#Delta#phi (l1,l2)", 12, 0., M_PI),
-            HistInfo("HT_"+flag, "H_{T} [GeV]", 26, 0, 1300),
-            HistInfo("PT_miss_"+flag, "p_{T}^{miss} [GeV]", 30, 0.1, 0.4),
-            HistInfo("max_M_over_PT_jet_"+flag, "#frac{M}{p_{T}}", 30, 0., 300.),
+            HistInfo("HT_"+flag, "H_{T} [GeV]", 21, minMaxHT.first, minMaxHT.second),
+            HistInfo("PT_miss_"+flag, "p_{T}^{miss} [GeV]", 30, 0., 300.),
+            HistInfo("max_M_over_PT_jet_"+flag, "#frac{M}{p_{T}}", 30, 0.1, 0.4),
             HistInfo("minDR_lb_"+flag, "min_{1} #Delta R(l,b)", 12, 0, 4.8),
             HistInfo("sec_minDR_lb_"+flag, "min_{2} #Delta R(l,b)", 12, 0, 4.8),
 
@@ -424,7 +429,6 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
             fillVal.push_back(0.);
         }
     }
-
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
         Lepton* l1 = event->getLepton(0);
