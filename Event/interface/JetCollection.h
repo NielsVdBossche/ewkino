@@ -46,6 +46,7 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
 	    JetCollection getVariedJetCollection( const std::string& variation ) const;
 
         JetCollection JECUpGroupedFlavorQCD(unsigned flavor) const;
+        JetCollection JECGroupedFlavorQCD(unsigned flavor, bool up) const;
         JetCollection JECDownGroupedFlavorQCD(unsigned flavor) const;
 
 

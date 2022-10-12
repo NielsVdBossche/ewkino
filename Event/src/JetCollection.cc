@@ -133,6 +133,13 @@ JetCollection JetCollection::JECDownGroupedFlavorQCD(unsigned flavor) const {
     return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
 }
 
+JetCollection JetCollection::JECGroupedFlavorQCD(unsigned flavor, bool isup) const {
+    if (isup) {
+        return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
+    } else {    
+        return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
+    }
+}
 
 JetCollection JetCollection::JECDownCollection() const{
     return buildVariedCollection( &Jet::JetJECDown );

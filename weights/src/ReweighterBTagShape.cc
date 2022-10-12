@@ -578,7 +578,7 @@ double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
     }
     if (!hasVariation(varName))
     {
-        std::string msg = "### ERROR ### in ReweighterBTagShape::weightJecVar:";
+        std::string msg = "### ERROR ### in ReweighterBTagShape::weightJecVar_FlavorFilter:";
         msg += " jec variation '" + jecVariation + "' (corresponding to '" + varName + "') not valid";
         std::cerr << msg << std::endl;
         std::cerr << "returning nominal weight" << std::endl;
@@ -586,7 +586,7 @@ double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
         //throw std::invalid_argument(msg);
     }
     double weight = 1.;
-    for (const auto &jetPtr : event.getJetCollection(jecVariation))
+    for (const auto &jetPtr : event.jetCollection().JECGroupedFlavorQCD(flavor, isup))
     {   
         if (jetPtr->hadronFlavor() == flavor) {
             if (isup)
