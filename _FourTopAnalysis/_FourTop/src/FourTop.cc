@@ -515,8 +515,8 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 } else {
                     currentJets = event.jetCollection().JECDownGroupedFlavorQCD(flavors[i]);
                 }
-                njets = event.getJetCollection(jecVarForSelection[i]).size();
-                ht = event.getJetCollection(jecVarForSelection[i]).scalarPtSum();
+                njets = currentJets.size();
+                ht = currentJets.scalarPtSum();
             }
 
             if (njets < 2) continue;
