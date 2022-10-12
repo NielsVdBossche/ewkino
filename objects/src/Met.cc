@@ -10,41 +10,37 @@ Met::Met( const TreeReader& treeReader,
     _phi_JECDown( treeReader._metPhi_JECDown ),
     _pt_JECUp( treeReader._met_JECUp ),
     _phi_JECUp( treeReader._metPhi_JECUp ),
+    _JECSources(treeReader._corrMETx_JECSourcesUp_Ids ),
+    _JECGrouped(treeReader._corrMETx_JECGroupedUp_Ids ),
     _pt_UnclDown( treeReader._met_UnclDown ),
     _phi_UnclDown( treeReader._metPhi_UnclDown ),
     _pt_UnclUp( treeReader._met_UnclUp ),
-    _phi_UnclUp( treeReader._metPhi_UnclUp )
-{
-    if( readAllJECVariations ){
-	for( const auto mapEl: treeReader._corrMETx_JECSourcesUp ){
-            std::string key = mapEl.first;
-            key = stringTools::removeOccurencesOf(key,"_corrMETx_");
-            key = stringTools::removeOccurencesOf(key,"_JECSourcesUp");
-            _JECSources.push_back( key ); // assume they are the same for Up/Down and x/y!
+    _phi_UnclUp( treeReader._metPhi_UnclUp ) {
+    
+    if (readAllJECVariations) {
+        _pxy_JECSourcesUp = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECSourcesUp_Ids->size());
+        _pxy_JECSourcesDown = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECSourcesUp_Ids->size());
+        for (const auto elMap : *(treeReader._corrMETx_JECSourcesUp_Ids)) {
+            _pxy_JECSourcesUp[elMap.second] = std::make_pair(
+                                               treeReader._corrMETx_JECSourcesUp[elMap.second],
+                                               treeReader._corrMETy_JECSourcesUp[elMap.second]);
+
+            _pxy_JECSourcesDown[elMap.second] = std::make_pair(
+                                    treeReader._corrMETx_JECSourcesDown[elMap.second],
+                                    treeReader._corrMETy_JECSourcesDown[elMap.second]);
         }
-	for( const std::string key: _JECSources ){
-	    _pxy_JECSourcesUp.insert( {key, std::make_pair( 
-		treeReader._corrMETx_JECSourcesUp.at("_corrMETx_"+key+"_JECSourcesUp"), 
-		treeReader._corrMETy_JECSourcesUp.at("_corrMETy_"+key+"_JECSourcesUp"))} );
-	    _pxy_JECSourcesDown.insert( {key, std::make_pair( 
-                treeReader._corrMETx_JECSourcesDown.at("_corrMETx_"+key+"_JECSourcesDown"),   
-                treeReader._corrMETy_JECSourcesDown.at("_corrMETy_"+key+"_JECSourcesDown"))} );
-	}
     }
-    if( readGroupedJECVariations ){
-        for( const auto mapEl: treeReader._corrMETx_JECGroupedUp ){
-            std::string key = mapEl.first;
-            key = stringTools::removeOccurencesOf(key,"_corrMETx_");
-            key = stringTools::removeOccurencesOf(key,"_JECGroupedUp");
-            _JECGrouped.push_back( key ); // assume they are the same for Up/Down and x/y!
-        }
-	for( const std::string key: _JECGrouped ){
-            _pxy_JECGroupedUp.insert( {key, std::make_pair( 
-                treeReader._corrMETx_JECGroupedUp.at("_corrMETx_"+key+"_JECGroupedUp"),  
-                treeReader._corrMETy_JECGroupedUp.at("_corrMETy_"+key+"_JECGroupedUp"))} );
-            _pxy_JECGroupedDown.insert( {key, std::make_pair(  
-                treeReader._corrMETx_JECGroupedDown.at("_corrMETx_"+key+"_JECGroupedDown"),   
-                treeReader._corrMETy_JECGroupedDown.at("_corrMETy_"+key+"_JECGroupedDown"))} );
+    if (readGroupedJECVariations) {
+        _pxy_JECGroupedUp = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECGroupedUp_Ids->size());
+        _pxy_JECGroupedDown = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECGroupedUp_Ids->size());
+
+        for (const auto elMap : *(treeReader._corrMETx_JECGroupedUp_Ids)) {
+            _pxy_JECGroupedUp[elMap.second] = std::make_pair(
+                                               treeReader._corrMETx_JECGroupedUp[elMap.second],
+                                               treeReader._corrMETy_JECGroupedUp[elMap.second]);
+            _pxy_JECGroupedDown[elMap.second] = std::make_pair(
+                                                 treeReader._corrMETx_JECGroupedDown[elMap.second],
+                                                 treeReader._corrMETy_JECGroupedDown[elMap.second]);
         }
     }
 }
@@ -84,11 +80,11 @@ Met Met::MetJECDown( const std::string source ) const{
     // note: this function checks both all and grouped variations,
     // need to check if there is no overlap in names between them!
     std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    for( std::string test: this->_JECSources ){
-        if(source==test) newpxy = this->_pxy_JECSourcesDown.at(source);
+    for(auto test: *_JECSources ){
+        if(source==test.first) newpxy = this->_pxy_JECSourcesDown[test.second];
     }
-    for( std::string test: this->_JECGrouped ){
-        if(source==test) newpxy = this->_pxy_JECGroupedDown.at(source);
+    for( auto test: *_JECGrouped ){
+        if(source==test.first) newpxy = this->_pxy_JECGroupedDown[test.second];
     }
     return variedMetPxPy( newpxy.first, newpxy.second );
 }
@@ -97,12 +93,34 @@ Met Met::MetJECUp( const std::string source ) const{
     // note: this function checks both all and grouped variations,
     // need to check if there is no overlap in names between them!
     std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    for( std::string test: this->_JECSources ){
-        if(source==test) newpxy = this->_pxy_JECSourcesUp.at(source);
+    for(auto test: *_JECSources ){
+        if(source==test.first) newpxy = this->_pxy_JECSourcesUp[test.second];
     }
-    for( std::string test: this->_JECGrouped ){
-        if(source==test) newpxy = this->_pxy_JECGroupedUp.at(source);
+    for( auto test: *_JECGrouped ){
+        if(source==test.first) newpxy = this->_pxy_JECGroupedUp[test.second];
     }
+    return variedMetPxPy( newpxy.first, newpxy.second );
+}
+
+
+Met Met::MetJECGroupedDown( const unsigned source) const {
+    std::pair< double, double > newpxy = std::make_pair( 0,0 );
+    newpxy = _pxy_JECGroupedDown[source];
+    return variedMetPxPy( newpxy.first, newpxy.second );
+}
+Met Met::MetJECGroupedUp( const unsigned source) const {
+    std::pair< double, double > newpxy = std::make_pair( 0,0 );
+    newpxy = _pxy_JECGroupedUp[source];
+    return variedMetPxPy( newpxy.first, newpxy.second );
+}
+Met Met::MetJECSourcesDown( const unsigned source) const {
+    std::pair< double, double > newpxy = std::make_pair( 0,0 );
+    newpxy = _pxy_JECSourcesDown[source];
+    return variedMetPxPy( newpxy.first, newpxy.second );
+}
+Met Met::MetJECSourcesUp( const unsigned source) const {
+    std::pair< double, double > newpxy = std::make_pair( 0,0 );
+    newpxy = _pxy_JECSourcesUp[source];
     return variedMetPxPy( newpxy.first, newpxy.second );
 }
 
@@ -174,8 +192,8 @@ Met Met::getVariedMet(JetCollection nomJets, std::string variation, unsigned fla
         if (jetPtr->hadronFlavor() != flavor) continue;
         
         std::shared_ptr<Jet> varJet;
-        if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECUp( variation ));
-        else varJet = std::make_shared< Jet >(jetPtr->JetJECDown( variation ));
+        //if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECUp( variation ));
+        //else varJet = std::make_shared< Jet >(jetPtr->JetJECDown( variation ));
 
         double ptdiff = ptNom - varJet->pt();
 

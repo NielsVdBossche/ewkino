@@ -27,8 +27,12 @@ class Met : public PhysicsObject {
 	Met MetJECDown( const std::string source ) const;
 	Met MetJECUp( const std::string source) const;
 
-	Met getVariedMet( const std::string& variation ) const;
+        Met MetJECGroupedDown( const unsigned ) const;
+	Met MetJECGroupedUp( const unsigned) const;
+        Met MetJECSourcesDown( const unsigned ) const;
+        Met MetJECSourcesUp( const unsigned) const;
 
+	Met getVariedMet( const std::string& variation ) const;
         Met getVariedMet(JetCollection nomJets, std::string variation, unsigned flavor, bool up) const;
 
         //maximum variations of met pT
@@ -46,12 +50,12 @@ class Met : public PhysicsObject {
         double _pt_JECUp = 0;
         double _phi_JECUp = 0;
 
-	std::vector< std::string > _JECSources;
-	std::map< std::string, std::pair<double,double> > _pxy_JECSourcesUp;
-	std::map< std::string, std::pair<double,double> > _pxy_JECSourcesDown;
-	std::vector< std::string > _JECGrouped;
-        std::map< std::string, std::pair<double,double> > _pxy_JECGroupedUp;
-        std::map< std::string, std::pair<double,double> > _pxy_JECGroupedDown;
+	std::map< std::string, size_t >* _JECSources = nullptr;
+	std::vector<std::pair<double,double> > _pxy_JECSourcesUp;
+	std::vector<std::pair<double,double> > _pxy_JECSourcesDown;
+	std::map< std::string, size_t >* _JECGrouped = nullptr;
+        std::vector< std::pair<double,double> > _pxy_JECGroupedUp;
+        std::vector< std::pair<double,double> > _pxy_JECGroupedDown;
 
         //unclustered energy uncertainties
         double _pt_UnclDown = 0;

@@ -111,6 +111,32 @@ JetCollection JetCollection::buildVariedCollection( Jet (Jet::*variedJet)(std::s
     return JetCollection( jetVector );
 }
 
+JetCollection JetCollection::buildVariedCollection( Jet (Jet::*variedJet)(const unsigned) const, 
+    unsigned variationArg ) const{
+    // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    for( const auto& jetPtr : *this ){
+
+        //jets are NOT shared between collections!
+        jetVector.push_back( std::make_shared< Jet >( (*jetPtr.*variedJet)( variationArg ) ) );
+    }
+    return JetCollection( jetVector );
+}
+
+JetCollection JetCollection::buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(const unsigned) const, unsigned variationArg, unsigned flavor ) const{
+    // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    for( const auto& jetPtr : *this ){
+        //jets are NOT shared between collections!
+        if (jetPtr->hadronFlavor() == flavor) {
+            jetVector.push_back( std::make_shared< Jet >( (*jetPtr.*variedJet)( variationArg ) ) );
+        } else {
+            jetVector.push_back( std::make_shared< Jet >( *jetPtr ) );
+        }
+    }
+    return JetCollection( jetVector );
+}
+
 JetCollection JetCollection::buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(std::string) const, std::string variationArg, unsigned flavor ) const{
     // similar to above but with argument passed to Jet::*variedJet
     std::vector< std::shared_ptr< Jet > > jetVector;
@@ -125,20 +151,37 @@ JetCollection JetCollection::buildVariedCollection_FlavorSet( Jet (Jet::*variedJ
     return JetCollection( jetVector );
 }
 
+JetCollection JetCollection::JECUpGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const {
+    return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedUp, sourceID, flavor).goodJetCollection();
+}
+
+JetCollection JetCollection::JECDownGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const {
+    return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedDown, sourceID, flavor).goodJetCollection();
+}
+
+JetCollection JetCollection::JECGroupedFlavorQCD(unsigned sourceID, unsigned flavor, bool isup) const {
+    if (isup) {
+        return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedUp, sourceID, flavor).goodJetCollection();
+    } else {    
+        return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedDown, sourceID, flavor).goodJetCollection();
+    }
+}
+
+
+JetCollection JetCollection::JECGroupedFlavorQCD(unsigned flavor, bool up) const {
+    if (up) {
+        return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
+    } else {    
+        return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
+    }
+}
+
 JetCollection JetCollection::JECUpGroupedFlavorQCD(unsigned flavor) const {
     return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
 }
 
 JetCollection JetCollection::JECDownGroupedFlavorQCD(unsigned flavor) const {
     return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
-}
-
-JetCollection JetCollection::JECGroupedFlavorQCD(unsigned flavor, bool isup) const {
-    if (isup) {
-        return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
-    } else {    
-        return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
-    }
 }
 
 JetCollection JetCollection::JECDownCollection() const{
@@ -207,6 +250,22 @@ JetCollection JetCollection::getVariedJetCollection( const std::string& variatio
 	+ "jet variation " + variation + " is unknown." );
     }
 }
+
+JetCollection JetCollection::getVariedJetCollection( unsigned source, bool isUp, bool isGrouped) const{
+    if( isUp && isGrouped ){
+        return buildVariedCollection( &Jet::JetJECGroupedUp, source ).goodJetCollection();
+    } else if( isUp && !isGrouped ){
+        return buildVariedCollection( &Jet::JetJECSourcesUp, source ).goodJetCollection();
+    } else if (isGrouped) {
+        return buildVariedCollection( &Jet::JetJECGroupedDown, source ).goodJetCollection();
+    } else if (!isGrouped) {
+        return buildVariedCollection( &Jet::JetJECSourcesDown, source ).goodJetCollection();
+    } else {
+        throw std::invalid_argument( std::string("ERROR in getVariedJetCollection: ")
+	+ "jet variation " + std::to_string(source) + " is unknown." );
+    }
+}
+
 
 
 JetCollection::size_type JetCollection::numberOfLooseBTaggedJets() const{
