@@ -527,7 +527,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             double btagreweight;
             if (jec && ! flavorQCD_Vars) {
                 btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i]);
-            } else if (flavorQCD_Vars) {
+            } else if (jec && flavorQCD_Vars) {
                 bool up = i % 2 == 0;
                 if (up) {
                     btagreweight = reweighter->weightJecVar_FlavorFilter(event, "FlavorQCDUp", flavors[i]);

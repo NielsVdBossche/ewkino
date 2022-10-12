@@ -113,7 +113,7 @@ ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
             _normFactors[sampleName][variation][0] = 1.;
 
             if (sys == "jesFlavorQCD") {
-                std::vector<std::string> flavors = {"_0", "_5", "_6"};
+                std::vector<std::string> flavors = {"_0", "_4", "_5"};
                 for (auto flavVar : flavors) {
                     variation = "up_" + sys + flavVar;
                     _normFactors[sampleName][variation][0] = 1.;
@@ -247,7 +247,8 @@ bool ReweighterBTagShape::considerVariation(const Jet &jet,
                                 "jesAbsolute_2017", "jesBBEC1_2017", "jesEC2_2017",
                                 "jesHF_2017", "jesRelativeSample_2017",
                                 "jesAbsolute_2016", "jesBBEC1_2016", "jesEC2_2016",
-                                "jesHF_2016", "jesRelativeSample_2016"};
+                                "jesHF_2016", "jesRelativeSample_2016",
+                                "jesFlavorQCD_0", "jesFlavorQCD_4", "jesFlavorQCD_5"};
     }
     for (std::string var : forbidden_variations)
     {
@@ -343,7 +344,11 @@ double ReweighterBTagShape::getNormFactor_FlavorFilter(const Event &event, unsig
     // check validity of sample to which event belongs
     if (_normFactors.find(sampleName) == _normFactors.end())
     {
-        throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample!");
+        throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample! " + sampleName);
+    }
+    if (_normFactors.at(sampleName).find(systematic) == _normFactors.at(sampleName).end())
+    {
+        throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this systematic! " + systematic);
     }
     // determine number of jets
     int njets = 0;
