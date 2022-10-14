@@ -30,17 +30,11 @@ void FourTop:: testRuns() {
         std::cout << treeReader->currentSample().fileName() << std::endl;
         TH1D* njets_NoBtagSF = new TH1D("njets_pass_noBTagSF", "njets_pass_noBTagSF;N;yield", 10, -0.5, 9.5);
         TH1D* yield_NoBtagSF = new TH1D("yield_pass_noBTagSF", "yield_pass_noBTagSF;yield;yield", 1, -0.5, 0.5);
+        TH1D* ht_NoBtagSF = new TH1D("ht_pass_noBTagSF", "ht_pass_noBTagSF;yield;yield",  20, 0., 1000.);
 
         TH1D* njets = new TH1D("njets_pass_nom", "njets_pass_nom;N;yield", 10, -0.5, 9.5);
-        TH1D* njets_var = new TH1D("njets_pass_lf", "njets_pass_lf;N;yield", 10, -0.5, 9.5);
+        TH1D* ht = new TH1D("ht_pass_nom", "ht_pass_nom;N;yield", 20, 0., 1000.);
         TH1D* yield = new TH1D("yield_pass_nom", "yield_pass_nom;yield;yield", 1, -0.5, 0.5);
-        TH1D* yield_var = new TH1D("yield_pass_lf", "yield_pass_lf;yield;yield", 1, -0.5, 0.5);
-        TH1D* njets_hf = new TH1D("njets_pass_hf", "njets_pass_hf;N;yield", 10, -0.5, 9.5);
-        TH1D* yield_hf = new TH1D("yield_pass_hf", "yield_pass_hf;yield;yield", 1, -0.5, 0.5);
-        TH1D* njets_cferr1 = new TH1D("njets_pass_cferr1", "njets_pass_cferr1;N;yield", 10, -0.5, 9.5);
-        TH1D* yield_cferr1 = new TH1D("yield_pass_cferr1", "yield_pass_cferr1;yield;yield", 1, -0.5, 0.5);
-        TH1D* njets_cferr2 = new TH1D("njets_pass_cferr2", "njets_pass_cferr2;N;yield", 10, -0.5, 9.5);
-        TH1D* yield_cferr2 = new TH1D("yield_pass_cferr2", "yield_pass_cferr2;yield;yield", 1, -0.5, 0.5);
 
         (*btagReweighter)->printNormFactors();
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
@@ -66,12 +60,6 @@ void FourTop:: testRuns() {
 
             if (currentEvent->numberOfJets() < 2) continue;
             if (currentEvent->numberOfLeptons() < 4 && currentEvent->HT() < 200) continue;
-            //selection->addNewEvent(currentEvent);
-
-            //if (! eventPassesTriggers()) continue;
-
-            //if (! selection->passLeptonSelection()) continue;
-            //selection->classifyEvent();
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() ){
@@ -86,29 +74,13 @@ void FourTop:: testRuns() {
             double weight_no_tag = weight / reweighter["bTag_shape"]->weight( *currentEvent );
             njets_NoBtagSF->Fill(currentEvent->numberOfJets(), weight_no_tag);
             yield_NoBtagSF->Fill(0., weight_no_tag);
+            ht_NoBtagSF->Fill(currentEvent->HT(), weight_no_tag);
 
             njets->Fill(currentEvent->numberOfJets(), weight);
             yield->Fill(0., weight);
+            ht->Fill(currentEvent->HT(), weight);
            
-            double weight_lf = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "lf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
 
-            njets_var->Fill(currentEvent->numberOfJets(), weight_lf);
-            yield_var->Fill(0., weight_lf);
-
-            double weight_hf= weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "hf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
-
-            njets_hf->Fill(currentEvent->numberOfJets(), weight_hf);
-            yield_hf->Fill(0., weight_hf);
-
-            double weight_cferr1 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr1" ) / reweighter["bTag_shape"]->weight( *currentEvent );
-
-            njets_cferr1->Fill(currentEvent->numberOfJets(), weight_cferr1);
-            yield_cferr1->Fill(0., weight_cferr1);
-
-            double weight_cferr2 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr2" ) / reweighter["bTag_shape"]->weight( *currentEvent );
-
-            njets_cferr2->Fill(currentEvent->numberOfJets(), weight_cferr2);
-            yield_cferr2->Fill(0., weight_cferr2);
         }
         
         // Output management: save histograms to a ROOT file.
@@ -121,17 +93,11 @@ void FourTop:: testRuns() {
 
         njets_NoBtagSF->Write(njets_NoBtagSF->GetName(), TObject::kOverwrite);
         yield_NoBtagSF->Write(yield_NoBtagSF->GetName(), TObject::kOverwrite);
+        ht_NoBtagSF->Write(ht_NoBtagSF->GetName(), TObject::kOverwrite);
         njets->Write(njets->GetName(), TObject::kOverwrite);
         yield->Write(yield->GetName(), TObject::kOverwrite);
-        njets_var->Write(njets_var->GetName(), TObject::kOverwrite);
-        yield_var->Write(yield_var->GetName(), TObject::kOverwrite);
+        ht->Write(ht->GetName(), TObject::kOverwrite);
 
-        njets_hf->Write(njets_hf->GetName(), TObject::kOverwrite);
-        yield_hf->Write(yield_hf->GetName(), TObject::kOverwrite);
-        njets_cferr1->Write(njets_cferr1->GetName(), TObject::kOverwrite);
-        yield_cferr1->Write(yield_cferr1->GetName(), TObject::kOverwrite);
-        njets_cferr2->Write(njets_cferr2->GetName(), TObject::kOverwrite);
-        yield_cferr2->Write(yield_cferr2->GetName(), TObject::kOverwrite);
     }
 
     outfile->Close();
