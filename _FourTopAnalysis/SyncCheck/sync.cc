@@ -75,12 +75,12 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             }
             eventsUsed++;
             
-            int numberOfLooseElectronsSync = countTrue(syncTreeContent->electrons_is_loose);
-            int numberOfFOElectronsSync = countTrue(syncTreeContent->electrons_is_fakeable);
-            int numberOfTightElectronsSync = countTrue(syncTreeContent->electrons_is_tight);
-            int numberOfLooseMuonsSync = countTrue(syncTreeContent->muons_is_loose);
-            int numberOfFOMuonsSync = countTrue(syncTreeContent->muons_is_fakeable);
-            int numberOfTightMuonsSync = countTrue(syncTreeContent->muons_is_tight);
+            int numberOfLooseElectronsSync = countTrue(*(syncTreeContent->electrons_is_loose));
+            int numberOfFOElectronsSync = countTrue(*(syncTreeContent->electrons_is_fakeable));
+            int numberOfTightElectronsSync = countTrue(*(syncTreeContent->electrons_is_tight));
+            int numberOfLooseMuonsSync = countTrue(*(syncTreeContent->muons_is_loose));
+            int numberOfFOMuonsSync = countTrue(*(syncTreeContent->muons_is_fakeable));
+            int numberOfTightMuonsSync = countTrue(*(syncTreeContent->muons_is_tight));
 
             if (numberOfLooseElectronsSync != numberOfLooseElectrons) {
                 std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;

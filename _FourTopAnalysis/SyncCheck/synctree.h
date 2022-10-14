@@ -6,13 +6,13 @@ class SyncTree {
     public:
         SyncTree(std::string& pathToFile);
 
-        ULong_t _eventNumber;
-        std::vector<bool> electrons_is_loose;
-        std::vector<bool> electrons_is_fakeable;
-        std::vector<bool> electrons_is_tight;
-        std::vector<bool> muons_is_loose;
-        std::vector<bool> muons_is_fakeable;
-        std::vector<bool> muons_is_tight;
+        ULong64_t _eventNumber;
+        std::vector<bool>* electrons_is_loose;
+        std::vector<bool>* electrons_is_fakeable;
+        std::vector<bool>* electrons_is_tight;
+        std::vector<bool>* muons_is_loose;
+        std::vector<bool>* muons_is_fakeable;
+        std::vector<bool>* muons_is_tight;
 
         TTree* GetTree() {return tree;}
         

@@ -7,6 +7,13 @@ SyncTree::SyncTree(std::string& pathToFile) {
 
     tree = (TTree*) syncfile->Get("SyncObjects");
 
+    electrons_is_loose = new std::vector<bool>();
+    electrons_is_fakeable = new std::vector<bool>();
+    electrons_is_tight = new std::vector<bool>();
+    muons_is_loose = new std::vector<bool>();
+    muons_is_fakeable = new std::vector<bool>();
+    muons_is_tight = new std::vector<bool>();
+
     tree->SetBranchAddress("EventNumber", &_eventNumber, &b__eventNumber);
     tree->SetBranchAddress("muons_is_loose",  &muons_is_loose, &b__muons_is_loose);
     tree->SetBranchAddress("muons_is_fakeable", &muons_is_fakeable, &b__muons_is_fakeable);
