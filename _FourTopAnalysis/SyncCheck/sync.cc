@@ -26,10 +26,7 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
     
     // set branches
 
-    for( int i = index->GetN() - 1; i >=0 ; --i ) { 
-        Long64_t local = syncTree->LoadTree( index->GetIndex()[i] ); 
-        syncTree->GetEntry(local);
-    }
+    int eventsUsed = 0;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -71,7 +68,12 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             
             JetCollection bTaggedJets = event.looseBTagCollection();
 
-            syncTree->GetEntryWithIndex(event.eventNumber());
+            int retValLoad = syncTree->GetEntryWithIndex(event.eventNumber());
+
+            if (retValLoad <= 0) {
+                std::cout << "event number " << event.eventNumber() << " not found. Skipping" << std::endl;
+            }
+            eventsUsed++;
             
             int numberOfLooseElectronsSync = countTrue(syncTreeContent->electrons_is_loose);
             int numberOfFOElectronsSync = countTrue(syncTreeContent->electrons_is_fakeable);
@@ -106,6 +108,7 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
              }
         }
     }
+    std::cout << "validated " << eventsUsed << std::endl;
 }
 
 int main(int argc, char const *argv[]) {
