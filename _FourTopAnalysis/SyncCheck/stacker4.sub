@@ -1,7 +1,0 @@
-executable = stacker4.sh
-output = /user/nivanden/condor/output/stacker_$(ClusterId)_$(ProcId).out
-error = /user/nivanden/condor/error/stacker_$(ClusterId)_$(ProcId).err
-log = /user/nivanden/condor/logs/stacker_$(ClusterId)_$(ProcId).log
-
-queue
-

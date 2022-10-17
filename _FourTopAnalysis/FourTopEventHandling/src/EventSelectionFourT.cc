@@ -257,7 +257,7 @@ bool EventFourT::passLeanSelection() {
 
     if (nJets < 2) return false;
 
-    if (event->numberOfLooseBTaggedJets() < 1) return false;
+    if (nLooseB < 1) return false;
 
     if (nLep < 4 && ht < 200) return false;
     
