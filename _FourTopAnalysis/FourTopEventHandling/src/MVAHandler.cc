@@ -255,7 +255,7 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string addition
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
         std::string yaxis = "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)];
 
-        histInfoVec->push_back(HistInfo_2D(name, xaxis, 100, 0., 1., yaxis, 100, 0., 1.));
+        histInfoVec->push_back(HistInfo_2D(name, xaxis, 20, 0., 1., yaxis, 20, 0., 1.));
     }
 
     return histInfoVec;
