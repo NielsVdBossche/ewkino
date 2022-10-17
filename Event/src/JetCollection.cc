@@ -224,6 +224,15 @@ JetCollection JetCollection::JECDownCollection( std::string source ) const{
     return buildVariedCollection( &Jet::JetJECDown, source );
 }
 
+JetCollection JetCollection::JECGroupedUpCollection( unsigned source ) const{
+    return buildVariedCollection( &Jet::JetJECGroupedUp, source ).goodJetCollection();
+}
+
+JetCollection JetCollection::JECGroupedDownCollection( unsigned source ) const{
+    return buildVariedCollection( &Jet::JetJECGroupedDown, source ).goodJetCollection();
+}
+
+
 JetCollection JetCollection::getVariedJetCollection( const std::string& variation) const{
     if( variation == "nominal" ){
         return this->goodJetCollection();

@@ -43,6 +43,8 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
 
 	    JetCollection JECUpCollection( std::string source ) const;
 	    JetCollection JECDownCollection( std::string source ) const;
+        JetCollection JECGroupedUpCollection( unsigned source ) const;
+        JetCollection JECGroupedDownCollection( unsigned source ) const;
 	    JetCollection getVariedJetCollection( const std::string& variation ) const;
         JetCollection getVariedJetCollection( unsigned source, bool isUp, bool isGrouped) const;
 

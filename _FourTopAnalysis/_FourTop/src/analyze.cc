@@ -123,7 +123,7 @@ void FourTop::analyze(std::string method) {
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
     std::vector<std::string> bTagShapeSystematics;
-    std::vector<std::string> JECSourcesGrouped;
+    std::map< std::string, size_t > JECSourcesGrouped;
     std::vector<std::string> JECQCDComponents;
     std::vector<unsigned> JECQCDComponents_flavor;
     std::vector<std::string> wzSFRegions;
@@ -181,9 +181,14 @@ void FourTop::analyze(std::string method) {
             }
             if (sampleIndex == 0 && useSplitJEC) {
                 std::cout << "split JEC" << std::endl;
-                JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariations();
 
-                mgrAll->addSubUncertainties(shapeUncId::JEC, JECSourcesGrouped);
+                JECSourcesGrouped = *currentEvent->jetInfo().groupedJECVariationsMap();
+                std::vector<std::string> inter;
+                for (auto var : JECSourcesGrouped) {
+                    inter.push_back(var.first);
+                }
+
+                mgrAll->addSubUncertainties(shapeUncId::JEC, inter);
 
                 JECQCDComponents = {"light", "charm", "bottom"};
                 JECQCDComponents_flavor = {0, 4, 5};
@@ -480,12 +485,12 @@ void FourTop::analyze(std::string method) {
                     }
                     std::string empty = "";
 
-                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, empty);
+                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
 
-                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false, empty);
+                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000);
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
@@ -496,11 +501,12 @@ void FourTop::analyze(std::string method) {
                     if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                     if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
-                    for (std::string jecSource : JECSourcesGrouped) {
-                        if (stringTools::stringContains(jecSource, "Total")) continue;
+                    for (auto jecSource : JECSourcesGrouped) {
+                        if (stringTools::stringContains(jecSource.first, "Total")) continue;
+                        std::string jecSourceStr = jecSource.first;
                         if (considerBTagShape) {
-                            std::string sourceUp = jecSource + "Up";
-                            std::string sourceDown = jecSource + "Down";
+                            std::string sourceUp = jecSourceStr + "Up";
+                            std::string sourceDown = jecSourceStr + "Down";
 
                             weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
@@ -508,12 +514,12 @@ void FourTop::analyze(std::string method) {
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
-                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource.second);
                         fillVecUp = selection->fillVector();
                         singleEntriesUp = selection->singleFillEntries();
                         fillVec2DUp = selection->fillVector2D();
 
-                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource);
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource.second);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();
@@ -521,8 +527,8 @@ void FourTop::analyze(std::string method) {
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
-                        if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSource, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                        if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSource, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                        if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                     }
                 } else if (uncID == shapeUncId::JECFlavorQCD && useSplitJEC) {
                     for (int i = 0; i < 3; i++) {
@@ -539,12 +545,12 @@ void FourTop::analyze(std::string method) {
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
-                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecVar, flavor);
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000, flavor);
                         fillVecUp = selection->fillVector();
                         singleEntriesUp = selection->singleFillEntries();
                         fillVec2DUp = selection->fillVector2D();
 
-                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecVar, flavor);
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000, flavor);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();

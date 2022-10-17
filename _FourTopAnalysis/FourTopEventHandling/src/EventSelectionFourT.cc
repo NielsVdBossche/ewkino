@@ -293,7 +293,7 @@ int EventFourT::NumberOfBFlavorJets() {
     return count;
 }
 
-eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& variation, unsigned flavor) {
+eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned variation, unsigned flavor) {
     //if JER
 
     delete jets;
@@ -322,7 +322,7 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& 
             bTagJets = new JetCollection(jets->looseBTagCollection());
         }
         met = event->met().pt();
-    } else if (id == shapeUncId::JEC && variation == "") {
+    } else if (id == shapeUncId::JEC && variation == 1000) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
@@ -334,17 +334,17 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& 
             bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().MetJECDown().pt();
         }
-    } else if (id == shapeUncId::JEC && variation != "") {
+    } else if (id == shapeUncId::JEC && variation != 1000) {
         if (up) {
-            jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection(variation));
+            jets = new JetCollection(event->getJetCollectionPtr()->JECGroupedUpCollection(variation));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetJECUp(variation).pt();
+            met = event->met().MetJECGroupedUp(variation).pt();
         } else {
-            jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection(variation));
+            jets = new JetCollection(event->getJetCollectionPtr()->JECGroupedDownCollection(variation));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetJECDown(variation).pt();
+            met = event->met().MetJECGroupedDown(variation).pt();
         }
     } else if (id == shapeUncId::MET) {
         if (up) {

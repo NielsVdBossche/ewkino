@@ -37,6 +37,9 @@ JetInfo::JetInfo( const TreeReader& treeReader,
             _JECGrouped.push_back(cleanJECVariationName(mapEl.first));
         }
     }
+
+    _groupedJEC_Ids = treeReader._groupedJEC_Ids;
+    _sourcesJEC_Ids = treeReader._sourcesJEC_Ids;
 }
 
 bool JetInfo::hasJECVariation( const std::string& jecName ) const{
