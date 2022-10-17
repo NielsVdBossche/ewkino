@@ -12,10 +12,10 @@ void FourTop:: testRuns() {
     std::cout << "building reweighter" << std::endl;
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
     ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
-    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, false );
-
-    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
-    //std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
+    //CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, false );
+//
+    //addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
+    ////std::shared_ptr<ReweighterBTagShape> btagReweighterPtr = dynamic_cast<ReweighterBTagShape*>(reweighter["bTag_shape"]);
 
     std::cout << "event loop" << std::endl;
 
@@ -49,7 +49,7 @@ void FourTop:: testRuns() {
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr( entry );
+            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true );
 
             currentEvent->removeTaus();
             currentEvent->selectLooseLeptons();
@@ -73,42 +73,42 @@ void FourTop:: testRuns() {
             //if (! selection->passLeptonSelection()) continue;
             //selection->classifyEvent();
 
-            double weight = currentEvent->weight();
-            if( currentEvent->isMC() ){
-                weight *= reweighter.totalWeight( *currentEvent );
-            }
-
-            // fill all histograms
-            //eventClass nominalClass = selection->getCurrentClass();
-            //if (currentEvent->numberOfJets() < 2) continue;
-            //if (selection->numberOfLeps() < 4 && selection->getHT() < 200) continue;
-            
-            double weight_no_tag = weight / reweighter["bTag_shape"]->weight( *currentEvent );
-            njets_NoBtagSF->Fill(currentEvent->numberOfJets(), weight_no_tag);
-            yield_NoBtagSF->Fill(0., weight_no_tag);
-
-            njets->Fill(currentEvent->numberOfJets(), weight);
-            yield->Fill(0., weight);
-           
-            double weight_lf = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "lf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
-
-            njets_var->Fill(currentEvent->numberOfJets(), weight_lf);
-            yield_var->Fill(0., weight_lf);
-
-            double weight_hf= weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "hf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
-
-            njets_hf->Fill(currentEvent->numberOfJets(), weight_hf);
-            yield_hf->Fill(0., weight_hf);
-
-            double weight_cferr1 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr1" ) / reweighter["bTag_shape"]->weight( *currentEvent );
-
-            njets_cferr1->Fill(currentEvent->numberOfJets(), weight_cferr1);
-            yield_cferr1->Fill(0., weight_cferr1);
-
-            double weight_cferr2 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr2" ) / reweighter["bTag_shape"]->weight( *currentEvent );
-
-            njets_cferr2->Fill(currentEvent->numberOfJets(), weight_cferr2);
-            yield_cferr2->Fill(0., weight_cferr2);
+            //double weight = currentEvent->weight();
+            //if( currentEvent->isMC() ){
+            //    weight *= reweighter.totalWeight( *currentEvent );
+            //}
+//
+            //// fill all histograms
+            ////eventClass nominalClass = selection->getCurrentClass();
+            ////if (currentEvent->numberOfJets() < 2) continue;
+            ////if (selection->numberOfLeps() < 4 && selection->getHT() < 200) continue;
+            //
+            //double weight_no_tag = weight / reweighter["bTag_shape"]->weight( *currentEvent );
+            //njets_NoBtagSF->Fill(currentEvent->numberOfJets(), weight_no_tag);
+            //yield_NoBtagSF->Fill(0., weight_no_tag);
+//
+            //njets->Fill(currentEvent->numberOfJets(), weight);
+            //yield->Fill(0., weight);
+           //
+            //double weight_lf = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "lf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+//
+            //njets_var->Fill(currentEvent->numberOfJets(), weight_lf);
+            //yield_var->Fill(0., weight_lf);
+//
+            //double weight_hf= weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "hf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+//
+            //njets_hf->Fill(currentEvent->numberOfJets(), weight_hf);
+            //yield_hf->Fill(0., weight_hf);
+//
+            //double weight_cferr1 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr1" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+//
+            //njets_cferr1->Fill(currentEvent->numberOfJets(), weight_cferr1);
+            //yield_cferr1->Fill(0., weight_cferr1);
+//
+            //double weight_cferr2 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr2" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+//
+            //njets_cferr2->Fill(currentEvent->numberOfJets(), weight_cferr2);
+            //yield_cferr2->Fill(0., weight_cferr2);
         }
         
         // Output management: save histograms to a ROOT file.

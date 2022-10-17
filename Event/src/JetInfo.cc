@@ -23,23 +23,25 @@ JetInfo::JetInfo( const TreeReader& treeReader,
 		  const bool readGroupedJECVariations ){
     _JECSources = std::vector<std::string>();
     _JECGrouped = std::vector<std::string>();
+
     if (readAllJECVariations) {
         for (auto mapEl : *(treeReader._jetSmearedPt_JECSourcesUp_Ids)) {
             // note: in principle only checking one branch should be enough
             // as up/down and pt/smearedPt are supposed to contain the same variations
+            std::string cleanedName = cleanJECVariationName(mapEl.first);
             _JECSources.push_back(cleanJECVariationName(mapEl.first));
+            _sourcesJEC_Ids[cleanedName] = mapEl.second;
         }
     }
     if (readGroupedJECVariations) {
         for (auto mapEl : *(treeReader._jetSmearedPt_JECGroupedUp_Ids)) {
             // note: in principle only checking one branch should be enough
             // as up/down and pt/smearedPt are supposed to contain the same variations
+            std::string cleanedName = cleanJECVariationName(mapEl.first);
             _JECGrouped.push_back(cleanJECVariationName(mapEl.first));
+            _groupedJEC_Ids[cleanedName] = mapEl.second;
         }
     }
-
-    _groupedJEC_Ids = treeReader._groupedJEC_Ids;
-    _sourcesJEC_Ids = treeReader._sourcesJEC_Ids;
 }
 
 bool JetInfo::hasJECVariation( const std::string& jecName ) const{

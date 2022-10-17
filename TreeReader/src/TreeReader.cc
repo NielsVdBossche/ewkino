@@ -17,6 +17,25 @@
 
 TreeReader::TreeReader( const std::string& sampleListFile, const std::string& sampleDirectory ){
     readSamples( sampleListFile, sampleDirectory );
+
+    _sourcesJEC_Ids = new std::map<std::string, size_t>();
+    _jetPt_JECSourcesDown_Ids = new std::map<std::string, size_t>();
+    _jetPt_JECSourcesUp_Ids = new std::map<std::string, size_t>();
+    _jetSmearedPt_JECSourcesDown_Ids = new std::map<std::string, size_t>();
+    _jetSmearedPt_JECSourcesUp_Ids = new std::map<std::string, size_t>();
+    _corrMETx_JECSourcesDown_Ids = new std::map<std::string, size_t>();
+    _corrMETx_JECSourcesUp_Ids = new std::map<std::string, size_t>();
+    _corrMETy_JECSourcesDown_Ids = new std::map<std::string, size_t>();
+    _corrMETy_JECSourcesUp_Ids = new std::map<std::string, size_t>();
+    _groupedJEC_Ids = new std::map<std::string, size_t>();
+    _jetPt_JECGroupedDown_Ids = new std::map<std::string, size_t>();
+    _jetPt_JECGroupedUp_Ids = new std::map<std::string, size_t>();
+    _jetSmearedPt_JECGroupedDown_Ids = new std::map<std::string, size_t>();
+    _jetSmearedPt_JECGroupedUp_Ids = new std::map<std::string, size_t>();
+    _corrMETx_JECGroupedDown_Ids = new std::map<std::string, size_t>();
+    _corrMETx_JECGroupedUp_Ids = new std::map<std::string, size_t>();
+    _corrMETy_JECGroupedDown_Ids = new std::map<std::string, size_t>();
+    _corrMETy_JECGroupedUp_Ids = new std::map<std::string, size_t>();
 }
 
 
@@ -171,33 +190,10 @@ void TreeReader::initializeMetFilterMap( TTree* treePtr ){
 }
 
 void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
-    // initialize jetPt branches
-    if (_sourcesJEC_Ids) {
-        delete _sourcesJEC_Ids;
-        delete _jetPt_JECSourcesDown_Ids;
-        delete _jetPt_JECSourcesUp_Ids;
-        delete _jetSmearedPt_JECSourcesDown_Ids;
-        delete _jetSmearedPt_JECSourcesUp_Ids;
-        delete _corrMETx_JECSourcesDown_Ids;
-        delete _corrMETx_JECSourcesUp_Ids;
-        delete _corrMETy_JECSourcesDown_Ids;
-        delete _corrMETy_JECSourcesUp_Ids;
-    }
-    _sourcesJEC_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECSourcesUp_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECSourcesUp_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECSourcesUp_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECSourcesUp_Ids = new std::map<std::string, size_t>();
-
     b__jetPt_JECSourcesUp = buildBranchMap(treePtr, {"_jetPt_", "_JECSourcesUp"}).second;
     unsigned ctr=0;
     for (auto mapEl : b__jetPt_JECSourcesUp) {
         (*_sourcesJEC_Ids)[mapEl.first] = ctr;
-        ctr++;
 
         (*_jetPt_JECSourcesUp_Ids)[mapEl.first] = ctr;
 
@@ -228,6 +224,8 @@ void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
         std::string corrmetYDown = stringTools::replace(corrmetY, "Up", "Down");
         b__corrMETy_JECSourcesDown[corrmetYDown] = nullptr;
         (*_corrMETy_JECSourcesDown_Ids)[corrmetYDown] = ctr;
+        
+        ctr++;
     }
     _jetPt_JECSourcesUp = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesUp_Ids->size());
     _jetPt_JECSourcesDown = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesDown_Ids->size());
@@ -241,32 +239,11 @@ void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
 }
 
 void TreeReader::initializeJecSourcesGroupedMaps(TTree* treePtr) {
-    if (_groupedJEC_Ids) {
-        delete _groupedJEC_Ids;
-        delete _jetPt_JECGroupedDown_Ids;
-        delete _jetPt_JECGroupedUp_Ids;
-        delete _jetSmearedPt_JECGroupedDown_Ids;
-        delete _jetSmearedPt_JECGroupedUp_Ids;
-        delete _corrMETx_JECGroupedDown_Ids;
-        delete _corrMETx_JECGroupedUp_Ids;
-        delete _corrMETy_JECGroupedDown_Ids;
-        delete _corrMETy_JECGroupedUp_Ids    ;
-    }
-    _groupedJEC_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECGroupedUp_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECGroupedUp_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECGroupedUp_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECGroupedUp_Ids = new std::map<std::string, size_t>();
     // initialize jetPt branches
     b__jetPt_JECGroupedUp = buildBranchMap(treePtr, {"_jetPt_", "_JECGroupedUp"}).second;
     unsigned ctr = 0;
     for (auto mapEl : b__jetPt_JECGroupedUp) {
         (*_groupedJEC_Ids)[mapEl.first] = ctr;
-        ctr++;
         (*_jetPt_JECGroupedUp_Ids)[mapEl.first] = ctr;
 
         std::string down = stringTools::replace(mapEl.first, "Up", "Down");
@@ -296,6 +273,8 @@ void TreeReader::initializeJecSourcesGroupedMaps(TTree* treePtr) {
         std::string corrmetYDown = stringTools::replace(corrmetY, "Up", "Down");
         b__corrMETy_JECGroupedDown[corrmetYDown] = nullptr;
         (*_corrMETy_JECGroupedDown_Ids)[corrmetYDown] = ctr;
+        
+        ctr++;
     }
     _jetPt_JECGroupedUp = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedUp_Ids->size());
     _jetPt_JECGroupedDown = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedDown_Ids->size());

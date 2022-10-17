@@ -182,7 +182,7 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0 && useSplitJEC) {
                 std::cout << "split JEC" << std::endl;
 
-                JECSourcesGrouped = *currentEvent->jetInfo().groupedJECVariationsMap();
+                JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariationsMap();
                 std::vector<std::string> inter;
                 for (auto var : JECSourcesGrouped) {
                     inter.push_back(var.first);
