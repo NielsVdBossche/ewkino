@@ -242,10 +242,10 @@ void FourTop::analyze(std::string method) {
             // Add lepton selection boolean call here!
 
             if (! selection->passLeptonSelection()) continue;
-            if (testRun) std::cout << "pass lepton selection" << std::endl;
+            //if (testRun) std::cout << "pass lepton selection" << std::endl;
             selection->classifyEvent();
             unsigned processNb = 0;
-            if (testRun) std::cout << "process nb " << processNb << std::endl;
+            //if (testRun) std::cout << "process nb " << processNb << std::endl;
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
@@ -311,7 +311,7 @@ void FourTop::analyze(std::string method) {
             // if region != considerRegion && considerRegion != fail: skip
 
             if (FillRegion(nominalClass, st)) {
-                if (testRun) std::cout << "is fill " << std::endl;
+                //if (testRun) std::cout << "is fill " << std::endl;
 
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
@@ -473,10 +473,10 @@ void FourTop::analyze(std::string method) {
                     // JER and JEC
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
-                        weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
-                                            / reweighter["bTag_shape"]->weight( *currentEvent );
-                        weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
-                                            / reweighter["bTag_shape"]->weight( *currentEvent );
+                        //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                        //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECDown" ) 
+                        //                    / reweighter["bTag_shape"]->weight( *currentEvent );
                     }
                     std::string empty = "";
 
@@ -499,13 +499,13 @@ void FourTop::analyze(std::string method) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (stringTools::stringContains(jecSource, "Total")) continue;
                         if (considerBTagShape) {
-                            std::string sourceUp = jecSource + "Up";
-                            std::string sourceDown = jecSource + "Down";
-
-                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
-                                                / reweighter["bTag_shape"]->weight( *currentEvent );
-                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
-                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            //std::string sourceUp = jecSource + "Up";
+                            //std::string sourceDown = jecSource + "Down";
+                            //
+                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
+                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
+                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
@@ -530,13 +530,13 @@ void FourTop::analyze(std::string method) {
                         std::string jecVar = "FlavorQCD";
                         unsigned flavor = JECQCDComponents_flavor[i];
                         if (considerBTagShape) {
-                            std::string sourceUp = "FlavorQCDUp";
-                            std::string sourceDown = "FlavorQCDDown";
-                            
-                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
-                                                / reweighter["bTag_shape"]->weight( *currentEvent );
-                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
-                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            //std::string sourceUp = "FlavorQCDUp";
+                            //std::string sourceDown = "FlavorQCDDown";
+                            //
+                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
+                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
+                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecVar, flavor);

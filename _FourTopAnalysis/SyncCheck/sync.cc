@@ -27,6 +27,11 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
     // set branches
 
     int eventsUsed = 0;
+    int elTightMismatch = 0;
+    int elFOMismatch = 0;
+    int muTightMismatch = 0;
+    int muFOMismatch = 0;
+
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -42,7 +47,26 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             //if (entry > 10000) break;
             // check if event numbers, 
             Event event = treeReader->buildEvent(entry);
+            ULong64_t evNb = event.eventNumber();
+            if (evNb < 3360000) continue;
+            if (evNb > 3370000 && evNb < 3888000) continue;
+            if (evNb > 3898000 && evNb < 4050000) continue;
+            if (evNb > 4070000 && evNb < 4250000) continue;
+            if (evNb > 4270000 && evNb < 4900000) continue;
+            if (evNb > 5000000 && evNb < 5100000) continue;
+            if (evNb > 5150000 && evNb < 5400000) continue;
+            if (evNb > 5500000 && evNb < 8100000) continue;
+            if (evNb > 8200000) continue;
 
+
+            int retValLoad = syncTree->GetEntryWithIndex(event.eventNumber());
+            if (retValLoad <= 0 || event.eventNumber() != syncTreeContent->_eventNumber) {
+                //std::cout << "event number " << event.eventNumber() << " not found. Skipping" << std::endl;
+                continue;
+            }
+            eventsUsed++;
+            
+            
             // Basic lepton selection
             event.removeTaus();
             event.selectLooseLeptons();
@@ -68,13 +92,6 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             
             JetCollection bTaggedJets = event.looseBTagCollection();
 
-            int retValLoad = syncTree->GetEntryWithIndex(event.eventNumber());
-
-            if (retValLoad <= 0) {
-                std::cout << "event number " << event.eventNumber() << " not found. Skipping" << std::endl;
-            }
-            eventsUsed++;
-            
             int numberOfLooseElectronsSync = countTrue(*(syncTreeContent->electrons_is_loose));
             int numberOfFOElectronsSync = countTrue(*(syncTreeContent->electrons_is_fakeable));
             int numberOfTightElectronsSync = countTrue(*(syncTreeContent->electrons_is_tight));
@@ -89,10 +106,12 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             if (numberOfFOElectronsSync != numberOfFOElectrons) {
                 std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
                 std::cout << ":\t mismatch " << "FO electrons " << numberOfFOElectrons << " x " << numberOfFOElectronsSync << std::endl;
+                elFOMismatch++;
              }
             if (numberOfTightElectronsSync != numberOfTightElectrons) {
                 std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
                 std::cout << ":\t mismatch " << "Tight electrons " << numberOfTightElectrons << " x " << numberOfTightElectronsSync << std::endl;
+                elTightMismatch++;
              }
             if (numberOfLooseMuonsSync != numberOfLooseMuons) {
                 std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
@@ -101,14 +120,21 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             if (numberOfFOMuonsSync != numberOfFOMuons) {
                 std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
                 std::cout << ":\t mismatch " << "FO muons " << numberOfFOMuons << " x " << numberOfFOMuonsSync << std::endl;
+                muFOMismatch++;
              }
             if (numberOfTightMuonsSync != numberOfTightMuons) {
                 std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
                 std::cout << ":\t mismatch " << "Tight muons " << numberOfTightMuons << " x " << numberOfTightMuonsSync << std::endl;
+                muTightMismatch++;
              }
         }
     }
     std::cout << "validated " << eventsUsed << std::endl;
+
+    std::cout << elTightMismatch << " tight el mismatched " << std::endl;
+    std::cout << elFOMismatch << " FO el mismatched " << std::endl;
+    std::cout << muTightMismatch << " tight mu mismatched " << std::endl;
+    std::cout << muFOMismatch << " FO mu mismatched " << std::endl;
 }
 
 int main(int argc, char const *argv[]) {

@@ -241,6 +241,9 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         minMaxNBjets = {0.5, 7.5};
     } else if (evClass == eventClass::crzz) {
         minMaxNjets = {-0.5, 4.5};
+    } else if (evClass == eventClass::ssdl || evClass == eventClass::trilep) {
+        minMaxNjets = {2.5, 10.5};
+        minMaxNBjets = {1.5, 6.5};
     }
 
     *histInfoVec = {
@@ -422,12 +425,12 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
     }
 
     if (evClass < eventClass::ssdl) {
-        if (event->getMVAScores()[2] > event->getMVAScores()[0]) {
-            if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(1.);
-            else fillVal.push_back(2.);
-        } else {
+        //if (event->getMVAScores()[2] > event->getMVAScores()[0]) {
+        //    if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(1.);
+        //    else fillVal.push_back(2.);
+        //} else {
             fillVal.push_back(0.);
-        }
+        //}
     }
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {

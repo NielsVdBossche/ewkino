@@ -14,16 +14,16 @@ void MVAHandler_4T::initReader() {
 
     std::string weightFilePath = "../MVATraining/VeryEpicLoader/weights/";
     if (currentConfig == Binary_DL) {
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_UL_2022-10-14_11-51__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
     } else if (currentConfig == Binary_ML) {
         isML = true;
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_UL_2022-10-14_11-50__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
     } else if (currentConfig == TriClass_DL) {
         if (lean) {
             //weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
             //weightFilePath += "FourTopClassification_LeanSel_DL_BDTG_B_2000_6_20_0.1_1_1.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-12_11-41__BDT_VAR_DLG_B_1250_4_20_0.05_5_0.5.weights.xml";
-            weightFilePath += "FourTopClassification_UL_2022-10-13_14-14__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -32,7 +32,7 @@ void MVAHandler_4T::initReader() {
             //weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
             //weightFilePath += "FourTopClassification_LeanSel_ML_BDTG_B_1500_5_20_0.08_1_0.6.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-12_12-08__BDT_VAR_MLG_B_1000_3_20_0.1_1_0.25.weights.xml";
-            weightFilePath += "FourTopClassification_UL_2022-10-13_14-15__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -121,24 +121,6 @@ void MVAHandler_4T::initReader() {
         reader->AddVariable("massSecTop", &massSecTop);
         reader->AddVariable("massSecTopW", &massSecTopW);
         reader->AddVariable("MET", &met);
-
-
-        /*
-        reader->AddVariable("N_jets", &n_jets_f);
-        reader->AddVariable("dr_bJets", &deltaRBjets);
-        reader->AddVariable("dr_leps", &dRleps);
-        reader->AddVariable("ht",  &ht);
-        reader->AddVariable("mToPt", &massToPt);
-        reader->AddVariable("pt_jet_four", &ptJetFour);
-        reader->AddVariable("pt_jet_five", &ptJetFive);
-        reader->AddVariable("pt_lep_two", &ptLepTwo);
-        reader->AddVariable("bTagSub",         &bTagSub);
-        reader->AddVariable("bTagThird",       &bTagThird);
-        reader->AddVariable("bTagPtLead",      &bTagPtLead);
-        reader->AddVariable("massBestTop",     &massBestTop);
-        reader->AddVariable("massBestTopW",    &massBestTopW);
-        reader->AddVariable("MET",             &met);
-        */
     }
     
 /*

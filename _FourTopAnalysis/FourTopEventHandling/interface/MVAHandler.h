@@ -49,7 +49,7 @@ class MVAHandler_4T {
     public:
         Float_t n_jets_f, n_bjets_f, deltaRBjets, n_b_loose;
         Float_t n_b_tight, dRleps, aziAngle, ht;
-        Float_t ptJetOne, ptJetTwo, ptJetThree, ptJetFour, ptJetFive, ptJetSix;
+        Float_t ptJetOne, ptJetFour, ptJetFive, ptJetSix;
         Float_t ptLepOne, ptLepTwo, ptLepThree;
         Float_t massToPt;
         Float_t min_dr_lep_b, sec_min_dr_lep_b;

@@ -1,5 +1,8 @@
 #include "../interface/FourTop.h"
 
+#include "../../../Tools/interface/histogramTools.h"
+
+
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
 #endif
@@ -35,6 +38,14 @@ void FourTop:: testRuns() {
         TH1D* njets = new TH1D("njets_pass_nom", "njets_pass_nom;N;yield", 10, -0.5, 9.5);
         TH1D* ht = new TH1D("ht_pass_nom", "ht_pass_nom;N;yield", 20, 0., 1000.);
         TH1D* yield = new TH1D("yield_pass_nom", "yield_pass_nom;yield;yield", 1, -0.5, 0.5);
+
+
+        TH1D* njets_hf = new TH1D("njets_pass_hf", "njets_pass_hf;N;yield", 10, -0.5, 9.5);
+        TH1D* yield_hf = new TH1D("yield_pass_hf", "yield_pass_hf;yield;yield", 1, -0.5, 0.5);
+        TH1D* njets_cferr1 = new TH1D("njets_pass_cferr1", "njets_pass_cferr1;N;yield", 10, -0.5, 9.5);
+        TH1D* yield_cferr1 = new TH1D("yield_pass_cferr1", "yield_pass_cferr1;yield;yield", 1, -0.5, 0.5);
+        TH1D* njets_cferr2 = new TH1D("njets_pass_cferr2", "njets_pass_cferr2;N;yield", 10, -0.5, 9.5);
+        TH1D* yield_cferr2 = new TH1D("yield_pass_cferr2", "yield_pass_cferr2;yield;yield", 1, -0.5, 0.5);
 
         (*btagReweighter)->printNormFactors();
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
@@ -72,15 +83,29 @@ void FourTop:: testRuns() {
             //if (selection->numberOfLeps() < 4 && selection->getHT() < 200) continue;
             
             double weight_no_tag = weight / reweighter["bTag_shape"]->weight( *currentEvent );
-            njets_NoBtagSF->Fill(currentEvent->numberOfJets(), weight_no_tag);
-            yield_NoBtagSF->Fill(0., weight_no_tag);
-            ht_NoBtagSF->Fill(currentEvent->HT(), weight_no_tag);
+            histogram::fillValue(njets_NoBtagSF, currentEvent->numberOfJets(), weight_no_tag);
+            histogram::fillValue(yield_NoBtagSF, 0., weight_no_tag);
+            histogram::fillValue(ht_NoBtagSF, currentEvent->HT(), weight_no_tag);
 
-            njets->Fill(currentEvent->numberOfJets(), weight);
-            yield->Fill(0., weight);
-            ht->Fill(currentEvent->HT(), weight);
-           
+            histogram::fillValue(njets, currentEvent->numberOfJets(), weight);
+            histogram::fillValue(yield, 0., weight);
+            histogram::fillValue(ht, currentEvent->HT(), weight);
 
+
+            double weight_hf= weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "hf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+
+            histogram::fillValue(njets_hf, currentEvent->numberOfJets(), weight_hf);
+            histogram::fillValue(yield_hf, 0., weight_hf);
+
+            double weight_cferr1 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr1" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+
+            histogram::fillValue(njets_cferr1, currentEvent->numberOfJets(), weight_cferr1);
+            histogram::fillValue(yield_cferr1, 0., weight_cferr1);
+
+            double weight_cferr2 = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, "cferr2" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+
+            histogram::fillValue(njets_cferr2, currentEvent->numberOfJets(), weight_cferr2);
+            histogram::fillValue(yield_cferr2, 0., weight_cferr2);
         }
         
         // Output management: save histograms to a ROOT file.
@@ -97,7 +122,12 @@ void FourTop:: testRuns() {
         njets->Write(njets->GetName(), TObject::kOverwrite);
         yield->Write(yield->GetName(), TObject::kOverwrite);
         ht->Write(ht->GetName(), TObject::kOverwrite);
-
+        njets_hf->Write(njets_hf->GetName(), TObject::kOverwrite);
+        yield_hf->Write(yield_hf->GetName(), TObject::kOverwrite);
+        njets_cferr1->Write(njets_cferr1->GetName(), TObject::kOverwrite);
+        yield_cferr1->Write(yield_cferr1->GetName(), TObject::kOverwrite);
+        njets_cferr2->Write(njets_cferr2->GetName(), TObject::kOverwrite);
+        yield_cferr2->Write(yield_cferr2->GetName(), TObject::kOverwrite);
     }
 
     outfile->Close();
