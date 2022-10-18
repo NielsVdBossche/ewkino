@@ -14,6 +14,8 @@ This method corresponds to "1d", whereas ReweighterBTag corresponds to "1a".
 #include "../interface/ReweighterBTagShape.h"
 #include "../interface/ReweighterBTag.h"
 
+#include "../../Tools/interface/histogramTools.h"
+
 /// constructor ///
 ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
                                          const std::string &sfFilePath,
@@ -105,20 +107,20 @@ ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
     for (Sample sample : samples)
     {      
         std::string sampleName = sample.fileName();
-        _normFactors[sampleName]["central"][0] = 1.;
+        _normFactors[sampleName]["central"] = nullptr;
         for (auto sys : allowedvar) {
             std::string variation = "up_" + sys;
-            _normFactors[sampleName][variation][0] = 1.;
+            _normFactors[sampleName][variation] = nullptr;
             variation = "down_" + sys;
-            _normFactors[sampleName][variation][0] = 1.;
+            _normFactors[sampleName][variation] = nullptr;
 
             if (sys == "jesFlavorQCD") {
                 std::vector<std::string> flavors = {"_0", "_4", "_5"};
                 for (auto flavVar : flavors) {
                     variation = "up_" + sys + flavVar;
-                    _normFactors[sampleName][variation][0] = 1.;
+                    _normFactors[sampleName][variation] = nullptr;
                     variation = "down_" + sys + flavVar;
-                    _normFactors[sampleName][variation][0] = 1.;
+                    _normFactors[sampleName][variation] = nullptr;
                 }
             }
 
@@ -192,7 +194,7 @@ void ReweighterBTagShape::initialize(const std::vector<Sample> &samples,
         // and update the normalization factor
         std::map<int, double> averageOfWeights = this->calcAverageOfWeights(sample,
                                                                             numberOfEntries);
-        this->setNormFactors(sample, averageOfWeights);
+        //this->setNormFactors(sample, averageOfWeights);
     }
     std::cout << "done initializing ReweighterBTagShape" << std::endl;
 }
@@ -261,7 +263,7 @@ bool ReweighterBTagShape::considerVariation(const Jet &jet,
 /// help functions for getting and setting normalization factors ///
 
 void ReweighterBTagShape::setNormFactors(const Sample &sample,
-                                         const std::map<int, double> normFactors)
+                                         std::shared_ptr<TH2D> normFactors)
 {
     // set the normalization factors
     // input arguments:
@@ -282,7 +284,7 @@ void ReweighterBTagShape::setNormFactors(const Sample &sample,
     std::cout << "done setting norm factors" << std::endl;
 }
 
-void ReweighterBTagShape::setNormFactors(const Sample &sample, const std::map<int, double> normFactors, std::string& variation )
+void ReweighterBTagShape::setNormFactors(const Sample &sample, std::shared_ptr<TH2D> normFactors, std::string& variation )
 {
     // set the normalization factors
     // input arguments:
@@ -317,18 +319,14 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
     }
     // determine number of jets
     int njets = event.getJetCollection(jecVariation).size();
+    double ht = event.getJetCollection(jecVariation).scalarPtSum();
     // retrieve the normalization factor
     // note: if no normalization factor was initialized for this jet multiplicity,
     //	     the value for lower jet multiplicities is retrieved instead.
     //std::cout << njets << " njets & syst " << systematic << " for jec var "<< jecVariation << std::endl;
-    for (int n = njets; n >= 0; n--)
-    {   
-        //std::cout << "get norm factor" << std::endl;
-        if (_normFactors.at(sampleName).at(systematic).find(n) != _normFactors.at(sampleName).at(systematic).end())
-        {
-            //std::cout << "found norm factor" << std::endl;
-            return _normFactors.at(sampleName).at(systematic).at(n);
-        }
+    std::shared_ptr<TH2D> normFactorsLocal = _normFactors.at(sampleName).at(systematic);
+    if (normFactorsLocal) {
+        return histogram::contentAtValues(normFactorsLocal.get(), njets, ht);
     }
 
     throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape got event for which no norm factor could be retrieved.");
@@ -352,29 +350,28 @@ double ReweighterBTagShape::getNormFactor_FlavorFilter(const Event &event, unsig
     }
     // determine number of jets
     int njets = 0;
+    double ht = 0.;
     if (stringTools::stringContains(jecVariation, "Up")) {
         njets = event.jetCollection().JECUpGroupedFlavorQCD(flavor).size();
+        ht = event.jetCollection().JECUpGroupedFlavorQCD(flavor).scalarPtSum();
     } else {
         njets = event.jetCollection().JECDownGroupedFlavorQCD(flavor).size();
+        ht = event.jetCollection().JECDownGroupedFlavorQCD(flavor).scalarPtSum();
     }
     // retrieve the normalization factor
     // note: if no normalization factor was initialized for this jet multiplicity,
     //	     the value for lower jet multiplicities is retrieved instead.
     //std::cout << njets << " njets & syst " << systematic << " for jec var "<< jecVariation << std::endl;
-    for (int n = njets; n >= 0; n--)
-    {   
-        //std::cout << "get norm factor" << std::endl;
-        if (_normFactors.at(sampleName).at(systematic).find(n) != _normFactors.at(sampleName).at(systematic).end())
-        {
-            //std::cout << "found norm factor" << std::endl;
-            return _normFactors.at(sampleName).at(systematic).at(n);
-        }
+    std::shared_ptr<TH2D> normFactorsLocal = _normFactors.at(sampleName).at(systematic);
+    if (normFactorsLocal) {
+        return histogram::contentAtValues(normFactorsLocal.get(), njets, ht);
     }
+
 
     throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape got event for which no norm factor could be retrieved.");
 }
 
-std::map<std::string, std::map<std::string, std::map<int, double>>> ReweighterBTagShape::getNormFactors() const
+std::map<std::string, std::map<std::string, std::shared_ptr<TH2D>>> ReweighterBTagShape::getNormFactors() const
 {
     return _normFactors;
 }
@@ -386,10 +383,10 @@ void ReweighterBTagShape::printNormFactors() const
         std::cout << el.first << ": " << std::endl;
         for (auto el2 : el.second){
             std::cout << el2.first << ": " << std::endl;
-            for (auto el3 : el2.second)
-            {
-                std::cout << " - " << el3.first << " -> " << el3.second << std::endl;
-            }
+            //for (auto el3 : el2.second)
+            //{
+            //    std::cout << " - " << el3.first << " -> " << el3.second << std::endl;
+            //}
         }   
     }
 }
