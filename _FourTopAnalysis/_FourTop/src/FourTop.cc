@@ -401,6 +401,28 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 }
 
 
+void cleanLastBins(std::shared_ptr<TH1D> num, std::shared_ptr<TH1D> denom) {
+    for (int i = num->GetNbinsX()+1; i > 1; i--) {
+        if (num->GetBinContent(i) < 1e-5) continue;
+        if (num->GetBinError(i) * 10 < num->GetBinContent(i)) return;
+
+        double errNum = sqrt(num->GetBinError(i) * num->GetBinError(i) + num->GetBinError(i-1) * num->GetBinError(i-1));
+        num->SetBinContent(i-1, num->GetBinContent(i-1) + num->GetBinContent(i));
+        num->SetBinError(i-1, errNum);
+        
+        num->SetBinContent(i, 0.);
+        num->SetBinError(i, 0.);
+
+        double errDenom = sqrt(denom->GetBinError(i) * denom->GetBinError(i) + denom->GetBinError(i-1) * denom->GetBinError(i-1));
+        denom->SetBinContent(i-1, denom->GetBinContent(i-1) + denom->GetBinContent(i));
+        denom->SetBinError(i-1, errDenom);
+
+        denom->SetBinContent(i, 0.);
+        denom->SetBinError(i, 0.);
+    }
+}
+
+
 void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::vector<std::string>& variations, bool jec) {
     // calculate the average of b-tag weights in a given sample
     // the return type is a map of jet multiplicity to average of weights
@@ -548,7 +570,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
     for (unsigned i=0; i < bTagVar.size(); i++) {
         normFile->cd();
         std::string bVar = bTagVar[i];
-
+        cleanLastBins(averageOfWeightsMap[bVar], nEntriesMap[bVar]);
         averageOfWeightsMap[bVar]->Divide(nEntriesMap[bVar].get());
         averageOfWeightsMap[bVar]->Write(("bTagNormFactors_" + bVar).c_str(), TObject::kOverwrite);
     }
