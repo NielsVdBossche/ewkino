@@ -23,7 +23,8 @@ void MVAHandler_4T::initReader() {
             //weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
             //weightFilePath += "FourTopClassification_LeanSel_DL_BDTG_B_2000_6_20_0.1_1_1.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-12_11-41__BDT_VAR_DLG_B_1250_4_20_0.05_5_0.5.weights.xml";
-            weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -32,7 +33,8 @@ void MVAHandler_4T::initReader() {
             //weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
             //weightFilePath += "FourTopClassification_LeanSel_ML_BDTG_B_1500_5_20_0.08_1_0.6.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-12_12-08__BDT_VAR_MLG_B_1000_3_20_0.1_1_0.25.weights.xml";
-            weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
         }

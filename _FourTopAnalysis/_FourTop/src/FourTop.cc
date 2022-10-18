@@ -159,8 +159,8 @@ FourTop::~FourTop() {
 }
 
 void FourTop::createMVAHandlers() {
-    mva_DL = new MVAHandler_4T(MVAConfigs::Binary_DL, selection, leanEventSelection);
-    mva_ML = new MVAHandler_4T(MVAConfigs::Binary_ML, selection, leanEventSelection);
+    mva_DL = new MVAHandler_4T(MVAConfigs::TriClass_DL, selection, leanEventSelection);
+    mva_ML = new MVAHandler_4T(MVAConfigs::TriClass_ML, selection, leanEventSelection);
 
     selection->setDLMVA(mva_DL);
     selection->setMLMVA(mva_ML);
