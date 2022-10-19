@@ -142,7 +142,6 @@ void FourTop::analyze(std::string method) {
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
         bool useSplitJEC = true;
-        bool isSignalSample = false;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
@@ -193,10 +192,6 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
-            }
-
-            if (stringTools::stringContains(treeReader->currentSample().processName(), "TTTT")) {
-                isSignalSample = true;
             }
         }
         
