@@ -12,6 +12,14 @@ int countTrue(std::vector<bool>& vec) {
     return ret;
 }
 
+bool floatEqual(double one, double two) {
+    if (fabs(one-two) < 1e-4) return true;
+    return false;
+}
+
+void raiseError(std::string obj, std::string quant) {
+    std::cout << obj << " mismatch for " << quant << std::endl;
+}
 
 void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
     TreeReader* treeReader = new TreeReader(ownSampleList, "/pnfs/iihe/cms/store/user/nivanden/skims/");
@@ -47,17 +55,6 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             //if (entry > 10000) break;
             // check if event numbers, 
             Event event = treeReader->buildEvent(entry);
-            ULong64_t evNb = event.eventNumber();
-            if (evNb < 3360000) continue;
-            if (evNb > 3370000 && evNb < 3888000) continue;
-            if (evNb > 3898000 && evNb < 4050000) continue;
-            if (evNb > 4070000 && evNb < 4250000) continue;
-            if (evNb > 4270000 && evNb < 4900000) continue;
-            if (evNb > 5000000 && evNb < 5100000) continue;
-            if (evNb > 5150000 && evNb < 5400000) continue;
-            if (evNb > 5500000 && evNb < 8100000) continue;
-            if (evNb > 8200000) continue;
-
 
             int retValLoad = syncTree->GetEntryWithIndex(event.eventNumber());
             if (retValLoad <= 0 || event.eventNumber() != syncTreeContent->_eventNumber) {
@@ -99,34 +96,34 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
             int numberOfFOMuonsSync = countTrue(*(syncTreeContent->muons_is_fakeable));
             int numberOfTightMuonsSync = countTrue(*(syncTreeContent->muons_is_tight));
 
-            if (numberOfLooseElectronsSync != numberOfLooseElectrons) {
-                std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
-                std::cout << ":\t mismatch " << "Loose electrons " << numberOfLooseElectrons << " x " << numberOfLooseElectronsSync << std::endl;
-             }
-            if (numberOfFOElectronsSync != numberOfFOElectrons) {
-                std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
-                std::cout << ":\t mismatch " << "FO electrons " << numberOfFOElectrons << " x " << numberOfFOElectronsSync << std::endl;
-                elFOMismatch++;
-             }
-            if (numberOfTightElectronsSync != numberOfTightElectrons) {
-                std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
-                std::cout << ":\t mismatch " << "Tight electrons " << numberOfTightElectrons << " x " << numberOfTightElectronsSync << std::endl;
-                elTightMismatch++;
-             }
-            if (numberOfLooseMuonsSync != numberOfLooseMuons) {
-                std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
-                std::cout << ":\t mismatch " << "Loose muons " << numberOfLooseMuons << " x " << numberOfLooseMuonsSync << std::endl;
-             }
-            if (numberOfFOMuonsSync != numberOfFOMuons) {
-                std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
-                std::cout << ":\t mismatch " << "FO muons " << numberOfFOMuons << " x " << numberOfFOMuonsSync << std::endl;
-                muFOMismatch++;
-             }
-            if (numberOfTightMuonsSync != numberOfTightMuons) {
-                std::cout << "EvNb " << event.eventNumber() << " x " << syncTreeContent->_eventNumber;
-                std::cout << ":\t mismatch " << "Tight muons " << numberOfTightMuons << " x " << numberOfTightMuonsSync << std::endl;
-                muTightMismatch++;
-             }
+            if (numberOfLooseElectronsSync != numberOfLooseElectrons || numberOfFOElectronsSync != numberOfFOElectrons || numberOfTightElectronsSync != numberOfTightElectrons) {
+                ElectronCollection electrons = event.electronCollection();
+                electrons.sortByPt();
+                for (unsigned i=0; i<electrons.size(); i++) {
+                    Electron curr = electrons[i];
+                    if (curr.isMuon()) continue;
+                    if (! floatEqual(curr.eta(), syncTreeContent->electrons_eta->at(i))) raiseError("Electron", "eta");
+                    if (! floatEqual(curr.phi(), syncTreeContent->electrons_phi->at(i))) raiseError("Electron", "phi");
+                    if (! floatEqual(curr.pt(), syncTreeContent->electrons_pt->at(i))) raiseError("Electron", "pt");
+                    if (! floatEqual(curr.closestJetDeepFlavor(), syncTreeContent->electrons_bscore->at(i))) raiseError("Electron", "bscore");
+                    if (! floatEqual(curr.leptonMVATOPUL(), syncTreeContent->electrons_extMVAscore->at(i))) raiseError("Electron", "mva");
+
+                }
+            }
+            if (numberOfLooseMuonsSync != numberOfLooseMuons || numberOfFOMuonsSync != numberOfFOMuons || numberOfTightMuonsSync != numberOfTightMuons) {
+                MuonCollection muons = event.muonCollection();
+                muons.sortByPt();
+                for (unsigned i=0; i<muons.size(); i++) {
+                    Muon curr = muons[i];
+                    if (curr.isElectron()) continue;
+                    if (! floatEqual(curr.eta(), syncTreeContent->muons_eta->at(i))) raiseError("Muon", "eta");
+                    if (! floatEqual(curr.phi(), syncTreeContent->muons_phi->at(i))) raiseError("Muon", "phi");
+                    if (! floatEqual(curr.pt(), syncTreeContent->muons_pt->at(i))) raiseError("Muon", "pt");
+                    if (! floatEqual(curr.closestJetDeepFlavor(), syncTreeContent->muons_bscore->at(i))) raiseError("Muon", "bscore");
+                    if (! floatEqual(curr.leptonMVATOPUL(), syncTreeContent->muons_extMVAscore->at(i))) raiseError("Muon", "mva");
+
+                }
+            }
         }
     }
     std::cout << "validated " << eventsUsed << std::endl;
