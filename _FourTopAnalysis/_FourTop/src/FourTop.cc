@@ -213,7 +213,7 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
         // loading in
         TFile* btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
 
-        for (int nLep = 2; nLep <= 4; nLep++) {
+        for (int nLep = 2; nLep < 5; nLep++) {
             std::string nLepStr = std::to_string(nLep);
             for (auto var : variations) {
                 std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
@@ -450,7 +450,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
     std::vector<std::string> bTagVar;
     std::vector<unsigned> flavors = {0, 0, 4, 4, 5, 5};
     bool flavorQCD_Vars = false;
-    for (int nLep = 2; nLep <= 4; nLep++) {
+    for (int nLep = 2; nLep < 5; nLep++) {
         std::string nLepStr = std::to_string(nLep);
         std::map<std::string, std::shared_ptr<TH1D>> averageOfWeightsMapTmp;
         std::map<std::string, std::shared_ptr<TH1D>> nEntriesMapTmp;
@@ -571,14 +571,19 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 btagreweight = reweighter->weightVariation(event, bVar);
             }
 
-            averageOfWeightsMap[event.numberOfTightLeptons()-2][bVar]->Fill(njets, btagreweight);
-            nEntriesMap[event.numberOfTightLeptons()-2][bVar]->Fill(njets, 1.);
+            if (event.numberOfTightLeptons() > 4) {
+                averageOfWeightsMap[2][bVar]->Fill(njets, btagreweight);
+                nEntriesMap[2][bVar]->Fill(njets, 1.);
+            } else {
+                averageOfWeightsMap[event.numberOfTightLeptons()-2][bVar]->Fill(njets, btagreweight);
+                nEntriesMap[event.numberOfTightLeptons()-2][bVar]->Fill(njets, 1.);
+            }
         }
     }
 
     TFile* normFile = TFile::Open( normFilePath.c_str(), "RECREATE" );
 
-    for (int nLep = 2; nLep<=4; nLep++) {
+    for (int nLep = 2; nLep<5; nLep++) {
         for (unsigned i=0; i < bTagVar.size(); i++) {
             normFile->cd();
             std::string bVar = bTagVar[i];
