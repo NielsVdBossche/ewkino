@@ -54,7 +54,7 @@ void FourTop::analyze(std::string method) {
     selection->setOffsets(offsets);
 
     if (method == "MCPrompt") {
-        processes = {"", "ChargeMisID"};
+        processes = {""};
         selection->setSelectionType(selectionType::MCPrompt);
         st = selectionType::MCPrompt;
 
@@ -253,8 +253,7 @@ void FourTop::analyze(std::string method) {
 
                 if (st == selectionType::MCPrompt) {
                     if (! selection->leptonsArePrompt()) continue;
-                    if (! selection->leptonsAreNotChargeFlip()) processNb = 1;
-                    if (processNb == 1 && selection->numberOfLeps() == 2) continue;
+                    if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
 
                 } else if (st == selectionType::MCNoChargeMisID)  {
                     if (! selection->leptonsAreNotChargeFlip()) continue;

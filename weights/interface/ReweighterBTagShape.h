@@ -29,11 +29,11 @@ class ReweighterBTagShape: public Reweighter{
 	bool hasSystematic( const std::string systematic ) const;
 	bool considerVariation( const Jet& jet, const std::string& variation ) const;
 
-	void setNormFactors( const Sample& sample, std::shared_ptr<TH2D> normFactors );
-	void setNormFactors( const Sample& sample, std::shared_ptr<TH2D> normFactors, std::string& variation );
+	void setNormFactors( const Sample& sample, std::shared_ptr<TH2D> normFactors, int nLeptons );
+	void setNormFactors( const Sample& sample, std::shared_ptr<TH2D> normFactors, std::string& variation, int nLeptons );
 	double getNormFactor( const Event&, const std::string& jecVariation="nominal", const std::string& systematic = "central") const;
 	double getNormFactor_FlavorFilter( const Event&, unsigned flavor, const std::string& jecVariation="nominal", const std::string& systematic = "central") const;
-	std::map<std::string, std::map<std::string, std::shared_ptr<TH2D>>>  getNormFactors() const;
+	std::map<std::string, std::map<std::string, std::map<int,std::shared_ptr<TH2D>>>>  getNormFactors() const;
 	void printNormFactors() const;
 	
 	double weightVariation( const Event& event, const std::string& variation ) const;
@@ -64,7 +64,7 @@ class ReweighterBTagShape: public Reweighter{
 	std::string _bTagAlgo;
 	std::vector<std::string> _variations;
 	std::vector<std::string> _systematics;
-	std::map<std::string, std::map<std::string, std::shared_ptr<TH2D>>> _normFactors; // [samp][variation]
+	std::map<std::string, std::map<std::string, std::map<int,std::shared_ptr<TH2D>>>> _normFactors; // [samp][variation]
 
 	double weight( const Jet& jet, const std::string& variation ) const;
 	double weight( const Event& event, const std::string& variation ) const;
