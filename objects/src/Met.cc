@@ -10,17 +10,17 @@ Met::Met( const TreeReader& treeReader,
     _phi_JECDown( treeReader._metPhi_JECDown ),
     _pt_JECUp( treeReader._met_JECUp ),
     _phi_JECUp( treeReader._metPhi_JECUp ),
-    _JECSources(treeReader._corrMETx_JECSourcesUp_Ids ),
-    _JECGrouped(treeReader._corrMETx_JECGroupedUp_Ids ),
+    _JECSources(treeReader._sourcesJEC_Ids ),
+    _JECGrouped(treeReader._groupedJEC_Ids ),
     _pt_UnclDown( treeReader._met_UnclDown ),
     _phi_UnclDown( treeReader._metPhi_UnclDown ),
     _pt_UnclUp( treeReader._met_UnclUp ),
     _phi_UnclUp( treeReader._metPhi_UnclUp ) {
     
     if (readAllJECVariations) {
-        _pxy_JECSourcesUp = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECSourcesUp_Ids->size());
-        _pxy_JECSourcesDown = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECSourcesUp_Ids->size());
-        for (const auto elMap : *(treeReader._corrMETx_JECSourcesUp_Ids)) {
+        _pxy_JECSourcesUp = std::vector<std::pair<double,double> >(_JECSources->size());
+        _pxy_JECSourcesDown = std::vector<std::pair<double,double> >(_JECSources->size());
+        for (const auto elMap : *_JECSources) {
             _pxy_JECSourcesUp[elMap.second] = std::make_pair(
                                                treeReader._corrMETx_JECSourcesUp[elMap.second],
                                                treeReader._corrMETy_JECSourcesUp[elMap.second]);
@@ -31,10 +31,10 @@ Met::Met( const TreeReader& treeReader,
         }
     }
     if (readGroupedJECVariations) {
-        _pxy_JECGroupedUp = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECGroupedUp_Ids->size());
-        _pxy_JECGroupedDown = std::vector<std::pair<double,double> >(treeReader._corrMETx_JECGroupedUp_Ids->size());
+        _pxy_JECGroupedUp = std::vector<std::pair<double,double> >(_JECGrouped->size());
+        _pxy_JECGroupedDown = std::vector<std::pair<double,double> >(_JECGrouped->size());
 
-        for (const auto elMap : *(treeReader._corrMETx_JECGroupedUp_Ids)) {
+        for (const auto elMap : *_JECGrouped) {
             _pxy_JECGroupedUp[elMap.second] = std::make_pair(
                                                treeReader._corrMETx_JECGroupedUp[elMap.second],
                                                treeReader._corrMETy_JECGroupedUp[elMap.second]);
@@ -182,7 +182,7 @@ std::ostream& Met::print( std::ostream& os ) const{
     return os;
 }
 
-Met Met::getVariedMet(JetCollection nomJets, std::string variation, unsigned flavor, bool up) const {
+Met Met::getVariedMet(JetCollection nomJets, unsigned variationSource, unsigned flavor, bool up) const {
     // rough approach
     // generate lorentzvector corresponding to met
     LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
@@ -192,8 +192,8 @@ Met Met::getVariedMet(JetCollection nomJets, std::string variation, unsigned fla
         if (jetPtr->hadronFlavor() != flavor) continue;
         
         std::shared_ptr<Jet> varJet;
-        //if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECUp( variation ));
-        //else varJet = std::make_shared< Jet >(jetPtr->JetJECDown( variation ));
+        if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECGroupedUp( variationSource ));
+        else varJet = std::make_shared< Jet >(jetPtr->JetJECGroupedDown( variationSource ));
 
         double ptdiff = ptNom - varJet->pt();
 

@@ -37,10 +37,8 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     _pt_JERDown( treeReader._jetSmearedPt_JERDown[jetIndex] ),
     _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),
 
-    _JECSourcesUp_Ids(treeReader._jetSmearedPt_JECSourcesUp_Ids),
-    _JECSourcesDown_Ids(treeReader._jetSmearedPt_JECSourcesDown_Ids),
-    _JECGroupedUp_Ids(treeReader._jetSmearedPt_JECGroupedUp_Ids),
-    _JECGroupedDown_Ids(treeReader._jetSmearedPt_JECGroupedDown_Ids),
+    _JECSources_Ids(treeReader._sourcesJEC_Ids),
+    _JECGrouped_Ids(treeReader._groupedJEC_Ids),
     selector( new JetSelector( this ) )
 {
     if (readAllJECVariations) {
@@ -223,15 +221,15 @@ Jet Jet::JetJER_1p93_To_2p5_Up() const {
 
 Jet Jet::JetJECUp( const std::string source ) const {
     double newpt = 0.;
-    if (_JECSourcesUp_Ids) {
-        for (auto mapEl : *_JECSourcesUp_Ids) {
+    if (_JECSources_Ids && _JECSources_Ids->size() > 0) {
+        for (auto mapEl : *_JECSources_Ids) {
             if (source == mapEl.first) {
                 newpt = _pt_JECSourcesUp[mapEl.second];
             }
         }
     }
-    if (_JECGroupedUp_Ids) {
-        for (auto mapEl : *_JECGroupedUp_Ids) {
+    if (_JECGrouped_Ids && _JECGrouped_Ids->size() > 0) {
+        for (auto mapEl : *_JECGrouped_Ids) {
             if (source == mapEl.first) newpt = _pt_JECGroupedUp[mapEl.second];
         }
     }
@@ -240,15 +238,15 @@ Jet Jet::JetJECUp( const std::string source ) const {
 }
 Jet Jet::JetJECDown( const std::string source ) const {
     double newpt = 0.;
-    if (_JECSourcesDown_Ids) {
-        for (auto mapEl : *_JECSourcesDown_Ids) {
+    if (_JECSources_Ids) {
+        for (auto mapEl : *_JECSources_Ids) {
             if (source == mapEl.first) {
                 newpt = _pt_JECSourcesDown[mapEl.second];
             }
         }
     }
-    if (_JECGroupedDown_Ids) {
-        for (auto mapEl : *_JECGroupedDown_Ids) {
+    if (_JECGrouped_Ids) {
+        for (auto mapEl : *_JECGrouped_Ids) {
             if (source == mapEl.first) newpt = _pt_JECGroupedDown[mapEl.second];
         }
     }

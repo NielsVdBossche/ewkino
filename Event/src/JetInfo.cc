@@ -25,21 +25,17 @@ JetInfo::JetInfo( const TreeReader& treeReader,
     _JECGrouped = std::vector<std::string>();
 
     if (readAllJECVariations) {
-        for (auto mapEl : *(treeReader._jetSmearedPt_JECSourcesUp_Ids)) {
-            // note: in principle only checking one branch should be enough
-            // as up/down and pt/smearedPt are supposed to contain the same variations
-            std::string cleanedName = cleanJECVariationName(mapEl.first);
+        _sourcesJEC_Ids = treeReader._sourcesJEC_Ids;
+
+        for (auto mapEl : *_sourcesJEC_Ids) {
             _JECSources.push_back(cleanJECVariationName(mapEl.first));
-            _sourcesJEC_Ids[cleanedName] = mapEl.second;
         }
     }
     if (readGroupedJECVariations) {
-        for (auto mapEl : *(treeReader._jetSmearedPt_JECGroupedUp_Ids)) {
-            // note: in principle only checking one branch should be enough
-            // as up/down and pt/smearedPt are supposed to contain the same variations
-            std::string cleanedName = cleanJECVariationName(mapEl.first);
+        _groupedJEC_Ids = treeReader._groupedJEC_Ids;
+
+        for (auto mapEl : *_groupedJEC_Ids) {
             _JECGrouped.push_back(cleanJECVariationName(mapEl.first));
-            _groupedJEC_Ids[cleanedName] = mapEl.second;
         }
     }
 }

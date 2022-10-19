@@ -19,23 +19,7 @@ TreeReader::TreeReader( const std::string& sampleListFile, const std::string& sa
     readSamples( sampleListFile, sampleDirectory );
 
     _sourcesJEC_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECSourcesUp_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECSourcesUp_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECSourcesUp_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECSourcesDown_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECSourcesUp_Ids = new std::map<std::string, size_t>();
     _groupedJEC_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _jetPt_JECGroupedUp_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _jetSmearedPt_JECGroupedUp_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _corrMETx_JECGroupedUp_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECGroupedDown_Ids = new std::map<std::string, size_t>();
-    _corrMETy_JECGroupedUp_Ids = new std::map<std::string, size_t>();
 }
 
 
@@ -193,49 +177,53 @@ void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
     b__jetPt_JECSourcesUp = buildBranchMap(treePtr, {"_jetPt_", "_JECSourcesUp"}).second;
     unsigned ctr=0;
     for (auto mapEl : b__jetPt_JECSourcesUp) {
-        (*_sourcesJEC_Ids)[mapEl.first] = ctr;
+        std::string jecNameCleaned = stringTools::removeOccurencesOf(mapEl.first,"_jetPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_jetSmearedPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECSourcesUp");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECSourcesDown");
+        _sourcesJEC_Ids->at(jecNameCleaned) = ctr;
 
-        (*_jetPt_JECSourcesUp_Ids)[mapEl.first] = ctr;
+        _jetPt_JECSourcesUp_Ids[mapEl.first] = ctr;
 
         std::string down = stringTools::replace(mapEl.first, "Up", "Down");
         b__jetPt_JECSourcesDown[down] = nullptr;
-        (*_jetPt_JECSourcesDown_Ids)[down] = ctr;
+        _jetPt_JECSourcesDown_Ids[down] = ctr;
 
         std::string smeared  = stringTools::replace(mapEl.first, "_jetPt", "_jetSmearedPt");
         b__jetSmearedPt_JECSourcesUp[smeared] = nullptr;
-        (*_jetSmearedPt_JECSourcesUp_Ids)[smeared] = ctr;
+        _jetSmearedPt_JECSourcesUp_Ids[smeared] = ctr;
 
         std::string smeareddown = stringTools::replace(smeared, "Up", "Down");
         b__jetSmearedPt_JECSourcesDown[smeareddown] = nullptr;
-        (*_jetSmearedPt_JECSourcesDown_Ids)[smeareddown] = ctr;
+        _jetSmearedPt_JECSourcesDown_Ids[smeareddown] = ctr;
 
         std::string corrmetX = stringTools::replace(mapEl.first, "_jetPt", "_corrMETx");
         b__corrMETx_JECSourcesUp[corrmetX] = nullptr;
-        (*_corrMETx_JECSourcesUp_Ids)[corrmetX] = ctr;
+        _corrMETx_JECSourcesUp_Ids[corrmetX] = ctr;
 
         std::string corrmetY = stringTools::replace(mapEl.first, "_jetPt", "_corrMETy");
         b__corrMETy_JECSourcesUp[corrmetY] = nullptr;
-        (*_corrMETy_JECSourcesUp_Ids)[corrmetY] = ctr;
+        _corrMETy_JECSourcesUp_Ids[corrmetY] = ctr;
 
         std::string corrmetXDown = stringTools::replace(corrmetX, "Up", "Down");
         b__corrMETx_JECSourcesDown[corrmetXDown] = nullptr;
-        (*_corrMETx_JECSourcesDown_Ids)[corrmetXDown] = ctr;
+        _corrMETx_JECSourcesDown_Ids[corrmetXDown] = ctr;
 
         std::string corrmetYDown = stringTools::replace(corrmetY, "Up", "Down");
         b__corrMETy_JECSourcesDown[corrmetYDown] = nullptr;
-        (*_corrMETy_JECSourcesDown_Ids)[corrmetYDown] = ctr;
+        _corrMETy_JECSourcesDown_Ids[corrmetYDown] = ctr;
         
         ctr++;
     }
-    _jetPt_JECSourcesUp = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesUp_Ids->size());
-    _jetPt_JECSourcesDown = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesDown_Ids->size());
-    _jetSmearedPt_JECSourcesUp = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECSourcesUp_Ids->size());
-    _jetSmearedPt_JECSourcesDown = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECSourcesDown_Ids->size());
+    _jetPt_JECSourcesUp = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesUp_Ids.size());
+    _jetPt_JECSourcesDown = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesDown_Ids.size());
+    _jetSmearedPt_JECSourcesUp = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECSourcesUp_Ids.size());
+    _jetSmearedPt_JECSourcesDown = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECSourcesDown_Ids.size());
 
-    _corrMETx_JECSourcesUp = std::vector<double>(_corrMETx_JECSourcesUp_Ids->size());
-    _corrMETx_JECSourcesDown = std::vector<double>(_corrMETx_JECSourcesDown_Ids->size());
-    _corrMETy_JECSourcesUp = std::vector<double>(_corrMETy_JECSourcesUp_Ids->size());
-    _corrMETy_JECSourcesDown = std::vector<double>(_corrMETy_JECSourcesDown_Ids->size());
+    _corrMETx_JECSourcesUp = std::vector<double>(_corrMETx_JECSourcesUp_Ids.size());
+    _corrMETx_JECSourcesDown = std::vector<double>(_corrMETx_JECSourcesDown_Ids.size());
+    _corrMETy_JECSourcesUp = std::vector<double>(_corrMETy_JECSourcesUp_Ids.size());
+    _corrMETy_JECSourcesDown = std::vector<double>(_corrMETy_JECSourcesDown_Ids.size());
 }
 
 void TreeReader::initializeJecSourcesGroupedMaps(TTree* treePtr) {
@@ -243,48 +231,52 @@ void TreeReader::initializeJecSourcesGroupedMaps(TTree* treePtr) {
     b__jetPt_JECGroupedUp = buildBranchMap(treePtr, {"_jetPt_", "_JECGroupedUp"}).second;
     unsigned ctr = 0;
     for (auto mapEl : b__jetPt_JECGroupedUp) {
-        (*_groupedJEC_Ids)[mapEl.first] = ctr;
-        (*_jetPt_JECGroupedUp_Ids)[mapEl.first] = ctr;
+        std::string jecNameCleaned = stringTools::removeOccurencesOf(mapEl.first,"_jetPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_jetSmearedPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECGroupedUp");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECGroupedDown");
+        _groupedJEC_Ids->at(jecNameCleaned) = ctr;
+        _jetPt_JECGroupedUp_Ids[mapEl.first] = ctr;
 
         std::string down = stringTools::replace(mapEl.first, "Up", "Down");
         b__jetPt_JECGroupedDown[down] = nullptr;
-        (*_jetPt_JECGroupedDown_Ids)[down] = ctr;
+        _jetPt_JECGroupedDown_Ids[down] = ctr;
 
         std::string smeared  = stringTools::replace(mapEl.first, "_jetPt", "_jetSmearedPt");
         b__jetSmearedPt_JECGroupedUp[smeared] = nullptr;
-        (*_jetSmearedPt_JECGroupedUp_Ids)[smeared] = ctr;
+        _jetSmearedPt_JECGroupedUp_Ids[smeared] = ctr;
 
         std::string smeareddown = stringTools::replace(smeared, "Up", "Down");
         b__jetSmearedPt_JECGroupedDown[smeareddown] = nullptr;
-        (*_jetSmearedPt_JECGroupedDown_Ids)[smeareddown] = ctr;
+        _jetSmearedPt_JECGroupedDown_Ids[smeareddown] = ctr;
 
         std::string corrmetX = stringTools::replace(mapEl.first, "_jetPt", "_corrMETx");
         b__corrMETx_JECGroupedUp[corrmetX] = nullptr;
-        (*_corrMETx_JECGroupedUp_Ids)[corrmetX] = ctr;
+        _corrMETx_JECGroupedUp_Ids[corrmetX] = ctr;
 
         std::string corrmetY = stringTools::replace(mapEl.first, "_jetPt", "_corrMETy");
         b__corrMETy_JECGroupedUp[corrmetY] = nullptr;
-        (*_corrMETy_JECGroupedUp_Ids)[corrmetY] = ctr;
+        _corrMETy_JECGroupedUp_Ids[corrmetY] = ctr;
 
         std::string corrmetXDown = stringTools::replace(corrmetX, "Up", "Down");
         b__corrMETx_JECGroupedDown[corrmetXDown] = nullptr;
-        (*_corrMETx_JECGroupedDown_Ids)[corrmetXDown] = ctr;
+        _corrMETx_JECGroupedDown_Ids[corrmetXDown] = ctr;
 
         std::string corrmetYDown = stringTools::replace(corrmetY, "Up", "Down");
         b__corrMETy_JECGroupedDown[corrmetYDown] = nullptr;
-        (*_corrMETy_JECGroupedDown_Ids)[corrmetYDown] = ctr;
+        _corrMETy_JECGroupedDown_Ids[corrmetYDown] = ctr;
         
         ctr++;
     }
-    _jetPt_JECGroupedUp = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedUp_Ids->size());
-    _jetPt_JECGroupedDown = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedDown_Ids->size());
-    _jetSmearedPt_JECGroupedUp = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECGroupedUp_Ids->size());
-    _jetSmearedPt_JECGroupedDown = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECGroupedDown_Ids->size());
+    _jetPt_JECGroupedUp = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedUp_Ids.size());
+    _jetPt_JECGroupedDown = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedDown_Ids.size());
+    _jetSmearedPt_JECGroupedUp = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECGroupedUp_Ids.size());
+    _jetSmearedPt_JECGroupedDown = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECGroupedDown_Ids.size());
 
-    _corrMETx_JECGroupedUp = std::vector<double>(_corrMETx_JECGroupedUp_Ids->size());
-    _corrMETx_JECGroupedDown = std::vector<double>(_corrMETx_JECGroupedDown_Ids->size());
-    _corrMETy_JECGroupedUp = std::vector<double>(_corrMETy_JECGroupedUp_Ids->size());
-    _corrMETy_JECGroupedDown = std::vector<double>(_corrMETy_JECGroupedDown_Ids->size());
+    _corrMETx_JECGroupedUp = std::vector<double>(_corrMETx_JECGroupedUp_Ids.size());
+    _corrMETx_JECGroupedDown = std::vector<double>(_corrMETx_JECGroupedDown_Ids.size());
+    _corrMETy_JECGroupedUp = std::vector<double>(_corrMETy_JECGroupedUp_Ids.size());
+    _corrMETy_JECGroupedDown = std::vector<double>(_corrMETy_JECGroupedDown_Ids.size());
 }
 
 // functions to find if a tree has branches with certain types of info //
@@ -845,23 +837,23 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
 
     // add split JEC uncertainties
     initializeJecSourcesMaps( _currentTreePtr );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _jetPt_JECSourcesUp, b__jetPt_JECSourcesUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _jetPt_JECSourcesDown, b__jetPt_JECSourcesDown );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesUp, b__jetSmearedPt_JECSourcesUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesDown, b__jetSmearedPt_JECSourcesDown );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _corrMETx_JECSourcesUp, b__corrMETx_JECSourcesUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _corrMETx_JECSourcesDown, b__corrMETx_JECSourcesDown );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _corrMETy_JECSourcesUp, b__corrMETy_JECSourcesUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_sourcesJEC_Ids, _corrMETy_JECSourcesDown, b__corrMETy_JECSourcesDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECSourcesUp_Ids, _jetPt_JECSourcesUp, b__jetPt_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECSourcesDown_Ids, _jetPt_JECSourcesDown, b__jetPt_JECSourcesDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECSourcesUp_Ids, _jetSmearedPt_JECSourcesUp, b__jetSmearedPt_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECSourcesDown_Ids, _jetSmearedPt_JECSourcesDown, b__jetSmearedPt_JECSourcesDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECSourcesUp_Ids, _corrMETx_JECSourcesUp, b__corrMETx_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECSourcesDown_Ids, _corrMETx_JECSourcesDown, b__corrMETx_JECSourcesDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECSourcesUp_Ids, _corrMETy_JECSourcesUp, b__corrMETy_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECSourcesDown_Ids, _corrMETy_JECSourcesDown, b__corrMETy_JECSourcesDown );
     initializeJecSourcesGroupedMaps( _currentTreePtr );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _jetPt_JECGroupedUp, b__jetPt_JECGroupedUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _jetPt_JECGroupedDown, b__jetPt_JECGroupedDown );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedUp, b__jetSmearedPt_JECGroupedUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedDown, b__jetSmearedPt_JECGroupedDown );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _corrMETx_JECGroupedUp, b__corrMETx_JECGroupedUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _corrMETx_JECGroupedDown, b__corrMETx_JECGroupedDown );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _corrMETy_JECGroupedUp, b__corrMETy_JECGroupedUp );
-    setMapBranchAddressesAndVectors( _currentTreePtr, *_groupedJEC_Ids, _corrMETy_JECGroupedDown, b__corrMETy_JECGroupedDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECGroupedUp_Ids, _jetPt_JECGroupedUp, b__jetPt_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECGroupedDown_Ids, _jetPt_JECGroupedDown, b__jetPt_JECGroupedDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECGroupedUp_Ids, _jetSmearedPt_JECGroupedUp, b__jetSmearedPt_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECGroupedDown_Ids, _jetSmearedPt_JECGroupedDown, b__jetSmearedPt_JECGroupedDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECGroupedUp_Ids, _corrMETx_JECGroupedUp, b__corrMETx_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECGroupedDown_Ids, _corrMETx_JECGroupedDown, b__corrMETx_JECGroupedDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECGroupedUp_Ids, _corrMETy_JECGroupedUp, b__corrMETy_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECGroupedDown_Ids, _corrMETy_JECGroupedDown, b__corrMETy_JECGroupedDown );
 }
 
 

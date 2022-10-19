@@ -90,10 +90,8 @@ class Jet : public PhysicsObject{
         std::vector< double > _pt_JECGroupedUp;
         std::vector< double > _pt_JECGroupedDown;
 
-        std::map<std::string, size_t >* _JECSourcesUp_Ids = nullptr;
-        std::map<std::string, size_t >* _JECSourcesDown_Ids = nullptr;
-        std::map<std::string, size_t >* _JECGroupedUp_Ids = nullptr;
-        std::map<std::string, size_t >* _JECGroupedDown_Ids = nullptr;
+        std::map<std::string, size_t >* _JECSources_Ids = nullptr;
+        std::map<std::string, size_t >* _JECGrouped_Ids = nullptr;
 
         //jet selector 
         JetSelector* selector;

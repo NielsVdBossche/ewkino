@@ -17,8 +17,8 @@ class JetInfo{
 	std::vector< std::string > allJECVariations(){ return _JECSources; }
 	std::vector< std::string > groupedJECVariations(){ return _JECGrouped; }
 
-	std::map< std::string, size_t > allJECVariationsMap(){ return _sourcesJEC_Ids; }
-	std::map< std::string, size_t > groupedJECVariationsMap(){ return _groupedJEC_Ids; }
+	std::map< std::string, size_t > allJECVariationsMap(){ return *_sourcesJEC_Ids; }
+	std::map< std::string, size_t > groupedJECVariationsMap(){ return *_groupedJEC_Ids; }
 
 	bool hasJECVariation( const std::string& ) const;
 	void printAllJECVariations() const;
@@ -29,8 +29,8 @@ class JetInfo{
 	std::vector< std::string > _JECSources;
 	std::vector< std::string > _JECGrouped;
 
-    std::map< std::string, size_t > _groupedJEC_Ids;
-    std::map< std::string, size_t > _sourcesJEC_Ids;
+    std::map< std::string, size_t >* _groupedJEC_Ids;
+    std::map< std::string, size_t >* _sourcesJEC_Ids;
 };
 
 #endif
