@@ -216,24 +216,17 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
         for (int nLep = 2; nLep < 5; nLep++) {
             std::string nLepStr = std::to_string(nLep);
             for (auto var : variations) {
-                std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
+                std::shared_ptr<TH2D> bTagNormFactorsHist = std::shared_ptr<TH2D>(dynamic_cast<TH2D*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
                 int tr = 0;
                 while (! bTagNormFactorsHist && tr < 10) {
                     btagNormFactorFile->Close();
                     btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
-                    bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
+                    bTagNormFactorsHist = std::shared_ptr<TH2D>(dynamic_cast<TH2D*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
                     tr++;
                 }
-                std::map<int, double> normFactors;
+                bTagNormFactorsHist->SetDirectory(gROOT);
 
-                for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
-                    double normFactor = bTagNormFactorsHist->GetBinContent(i);
-                    if (fabs(normFactor) > 1e-6) {
-                        normFactors[i-1] = normFactor;
-                    }
-                }
-
-                reweighter->setNormFactors(samp, normFactors, var, nLep);
+                reweighter->setNormFactors(samp, bTagNormFactorsHist, var, nLep);
             }
 
             btagNormFactorFile->Close();
@@ -243,25 +236,18 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
                 for (std::string upOrDown : {"up", "down"}) {
                     std::string fullJecName = upOrDown + "_jes" + var;
 
-                    std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileJec->Get((nLepStr + "L_bTagNormFactors_" + fullJecName).c_str())));
+                    std::shared_ptr<TH2D> bTagNormFactorsHist = std::shared_ptr<TH2D>(dynamic_cast<TH2D*>(btagNormFactorFileJec->Get((nLepStr + "L_bTagNormFactors_" + fullJecName).c_str())));
                     int tr = 0;
                     while (! bTagNormFactorsHist && tr < 10) {
                         btagNormFactorFileJec->Close();
                         btagNormFactorFileJec = TFile::Open(sampleNormfactorsJecVarPath.c_str());
-                        bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileJec->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
+                        bTagNormFactorsHist = std::shared_ptr<TH2D>(dynamic_cast<TH2D*>(btagNormFactorFileJec->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
                         tr++;
                     }
+                    bTagNormFactorsHist->SetDirectory(gROOT);
 
-                    std::map<int, double> normFactors;
-
-                    for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
-                        double normFactor = bTagNormFactorsHist->GetBinContent(i);
-                        if (fabs(normFactor) > 1e-6) {
-                            normFactors[i-1] = normFactor;
-                        }
-                    }
                     // up and down variations!!
-                    reweighter->setNormFactors(samp, normFactors, fullJecName, nLep);
+                    reweighter->setNormFactors(samp, bTagNormFactorsHist, fullJecName, nLep);
                 }
             }
             btagNormFactorFileJec->Close();
@@ -271,25 +257,18 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
                 for (std::string upOrDown : {"up", "down"}) {
                     std::string fullJecName = upOrDown + "_jes" + var;
 
-                    std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileFlavorQCD->Get((nLepStr + "L_bTagNormFactors_" + fullJecName).c_str())));
+                    std::shared_ptr<TH2D> bTagNormFactorsHist = std::shared_ptr<TH2D>(dynamic_cast<TH2D*>(btagNormFactorFileFlavorQCD->Get((nLepStr + "L_bTagNormFactors_" + fullJecName).c_str())));
                     int tr = 0;
                     while (! bTagNormFactorsHist && tr < 10) {
                         btagNormFactorFileFlavorQCD->Close();
                         btagNormFactorFileFlavorQCD = TFile::Open(sampleNormfactorsFlavorQCDVarPath.c_str());
-                        bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFileFlavorQCD->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
+                        bTagNormFactorsHist = std::shared_ptr<TH2D>(dynamic_cast<TH2D*>(btagNormFactorFileFlavorQCD->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
                         tr++;
                     }
+                    bTagNormFactorsHist->SetDirectory(gROOT);
 
-                    std::map<int, double> normFactors;
-
-                    for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
-                        double normFactor = bTagNormFactorsHist->GetBinContent(i);
-                        if (fabs(normFactor) > 1e-6) {
-                            normFactors[i-1] = normFactor;
-                        }
-                    }
                     // up and down variations!!
-                    reweighter->setNormFactors(samp, normFactors, fullJecName, nLep);
+                    reweighter->setNormFactors(samp, bTagNormFactorsHist, fullJecName, nLep);
                 }
             }
             btagNormFactorFileFlavorQCD->Close();
@@ -326,8 +305,8 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
         }
     }
     // initialize the output map
-    std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("bTagNormFactors" + samp.fileName() + bTagVar).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
-    std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("nEntries" + bTagVar).c_str(), "nEntries;Jets;Entries", 30, 0, 30);
+    std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("bTagNormFactors" + samp.fileName() + bTagVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 120, 0., 3000.);
+    std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("nEntries" + bTagVar).c_str(), "nEntries;Jets;HT;Factor", 30, 0, 30., 120, 0., 3000.);
 
     // loop over events
     long unsigned availableEntries = tempTree.numberOfEntries();
@@ -381,9 +360,14 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
             btagreweight = reweighter->weightVariation(event, bTagVar);
         }
 
-        // add it to the map
-        averageOfWeights->Fill(njets, btagreweight);
-        nEntries->Fill(njets, 1.);
+        if (ht < 3000.) {
+            averageOfWeights->Fill(njets, ht, btagreweight);
+            nEntries->Fill(njets, ht, 1.);
+        } else {
+            averageOfWeights->Fill(njets, 2999., btagreweight);
+            nEntries->Fill(njets, 2999., 1.);
+        }
+
     }
 
     // divide sum by number to get average
@@ -509,7 +493,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
                     averageOfWeightsMapTmp[var] = averageOfWeights;
                     nEntriesMapTmp[var] = nEntries;
-                }
+            }
         }
         averageOfWeightsMap.push_back(averageOfWeightsMapTmp);
         nEntriesMap.push_back(nEntriesMapTmp);
