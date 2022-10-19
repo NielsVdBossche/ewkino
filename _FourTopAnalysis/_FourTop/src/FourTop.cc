@@ -588,9 +588,9 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             normFile->cd();
             std::string bVar = bTagVar[i];
             std::string nLepStr = std::to_string(nLep);
-            cleanLastBins(averageOfWeightsMap[nLep][bVar], nEntriesMap[nLep][bVar]);
-            averageOfWeightsMap[nLep][bVar]->Divide(nEntriesMap[nLep][bVar].get());
-            averageOfWeightsMap[nLep][bVar]->Write((nLepStr + "L_bTagNormFactors_" + bVar).c_str(), TObject::kOverwrite);
+            cleanLastBins(averageOfWeightsMap[nLep-2][bVar], nEntriesMap[nLep-2][bVar]);
+            averageOfWeightsMap[nLep-2][bVar]->Divide(nEntriesMap[nLep-2][bVar].get());
+            averageOfWeightsMap[nLep-2][bVar]->Write((nLepStr + "L_bTagNormFactors_" + bVar).c_str(), TObject::kOverwrite);
         }
     }
 

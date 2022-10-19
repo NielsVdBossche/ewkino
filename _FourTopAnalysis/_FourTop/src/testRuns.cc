@@ -47,6 +47,15 @@ void FourTop:: testRuns() {
         TH1D* njets_cferr2 = new TH1D("njets_pass_cferr2", "njets_pass_cferr2;N;yield", 10, -0.5, 9.5);
         TH1D* yield_cferr2 = new TH1D("yield_pass_cferr2", "yield_pass_cferr2;yield;yield", 1, -0.5, 0.5);
 
+
+
+        TH1D* njets_hf_down = new TH1D("njets_pass_hf_down", "njets_pass_hf_down;N;yield", 10, -0.5, 9.5);
+        TH1D* yield_hf_down = new TH1D("yield_pass_hf_down", "yield_pass_hf_down;yield;yield", 1, -0.5, 0.5);
+        TH1D* njets_cferr1_down = new TH1D("njets_pass_cferr1_down", "njets_pass_cferr1_down;N;yield", 10, -0.5, 9.5);
+        TH1D* yield_cferr1_down = new TH1D("yield_pass_cferr1_down", "yield_pass_cferr1_down;yield;yield", 1, -0.5, 0.5);
+        TH1D* njets_cferr2_down = new TH1D("njets_pass_cferr2_down", "njets_pass_cferr2_down;N;yield", 10, -0.5, 9.5);
+        TH1D* yield_cferr2_down = new TH1D("yield_pass_cferr2_down", "yield_pass_cferr2_down;yield;yield", 1, -0.5, 0.5);
+
         (*btagReweighter)->printNormFactors();
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             //if (entry > 10000) break;
@@ -66,7 +75,7 @@ void FourTop:: testRuns() {
             if (currentEvent->numberOfFOLeptons() != currentEvent->numberOfTightLeptons()) continue;
             currentEvent->selectTightLeptons();
 
-            if (currentEvent->numberOfLeptons() < 2) continue;
+            if (currentEvent->numberOfLeptons() != 3) continue;
             if (currentEvent->numberOfLeptons() == 2 && currentEvent->lepton(0).charge() != currentEvent->lepton(1).charge()) continue;
 
             if (currentEvent->numberOfJets() < 2) continue;
@@ -106,6 +115,23 @@ void FourTop:: testRuns() {
 
             histogram::fillValue(njets_cferr2, currentEvent->numberOfJets(), weight_cferr2);
             histogram::fillValue(yield_cferr2, 0., weight_cferr2);
+
+
+
+            double weight_hf_down= weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, "hf" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+
+            histogram::fillValue(njets_hf_down, currentEvent->numberOfJets(), weight_hf_down);
+            histogram::fillValue(yield_hf_down, 0., weight_hf_down);
+
+            double weight_cferr1_down = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, "cferr1" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+
+            histogram::fillValue(njets_cferr1_down, currentEvent->numberOfJets(), weight_cferr1_down);
+            histogram::fillValue(yield_cferr1_down, 0., weight_cferr1_down);
+
+            double weight_cferr2_down = weight * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, "cferr2" ) / reweighter["bTag_shape"]->weight( *currentEvent );
+
+            histogram::fillValue(njets_cferr2_down, currentEvent->numberOfJets(), weight_cferr2_down);
+            histogram::fillValue(yield_cferr2_down, 0., weight_cferr2_down);
         }
         
         // Output management: save histograms to a ROOT file.
@@ -128,6 +154,13 @@ void FourTop:: testRuns() {
         yield_cferr1->Write(yield_cferr1->GetName(), TObject::kOverwrite);
         njets_cferr2->Write(njets_cferr2->GetName(), TObject::kOverwrite);
         yield_cferr2->Write(yield_cferr2->GetName(), TObject::kOverwrite);
+
+        njets_hf_down->Write(njets_hf_down->GetName(), TObject::kOverwrite);
+        yield_hf_down->Write(yield_hf_down->GetName(), TObject::kOverwrite);
+        njets_cferr1_down->Write(njets_cferr1_down->GetName(), TObject::kOverwrite);
+        yield_cferr1_down->Write(yield_cferr1_down->GetName(), TObject::kOverwrite);
+        njets_cferr2_down->Write(njets_cferr2_down->GetName(), TObject::kOverwrite);
+        yield_cferr2_down->Write(yield_cferr2_down->GetName(), TObject::kOverwrite);
     }
 
     outfile->Close();
