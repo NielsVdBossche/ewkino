@@ -163,7 +163,7 @@ void FourTop::analyze(std::string method) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
             std::cout << "finding available PS scale variations...\n";
-            Event event = treeReader->buildEvent(0);
+            Event event = treeReader->buildEvent(0, false, false, false, true);
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
             if(numberOfPSVariations>=44) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
@@ -183,12 +183,17 @@ void FourTop::analyze(std::string method) {
                 std::cout << "split JEC" << std::endl;
 
                 JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariationsMap();
+                std::cout << "got sources" << std::endl;
                 std::vector<std::string> inter;
+
                 for (auto var : JECSourcesGrouped) {
                     inter.push_back(var.first);
                 }
+                std::cout << "saved sources" << std::endl;
+
 
                 mgrAll->addSubUncertainties(shapeUncId::JEC, inter);
+                std::cout << "added variations" << std::endl;
 
                 JECQCDComponents = {"light", "charm", "bottom"};
                 JECQCDComponents_flavor = {0, 4, 5};
