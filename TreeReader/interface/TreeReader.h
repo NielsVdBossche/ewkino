@@ -239,8 +239,8 @@ class TreeReader {
         std::vector< Double_t[nJets_max] > _jetSmearedPt_JECSourcesDown;
         std::vector< Double_t[nJets_max] > _jetSmearedPt_JECSourcesUp;
 
-        std::map< std::string, size_t >* _groupedJEC_Ids = nullptr;
-        std::map< std::string, size_t >* _sourcesJEC_Ids = nullptr;
+        std::map< std::string, size_t >* _groupedJEC_Ids;
+        std::map< std::string, size_t >* _sourcesJEC_Ids;
         
         std::map< std::string, size_t > _jetPt_JECGroupedUp_Ids;
         std::map< std::string, size_t > _jetPt_JECGroupedDown_Ids;
