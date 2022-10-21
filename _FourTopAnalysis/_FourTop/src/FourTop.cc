@@ -390,37 +390,109 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
 
 void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
     for (int i = num->GetNbinsX()+1; i > 1; i--) {
-        for (int j = num->GetNbinsY()+1; j > 1; j--) {
-            // run procedure for ht -> until bin is sufficiently filled at same njet 
-            // if j == lowest -> break and go to prev bin
-
-
-
-
-
-
-
-
-
-
-
-            if (num->GetBinContent(i) < 1e-5) continue;
-            if (num->GetBinError(i) * 10 < num->GetBinContent(i)) return;
-
-            double errNum = sqrt(num->GetBinError(i) * num->GetBinError(i) + num->GetBinError(i-1) * num->GetBinError(i-1));
-            num->SetBinContent(i-1, num->GetBinContent(i-1) + num->GetBinContent(i));
-            num->SetBinError(i-1, errNum);
-            
-            num->SetBinContent(i, 0.);
-            num->SetBinError(i, 0.);
-
-            double errDenom = sqrt(denom->GetBinError(i) * denom->GetBinError(i) + denom->GetBinError(i-1) * denom->GetBinError(i-1));
-            denom->SetBinContent(i-1, denom->GetBinContent(i-1) + denom->GetBinContent(i));
-            denom->SetBinError(i-1, errDenom);
-
-            denom->SetBinContent(i, 0.);
-            denom->SetBinError(i, 0.);
+        double counts = 0.;
+        for (int j = num->GetNbinsY()+1; j > 1; j--) { 
+            counts += denom->GetBinContent(i,j);
+            // check if we can have sufficient stats in this njets bin
         }
+
+        if (sqrt(counts) / counts > 0.10) {
+            for (int j = num->GetNbinsY()+1; j > 1; j--) {
+                if (num->GetBinContent(i,j) < 1e-5) continue;
+                //if (num->GetBinError(i,j) * 10 < num->GetBinContent(i,j)) continue;
+
+                // check all bins and see if there is anything valuable
+                // run procedure for ht -> until bin is sufficiently filled at same njet 
+                // if j == lowest -> break and go to prev bin
+
+                double errNum = sqrt(num->GetBinError(i,j) * num->GetBinError(i,j) + num->GetBinError(i-1,j) * num->GetBinError(i-1,j));
+                num->SetBinContent(i-1, j, num->GetBinContent(i-1,j) + num->GetBinContent(i,j));
+                num->SetBinError(i-1, j, errNum);
+                
+                num->SetBinContent(i, j, 0.);
+                num->SetBinError(i, j, 0.);
+
+                double errDenom = sqrt(denom->GetBinError(i,j) * denom->GetBinError(i,j) + denom->GetBinError(i-1,j) * denom->GetBinError(i-1,j));
+                denom->SetBinContent(i-1, j, denom->GetBinContent(i-1,j) + denom->GetBinContent(i,j));
+                denom->SetBinError(i-1, j, errDenom);
+
+                denom->SetBinContent(i, j, 0.);
+                denom->SetBinError(i, j, 0.);
+            }
+        } else {
+            //  do normal stuff
+            for (int j = num->GetNbinsY()+1; j > 1; j--) {
+                if (num->GetBinContent(i,j) < 1e-5) continue;
+                if (num->GetBinError(i,j) * 10 < num->GetBinContent(i,j)) continue;
+
+                // check all bins and see if there is anything valuable
+                // run procedure for ht -> until bin is sufficiently filled at same njet 
+                // if j == lowest -> break and go to prev bin
+
+                double errNum = sqrt(num->GetBinError(i,j) * num->GetBinError(i,j) + num->GetBinError(i,j-1) * num->GetBinError(i,j-1));
+                num->SetBinContent(i, j-1, num->GetBinContent(i,j-1) + num->GetBinContent(i,j));
+                num->SetBinError(i, j-1, errNum);
+                
+                num->SetBinContent(i, j, 0.);
+                num->SetBinError(i, j, 0.);
+
+                double errDenom = sqrt(denom->GetBinError(i,j) * denom->GetBinError(i,j) + denom->GetBinError(i,j-1) * denom->GetBinError(i,j-1));
+                denom->SetBinContent(i, j-1, denom->GetBinContent(i,j-1) + denom->GetBinContent(i,j));
+                denom->SetBinError(i, j-1, errDenom);
+
+                denom->SetBinContent(i, j, 0.);
+                denom->SetBinError(i, j, 0.);
+            }
+        }
+        // move to lower jet multiplicity    
+    }
+    // afterwards: fill empty bins at same jet mult with one at lower ht
+    // in njets similar
+    for (int i = 1; i < num->GetNbinsX()+1; i++) {
+        if (i == 1) {
+            for (int j = 1; j < num->GetNbinsY()+1; j++) {
+                num->SetBinContent(i, j, 1.);
+                num->SetBinError(i, j, 1.);
+                denom->SetBinContent(i, j, 1.);
+                denom->SetBinError(i, j, 1.);
+            }
+            continue;
+        }
+
+        int htbin = 0;
+        while (num->GetBinContent(i,htbin+1) < 1e-5 && htbin < num->GetNbinsY()) {
+            htbin++;
+        }
+        if (htbin != 0 && htbin != num->GetNbinsY()) {
+            for (int j=htbin; j>0; j--) {
+                num->SetBinContent(i, j, num->GetBinContent(i, j+1));
+                num->SetBinError(i, j, num->GetBinError(i, j+1));
+                denom->SetBinContent(i, j, denom->GetBinContent(i, j+1));
+                denom->SetBinError(i, j, denom->GetBinError(i, j+1));
+            }
+        } else if (htbin == num->GetNbinsY()) {
+            for (int j = 1; j < num->GetNbinsY()+1; j++) {
+                num->SetBinContent(i, j, num->GetBinContent(i-1, j));
+                num->SetBinError(i, j, num->GetBinError(i-1, j));
+                denom->SetBinContent(i, j, denom->GetBinContent(i-1, j));
+                denom->SetBinError(i, j, denom->GetBinError(i-1, j));
+            }
+        }
+
+        int htbinHigh = num->GetNbinsY() + 1;
+        while (htbinHigh > 0 && num->GetBinContent(i,htbinHigh-1) < 1e-5) {
+            htbinHigh--;
+        }
+
+        if (htbinHigh != num->GetNbinsY() + 1) {
+            for (int j=htbinHigh; j< num->GetNbinsY() + 1; j++) {
+                num->SetBinContent(i, j, num->GetBinContent(i, j-1));
+                num->SetBinError(i, j, num->GetBinError(i, j-1));
+                denom->SetBinContent(i, j, denom->GetBinContent(i, j-1));
+                denom->SetBinError(i, j, denom->GetBinError(i, j-1));
+            }
+        }
+        // ideally maps should be full now. Alsooo shouldn't really matter. But ok.
     }
 }
 
@@ -463,11 +535,11 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 jecVarForSelection.push_back(var+"Up");
                 if (nLep == 2) bTagVar.push_back(jecVar);
 
-                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 120, 0., 3000.);
-                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 120, 0., 3000.);
+                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 40, 0., 2000.);
+                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 40, 0., 2000.);
 
-                averageOfWeights->Fill(0., 1.);
-                nEntries->Fill(0., 1.);
+                averageOfWeights->Fill(0., 0., 1.);
+                nEntries->Fill(0., 0., 1.);
 
                 averageOfWeightsMapTmp[jecVar] = averageOfWeights;
                 nEntriesMapTmp[jecVar] = nEntries;
@@ -476,20 +548,20 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 jecVarForSelection.push_back(var+"Down");
                 if (nLep == 2) bTagVar.push_back(jecVar);
 
-                std::shared_ptr<TH2D> averageOfWeights_down = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 120, 0., 3000.);
-                std::shared_ptr<TH2D> nEntries_down = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 120, 0., 3000.);
+                std::shared_ptr<TH2D> averageOfWeights_down = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 40, 0., 2000.);
+                std::shared_ptr<TH2D> nEntries_down = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 40, 0., 2000.);
 
-                averageOfWeights_down->Fill(0., 1.);
-                nEntries_down->Fill(0., 1.);
+                averageOfWeights_down->Fill(0., 0., 1.);
+                nEntries_down->Fill(0., 0., 1.);
 
                 averageOfWeightsMapTmp[jecVar] = averageOfWeights_down;
                 nEntriesMapTmp[jecVar] = nEntries_down;
             } else {
-                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + var).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 120, 0., 3000.);
-                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + var).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 120, 0., 3000.);
+                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + var).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 40, 0., 2000.);
+                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + var).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 40, 0., 2000.);
 
-                    averageOfWeights->Fill(0., 1.);
-                    nEntries->Fill(0., 1.);
+                    averageOfWeights->Fill(0., 0., 1.);
+                    nEntries->Fill(0., 0., 1.);
 
                     averageOfWeightsMapTmp[var] = averageOfWeights;
                     nEntriesMapTmp[var] = nEntries;
@@ -552,11 +624,6 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 ht = currentJets.scalarPtSum();
             }
 
-            if (considerRegion != eventClass::dy || considerRegion != eventClass::ttbar) {
-                if (event.numberOfLeptons() < 4 && ht < 200) continue;
-            }
-            //std::cout << "before weights" << std::endl;
-
             double btagreweight;
             if (jec && ! flavorQCD_Vars) {
                 btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i]);
@@ -573,12 +640,12 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             int nLeps = event.numberOfTightLeptons();
             if (nLeps > 4) nLeps = 4;
 
-            if (ht < 3000.) {
+            if (ht < 2000.) {
                 averageOfWeightsMap[nLeps-2][bVar]->Fill(njets, ht, btagreweight);
                 nEntriesMap[nLeps-2][bVar]->Fill(njets, ht, 1.);
             } else {
-                averageOfWeightsMap[nLeps-2][bVar]->Fill(njets, 2999., btagreweight);
-                nEntriesMap[nLeps-2][bVar]->Fill(njets, 2999., 1.);
+                averageOfWeightsMap[nLeps-2][bVar]->Fill(njets, 1999., btagreweight);
+                nEntriesMap[nLeps-2][bVar]->Fill(njets, 1999., 1.);
             }
             //std::cout << "filled maps" << std::endl;
 
