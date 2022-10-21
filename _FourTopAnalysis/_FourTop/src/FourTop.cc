@@ -397,7 +397,7 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
         }
 
         if (sqrt(counts) / counts > 0.10) {
-            for (int j = num->GetNbinsY()+1; j > 1; j--) {
+            for (int j = num->GetNbinsY()+1; j > 0; j--) {
                 if (num->GetBinContent(i,j) < 1e-5) continue;
                 //if (num->GetBinError(i,j) * 10 < num->GetBinContent(i,j)) continue;
 
@@ -459,6 +459,42 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
             continue;
         }
 
+        double counting = 0.;
+        for (int j=num->GetNbinsY()+1; j>1;j--) {
+            counting += num->GetBinContent(i,j);
+        }
+
+        if (counting < 1.e-5) {
+            num->SetBinContent(i,1, num->GetBinContent(i-1,1));
+            num->SetBinError(i,1, num->GetBinError(i-1,1));
+            denom->SetBinContent(i,1, denom->GetBinContent(i-1,1));
+            denom->SetBinError(i,1, denom->GetBinError(i-1,1));
+        }
+
+        for (int j=num->GetNbinsY()+1; j>1;j--) {
+            if (num->GetBinContent(i,j) > 1e-5) continue;
+            // if it contains no shit we need to correct
+            // go looking for error and content of the first filled bin and fill this bin with it
+            int filledHT = j-1;
+
+            while (filledHT > 0 && num->GetBinContent(i, filledHT) < 1e-5) {
+                filledHT--;
+            }
+            if (filledHT == 0) {
+                // do something
+                while (filledHT < num->GetNbinsY() + 1 && num->GetBinContent(i, filledHT) < 1e-5) {
+                    filledHT++;
+                }
+                continue;
+            }
+
+            num->SetBinContent(i, j, num->GetBinContent(i, filledHT));
+            num->SetBinError(i, j, num->GetBinError(i, filledHT));
+            denom->SetBinContent(i, j, denom->GetBinContent(i, filledHT));
+            denom->SetBinError(i, j, denom->GetBinError(i, filledHT));
+        }
+
+        /*
         int htbin = 0;
         while (num->GetBinContent(i,htbin+1) < 1e-5 && htbin < num->GetNbinsY()) {
             htbin++;
@@ -491,7 +527,7 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
                 denom->SetBinContent(i, j, denom->GetBinContent(i, j-1));
                 denom->SetBinError(i, j, denom->GetBinError(i, j-1));
             }
-        }
+        }*/
         // ideally maps should be full now. Alsooo shouldn't really matter. But ok.
     }
 }
