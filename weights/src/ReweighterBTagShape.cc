@@ -322,6 +322,7 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
     int njets = event.getJetCollection(jecVariation).size();
     double ht = event.getJetCollection(jecVariation).scalarPtSum();
     int nLeptons = event.numberOfFOLeptons();
+    if (nLeptons > 4) nLeptons=4;
     // retrieve the normalization factor
     // note: if no normalization factor was initialized for this jet multiplicity,
     //	     the value for lower jet multiplicities is retrieved instead.
@@ -352,10 +353,14 @@ double ReweighterBTagShape::getNormFactor_FlavorFilter(const Event &event, unsig
     {
         throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this systematic! " + systematic);
     }
+    //std::cout << "normfactor" << std::endl;
     // determine number of jets
     int njets = 0;
     double ht = 0.;
     int nLeptons = event.numberOfFOLeptons();
+    //std::cout << "nelps" << nLeptons << std::endl;
+
+    if (nLeptons > 4) nLeptons=4;
     if (stringTools::stringContains(jecVariation, "Up")) {
         njets = event.jetCollection().JECUpGroupedFlavorQCD(flavor).size();
         ht = event.jetCollection().JECUpGroupedFlavorQCD(flavor).scalarPtSum();
@@ -585,6 +590,7 @@ double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
         jesVarName = "down_" + varName + "_" + std::to_string(flavor);
         isup = false;
     }
+    //std::cout << jecVariation << " " << flavor << std::endl;
     if (!hasVariation(varName))
     {
         std::string msg = "### ERROR ### in ReweighterBTagShape::weightJecVar_FlavorFilter:";

@@ -461,7 +461,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             if (jec) {
                 std::string jecVar = "up_jes" + var;
                 jecVarForSelection.push_back(var+"Up");
-                bTagVar.push_back(jecVar);
+                if (nLep == 2) bTagVar.push_back(jecVar);
 
                 std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 120, 0., 3000.);
                 std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 120, 0., 3000.);
@@ -474,7 +474,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
                 jecVar = "down_jes" + var;
                 jecVarForSelection.push_back(var+"Down");
-                bTagVar.push_back(jecVar);
+                if (nLep == 2) bTagVar.push_back(jecVar);
 
                 std::shared_ptr<TH2D> averageOfWeights_down = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 120, 0., 3000.);
                 std::shared_ptr<TH2D> nEntries_down = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 120, 0., 3000.);
@@ -535,6 +535,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
         for (unsigned i=0; i < bTagVar.size(); i++) {
             std::string bVar = bTagVar[i];
+
             JetCollection currentJets;
             if (jec && ! flavorQCD_Vars) {
                 currentJets = event.getJetCollection(jecVarForSelection[i]);
@@ -554,6 +555,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             if (considerRegion != eventClass::dy || considerRegion != eventClass::ttbar) {
                 if (event.numberOfLeptons() < 4 && ht < 200) continue;
             }
+            //std::cout << "before weights" << std::endl;
 
             double btagreweight;
             if (jec && ! flavorQCD_Vars) {
@@ -578,8 +580,11 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 averageOfWeightsMap[nLeps-2][bVar]->Fill(njets, 2999., btagreweight);
                 nEntriesMap[nLeps-2][bVar]->Fill(njets, 2999., 1.);
             }
+            //std::cout << "filled maps" << std::endl;
+
         }
     }
+    //std::cout << "flling file" << std::endl;
 
     TFile* normFile = TFile::Open( normFilePath.c_str(), "RECREATE" );
 
