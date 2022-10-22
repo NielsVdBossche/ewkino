@@ -420,6 +420,79 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
                 denom->SetBinError(i, j, 0.);
             }
         } else {
+            // stap 1:
+            // identify first bin filled and last bin filled
+            // identify bin closest to middle below and above 1 with low stats and squish
+            // 
+            // next: 
+            // start at lowest filled bin and pull till 0
+            // start at highest filled bin and pull till max bin
+
+            int lowestFilled = 1;
+            int highestFilled = num->GetNbinsY();
+            while (lowestFilled < highestFilled && num->GetBinContent(i, lowestFilled) < 1e-5) lowestFilled++;
+            if (lowestFilled == highestFilled) continue;
+
+            while (highestFilled > lowestFilled && num->GetBinContent(i, highestFilled) < 1e-5) highestFilled--;
+            if (lowestFilled == highestFilled) continue;
+
+            int middle = (highestFilled-lowestFilled) / 2;
+            int belowMiddleEmpty = lowestFilled;
+            int aboveMiddleEmpty = highestFilled;
+
+            for (int j=lowestFilled; j <= highestFilled; j++) {
+                double content = denom->GetBinContent(i,j);
+                double contErr = denom->GetBinError(i,j);
+                if (j < middle && (contErr * 10 > content || content < 1e-5)) {
+                    belowMiddleEmpty = j;
+                } else if (j > middle && (contErr * 10 > content || content < 1e-5) && j < aboveMiddleEmpty) {
+                    aboveMiddleEmpty = j;
+                }
+            }
+
+            double newLowContent = 0.;
+            double newLowError = 0.;
+            double newLowContentDenom = 0.;
+            double newLowErrorDenom = 0.;
+            for (int j=lowestFilled; j <= belowMiddleEmpty; j++) {
+                newLowContent += num->GetBinContent(i,j);
+                newLowError += (num->GetBinError(i,j) * num->GetBinError(i,j));
+                newLowContentDenom += denom->GetBinContent(i,j);
+                newLowErrorDenom += (denom->GetBinError(i,j) * denom->GetBinError(i,j));
+
+                num->SetBinContent(i, j, 0.);
+                num->SetBinError(i, j, 0.);
+                denom->SetBinContent(i, j, 0.);
+                denom->SetBinError(i, j, 0.);
+            }
+            num->SetBinContent(i,belowMiddleEmpty, newLowContent);
+            num->SetBinError(i, belowMiddleEmpty, sqrt(newLowError));
+            denom->SetBinContent(i,belowMiddleEmpty, newLowContentDenom);
+            denom->SetBinError(i, belowMiddleEmpty, sqrt(newLowErrorDenom));
+            
+            double newHighContent = 0.;
+            double newHighError = 0.;
+            double newHighContentDenom = 0.;
+            double newHighErrorDenom = 0.;
+            for (int j=highestFilled; j >= aboveMiddleEmpty; j--) {
+                newHighContent += num->GetBinContent(i,j);
+                newHighError += (num->GetBinError(i,j) * num->GetBinError(i,j));
+                newHighContentDenom += denom->GetBinContent(i,j);
+                newHighErrorDenom += (denom->GetBinError(i,j) * denom->GetBinError(i,j));
+
+                num->SetBinContent(i, j, 0.);
+                num->SetBinError(i, j, 0.);
+                denom->SetBinContent(i, j, 0.);
+                denom->SetBinError(i, j, 0.);
+            }
+            num->SetBinContent(i,aboveMiddleEmpty, newHighContent);
+            num->SetBinError(i, aboveMiddleEmpty, sqrt(newHighError));
+            denom->SetBinContent(i,aboveMiddleEmpty, newHighContentDenom);
+            denom->SetBinError(i, aboveMiddleEmpty, sqrt(newHighErrorDenom));
+
+
+            /*
+
             //  do normal stuff
             for (int j = num->GetNbinsY()+1; j > 1; j--) {
                 if (num->GetBinContent(i,j) < 1e-5) continue;
@@ -443,11 +516,13 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
                 denom->SetBinContent(i, j, 0.);
                 denom->SetBinError(i, j, 0.);
             }
+            */
         }
         // move to lower jet multiplicity    
     }
     // afterwards: fill empty bins at same jet mult with one at lower ht
     // in njets similar
+    /*
     for (int i = 1; i < num->GetNbinsX()+1; i++) {
         if (i == 1) {
             for (int j = 1; j < num->GetNbinsY()+1; j++) {
@@ -527,9 +602,9 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
                 denom->SetBinContent(i, j, denom->GetBinContent(i, j-1));
                 denom->SetBinError(i, j, denom->GetBinError(i, j-1));
             }
-        }*/
+        }
         // ideally maps should be full now. Alsooo shouldn't really matter. But ok.
-    }
+    }*/
 }
 
 
