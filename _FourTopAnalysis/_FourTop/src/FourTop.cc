@@ -396,12 +396,13 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
             // check if we can have sufficient stats in this njets bin
         }
 
-        if (sqrt(counts) / counts > 0.10) {
+        if (sqrt(counts) / counts > 0.20) {
+            std::cout << "low counts" << std::endl;
             for (int j = num->GetNbinsY()+1; j > 0; j--) {
                 if (num->GetBinContent(i,j) < 1e-5) continue;
                 //if (num->GetBinError(i,j) * 10 < num->GetBinContent(i,j)) continue;
 
-                // check all bins and see if there is anything valuable
+                // check all bins2L_bTagNormFactors_central and see if there is anything valuable
                 // run procedure for ht -> until bin is sufficiently filled at same njet 
                 // if j == lowest -> break and go to prev bin
 
@@ -420,34 +421,90 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
                 denom->SetBinError(i, j, 0.);
             }
         } else {
-            //  do normal stuff
-            for (int j = num->GetNbinsY()+1; j > 1; j--) {
-                if (num->GetBinContent(i,j) < 1e-5) continue;
-                if (num->GetBinError(i,j) * 10 < num->GetBinContent(i,j)) continue;
+            // stap 1:
+            // identify first bin filled and last bin filled
+            // identify bin closest to middle below and above 1 with low stats and squish
+            // 
+            // next: 
+            // start at lowest filled bin and pull till 0
+            // start at highest filled bin and pull till max bin
+            std::cout << "high counts" << std::endl;
 
-                // check all bins and see if there is anything valuable
-                // run procedure for ht -> until bin is sufficiently filled at same njet 
-                // if j == lowest -> break and go to prev bin
+            int lowestFilled = 1;
+            int highestFilled = num->GetNbinsY();
+            while (lowestFilled < highestFilled && num->GetBinContent(i, lowestFilled) < 1e-5) lowestFilled++;
+            if (lowestFilled == highestFilled) continue;
 
-                double errNum = sqrt(num->GetBinError(i,j) * num->GetBinError(i,j) + num->GetBinError(i,j-1) * num->GetBinError(i,j-1));
-                num->SetBinContent(i, j-1, num->GetBinContent(i,j-1) + num->GetBinContent(i,j));
-                num->SetBinError(i, j-1, errNum);
-                
+            while (highestFilled > lowestFilled && num->GetBinContent(i, highestFilled) < 1e-5) highestFilled--;
+            if (lowestFilled == highestFilled) continue;
+
+            std::cout << i << " " << highestFilled << " " << lowestFilled << std::endl;
+            
+            int middle = (highestFilled-lowestFilled) / 2;
+            int belowMiddleEmpty = lowestFilled;
+            int aboveMiddleEmpty = highestFilled;
+
+            for (int j=lowestFilled; j <= highestFilled; j++) {
+                double content = denom->GetBinContent(i,j);
+                double contErr = denom->GetBinError(i,j);
+                if (j < middle && (contErr * 20. > content || content < 1e-5)) {
+                    belowMiddleEmpty = j;
+                } else if (j > middle && (contErr * 20. > content || content < 1e-5) && j < aboveMiddleEmpty) {
+                    aboveMiddleEmpty = j;
+                }
+            }
+
+            std::cout << belowMiddleEmpty << " " << aboveMiddleEmpty << std::endl;
+
+
+            double newLowContent = 0.;
+            double newLowError = 0.;
+            double newLowContentDenom = 0.;
+            double newLowErrorDenom = 0.;
+            for (int j=lowestFilled; j <= belowMiddleEmpty; j++) {
+                newLowContent += num->GetBinContent(i,j);
+                newLowError += (num->GetBinError(i,j) * num->GetBinError(i,j));
+                newLowContentDenom += denom->GetBinContent(i,j);
+                newLowErrorDenom += (denom->GetBinError(i,j) * denom->GetBinError(i,j));
+
                 num->SetBinContent(i, j, 0.);
                 num->SetBinError(i, j, 0.);
-
-                double errDenom = sqrt(denom->GetBinError(i,j) * denom->GetBinError(i,j) + denom->GetBinError(i,j-1) * denom->GetBinError(i,j-1));
-                denom->SetBinContent(i, j-1, denom->GetBinContent(i,j-1) + denom->GetBinContent(i,j));
-                denom->SetBinError(i, j-1, errDenom);
-
                 denom->SetBinContent(i, j, 0.);
                 denom->SetBinError(i, j, 0.);
             }
+            num->SetBinContent(i,belowMiddleEmpty, newLowContent);
+            num->SetBinError(i, belowMiddleEmpty, sqrt(newLowError));
+            denom->SetBinContent(i,belowMiddleEmpty, newLowContentDenom);
+            denom->SetBinError(i, belowMiddleEmpty, sqrt(newLowErrorDenom));
+            std::cout << newLowContent << " " << newLowError << " " << newLowContentDenom << " " << newLowErrorDenom;
+            
+            double newHighContent = 0.;
+            double newHighError = 0.;
+            double newHighContentDenom = 0.;
+            double newHighErrorDenom = 0.;
+            for (int j=highestFilled; j >= aboveMiddleEmpty; j--) {
+                newHighContent += num->GetBinContent(i,j);
+                newHighError += (num->GetBinError(i,j) * num->GetBinError(i,j));
+                newHighContentDenom += denom->GetBinContent(i,j);
+                newHighErrorDenom += (denom->GetBinError(i,j) * denom->GetBinError(i,j));
+
+                num->SetBinContent(i, j, 0.);
+                num->SetBinError(i, j, 0.);
+                denom->SetBinContent(i, j, 0.);
+                denom->SetBinError(i, j, 0.);
+            }
+            num->SetBinContent(i,aboveMiddleEmpty, newHighContent);
+            num->SetBinError(i, aboveMiddleEmpty, sqrt(newHighError));
+            denom->SetBinContent(i,aboveMiddleEmpty, newHighContentDenom);
+            denom->SetBinError(i, aboveMiddleEmpty, sqrt(newHighErrorDenom));
+            std::cout << newHighContent << " " << newHighError << " " << newHighContentDenom << " " << newHighErrorDenom;
+
         }
         // move to lower jet multiplicity    
     }
     // afterwards: fill empty bins at same jet mult with one at lower ht
     // in njets similar
+    
     for (int i = 1; i < num->GetNbinsX()+1; i++) {
         if (i == 1) {
             for (int j = 1; j < num->GetNbinsY()+1; j++) {
@@ -465,70 +522,40 @@ void cleanLastBins(std::shared_ptr<TH2D> num, std::shared_ptr<TH2D> denom) {
         }
 
         if (counting < 1.e-5) {
-            num->SetBinContent(i,1, num->GetBinContent(i-1,1));
-            num->SetBinError(i,1, num->GetBinError(i-1,1));
-            denom->SetBinContent(i,1, denom->GetBinContent(i-1,1));
-            denom->SetBinError(i,1, denom->GetBinError(i-1,1));
-        }
-
-        for (int j=num->GetNbinsY()+1; j>1;j--) {
-            if (num->GetBinContent(i,j) > 1e-5) continue;
-            // if it contains no shit we need to correct
-            // go looking for error and content of the first filled bin and fill this bin with it
-            int filledHT = j-1;
-
-            while (filledHT > 0 && num->GetBinContent(i, filledHT) < 1e-5) {
-                filledHT--;
-            }
-            if (filledHT == 0) {
-                // do something
-                while (filledHT < num->GetNbinsY() + 1 && num->GetBinContent(i, filledHT) < 1e-5) {
-                    filledHT++;
-                }
-                continue;
-            }
-
-            num->SetBinContent(i, j, num->GetBinContent(i, filledHT));
-            num->SetBinError(i, j, num->GetBinError(i, filledHT));
-            denom->SetBinContent(i, j, denom->GetBinContent(i, filledHT));
-            denom->SetBinError(i, j, denom->GetBinError(i, filledHT));
-        }
-
-        /*
-        int htbin = 0;
-        while (num->GetBinContent(i,htbin+1) < 1e-5 && htbin < num->GetNbinsY()) {
-            htbin++;
-        }
-        if (htbin != 0 && htbin != num->GetNbinsY()) {
-            for (int j=htbin; j>0; j--) {
-                num->SetBinContent(i, j, num->GetBinContent(i, j+1));
-                num->SetBinError(i, j, num->GetBinError(i, j+1));
-                denom->SetBinContent(i, j, denom->GetBinContent(i, j+1));
-                denom->SetBinError(i, j, denom->GetBinError(i, j+1));
-            }
-        } else if (htbin == num->GetNbinsY()) {
-            for (int j = 1; j < num->GetNbinsY()+1; j++) {
-                num->SetBinContent(i, j, num->GetBinContent(i-1, j));
-                num->SetBinError(i, j, num->GetBinError(i-1, j));
-                denom->SetBinContent(i, j, denom->GetBinContent(i-1, j));
-                denom->SetBinError(i, j, denom->GetBinError(i-1, j));
+            for (int j=num->GetNbinsY()+1; j>=1;j--) {
+                num->SetBinContent(i,j, num->GetBinContent(i-1,j));
+                num->SetBinError(i,j, num->GetBinError(i-1,j));
+                denom->SetBinContent(i,j, denom->GetBinContent(i-1,j));
+                denom->SetBinError(i,j, denom->GetBinError(i-1,j));
             }
         }
 
-        int htbinHigh = num->GetNbinsY() + 1;
-        while (htbinHigh > 0 && num->GetBinContent(i,htbinHigh-1) < 1e-5) {
-            htbinHigh--;
+        int filledLow = 0;
+        int filledHigh = num->GetNbinsY()+1;
+
+        while (filledLow < filledHigh && num->GetBinContent(i, filledLow) < 1e-5) filledLow++;
+        std::cout << "bin " << i << std::endl;
+        std::cout << "filled low " << filledLow << " " << num->GetBinContent(i,filledLow)<< std::endl;
+        if (filledLow != 0) {
+            for (int j=0; j<filledLow;j++) {
+                num->SetBinContent(i,j, num->GetBinContent(i,filledLow));
+                num->SetBinError(i,j, num->GetBinError(i,filledLow));
+                denom->SetBinContent(i,j, denom->GetBinContent(i,filledLow));
+                denom->SetBinError(i,j, denom->GetBinError(i,filledLow));
+            }
         }
 
-        if (htbinHigh != num->GetNbinsY() + 1) {
-            for (int j=htbinHigh; j< num->GetNbinsY() + 1; j++) {
-                num->SetBinContent(i, j, num->GetBinContent(i, j-1));
-                num->SetBinError(i, j, num->GetBinError(i, j-1));
-                denom->SetBinContent(i, j, denom->GetBinContent(i, j-1));
-                denom->SetBinError(i, j, denom->GetBinError(i, j-1));
+        while (filledHigh > filledLow && num->GetBinContent(i, filledHigh) < 1e-5) filledHigh--;
+        std::cout << "filled high " << filledHigh << " " << num->GetBinContent(i,filledHigh) << std::endl;
+
+        if (filledHigh != num->GetNbinsY()+1) {
+            for (int j=num->GetNbinsY(); j>filledHigh;j--) {
+                num->SetBinContent(i,j, num->GetBinContent(i,filledHigh));
+                num->SetBinError(i,j, num->GetBinError(i,filledHigh));
+                denom->SetBinContent(i,j, denom->GetBinContent(i,filledHigh));
+                denom->SetBinError(i,j, denom->GetBinError(i,filledHigh));
             }
-        }*/
-        // ideally maps should be full now. Alsooo shouldn't really matter. But ok.
+        }
     }
 }
 
@@ -553,6 +580,10 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
     std::vector<std::map<std::string, std::shared_ptr<TH2D>>> averageOfWeightsMap;
     std::vector<std::map<std::string, std::shared_ptr<TH2D>>> nEntriesMap;
 
+    
+    double bins[15] = {0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1200., 1400., 1800., 2500.};
+    int nBins = 14;
+
     std::vector<std::string> jecVarForSelection;
     std::vector<std::string> bTagVar;
     std::vector<unsigned> flavors = {0, 0, 4, 4, 5, 5};
@@ -571,8 +602,8 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 jecVarForSelection.push_back(var+"Up");
                 if (nLep == 2) bTagVar.push_back(jecVar);
 
-                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 40, 0., 2000.);
-                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 40, 0., 2000.);
+                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 20, 0, 20., nBins, bins);
+                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 20, 0, 20., nBins, bins);
 
                 averageOfWeights->Fill(0., 0., 1.);
                 nEntries->Fill(0., 0., 1.);
@@ -584,8 +615,8 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 jecVarForSelection.push_back(var+"Down");
                 if (nLep == 2) bTagVar.push_back(jecVar);
 
-                std::shared_ptr<TH2D> averageOfWeights_down = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 40, 0., 2000.);
-                std::shared_ptr<TH2D> nEntries_down = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 40, 0., 2000.);
+                std::shared_ptr<TH2D> averageOfWeights_down = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + jecVar).c_str(), "bTagNormFactors;Jets;HT;Factor", 20, 0, 20., nBins, bins);
+                std::shared_ptr<TH2D> nEntries_down = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + jecVar).c_str(), "nEntries;Jets;HT;Entries", 20, 0, 20., nBins, bins);
 
                 averageOfWeights_down->Fill(0., 0., 1.);
                 nEntries_down->Fill(0., 0., 1.);
@@ -593,8 +624,8 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
                 averageOfWeightsMapTmp[jecVar] = averageOfWeights_down;
                 nEntriesMapTmp[jecVar] = nEntries_down;
             } else {
-                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + var).c_str(), "bTagNormFactors;Jets;HT;Factor", 30, 0, 30., 40, 0., 2000.);
-                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + var).c_str(), "nEntries;Jets;HT;Entries", 30, 0, 30., 40, 0., 2000.);
+                std::shared_ptr<TH2D> averageOfWeights = std::make_shared<TH2D>(("L" + nLepStr + "_bTagNormFactors" + samp.fileName() + var).c_str(), "bTagNormFactors;Jets;HT;Factor", 20, 0, 20., nBins, bins);
+                std::shared_ptr<TH2D> nEntries = std::make_shared<TH2D>(("L" + nLepStr + "_nEntries" + var).c_str(), "nEntries;Jets;HT;Entries", 20, 0, 20., nBins, bins);
 
                     averageOfWeights->Fill(0., 0., 1.);
                     nEntries->Fill(0., 0., 1.);
@@ -616,7 +647,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
     std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
 
     for (long unsigned entry = 0; entry < availableEntries; ++entry) {
-        //if (entry>1000) break;
+        //if (entry>100000) break;
         Event event;
         if (jec) event = tempTree.buildEvent(entry, false, false, false, true);
         else event = tempTree.buildEvent(entry);
@@ -642,6 +673,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
         double ht = event.HT();
 
         for (unsigned i=0; i < bTagVar.size(); i++) {
+            //if (i>0) break;
             std::string bVar = bTagVar[i];
 
             JetCollection currentJets;
@@ -676,6 +708,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             int nLeps = event.numberOfTightLeptons();
             if (nLeps > 4) nLeps = 4;
 
+            if (njets >= 20) njets = 19;
             if (ht < 2000.) {
                 averageOfWeightsMap[nLeps-2][bVar]->Fill(njets, ht, btagreweight);
                 nEntriesMap[nLeps-2][bVar]->Fill(njets, ht, 1.);
