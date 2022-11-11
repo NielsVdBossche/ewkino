@@ -8,6 +8,7 @@ std::pair<Double_t*, std::vector<Double_t>*> mvaDataManager::prepareTTree(TTree*
     //*weight = 1.; // unless changed elsewhere
     chain->SetBranchAddress("weight_rew", weight);
 
+    //chain->SetBranchAddress("weight_an", weight);
 
     std::vector<Double_t>* dataVector = nullptr;
     if (config == BDT_DL) {
@@ -506,8 +507,22 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
             TFile* input = new TFile(currentFile.c_str(), "open");
             TTree* newClassElement  = (TTree*) input->Get(treeName.c_str());
 
+
             std::pair<Double_t*, std::vector<Double_t>*> vars = prepareTTree(newClassElement, config, variables);
+
+            double weightNorm = 1.; // sum weights, find ratio to make it === 1000
+            //double sumWeight = 0.;
+            //for (int i=0; i < newClassElement->GetEntries(); i++) {
+            //    newClassElement->GetEntry(i);
+            //    sumWeight += *vars.first;
+            //}
+            //weightNorm = 1000. / sumWeight;
             
+            //if (className == "Background") weightNorm = weightNorm / 15.5;
+            //else if (className == "Signal") weightNorm = weightNorm / 4.;
+            //else if (className == "TTV") weightNorm = weightNorm / 3.;
+            //weightNorm = 1.;
+
             double ptrain = 0.8;
             if (stream >> splitFraction) {
                 ptrain = std::stod(splitFraction);
@@ -516,13 +531,13 @@ TMVA::DataLoader* mvaDataManager::buildDataLoader(std::string& sampleList, std::
             for (int i=0; i < newClassElement->GetEntries(); i++) {
                 newClassElement->GetEntry(i);
                 //std::cout << *vars.first << std::endl;
-                if (useCV) dataloader->AddTrainingEvent(className, *vars.second, *vars.first);
+                if (useCV) dataloader->AddTrainingEvent(className, *vars.second, *vars.first * weightNorm);
                 else {
                     float rnd = r->Rndm();
                     if (rnd < ptrain) {
-                        dataloader->AddTrainingEvent(className, *vars.second, *vars.first);
+                        dataloader->AddTrainingEvent(className, *vars.second, *vars.first * weightNorm);
                     } else {
-                        dataloader->AddTestEvent(className, *vars.second, *vars.first);
+                        dataloader->AddTestEvent(className, *vars.second, *vars.first * weightNorm);
                     }
                 }
             }

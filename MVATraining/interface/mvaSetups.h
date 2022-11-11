@@ -12,7 +12,7 @@
 
 
 namespace mvaSetupManager {
-    TMVA::Factory* buildFactory(mvaConfiguration config, TFile* outputFile);
+    TMVA::Factory* buildFactory(mvaConfiguration config, TFile* outputFile, unsigned nClasses);
     //TMVA::Factory* buildFactories(mvaConfiguration config, TFile* outputFile);
     void addBDT(TMVA::Factory* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, int cuts, double shrinkage, int minNodeSize, double baggedSampleFraction);
     void addBDT_CV(TMVA::CrossValidation* factory, TMVA::DataLoader* dataloader, std::string& initsetup, int nTrees, int depth, int cuts, double shrinkage, int minNodeSize, double baggedSampleFraction);
