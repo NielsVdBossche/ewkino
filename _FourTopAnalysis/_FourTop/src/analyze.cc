@@ -127,6 +127,7 @@ void FourTop::analyze(std::string method) {
     std::vector<std::string> JECQCDComponents;
     std::vector<unsigned> JECQCDComponents_flavor;
     std::vector<std::string> wzSFRegions;
+    std::vector<std::string> zzSFRegions;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -141,7 +142,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        bool useSplitJEC = true;
+        bool useSplitJEC = false;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
@@ -192,6 +193,8 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
+                //zzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4PlusJet"};
+                //mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
             }
         }
         
@@ -463,6 +466,27 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight, weight);
                         }
                     }
+                //else if (uncID == shapeUncId::ZZSF) {
+                //  if (sampleReweighter) {
+                //      for (int i=0; i < 5; i++) {
+                //          if (selection->numberOfJets() == i || (i == 4 && selection->numberOfJets() >= 4)) {
+                //              weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                //              weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                //          }
+                //          std::string zzSFRegion = zzSFRegions[i];
+                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight * weightUp, weight * weightDown);
+                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
+                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                //      }
+                //      weightUp = 1.;
+                //      weightDown = 1.;
+                //  } else {
+                //      for (std::string zzSFRegion : zzSFRegions) {
+                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight, weight);
+                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight, weight);
+                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
+                //      }
+                //  }
                 } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
 
@@ -493,13 +517,13 @@ void FourTop::analyze(std::string method) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (stringTools::stringContains(jecSource, "Total")) continue;
                         if (considerBTagShape) {
-                            //std::string sourceUp = jecSource + "Up";
-                            //std::string sourceDown = jecSource + "Down";
-                            //
-                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            std::string sourceUp = jecSource + "Up";
+                            std::string sourceDown = jecSource + "Down";
+                            
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
@@ -524,13 +548,13 @@ void FourTop::analyze(std::string method) {
                         std::string jecVar = "FlavorQCD";
                         unsigned flavor = JECQCDComponents_flavor[i];
                         if (considerBTagShape) {
-                            //std::string sourceUp = "FlavorQCDUp";
-                            //std::string sourceDown = "FlavorQCDDown";
-                            //
-                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            std::string sourceUp = "FlavorQCDUp";
+                            std::string sourceDown = "FlavorQCDDown";
+                            
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecVar, flavor);
@@ -639,7 +663,11 @@ CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
         std::string sampleName = samp.fileName();
         if (stringTools::stringStartsWith(sampleName, "WZTo") || stringTools::stringStartsWith(sampleName, "WZ_")) {
             sampleReweighter->addReweighter("WZ", std::make_shared< ReweighterSample >("WZ", dir));
-        } //else if (stringTools::stringStartsWith(sampleName, "ZG")) {
+        } //else if (stringTools::stringStartsWith(sampleName, "ZZTo") || stringTools::stringStartsWith(sampleName, "ZZ_")) {
+          //  sampleReweighter->addReweighter("ZZ", std::make_shared< ReweighterSample >("ZZ", dir));
+        //}
+        
+        //else if (stringTools::stringStartsWith(sampleName, "ZG")) {
           //  sampleReweighter->addReweighter("ZG", std::make_shared< ReweighterSample >("ZG", dir));
         //}
     }
