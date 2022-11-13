@@ -445,7 +445,7 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
             JetCollection bJets = event->getJetCol()->mediumBTagCollection();
             std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
             fillVal.push_back(deltaR(bJets[0], bJets[1]));
-            mindR_Bjets[0];
+            fillVal.push_back(mindR_Bjets[0]);
         } else {
             fillVal.push_back(5.);
             fillVal.push_back(5.);
@@ -455,7 +455,7 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
             JetCollection jets = *event->getJetCol();
             std::vector<double> mindR_jets = calculators::mindRInJetCollection(jets);
             fillVal.push_back(deltaR(jets[0], jets[1]));
-            mindR_jets[0];
+            fillVal.push_back(mindR_jets[0]);
         } else {
             fillVal.push_back(5.);
             fillVal.push_back(5.);
