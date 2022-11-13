@@ -244,6 +244,9 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     } else if (evClass == eventClass::ssdl || evClass == eventClass::trilep) {
         minMaxNjets = {2.5, 10.5};
         minMaxNBjets = {1.5, 6.5};
+    } else if (evClass == eventClass::fourlep) {
+        minMaxNjets = {1.5, 6.5};
+        minMaxNBjets = {0.5, 4.5};    
     }
 
     *histInfoVec = {
@@ -252,6 +255,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "N_jets_" + flag, "N_{jets}", int(minMaxNjets.second -  minMaxNjets.first), minMaxNjets.first, minMaxNjets.second),
         HistInfo( "N_Bjets_" + flag, "N_{b}", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
+        HistInfo( "N_MediumBjets_" + flag, "N_{b} (medium WP)", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
         HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, minMaxHT.first, minMaxHT.second),
         HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 15, 0, 300),
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
@@ -270,6 +274,10 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
 
     if (evClass < eventClass::ssdl) {
         histInfoVec->push_back(HistInfo("TriClass_Fit_" + flag, "", 3, -0.5, 2.5));
+    } else if (evClass >= eventClass::ssdl) {
+        int nBins = 8;
+        if (evClass != eventClass::ssdl) nBins = 6;
+        histInfoVec->push_back(HistInfo("Cutbased_AN_" + flag, "", nBins, -0.5, double(nBins) - 0.5));
     }
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
@@ -394,6 +402,7 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         event->getLepton(1)->pt(),
         double(event->numberOfJets()),
         double(event->numberOfLooseBJets()),
+        double(event->numberOfMediumBJets()),
         event->getHT(),
         event->getMET(),
         event->getMediumLepCol()->scalarPtSum(),
@@ -425,13 +434,39 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
     }
 
     if (evClass < eventClass::ssdl) {
-        //if (event->getMVAScores()[2] > event->getMVAScores()[0]) {
-        //    if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(1.);
-        //    else fillVal.push_back(2.);
-        //} else {
+        if (event->getMVAScores()[2] > event->getMVAScores()[0]) {
+            if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(1.);
+            else fillVal.push_back(2.);
+        } else {
             fillVal.push_back(0.);
-        //}
+        }
+    } else if (evClass >= eventClass::ssdl) {
+        if (evClass == eventClass::ssdl) {
+            if (event->numberOfMediumBJets() == 2) {
+                if (event->numberOfJets() == 6) fillVal.push_back(0.);
+                else if (event->numberOfJets() == 7) fillVal.push_back(1.);
+                else if (event->numberOfJets() >= 8) fillVal.push_back(2.);
+            } else if (event->numberOfMediumBJets() == 3) {
+                if (event->numberOfJets() == 5) fillVal.push_back(3.);
+                else if (event->numberOfJets() == 6) fillVal.push_back(4.);
+                else if (event->numberOfJets() == 7) fillVal.push_back(5.);
+                else if (event->numberOfJets() >= 8) fillVal.push_back(6.);
+            } else if (event->numberOfMediumBJets() >= 4) {
+                if (event->numberOfJets() >= 5) fillVal.push_back(7.);
+            }
+        } else {
+            if (event->numberOfMediumBJets() == 2) {
+                if (event->numberOfJets() == 5) fillVal.push_back(0.);
+                else if (event->numberOfJets() == 6) fillVal.push_back(1.);
+                else if (event->numberOfJets() >= 7) fillVal.push_back(2.);
+            } else if (event->numberOfMediumBJets() >= 3) {
+                if (event->numberOfJets() == 4) fillVal.push_back(3.);
+                else if (event->numberOfJets() == 5) fillVal.push_back(4.);
+                else if (event->numberOfJets() >= 6) fillVal.push_back(5.);
+            }
+        }
     }
+
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
         Lepton* l1 = event->getLepton(0);
