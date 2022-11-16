@@ -22,6 +22,7 @@
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 #include "../../FourTopEventHandling/interface/EventFourTLoose.h"
+#include "../../FourTopEventHandling/interface/EventFourTOldAN.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 #include "../../HistogramHandling/interface/ChannelManager.h"
 

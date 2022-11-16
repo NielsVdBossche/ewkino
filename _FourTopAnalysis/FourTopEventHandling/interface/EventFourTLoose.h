@@ -1,3 +1,6 @@
+#ifndef EVENTFOURTLOOSE
+#define EVENTFOURTLOOSE
+
 #include "EventFourT.h"
 
 class EventFourTLoose : public EventFourT {
@@ -9,3 +12,5 @@ class EventFourTLoose : public EventFourT {
 
         virtual void classifyEvent();
 };
+
+#endif

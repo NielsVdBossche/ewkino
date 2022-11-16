@@ -86,12 +86,14 @@ class EventFourT {
         TopReconstructionNew* getTopReco() {return topReco;}
 
         int numberOfJets() const {return nJets;}
+        void setNumberOfJets(int newNjets) {nJets = newNjets;}
         int numberOfMediumBJets() const {return nMediumB;}
         int numberOfTightBJets() const {return nTightB;}
         int numberOfLooseBJets() const {return nLooseB;}
         int numberOfLooseLeps() const {return nLooseLep;}
         int numberOfLeps() const {return nLep;}
         double getHT() const {return ht;}
+        void setHT(double newHT) {ht = newHT;}
         double getMET() const {return met;}
         eventClass getCurrentClass() const {return currentClass;}
         bool isEventNormalSelected() const {return isNormalSelected;}

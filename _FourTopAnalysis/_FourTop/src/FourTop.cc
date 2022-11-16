@@ -18,7 +18,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    selection = new EventFourTLoose();
+    selection = new EventFourTOldAN();
 
     if (mode < 2) {
         std::string outputFileName = "Output/" + outputName + "_";
