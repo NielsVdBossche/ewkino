@@ -43,7 +43,8 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
         HistInfo("LowestLepMVAScore_" + flag, "score", 40, -1., 1.),
         HistInfo("LeptonsAtLooseWP_" + flag, "N_{l}", 8, -0.5, 7.5),
         HistInfo("nEventsWith3T1Looser_" + flag, "N_{l}", 2, -0.5, 1.5),
-        HistInfo("nLepsNotTightButLooseWP_" + flag, "N_{l}", 4, -0.5, 3.5)};
+        HistInfo("nLepsNotTightButLooseWP_" + flag, "N_{l}", 4, -0.5, 3.5)
+    };
 
     // variables for selection
 
@@ -147,15 +148,20 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr(entry);
-            selection->addNewEvent(currentEvent);  // THIS CAN NOT BE PLACED EARLIER DUE TO THE SELECTIONS IT PERFORMS
+            selection->addNewEvent(currentEvent); 
+            if (! eventPassesTriggers()) continue;
+            if (! selection->leptonsArePrompt()) continue;
+            if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
+
             if (!selection->passLeptonSelection()) continue;
 
             std::shared_ptr<TH1D> cutflowHist;
             std::vector<std::shared_ptr<TH1D>>* currentHistSet;
-            std::shared_ptr<TH1D> cutflowHistSub;
 
             int nLeps = selection->numberOfLeps();
             int nTightLeps = nLeps;
+
+            if (nLeps < 2) continue;
 
             if (nLeps == 2) {
                 cutflowHist = dlHist;
@@ -169,14 +175,16 @@ void FourTop::cutFlow(std::string& sortingMode) {
             }
 
             weight = currentEvent->weight();
-            if (!sortOnGenerator) weight *= reweighter.totalWeight(*currentEvent);
+            weight *= reweighter.totalWeight(*currentEvent);
+            selection->classifyEvent();
+            eventClass nominalClass = selection->getCurrentClass();
 
-            // std::cout << nLeps << " " << sameCharge << std::endl;
+            std::cout << nLeps << std::endl;
             cutflowHist->Fill(0., weight);
-            cutflowHistSub->Fill(0., weight);
+            
 
             cutflowHist->Fill(1., weight);
-            cutflowHistSub->Fill(1., weight);
+            
 
             currentHistSet->at(7)->Fill(currentEvent->numberOfGoodJets(), weight);
             currentHistSet->at(8)->Fill(currentEvent->numberOfLooseBTaggedJets(), weight);
@@ -184,29 +192,29 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(10)->Fill(currentEvent->HT(), weight);
 
             cutflowHist->Fill(6., weight);
-            cutflowHistSub->Fill(6., weight);
+            
             currentEvent->sortLeptonsByPt();
 
             if (selection->getLepton(0)->pt() < 25 || selection->getLepton(1)->pt() < 20) continue;
 
             cutflowHist->Fill(7., weight);
-            cutflowHistSub->Fill(7., weight);
+            
 
             // Remove mass resonances
             if (! selection->passLowMassVeto()) continue;
 
             cutflowHist->Fill(8., weight);
-            cutflowHistSub->Fill(8., weight);
+            
 
             if (!selection->passZBosonVeto()) continue;
             cutflowHist->Fill(9., weight);
-            cutflowHistSub->Fill(9., weight);
+            
 
             currentHistSet->at(13)->Fill(currentEvent->numberOfJets(), weight);
 
             if ((nLeps == 2 && selection->numberOfJets() < 4) || (nLeps == 3 && selection->numberOfJets() < 3) || (nLeps == 4 && selection->numberOfJets() < 2)) continue;
             cutflowHist->Fill(10., weight);
-            cutflowHistSub->Fill(10., weight);
+            
 
             if (selection->numberOfLooseBJets() == 2) currentHistSet->at(16)->Fill(selection->numberOfJets(), weight);
             if (selection->numberOfLooseBJets() == 3) currentHistSet->at(19)->Fill(selection->numberOfJets(), weight);
@@ -217,21 +225,25 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
             if ((nLeps < 4 && selection->numberOfLooseBJets() < 2) || (nLeps == 4 && selection->numberOfLooseBJets() < 1)) continue;
             cutflowHist->Fill(11., weight);
-            cutflowHistSub->Fill(11., weight);
+            
 
             if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6)) continue;
             cutflowHist->Fill(12., weight);
-            cutflowHistSub->Fill(12., weight);
+            
 
             currentHistSet->at(18)->Fill(selection->getHT(), weight);
 
             if ((nLeps == 2 && selection->getHT() < 280) || (nLeps == 3 && selection->getHT() < 200)) continue;
             cutflowHist->Fill(13., weight);
-            cutflowHistSub->Fill(13., weight);
+            
 
             if (selection->numberOfLooseBJets() == 2) currentHistSet->at(20)->Fill(selection->numberOfJets(), weight);
             if (selection->numberOfLooseBJets() == 3) currentHistSet->at(21)->Fill(selection->numberOfJets(), weight);
             if (selection->numberOfMediumBJets() == 2) currentHistSet->at(22)->Fill(selection->numberOfJets(), weight);
+
+            if (nominalClass == eventClass::ssdl) cutflowHist->Fill(14., weight);
+            if (nominalClass == eventClass::trilep) cutflowHist->Fill(15., weight);
+            if (nominalClass == eventClass::fourlep) cutflowHist->Fill(16., weight);
         }
 
         // Output management: save histograms to a ROOT file.

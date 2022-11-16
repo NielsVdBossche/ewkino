@@ -646,7 +646,7 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
 
-        if (selection->GetDLMVA()->getClassAndScore().first == MVAClasses::TTTT) subClasses.push_back("pureSig");
+        if (currClass == eventClass::ssdl && selection->GetDLMVA()->getClassAndScore().first == MVAClasses::TTTT) subClasses.push_back("pureSig");
     } else if (currClass == eventClass::trilep) {
         if (selection->getMediumLepCol()->hasOSSFPair()) {
             subClasses.push_back("OSSF");

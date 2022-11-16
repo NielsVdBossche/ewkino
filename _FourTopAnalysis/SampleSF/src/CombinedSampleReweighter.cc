@@ -26,6 +26,13 @@ double CombinedSampleReweighter::totalWeightDown( const Event& event, const int 
     return totalWeight(&ReweighterSample::weightDown, event, njet);
 }
 
+bool CombinedSampleReweighter::hasReweighter(std::string rew) {
+    for (auto el : reweighterMap) {
+        if (el.first == rew) return true;
+    }
+    return false;
+}
+
 bool CombinedSampleReweighter::IsEmpty() const {
     if (reweighterVector.size() == 0) {
         return true;
