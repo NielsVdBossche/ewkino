@@ -166,7 +166,19 @@ tight electron selection for medium 0p4 tZq ID
 
 bool ElectronSelector::isTightBase() const{
     if( !isFO() ) return false;
-    if( electronMVAValue(electronPtr) <= electronMVACut() ) return false;
+    //if( electronMVAValue(electronPtr) <= electronMVACut() ) return false;
+    if (electronPtr->miniIso() > 0.12) return false;
+    if (electronPtr->ptRatio() < 0.80 && electronPtr->ptRel() < 7.2) return false;
+
+    //   self.isLeptonMva4TOP = bool(self.miniIso < 0.12) and bool(self.ptRatio > 0.80 or self.pTRel > 7.2)
+
+    if (electronPtr->absEta() < 0.8 && (electronPtr->pt() > 10 && electronPtr->pt() < 15) && electronPtr->electronMVAFall17NoIso() < 0.77) return false;
+    else if (electronPtr->absEta() < 0.8 && (electronPtr->pt() > 25) and electronPtr->electronMVAFall17NoIso() < 0.52) return false;
+    else if (electronPtr->absEta() > 0.8 && electronPtr->absEta() < 1.479 && (electronPtr->pt() > 10 and electronPtr->pt() < 15) and electronPtr->electronMVAFall17NoIso() < 0.56) return false;
+    else if (electronPtr->absEta() > 0.8 && electronPtr->absEta() < 1.479 && (electronPtr->pt() > 25) and electronPtr->electronMVAFall17NoIso() < 0.11) return false;
+    else if (electronPtr->absEta() > 1.479 && electronPtr->absEta() < 2.5 && (electronPtr->pt() > 10 and electronPtr->pt() < 15) and electronPtr->electronMVAFall17NoIso() < 0.48) return false;
+    else if (electronPtr->absEta() > 1.479 && electronPtr->absEta() < 2.5 && (electronPtr->pt() > 25) and electronPtr->electronMVAFall17NoIso() < -0.01) return false;
+    
     return true;
 }
 
