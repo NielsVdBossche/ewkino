@@ -88,12 +88,12 @@ void FourTop::cutFlow(std::string& sortingMode) {
     ReweighterBTagShape** btagReweighter;
     CombinedReweighter reweighter;
     CombinedSampleReweighter* sampleReweighter = nullptr;
-    if (!sortOnGenerator) {
-        std::cout << "building reweighter" << std::endl;
-        btagReweighter = new ReweighterBTagShape*();
-        reweighter = reweighterFactory->buildReweighter("../weights/", yearString, treeReader->sampleVector(), btagReweighter, testRun);
-        addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
-    }
+    //if (!sortOnGenerator) {
+    //    std::cout << "building reweighter" << std::endl;
+    //    btagReweighter = new ReweighterBTagShape*();
+    //    reweighter = reweighterFactory->buildReweighter("../weights/", yearString, treeReader->sampleVector(), btagReweighter, testRun);
+    //    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
+    //}
 
     std::string channelDL = "DL";
     std::vector<HistInfo>* infoDL = getCutflowHist(channelDL, sortOnGenerator);
@@ -149,9 +149,9 @@ void FourTop::cutFlow(std::string& sortingMode) {
             // Initialize event
             currentEvent = treeReader->buildEventPtr(entry);
             selection->addNewEvent(currentEvent); 
-            if (! eventPassesTriggers()) continue;
-            if (! selection->leptonsArePrompt()) continue;
-            if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
+            //if (! eventPassesTriggers()) continue;
+            //if (! selection->leptonsArePrompt()) continue;
+            //if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
 
             if (!selection->passLeptonSelection()) continue;
 
@@ -175,7 +175,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             }
 
             weight = currentEvent->weight();
-            weight *= reweighter.totalWeight(*currentEvent);
+            //weight *= reweighter.totalWeight(*currentEvent);
             selection->classifyEvent();
             eventClass nominalClass = selection->getCurrentClass();
 
