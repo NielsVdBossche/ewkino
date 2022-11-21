@@ -358,10 +358,12 @@ void FourTop::analyze(std::string method) {
 
                 if (uncID <= shapeUncId::pileup) {
                     // all uncertainties with simple reweighting
+                    //if (uncID >= shapeUncId::prefire)  {
                     std::string id = uncTranslateMap[shapeUncId(uncID)];
                     double weightNominalInv = 1. / reweighter[ id ]->weight( *currentEvent );
                     weightUp = reweighter[ id ]->weightUp( *currentEvent ) * weightNominalInv;
                     weightDown = reweighter[ id ]->weightDown( *currentEvent ) * weightNominalInv;
+                    //}
                 } else if (uncID == shapeUncId::qcdScale) {
                     std::vector<double> qcdvariations;
                     if (hasValidQcds) {

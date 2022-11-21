@@ -157,11 +157,12 @@ tight muon selection for medium 0p4 tZq ID
 
 bool MuonSelector::isTightBase() const{
     if( !isFO() ) return false;
+    if( muonMVAValue(muonPtr) <= muonMVACut() ) return false;
     
-    if ( !muonPtr->isMediumPOGMuon() ) return false;
-    if (muonPtr->miniIso() >= 0.16) return false;
-    if (muonPtr->ptRatio() < 0.76 && muonPtr->ptRel() < 7.2) return false;
-    //        self.isLeptonMva4TOP = self.POGMedium and \
+    //if ( !muonPtr->isMediumPOGMuon() ) return false;
+    //if (muonPtr->miniIso() >= 0.16) return false;
+    //if (muonPtr->ptRatio() < 0.76 && muonPtr->ptRel() < 7.2) return false;
+    //        self.isLeptonMva4TOP = self.POGMedium and
     //    bool(self.miniIso < 0.16) and bool(self.ptRatio > 0.76 or self.pTRel > 7.2)
 
     return true;

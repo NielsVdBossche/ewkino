@@ -271,9 +271,9 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     if (evClass < eventClass::ssdl) {
         histInfoVec->push_back(HistInfo("TriClass_Fit_" + flag, "", 3, -0.5, 2.5));
     } else if (evClass >= eventClass::ssdl) {
-        int nBins = 14;
+        int nBins = 15;
         if (evClass != eventClass::ssdl) nBins = 6;
-        histInfoVec->push_back(HistInfo("Cutbased_AN_" + flag, "", nBins, -0.5, double(nBins) - 0.5));
+        histInfoVec->push_back(HistInfo("Cutbased_AN_" + flag, "", nBins, -1.5, double(nBins) - 1.5));
     }
 
 
@@ -443,32 +443,32 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
                     if (event->numberOfJets() == 6) fillVal.push_back(0.);
                     else if (event->numberOfJets() == 7) fillVal.push_back(1.);
                     else if (event->numberOfJets() >= 8) fillVal.push_back(2.);
-                    else fillVal.push_back(0.);
+                    else fillVal.push_back(-1.);
                 } else if (event->numberOfMediumBJets() == 3) {
                     if (event->numberOfJets() == 5) fillVal.push_back(3.);
                     else if (event->numberOfJets() == 6) fillVal.push_back(4.);
                     else if (event->numberOfJets() == 7) fillVal.push_back(5.);
                     else if (event->numberOfJets() >= 8) fillVal.push_back(6.);
-                    else fillVal.push_back(0.);
+                    else fillVal.push_back(-1.);
                 } else if (event->numberOfMediumBJets() >= 4) {
                     if (event->numberOfJets() >= 5) fillVal.push_back(7.);
                     else fillVal.push_back(0.);
-                } else fillVal.push_back(0.);
+                } else fillVal.push_back(-1.);
             } else {
                 if (event->numberOfMediumBJets() == 2) {
                     if (event->numberOfJets() == 5) fillVal.push_back(8.);
                     else if (event->numberOfJets() == 6) fillVal.push_back(9.);
                     else if (event->numberOfJets() >= 7) fillVal.push_back(10.);
-                    else fillVal.push_back(0.);
+                    else fillVal.push_back(-1.);
                 } else if (event->numberOfMediumBJets() >= 3) {
                     if (event->numberOfJets() == 4) fillVal.push_back(11.);
                     else if (event->numberOfJets() == 5) fillVal.push_back(12.);
                     else if (event->numberOfJets() >= 6) fillVal.push_back(13.);
-                    else fillVal.push_back(0.);
-                } else fillVal.push_back(0.);
+                    else fillVal.push_back(-1.);
+                } else fillVal.push_back(-1.);
             }
         } else {
-            fillVal.push_back(0.);
+            fillVal.push_back(-1.);
         }
     }
 
