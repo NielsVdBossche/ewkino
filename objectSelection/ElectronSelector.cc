@@ -41,7 +41,7 @@ loose electron selection (common for ttH and tZq IDs)
 ----------------------------------------------------------------
 */
 bool ElectronSelector::isLooseBase() const{
-    if( electronPtr->uncorrectedPt() < 10) return false;
+    if( electronPtr->uncorrectedPt() < 20) return false;
     if( electronPtr->absEta() >= 2.5 ) return false;
     if( fabs( electronPtr->dxy() ) >= 0.05 ) return false;
     if( fabs( electronPtr->dz() ) >= 0.1 ) return false;

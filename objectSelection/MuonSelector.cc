@@ -38,7 +38,7 @@ loose muon selection (common to tZq, ttH and old tZq ID)
 */
 
 bool MuonSelector::isLooseBase() const{
-    if( muonPtr->uncorrectedPt() <= 10 ) return false;
+    if( muonPtr->uncorrectedPt() <= 20 ) return false;
     if( muonPtr->absEta() >= 2.4 ) return false; 
     if( fabs( muonPtr->dxy() ) >= 0.05 ) return false;
     if( fabs( muonPtr->dz() ) >= 0.1 ) return false;
