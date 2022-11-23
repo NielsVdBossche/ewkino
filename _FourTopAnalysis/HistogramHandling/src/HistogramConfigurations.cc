@@ -286,6 +286,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         histInfoVec->push_back(HistInfo( "min_deltaR_MedB_" + flag, "#Delta R(b1,b2)", 24, 0, 4.8));
         histInfoVec->push_back(HistInfo( "deltaR_HighPT_Jets_" + flag, "#Delta R(j1,j2)", 24, 0, 4.8));
         histInfoVec->push_back(HistInfo( "min_deltaR_Jets_" + flag, "#Delta R(j1,j2)", 24, 0, 4.8));
+        histInfoVec->push_back(HistInfo( "NjetNbjet_" + flag, "", 28, -0.5, 27.5));
     }
 
     return histInfoVec;
@@ -315,7 +316,7 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
 
     // only bdt variables here
 
-    if (unsigned(evClass) >= eventClass::ssdl) {
+    if (unsigned(evClass) >= eventClass::ssdl || unsigned(evClass) == eventClass::crz3L) {
         std::pair<double, double> minMaxNjets = {-0.5, 6.5};
         std::pair<double, double> minMaxNBjets = {-0.5, 4.5};
         std::pair<double, double> minMaxHT = {0, 800};
@@ -469,6 +470,14 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
             fillVal.push_back(5.);
             fillVal.push_back(5.);
         }
+
+        int nbs = (event->numberOfMediumBJets() > 5 ? 5 : event->numberOfMediumBJets());
+        int njs = (event->numberOfJets() > 10 ? 10 : event->numberOfJets());
+        if (nbs < 2) nbs = 2;
+        if (njs < 3) njs = 3;
+
+        int lastPlotFillVal = (nbs - 2) * 8 + (njs - 3);
+        fillVal.push_back(lastPlotFillVal);
     }
 
     return fillVal;
@@ -756,7 +765,7 @@ std::vector<double> HistogramConfig::fillNominalHists(const eventClass evClass, 
 
 std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClass, EventFourT* event) {
     std::vector<double> fillVal;
-    if (unsigned(evClass) >= eventClass::ssdl) {
+    if (unsigned(evClass) >= eventClass::ssdl || unsigned(evClass) == eventClass::crz3L) {
         MVAHandler_4T* mva;
         if (evClass == eventClass::ssdl) {
             mva = event->GetDLMVA();

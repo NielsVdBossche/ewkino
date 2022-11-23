@@ -653,6 +653,10 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         } else {
             subClasses.push_back("noOSSF");
         }
+    } else if (currClass == eventClass::crz3L && onlyCR) {
+        if (selection->numberOfLooseBJets() >= 2 && selection->numberOfJets() >= 3) {
+            subClasses.push_back("SigZVeto");
+        }
     }
 
     return subClasses;
@@ -753,8 +757,8 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
 
     std::map<eventClass, std::string> namingScheme = {
             {fail, "fail"},
-            {dy, "DY"},
-            {ttbar, "TTBar"},
+            {dy, "_DY"},
+            {ttbar, "_TTBar"},
             {crwz, "CRWZ"},
             {crzz, "CRZZ"},
             {cr_conv, "CR-Conversion"},
@@ -771,21 +775,28 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
+    std::vector<std::string> crzSubChannels = {"SigZVeto"};
 
     if (considerRegion == eventClass::fail) {
         if (bdtOutput) {
+            offsets[eventClass::dy] = mgrAll->at(eventClass::dy)->getHistInfo()->size() + mva_DL->getMaxClass();
+            offsets[eventClass::ttbar] = mgrAll->at(eventClass::ttbar)->getHistInfo()->size() + mva_DL->getMaxClass();
             offsets[eventClass::crz3L] = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
             offsets[eventClass::crz4L] = mgrAll->at(eventClass::crz4L)->getHistInfo()->size() + mva_ML->getMaxClass();
             offsets[eventClass::cro3L] = mgrAll->at(eventClass::cro3L)->getHistInfo()->size() + mva_ML->getMaxClass();  
             offsets[eventClass::cro] = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
             offsets[eventClass::crw] = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
 
+            mgrAll->at(eventClass::dy)->updateHistInfo(mva_DL->createHistograms("_DY", true));
+            mgrAll->at(eventClass::ttbar)->updateHistInfo(mva_DL->createHistograms("_TTBar", true));
             mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-Z", true));
             mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-Z", true));
             mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-2J1B", true));
             mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CR-2L-23J1B", true));
             mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CR-2L-45J2B", true));
 
+            mgrAll->at(eventClass::dy)->set2DHistInfo(mva_DL->create2DHistograms("_DY", true));
+            mgrAll->at(eventClass::ttbar)->set2DHistInfo(mva_DL->create2DHistograms("_TTBar", true));
             mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-Z", true));
             mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-4L-Z", true));
             mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-2J1B", true));
@@ -794,6 +805,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
         }
         
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
+        if (onlyCR) mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
         if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
 
         if (! onlyCR) {
@@ -815,9 +827,9 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
         }
     } else {
-        if (bdtOutput && considerRegion >= unsigned(eventClass::crz3L)) {
+        if (bdtOutput && (considerRegion >= unsigned(eventClass::crz3L) || considerRegion == unsigned(eventClass::dy) || considerRegion == unsigned(eventClass::ttbar))) {
             //std::cout << "bdt output" << std::endl;
-            if (considerRegion == eventClass::cro || considerRegion == eventClass::crw || considerRegion == eventClass::ssdl) {
+            if (considerRegion == eventClass::cro || considerRegion == eventClass::crw || considerRegion == eventClass::ssdl || considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
                 offsets[considerRegion] = mgrAll->at(considerRegion)->getHistInfo()->size() + mva_DL->getMaxClass();
                 mgrAll->at(considerRegion)->updateHistInfo(mva_DL->createHistograms(namingScheme[considerRegion], true));
                 mgrAll->at(considerRegion)->set2DHistInfo(mva_DL->create2DHistograms(namingScheme[considerRegion], true));
@@ -835,6 +847,8 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
     }
     if (! bdtOutput) {
         offsets = {
+            {eventClass::dy, 0},
+            {eventClass::ttbar, 0},
             {eventClass::crwz, 0},
             {eventClass::cr_conv, 0},
             {eventClass::crzz, 0},
