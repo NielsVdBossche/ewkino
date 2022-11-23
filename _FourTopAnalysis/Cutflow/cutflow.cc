@@ -149,7 +149,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             // Initialize event
             currentEvent = treeReader->buildEventPtr(entry);
             selection->addNewEvent(currentEvent); 
-            //if (! eventPassesTriggers()) continue;
+            if (! eventPassesTriggers()) continue;
             //if (! selection->leptonsArePrompt()) continue;
             //if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
 
