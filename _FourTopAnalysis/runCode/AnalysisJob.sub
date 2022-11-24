@@ -1,5 +1,5 @@
 executable = MainAnalysis.sh
-arguments = $(Samplelist) $(Method) timestamp=2022-11-18_14-37
+arguments = $(Samplelist) $(Method) timestamp=2022-11-23_17-14
 
 output = /user/nivanden/condor/output/analysis_exec_$(method)_$(ClusterId)_$(ProcId).out
 error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcId).err
