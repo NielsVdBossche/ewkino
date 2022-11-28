@@ -35,6 +35,7 @@ class TreeReader {
         static const unsigned nJets_max = 100;
         static const unsigned gen_nL_max = 20;
         static const unsigned lhe_n_max = 20;
+        static const unsigned gen_n_max = 1000;
 	// global event variables and weights
         ULong_t         _runNb;
         ULong_t         _lumiBlock;
@@ -64,6 +65,24 @@ class TreeReader {
         Bool_t          _gen_lIsPrompt[gen_nL_max];   
         UInt_t          _ttgEventType;
         UInt_t          _zgEventType;
+
+        // all generator variables
+        UInt_t     _gen_n;
+        Double_t   _gen_pt[gen_n_max];
+        Double_t   _gen_eta[gen_n_max];
+        Double_t   _gen_phi[gen_n_max];
+        Double_t   _gen_E[gen_n_max];
+        Int_t      _gen_pdgId[gen_n_max];
+        Int_t      _gen_charge[gen_n_max];
+        Int_t      _gen_status[gen_n_max];
+        Bool_t     _gen_isPromptFinalState[gen_n_max];
+        Bool_t     _gen_isDirectPromptTauDecayProductFinalState[gen_n_max];
+        Bool_t     _gen_isLastCopy[gen_n_max];
+        Int_t      _gen_index[gen_n_max];
+        Int_t      _gen_motherIndex[gen_n_max];
+        Int_t      _gen_daughter_n[gen_n_max];
+        Int_t      _gen_daughterIndex[gen_n_max][10];
+
         // lhe variables
         UInt_t          _nLheTau;
         UInt_t          _nLheParticles;
@@ -333,6 +352,7 @@ class TreeReader {
 
         //check whether generator info is present in current tree
         bool containsGeneratorInfo() const;
+        bool containsFullGeneratorInfo() const;
         bool containsLheInfo() const;
         
         //check whether SUSY mass info is present in the current sample
@@ -648,6 +668,23 @@ class TreeReader {
 
         std::map< std::string, TBranch* > b__triggerMap;
         std::map< std::string, TBranch* > b__MetFilterMap; 
+
+        // all generator variables
+        TBranch        *b__gen_n;
+        TBranch        *b__gen_pt;
+        TBranch        *b__gen_eta;
+        TBranch        *b__gen_phi;
+        TBranch        *b__gen_E;
+        TBranch        *b__gen_pdgId;
+        TBranch        *b__gen_charge;
+        TBranch        *b__gen_status;
+        TBranch        *b__gen_isPromptFinalState;
+        TBranch        *b__gen_isDirectPromptTauDecayProductFinalState;
+        TBranch        *b__gen_isLastCopy;
+        TBranch        *b__gen_index;
+        TBranch        *b__gen_motherIndex;
+        TBranch        *b__gen_daughter_n;
+        TBranch        *b__gen_daughterIndex;
 };
 
 #endif
