@@ -23,17 +23,18 @@ void EventFourTOldAN::classifyEvent() {
     if (getHT() < 300) return;
     if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
 
+    if (numberOfLeps() == 3 && getMediumLepCol()->at(2)->pt() < 20) return;
     if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() != 0) return;
     if (! passZBosonVeto()) {
         if (numberOfLeps() == 3) SetEventClass(eventClass::crz3L);
-        if (numberOfLeps() == 4 && passSingleZBosonVeto()) SetEventClass(eventClass::crz4L);
-        if (numberOfLeps() == 4 && !passSingleZBosonVeto()) SetEventClass(eventClass::crzz);
+        if (numberOfLeps() == 4 && passSingleZBosonVeto()) SetEventClass(eventClass::crz3L);
+        //if (numberOfLeps() == 4 && !passSingleZBosonVeto()) SetEventClass(eventClass::crzz);
         return;
     }
         
-    int trueCountCRO = (numberOfLooseBJets() < 2 ? 1 : 0) + (numberOfJets() < 4 ? 1 : 0) + (getHT() < 280 ? 1 : 0);
+    int trueCountCRO = (numberOfMediumBJets() < 2 ? 1 : 0) + (numberOfJets() < 4 ? 1 : 0) + (getHT() < 280 ? 1 : 0);
     if (numberOfLeps() == 2 && trueCountCRO == 1) {
-        SetEventClass(eventClass::cro); // adapt to other crs potentially
+        //SetEventClass(eventClass::cro); // adapt to other crs potentially
         return;
     } else if (numberOfLeps() == 2 && trueCountCRO > 1) {
         return;
@@ -41,12 +42,12 @@ void EventFourTOldAN::classifyEvent() {
     
     //int trueCountCRO3L = (numberOfLooseBJets() < 2 ? 1 : 0) + (numberOfJets() < 3 ? 1 : 0); // likely want this in future
 
-    if (numberOfLeps() == 3 && (numberOfLooseBJets() < 2 || numberOfJets() < 3)) {
-        SetEventClass(eventClass::cro3L);
+    if (numberOfLeps() == 3 && (numberOfMediumBJets() < 2 || numberOfJets() < 3)) {
+        //SetEventClass(eventClass::cro3L);
         return;
     }
 
-    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfLooseBJets() == 2) {
+    if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
         SetEventClass(eventClass::crw);
         return;
     }
@@ -55,10 +56,10 @@ void EventFourTOldAN::classifyEvent() {
         SetEventClass(eventClass::ssdl);
         return;
     } else if (numberOfLeps() == 3) {
-        SetEventClass(eventClass::trilep);
+        SetEventClass(eventClass::ssdl);
         return;
     } else if (numberOfLeps() == 4) {
-        SetEventClass(eventClass::fourlep);
+        SetEventClass(eventClass::ssdl);
         return;
     }
     return;
