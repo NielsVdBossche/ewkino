@@ -32,20 +32,20 @@ void EventFourTOldAN::classifyEvent() {
         return;
     }
         
-    int trueCountCRO = (numberOfMediumBJets() < 2 ? 1 : 0) + (numberOfJets() < 4 ? 1 : 0) + (getHT() < 280 ? 1 : 0);
-    if (numberOfLeps() == 2 && trueCountCRO == 1) {
-        //SetEventClass(eventClass::cro); // adapt to other crs potentially
-        return;
-    } else if (numberOfLeps() == 2 && trueCountCRO > 1) {
-        return;
-    }
+    //int trueCountCRO = (numberOfMediumBJets() < 2 ? 1 : 0) + (numberOfJets() < 4 ? 1 : 0) + (getHT() < 280 ? 1 : 0);
+    //if (numberOfLeps() == 2 && trueCountCRO == 1) {
+    //    //SetEventClass(eventClass::cro); // adapt to other crs potentially
+    //    return;
+    //} else if (numberOfLeps() == 2 && trueCountCRO > 1) {
+    //    return;
+    //}
     
     //int trueCountCRO3L = (numberOfLooseBJets() < 2 ? 1 : 0) + (numberOfJets() < 3 ? 1 : 0); // likely want this in future
 
-    if (numberOfLeps() == 3 && (numberOfMediumBJets() < 2 || numberOfJets() < 3)) {
-        //SetEventClass(eventClass::cro3L);
-        return;
-    }
+    //if (numberOfLeps() == 3 && (numberOfMediumBJets() < 2 || numberOfJets() < 3)) {
+    //    //SetEventClass(eventClass::cro3L);
+    //    return;
+    //}
 
     if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
         SetEventClass(eventClass::crw);
