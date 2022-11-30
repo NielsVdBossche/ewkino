@@ -149,7 +149,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             // Initialize event
             currentEvent = treeReader->buildEventPtr(entry);
             selection->addNewEvent(currentEvent); 
-            if (! eventPassesTriggers()) continue;
+            //if (! eventPassesTriggers()) continue;
             //if (! selection->leptonsArePrompt()) continue;
             //if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
 
@@ -174,7 +174,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
                 currentHistSet = all4LHist;
             }
 
-            weight = currentEvent->weight();
+            weight = 1.;// currentEvent->weight();
             //weight *= reweighter.totalWeight(*currentEvent);
             selection->classifyEvent();
             eventClass nominalClass = selection->getCurrentClass();
