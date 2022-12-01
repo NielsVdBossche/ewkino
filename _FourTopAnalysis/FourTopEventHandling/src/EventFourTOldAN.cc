@@ -24,6 +24,7 @@ void EventFourTOldAN::classifyEvent() {
     if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
 
     if (numberOfLeps() == 3 && getMediumLepCol()->at(2)->pt() < 20) return;
+    if (numberOfLeps() == 4 && getMediumLepCol()->at(3)->pt() < 20) return;
     if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() != 0) return;
     if (! passZBosonVeto()) {
         if (numberOfLeps() == 3) SetEventClass(eventClass::crz3L);
@@ -56,10 +57,10 @@ void EventFourTOldAN::classifyEvent() {
         SetEventClass(eventClass::ssdl);
         return;
     } else if (numberOfLeps() == 3) {
-        SetEventClass(eventClass::ssdl);
+        SetEventClass(eventClass::trilep);
         return;
     } else if (numberOfLeps() == 4) {
-        SetEventClass(eventClass::ssdl);
+        SetEventClass(eventClass::fourlep);
         return;
     }
     return;
