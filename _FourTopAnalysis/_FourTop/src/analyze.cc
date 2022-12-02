@@ -69,7 +69,7 @@ void FourTop::analyze(std::string method) {
         std::cout << "Running method " << "ChargeDD" << std::endl;
     } else if (method == "nonPromptDD") {
         initFakerate();
-        processes = {"nonPromptDD"};
+        processes = {"nonPromptElectron", "nonPromptMuon"};
         selection->setSelectionType(selectionType::NPDD);
         useUncertainties = false;
         st = selectionType::NPDD;
@@ -77,7 +77,7 @@ void FourTop::analyze(std::string method) {
         std::cout << "Running method " << "NP DD" << std::endl;
     } else if (method == "nonPromptDDControl") {
         initFakerate();
-        processes = {"nonPrompt"};
+        processes = {"nonPromptElectron", "nonPromptMuon"};
         selection->setSelectionType(selectionType::NPDD);
         isNPControl = true;
         useUncertainties = false;
@@ -272,6 +272,13 @@ void FourTop::analyze(std::string method) {
             } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
                 weight *= FakeRateWeight();
+                for (auto lepton : *selection->getMediumLepCol()) {
+                    if (lepton->isFO() && ! lepton->isTight()) {
+                        if (lepton->isMuon()) processNb = 1;
+                        break;
+                    }
+                }
+
                 if (currentEvent->isMC() && ! isNPControl) {
                     weight *= -1;
                     // should all leptons be prompt?

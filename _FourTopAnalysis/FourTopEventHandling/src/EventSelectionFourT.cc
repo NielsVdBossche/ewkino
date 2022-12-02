@@ -93,7 +93,7 @@ bool EventFourT::passBaselineEventSelection() {
     //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
     //if (! passLeptonSelection()) return false;
-    //std::cout << "pqss lep sel" << std::endl;
+    //std::cout << "pass lep sel" << std::endl;
     //if (mediumLeps->size() < 2) return false;
     //if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
 
@@ -183,6 +183,7 @@ bool EventFourT::passLeptonSelection() {
     }
     
     nLep = (*mediumLeps)->size();
+    (*mediumLeps)->sortByPt();
     return true;
 }
 
