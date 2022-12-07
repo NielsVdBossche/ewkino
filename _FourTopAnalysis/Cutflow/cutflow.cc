@@ -143,6 +143,11 @@ void FourTop::cutFlow(std::string& sortingMode) {
         // at end of sel, count extra if it flows to other channels (3l and then ssdl?)
         double weight = 1.;
 
+        std::ofstream eventTagsOutput;
+        std::string samplename = treeReader->sampleVector()[0].uniqueName();
+        eventTagsOutput.open("Output/EventTags_" + samplename + ".txt");
+        
+
         for (long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry) {
             delete currentEvent;
 
@@ -235,7 +240,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
             if ((nLeps == 2 && selection->getHT() < 280) || (nLeps == 3 && selection->getHT() < 200)) continue;
             cutflowHist->Fill(13., weight);
-            
+            eventTagsOutput << currentEvent->eventNumber() << std::endl;
 
             if (selection->numberOfLooseBJets() == 2) currentHistSet->at(20)->Fill(selection->numberOfJets(), weight);
             if (selection->numberOfLooseBJets() == 3) currentHistSet->at(21)->Fill(selection->numberOfJets(), weight);
@@ -270,6 +275,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
         TriLManager->writeCurrentHistograms();
         FourLManager->writeCurrentHistograms();
         garbageManager->writeCurrentHistograms();
+        eventTagsOutput.close();
     }
 
     // Don't forget non-prompt contributions
