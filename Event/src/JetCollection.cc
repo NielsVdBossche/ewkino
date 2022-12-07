@@ -181,6 +181,10 @@ JetCollection JetCollection::JECDownCollection( std::string source ) const{
     return buildVariedCollection( &Jet::JetJECDown, source );
 }
 
+JetCollection JetCollection::HEMIssue() const {
+    return buildVariedCollection( &Jet::HEMIssue );
+}
+
 JetCollection JetCollection::getVariedJetCollection( const std::string& variation) const{
     if( variation == "nominal" ){
         return this->goodJetCollection();

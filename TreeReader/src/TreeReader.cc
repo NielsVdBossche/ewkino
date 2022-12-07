@@ -255,6 +255,10 @@ bool TreeReader::containsFullGeneratorInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_gen_pt" );
 }
 
+bool TreeReader::containsParticleLevelInfo() const{
+    return treeHasBranchWithName( _currentTreePtr, "_pl_" );
+}
+
 bool TreeReader::containsLheInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_lhePt" );
 }
@@ -753,7 +757,30 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
             _currentTreePtr->SetBranchAddress("_gen_daughter_n",                               _gen_daughter_n,                               &b__gen_daughter_n);
             _currentTreePtr->SetBranchAddress("_gen_daughterIndex",                            _gen_daughterIndex,                            &b__gen_daughterIndex);
         }
-    } 
+    }
+
+    if (containsParticleLevelInfo()) {
+        _currentTreePtr->SetBranchAddress("_pl_met",                   &_pl_met,                   &b__pl_met);
+        _currentTreePtr->SetBranchAddress("_pl_metPhi",                &_pl_metPhi,                &b__pl_metPhi);
+        _currentTreePtr->SetBranchAddress("_pl_nPh",                   &_pl_nPh,                   &b__pl_nPh);
+        _currentTreePtr->SetBranchAddress("_pl_phPt",                  _pl_phPt,                  &b__pl_phPt);
+        _currentTreePtr->SetBranchAddress("_pl_phEta",                 _pl_phEta,                 &b__pl_phEta);
+        _currentTreePtr->SetBranchAddress("_pl_phPhi",                 _pl_phPhi,                 &b__pl_phPhi);
+        _currentTreePtr->SetBranchAddress("_pl_phE",                   _pl_phE,                   &b__pl_phE);
+        _currentTreePtr->SetBranchAddress("_pl_nL",                    &_pl_nL,                    &b__pl_nL);
+        _currentTreePtr->SetBranchAddress("_pl_lPt",                   _pl_lPt,                   &b__pl_lPt);
+        _currentTreePtr->SetBranchAddress("_pl_lEta",                  _pl_lEta,                  &b__pl_lEta);
+        _currentTreePtr->SetBranchAddress("_pl_lPhi",                  _pl_lPhi,                  &b__pl_lPhi);
+        _currentTreePtr->SetBranchAddress("_pl_lE",                    _pl_lE,                    &b__pl_lE);
+        _currentTreePtr->SetBranchAddress("_pl_lFlavor",               _pl_lFlavor,               &b__pl_lFlavor);
+        _currentTreePtr->SetBranchAddress("_pl_lCharge",               _pl_lCharge,               &b__pl_lCharge);
+        _currentTreePtr->SetBranchAddress("_pl_nJets",                 &_pl_nJets,                 &b__pl_nJets);
+        _currentTreePtr->SetBranchAddress("_pl_jetPt",                 _pl_jetPt,                 &b__pl_jetPt);
+        _currentTreePtr->SetBranchAddress("_pl_jetEta",                _pl_jetEta,                &b__pl_jetEta);
+        _currentTreePtr->SetBranchAddress("_pl_jetPhi",                _pl_jetPhi,                &b__pl_jetPhi);
+        _currentTreePtr->SetBranchAddress("_pl_jetE",                  _pl_jetE,                  &b__pl_jetE);
+        _currentTreePtr->SetBranchAddress("_pl_jetHadronFlavor",       _pl_jetHadronFlavor,       &b__pl_jetHadronFlavor);
+    }
 
     if (containsLheInfo()) {
         _currentTreePtr->SetBranchAddress("_nLheTau", &_nLheTau, &b__nLheTau);
@@ -1029,6 +1056,29 @@ void TreeReader::setOutputTree( TTree* outputTree ){
             outputTree->Branch("_gen_daughterIndex",                            &_gen_daughterIndex,                            "_gen_daughterIndex[_gen_n][10]/I");
         }
     } 
+
+    if (containsParticleLevelInfo()) {
+        outputTree->Branch("_pl_met",                   &_pl_met,                   "_pl_met/D");
+        outputTree->Branch("_pl_metPhi",                &_pl_metPhi,                "_pl_metPhi/D");
+        outputTree->Branch("_pl_nPh",                   &_pl_nPh,                   "_pl_nPh/i");
+        outputTree->Branch("_pl_phPt",                  &_pl_phPt,                  "_pl_phPt[_pl_nPh]/D");
+        outputTree->Branch("_pl_phEta",                 &_pl_phEta,                 "_pl_phEta[_pl_nPh]/D");
+        outputTree->Branch("_pl_phPhi",                 &_pl_phPhi,                 "_pl_phPhi[_pl_nPh]/D");
+        outputTree->Branch("_pl_phE",                   &_pl_phE,                   "_pl_phE[_pl_nPh]/D");
+        outputTree->Branch("_pl_nL",                    &_pl_nL,                    "_pl_nL/i");
+        outputTree->Branch("_pl_lPt",                   &_pl_lPt,                   "_pl_lPt[_pl_nL]/D");
+        outputTree->Branch("_pl_lEta",                  &_pl_lEta,                  "_pl_lEta[_pl_nL]/D");
+        outputTree->Branch("_pl_lPhi",                  &_pl_lPhi,                  "_pl_lPhi[_pl_nL]/D");
+        outputTree->Branch("_pl_lE",                    &_pl_lE,                    "_pl_lE[_pl_nL]/D");
+        outputTree->Branch("_pl_lFlavor",               &_pl_lFlavor,               "_pl_lFlavor[_pl_nL]/i");
+        outputTree->Branch("_pl_lCharge",               &_pl_lCharge,               "_pl_lCharge[_pl_nL]/I");
+        outputTree->Branch("_pl_nJets",                 &_pl_nJets,                 "_pl_nJets/i");
+        outputTree->Branch("_pl_jetPt",                 &_pl_jetPt,                 "_pl_jetPt[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetEta",                &_pl_jetEta,                "_pl_jetEta[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetPhi",                &_pl_jetPhi,                "_pl_jetPhi[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetE",                  &_pl_jetE,                  "_pl_jetE[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetHadronFlavor",       &_pl_jetHadronFlavor,       "_pl_jetHadronFlavor[_pl_nJets]/i");
+    }
 
     if (containsLheInfo()) {
         outputTree->Branch("_nLheTau",                   &_nLheTau,                   "_nLheTau/i");
