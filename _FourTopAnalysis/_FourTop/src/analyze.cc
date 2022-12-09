@@ -131,7 +131,7 @@ void FourTop::analyze(std::string method) {
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
         std::cout << "init sample" << std::endl;
-        currentEvent = treeReader->buildEventPtr(0);
+        currentEvent = treeReader->buildEventPtr(0, false, false, false, true );
 
         std::cerr << treeReader->currentSample().fileName() << std::endl;
         std::cout << treeReader->currentSample().fileName() << std::endl;
@@ -183,9 +183,7 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0 && useSplitJEC) {
                 std::cout << "split JEC" << std::endl;
                 JetInfo info = currentEvent->jetInfo();
-                info.groupedJECVariations();
                 std::map< std::string, size_t >* a = info.groupedJECVariationsMap();
-                std::cout << "got sources" << std::endl;
                 std::vector<std::string> inter;
 
                 for (auto var : *a) {
@@ -193,7 +191,6 @@ void FourTop::analyze(std::string method) {
                 }
 
                 JECSourcesGrouped = *a;
-                std::cout << "saved sources" << std::endl;
 
 
                 mgrAll->addSubUncertainties(shapeUncId::JEC, inter);
