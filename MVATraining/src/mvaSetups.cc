@@ -4,7 +4,7 @@
 
 #include <ctime>
 
-TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile) {
+TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* outputFile, unsigned nClasses) {
     //std::string analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
     std::string analysType;
     if (config == NN_DL || config == NN_ML) {
@@ -12,7 +12,12 @@ TMVA::Factory* mvaSetupManager::buildFactory(mvaConfiguration config, TFile* out
     } else {
         analysType = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=";
     }
-    analysType += "Multiclass";
+    if (nClasses > 2) {
+        analysType += "Multiclass";
+    } else {
+        analysType += "Classification";
+    }
+
 
     std::ostringstream oss;
 

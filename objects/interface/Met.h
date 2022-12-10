@@ -33,8 +33,8 @@ class Met : public PhysicsObject {
         Met MetJECSourcesUp( const unsigned) const;
 
 	Met getVariedMet( const std::string& variation ) const;
-        Met getVariedMet(JetCollection nomJets, unsigned variationSource, unsigned flavor, bool up) const;
-
+        Met getVariedMet(JetCollection& nomJets, unsigned variationSource, unsigned flavor, bool up) const;
+        Met HEMIssue(JetCollection&) const;
         //maximum variations of met pT
         double maxPtAnyVariation() const;
         double minPtAnyVariation() const;

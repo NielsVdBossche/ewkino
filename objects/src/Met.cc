@@ -124,6 +124,22 @@ Met Met::MetJECSourcesUp( const unsigned source) const {
     return variedMetPxPy( newpxy.first, newpxy.second );
 }
 
+Met Met::HEMIssue(JetCollection& nominalJets) const {
+    LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
+    for (const auto& jetPtr : nominalJets) {
+        double ptNom = jetPtr->pt();
+        Jet varJet = jetPtr->HEMIssue();
+        double ptdiff = ptNom - varJet.pt();
+        if (fabs(ptdiff) > 1e-1) {
+            ret += LorentzVector(ptdiff, 0., jetPtr->phi(), ptdiff);
+        }
+    }
+    Met variedMet( *this );
+    variedMet.setLorentzVector(ret.pt(), eta(), ret.phi(), ret.pt() );
+    return variedMet;
+}
+
+
 Met Met::getVariedMet( const std::string& variation ) const{
     if( variation == "nominal" ){
         return *this;
@@ -182,7 +198,7 @@ std::ostream& Met::print( std::ostream& os ) const{
     return os;
 }
 
-Met Met::getVariedMet(JetCollection nomJets, unsigned variationSource, unsigned flavor, bool up) const {
+Met Met::getVariedMet(JetCollection& nomJets, unsigned variationSource, unsigned flavor, bool up) const {
     // rough approach
     // generate lorentzvector corresponding to met
     LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());

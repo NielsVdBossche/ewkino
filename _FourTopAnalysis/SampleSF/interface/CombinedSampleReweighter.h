@@ -21,6 +21,8 @@ class CombinedSampleReweighter {
         double totalWeightUp( const Event&, const int ) const;
         double totalWeightDown( const Event&, const int ) const;
 
+        bool hasReweighter(std::string rew);
+
         bool IsEmpty() const;
     private:
         double totalWeight( double (ReweighterSample::*weightFunction)(const Event&, const int) const, const Event&, const int ) const;

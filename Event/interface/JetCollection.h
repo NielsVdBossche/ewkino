@@ -56,6 +56,9 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection JECUpGroupedFlavorQCD(unsigned flavor) const;
         JetCollection JECDownGroupedFlavorQCD(unsigned flavor) const;
 
+        JetCollection HEMIssue() const;
+
+
         //select jets
         void selectGoodJets();
         JetCollection goodJetCollection() const;

@@ -50,6 +50,8 @@ std::vector<double> EventFourT::fillVector() {
         fillVec = histFiller(currentClass, this);
     } else if (currentClass == eventClass::fourlep) {
         fillVec = histFiller(currentClass, this);
+    } else if (currentClass == eventClass::dy || currentClass == eventClass::ttbar) {
+        fillVec = histFiller(currentClass, this);
     } else if (currentClass != eventClass::fail) {
         useMVA = false;
         fillVec = histFiller(currentClass, this);
@@ -66,7 +68,7 @@ std::vector<double> EventFourT::fillVector() {
 
 std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
     std::vector<std::pair<int, double>> singleEntries;
-    if (currentClass == eventClass::fail || currentClass < eventClass::crz3L) return singleEntries;
+    if (currentClass == eventClass::fail || (currentClass < eventClass::crz3L && (currentClass != eventClass::dy || currentClass != eventClass::ttbar))) return singleEntries;
     MVAHandler_4T* currentMVA = dl_MVA;
     //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
@@ -84,7 +86,7 @@ std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
 
 std::vector<std::pair<double, double>> EventFourT::fillVector2D() {
     std::vector<std::pair<double, double>> fillVec2D;
-    if (currentClass == eventClass::fail || currentClass < eventClass::crz3L) return fillVec2D;
+    if (currentClass == eventClass::fail || (currentClass < eventClass::crz3L && (currentClass != eventClass::dy || currentClass != eventClass::ttbar))) return fillVec2D;
     MVAHandler_4T* currentMVA = dl_MVA;
     //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass > eventClass::ssdl) currentMVA = ml_MVA;

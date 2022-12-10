@@ -105,23 +105,24 @@ ReweighterBTagShape::ReweighterBTagShape(const std::string &weightDirectory,
     for (Sample sample : samples)
     {      
         std::string sampleName = sample.fileName();
-        _normFactors[sampleName]["central"][0] = 1.;
-        for (auto sys : allowedvar) {
-            std::string variation = "up_" + sys;
-            _normFactors[sampleName][variation][0] = 1.;
-            variation = "down_" + sys;
-            _normFactors[sampleName][variation][0] = 1.;
+        for (int nLep = 2; nLep<5; nLep++) {
+            _normFactors[sampleName]["central"][nLep][0] = 1.;
+            for (auto sys : allowedvar) {
+                std::string variation = "up_" + sys;
+                _normFactors[sampleName][variation][nLep][0] = 1.;
+                variation = "down_" + sys;
+                _normFactors[sampleName][variation][nLep][0] = 1.;
 
-            if (sys == "jesFlavorQCD") {
-                std::vector<std::string> flavors = {"_0", "_5", "_6"};
-                for (auto flavVar : flavors) {
-                    variation = "up_" + sys + flavVar;
-                    _normFactors[sampleName][variation][0] = 1.;
-                    variation = "down_" + sys + flavVar;
-                    _normFactors[sampleName][variation][0] = 1.;
+                if (sys == "jesFlavorQCD") {
+                    std::vector<std::string> flavors = {"_0", "_4", "_5"};
+                    for (auto flavVar : flavors) {
+                        variation = "up_" + sys + flavVar;
+                        _normFactors[sampleName][variation][nLep][0] = 1.;
+                        variation = "down_" + sys + flavVar;
+                        _normFactors[sampleName][variation][nLep][0] = 1.;
+                    }
                 }
             }
-
         }
         // (initialize one element at 0 jets for each sample;
         // events with higher jet multiplicities will fall back to this default value)
@@ -192,7 +193,7 @@ void ReweighterBTagShape::initialize(const std::vector<Sample> &samples,
         // and update the normalization factor
         std::map<int, double> averageOfWeights = this->calcAverageOfWeights(sample,
                                                                             numberOfEntries);
-        this->setNormFactors(sample, averageOfWeights);
+        this->setNormFactors(sample, averageOfWeights, 2);
     }
     std::cout << "done initializing ReweighterBTagShape" << std::endl;
 }
@@ -247,7 +248,8 @@ bool ReweighterBTagShape::considerVariation(const Jet &jet,
                                 "jesAbsolute_2017", "jesBBEC1_2017", "jesEC2_2017",
                                 "jesHF_2017", "jesRelativeSample_2017",
                                 "jesAbsolute_2016", "jesBBEC1_2016", "jesEC2_2016",
-                                "jesHF_2016", "jesRelativeSample_2016"};
+                                "jesHF_2016", "jesRelativeSample_2016",
+                                "jesFlavorQCD_0", "jesFlavorQCD_4", "jesFlavorQCD_5"};
     }
     for (std::string var : forbidden_variations)
     {
@@ -260,7 +262,7 @@ bool ReweighterBTagShape::considerVariation(const Jet &jet,
 /// help functions for getting and setting normalization factors ///
 
 void ReweighterBTagShape::setNormFactors(const Sample &sample,
-                                         const std::map<int, double> normFactors)
+                                         const std::map<int, double> normFactors, int nLeptons)
 {
     // set the normalization factors
     // input arguments:
@@ -277,11 +279,11 @@ void ReweighterBTagShape::setNormFactors(const Sample &sample,
         throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample!");
     }
 
-    _normFactors[sampleName]["central"] = normFactors;
+    _normFactors[sampleName]["central"][nLeptons] = normFactors;
     std::cout << "done setting norm factors" << std::endl;
 }
 
-void ReweighterBTagShape::setNormFactors(const Sample &sample, const std::map<int, double> normFactors, std::string& variation )
+void ReweighterBTagShape::setNormFactors(const Sample &sample, const std::map<int, double> normFactors, std::string& variation, int nLeptons )
 {
     // set the normalization factors
     // input arguments:
@@ -298,7 +300,7 @@ void ReweighterBTagShape::setNormFactors(const Sample &sample, const std::map<in
         throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample!");
     }
 
-    _normFactors[entry][variation] = normFactors;
+    _normFactors[entry][variation][nLeptons] = normFactors;
     std::cout << "done setting norm factors" << std::endl;
 }
 
@@ -316,6 +318,8 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
     }
     // determine number of jets
     int njets = event.getJetCollection(jecVariation).size();
+    int nLeptons = event.numberOfFOLeptons();
+    if (nLeptons > 4) nLeptons=4;
     // retrieve the normalization factor
     // note: if no normalization factor was initialized for this jet multiplicity,
     //	     the value for lower jet multiplicities is retrieved instead.
@@ -323,10 +327,10 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
     for (int n = njets; n >= 0; n--)
     {   
         //std::cout << "get norm factor" << std::endl;
-        if (_normFactors.at(sampleName).at(systematic).find(n) != _normFactors.at(sampleName).at(systematic).end())
+        if (_normFactors.at(sampleName).at(systematic).at(nLeptons).find(n) != _normFactors.at(sampleName).at(systematic).at(nLeptons).end())
         {
             //std::cout << "found norm factor" << std::endl;
-            return _normFactors.at(sampleName).at(systematic).at(n);
+            return _normFactors.at(sampleName).at(systematic).at(nLeptons).at(n);
         }
     }
 
@@ -343,10 +347,19 @@ double ReweighterBTagShape::getNormFactor_FlavorFilter(const Event &event, unsig
     // check validity of sample to which event belongs
     if (_normFactors.find(sampleName) == _normFactors.end())
     {
-        throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample!");
+        throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample! " + sampleName);
     }
+    if (_normFactors.at(sampleName).find(systematic) == _normFactors.at(sampleName).end())
+    {
+        throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this systematic! " + systematic);
+    }
+    //std::cout << "normfactor" << std::endl;
     // determine number of jets
     int njets = 0;
+    int nLeptons = event.numberOfFOLeptons();
+    //std::cout << "nelps" << nLeptons << std::endl;
+
+    if (nLeptons > 4) nLeptons=4;
     if (stringTools::stringContains(jecVariation, "Up")) {
         njets = event.jetCollection().JECUpGroupedFlavorQCD(flavor).size();
     } else {
@@ -356,37 +369,39 @@ double ReweighterBTagShape::getNormFactor_FlavorFilter(const Event &event, unsig
     // note: if no normalization factor was initialized for this jet multiplicity,
     //	     the value for lower jet multiplicities is retrieved instead.
     //std::cout << njets << " njets & syst " << systematic << " for jec var "<< jecVariation << std::endl;
+    //std::cout << "get out" << nLeptons << std::endl;
+    
     for (int n = njets; n >= 0; n--)
     {   
         //std::cout << "get norm factor" << std::endl;
-        if (_normFactors.at(sampleName).at(systematic).find(n) != _normFactors.at(sampleName).at(systematic).end())
+        if (_normFactors.at(sampleName).at(systematic).at(nLeptons).find(n) != _normFactors.at(sampleName).at(systematic).at(nLeptons).end())
         {
             //std::cout << "found norm factor" << std::endl;
-            return _normFactors.at(sampleName).at(systematic).at(n);
+            return _normFactors.at(sampleName).at(systematic).at(nLeptons).at(n);
         }
     }
 
     throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape got event for which no norm factor could be retrieved.");
 }
 
-std::map<std::string, std::map<std::string, std::map<int, double>>> ReweighterBTagShape::getNormFactors() const
+std::map<std::string, std::map<std::string, std::map<int,std::map<int,double>>>> ReweighterBTagShape::getNormFactors() const
 {
     return _normFactors;
 }
 
 void ReweighterBTagShape::printNormFactors() const
 {
-    for (auto el : _normFactors)
-    {   
-        std::cout << el.first << ": " << std::endl;
-        for (auto el2 : el.second){
-            std::cout << el2.first << ": " << std::endl;
-            for (auto el3 : el2.second)
-            {
-                std::cout << " - " << el3.first << " -> " << el3.second << std::endl;
-            }
-        }   
-    }
+    //for (auto el : _normFactors)
+    //{   
+    //    std::cout << el.first << ": " << std::endl;
+    //    for (auto el2 : el.second){
+    //        std::cout << el2.first << ": " << std::endl;
+    //        for (auto el3 : el2.second)
+    //        {
+    //            //std::cout << " - " << el3.first << " -> " << el3.second << std::endl;
+    //        }
+    //    }   
+    //}
 }
 
 double ReweighterBTagShape::weightVariation( const Event& event, const std::string& variation ) const {
@@ -576,6 +591,7 @@ double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
         jesVarName = "down_" + varName + "_" + std::to_string(flavor);
         isup = false;
     }
+    //std::cout << jecVariation << " " << flavor << std::endl;
     if (!hasVariation(varName))
     {
         std::string msg = "### ERROR ### in ReweighterBTagShape::weightJecVar_FlavorFilter:";

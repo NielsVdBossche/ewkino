@@ -14,23 +14,29 @@ void MVAHandler_4T::initReader() {
 
     std::string weightFilePath = "../MVATraining/VeryEpicLoader/weights/";
     if (currentConfig == Binary_DL) {
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_UL_2022-10-14_11-51__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
     } else if (currentConfig == Binary_ML) {
         isML = true;
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_UL_2022-10-14_11-50__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
     } else if (currentConfig == TriClass_DL) {
         if (lean) {
             //weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
-            weightFilePath += "FourTopClassification_LeanSel_DL_BDTG_B_2000_6_20_0.1_1_1.weights.xml";
-            //weightFilePath += "FourTopClassification_UL_2022-10-10_09-45__BDT_VAR_DLG_B_1500_3_20_0.05_1_0.5.weights.xml";
+            //weightFilePath += "FourTopClassification_LeanSel_DL_BDTG_B_2000_6_20_0.1_1_1.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-12_11-41__BDT_VAR_DLG_B_1250_4_20_0.05_5_0.5.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
         }
     } else if (currentConfig == TriClass_ML) {
         if (lean) {
             //weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
-            weightFilePath += "FourTopClassification_LeanSel_ML_BDTG_B_1500_5_20_0.08_1_0.6.weights.xml";
-            //weightFilePath += "FourTopClassification_UL_2022-10-10_13-55__BDT_VAR_MLG_B_1250_3_20_0.05_1_0.25.weights.xml";
+            //weightFilePath += "FourTopClassification_LeanSel_ML_BDTG_B_1500_5_20_0.08_1_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-12_12-08__BDT_VAR_MLG_B_1000_3_20_0.1_1_0.25.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -41,44 +47,87 @@ void MVAHandler_4T::initReader() {
         isML = true;
         weightFilePath += "WEIGHTS";
     }
-    /*
+    
     if (isML) {
+        reader->AddVariable("N_jets", &n_jets_f);
+        //reader->AddVariable("N_b", &n_bjets_f);
+        reader->AddVariable("N_b_tight", &n_b_tight);
+        //reader->AddVariable("N_b_loose", &n_b_loose);
         reader->AddVariable("dr_bJets", &deltaRBjets);
         reader->AddVariable("dr_leps", &dRleps);
-        reader->AddVariable("ht",  &ht);
+        //reader->AddVariable("aziAngle", &aziAngle);
+        reader->AddVariable("ht", &ht);
         reader->AddVariable("mToPt", &massToPt);
+        reader->AddVariable("min_dr_lep_b", &min_dr_lep_b);
+        //reader->AddVariable("sec_min_dr_lep_b", &sec_min_dr_lep_b);
         reader->AddVariable("pt_jet_one", &ptJetOne);
-        reader->AddVariable("pt_jet_two", &ptJetTwo);
+        //reader->AddVariable("pt_jet_two", &ptJetTwo);
         reader->AddVariable("pt_jet_three", &ptJetThree);
+        //reader->AddVariable("pt_jet_four", &ptJetFour);
         reader->AddVariable("pt_jet_five", &ptJetFive);
+        //reader->AddVariable("pt_jet_six", &ptJetSix);
+        reader->AddVariable("pt_lep_one", &ptLepOne);
         reader->AddVariable("pt_lep_two", &ptLepTwo);
-        reader->AddVariable("pt_lep_three", &ptLepThree);
-
-        reader->AddVariable("bTagSub",         &bTagSub);
-        reader->AddVariable("bTagThird",       &bTagThird);
-        reader->AddVariable("bTagPtLead",      &bTagPtLead);
-        reader->AddVariable("bTagPtSub",       &bTagPtSub);
-        reader->AddVariable("massBestTop",     &massBestTop);
-        reader->AddVariable("massBestTopW",    &massBestTopW);
-        reader->AddVariable("MET",             &met);
+        reader->AddVariable("pt_lep_three", &ptLepTwo);
+        //reader->AddVariable("bTagLead", &bTagLead);
+        reader->AddVariable("bTagSub", &bTagSub);
+        reader->AddVariable("bTagThird", &bTagThird);
+        //reader->AddVariable("bTagFourth", &bTagFourth);
+        reader->AddVariable("bTagPtLead", &bTagPtLead);
+        reader->AddVariable("bTagPtSub", &bTagPtSub);
+        reader->AddVariable("bTagPtThird", &bTagPtThird);
+        reader->AddVariable("bTagPtFourth", &bTagPtFourth);
+        reader->AddVariable("m2ll", &m2ll);
+        //reader->AddVariable("m2bb", &m2bb);
+        //reader->AddVariable("m2lblb", &m2lblb);
+        reader->AddVariable("mtLeadLepMET", &mtLeadLepMET);
+        reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
+        reader->AddVariable("massBestTop", &massBestTop);
+        reader->AddVariable("massBestTopW", &massBestTopW);
+        //reader->AddVariable("massSecTop", &massSecTop);
+        //reader->AddVariable("massSecTopW", &massSecTopW);
+        reader->AddVariable("MET", &met);
     } else {
         reader->AddVariable("N_jets", &n_jets_f);
+        reader->AddVariable("N_b", &n_bjets_f);
+        reader->AddVariable("N_b_tight", &n_b_tight);
+        //reader->AddVariable("N_b_loose", &n_b_loose);
         reader->AddVariable("dr_bJets", &deltaRBjets);
         reader->AddVariable("dr_leps", &dRleps);
-        reader->AddVariable("ht",  &ht);
+        reader->AddVariable("aziAngle", &aziAngle);
+        reader->AddVariable("ht", &ht);
         reader->AddVariable("mToPt", &massToPt);
+        reader->AddVariable("min_dr_lep_b", &min_dr_lep_b);
+        reader->AddVariable("sec_min_dr_lep_b", &sec_min_dr_lep_b);
+        reader->AddVariable("pt_jet_one", &ptJetOne);
+        reader->AddVariable("pt_jet_two", &ptJetTwo);
+        //reader->AddVariable("pt_jet_three", &ptJetThree);
         reader->AddVariable("pt_jet_four", &ptJetFour);
         reader->AddVariable("pt_jet_five", &ptJetFive);
+        //reader->AddVariable("pt_jet_six", &ptJetSix);
+        reader->AddVariable("pt_lep_one", &ptLepOne);
         reader->AddVariable("pt_lep_two", &ptLepTwo);
-        reader->AddVariable("bTagSub",         &bTagSub);
-        reader->AddVariable("bTagThird",       &bTagThird);
-        reader->AddVariable("bTagPtLead",      &bTagPtLead);
-        reader->AddVariable("massBestTop",     &massBestTop);
-        reader->AddVariable("massBestTopW",    &massBestTopW);
-        reader->AddVariable("MET",             &met);
-    }*/
+        //reader->AddVariable("bTagLead", &bTagLead);
+        reader->AddVariable("bTagSub", &bTagSub);
+        reader->AddVariable("bTagThird", &bTagThird);
+        reader->AddVariable("bTagFourth", &bTagFourth);
+        reader->AddVariable("bTagPtLead", &bTagPtLead);
+        reader->AddVariable("bTagPtSub", &bTagPtSub);
+        reader->AddVariable("bTagPtThird", &bTagPtThird);
+        //reader->AddVariable("bTagPtFourth", &bTagPtFourth);
+        //reader->AddVariable("m2ll", &m2ll);
+        reader->AddVariable("m2bb", &m2bb);
+        reader->AddVariable("m2lblb", &m2lblb);
+        reader->AddVariable("mtLeadLepMET", &mtLeadLepMET);
+        reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
+        reader->AddVariable("massBestTop", &massBestTop);
+        reader->AddVariable("massBestTopW", &massBestTopW);
+        reader->AddVariable("massSecTop", &massSecTop);
+        reader->AddVariable("massSecTopW", &massSecTopW);
+        reader->AddVariable("MET", &met);
+    }
     
-
+/*
     reader->AddVariable("N_jets", &n_jets_f);
     reader->AddVariable("N_b", &n_bjets_f);
     reader->AddVariable("N_b_tight", &n_b_tight);
@@ -123,7 +172,7 @@ void MVAHandler_4T::initReader() {
     if (isML) {
         reader->AddVariable("pt_lep_three", &ptLepThree);
     }
-
+*/
     reader->BookMVA("BDTCurr", weightFilePath);
 
     createHistograms("");
@@ -210,7 +259,7 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string addition
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
         std::string yaxis = "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)];
 
-        histInfoVec->push_back(HistInfo_2D(name, xaxis, 100, 0., 1., yaxis, 100, 0., 1.));
+        histInfoVec->push_back(HistInfo_2D(name, xaxis, 20, 0., 1., yaxis, 20, 0., 1.));
     }
 
     return histInfoVec;

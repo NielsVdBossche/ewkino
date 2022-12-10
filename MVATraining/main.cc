@@ -37,6 +37,7 @@ int main(int argc, char const *argv[]) {
     std::string setup = argv[3];
     std::string searchSetup = argv[4];
     std::string variables = ""; // just make variables the last thing added.
+    std::string variables_short = "";
     bool useCV = false;
 
     int el = 0;
@@ -45,6 +46,7 @@ int main(int argc, char const *argv[]) {
         if (el < 6) continue;
         if (stringTools::stringContains(arg, ".txt")) {
             variables = arg;
+            variables_short = stringTools::fileNameWithoutExtension(stringTools::fileNameFromPath(variables));
         } else if (stringTools::stringContains(arg, "CV")) {
             useCV = true;
         }
@@ -74,11 +76,13 @@ int main(int argc, char const *argv[]) {
     if (searchSetup == "search") {
         outfile = new TFile(("Classifiers/FourTopClassificationUL_LeanSel_Search_" + setup + "_nTrees_" + std::string(argv[5]) + "_Depth_" + std::string(argv[6]) + "_nCuts_" + std::string(argv[7]) + "_shrink_" + std::string(argv[8]) + "_minNodeSize" + std::string(argv[9]) + "_baggedFraction_" + std::string(argv[10]) + ".root").c_str() ,"RECREATE");
     } else {
-        outfile = new TFile(("Classifiers/FourTopClassificationUL_LeanSel_" + oss.str() + "_" + setup + ".root").c_str() ,"RECREATE");
+        outfile = new TFile(("Classifiers/FourTopClassificationUL_LeanSel_" + oss.str() + "_" + variables_short + "_" + setup + ".root").c_str() ,"RECREATE");
     }
     TMVA::Factory* factory;
     TMVA::CrossValidation* cv;
-    if (!useCV) factory = mvaSetupManager::buildFactory(conf, outfile);
+    unsigned nClasses = data->GetDataSetInfo().GetNClasses();
+
+    if (!useCV) factory = mvaSetupManager::buildFactory(conf, outfile, nClasses);
     else cv = mvaSetupManager::useCrossValidation(data, outfile, conf);
 
     // class manages a dataloader and a factory, as well as settings for the mva's
@@ -100,10 +104,11 @@ int main(int argc, char const *argv[]) {
             if (!useCV) mvaSetupManager::addBDT(factory, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
             else mvaSetupManager::addBDT_CV(cv, data, setup, ntrees, maxDepth, ncuts, shrinkage, minNodeSize, baggedSampleFraction);
         } else {
-            if (!useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT(factory, data, setup, 2000, 4, 20, 0.10, 1, 1.);
-            else if (!useCV && (conf == BDT_VAR_ML || conf == BDT_ML)) mvaSetupManager::addBDT(factory, data, setup, 1500, 4, 20, 0.08, 1, 0.6);
-            else if (useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT_CV(cv, data, setup, 2000, 6, 20, 0.10, 1, 1.);
-            else if (useCV) mvaSetupManager::addBDT_CV(cv, data, setup, 1500, 5, 20, 0.08, 1, 0.6);
+            std::string tmpname = variables_short + "_" + setup;
+            if (!useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT(factory, data, tmpname, 2000, 4, 20, 0.10, 1, 1.);
+            else if (!useCV && (conf == BDT_VAR_ML || conf == BDT_ML)) mvaSetupManager::addBDT(factory, data, tmpname, 1500, 4, 20, 0.08, 1, 0.6);
+            else if (useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT_CV(cv, data, tmpname, 2000, 6, 20, 0.10, 1, 1.);
+            else if (useCV) mvaSetupManager::addBDT_CV(cv, data, tmpname, 1500, 5, 20, 0.08, 1, 0.6);
             else if (conf == BDT_DL_SPLIT) mvaSetupManager::addBDTs_SplitB(factory, data, variableVector);
 
         }
@@ -123,7 +128,7 @@ int main(int argc, char const *argv[]) {
         factory->EvaluateAllMethods();
         TCanvas* rocPlot = factory->GetROCCurve(data);
         rocPlot->Print(("rocCurve_" + setup + ".png").c_str());
-        factory->EvaluateAllVariables(data);
+        //factory->EvaluateAllVariables(data);
     }
 
     outfile->Write();

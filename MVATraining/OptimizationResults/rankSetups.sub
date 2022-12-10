@@ -1,0 +1,7 @@
+executable = rankSetups.sh
+
+output = /user/nivanden/condor/output/rankSetups_$(ClusterId)_$(ProcId).out
+error = /user/nivanden/condor/error/rankSetups_$(ClusterId)_$(ProcId).err
+log = /user/nivanden/condor/logs/rankSetups_$(ClusterId)_$(ProcId).log
+
+queue

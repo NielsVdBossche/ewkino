@@ -283,6 +283,21 @@ Jet Jet::JetJECSourcesUp( const unsigned source_id ) const{
     return variedJet( newpt );
 }
 
+Jet Jet::HEMIssue() const {
+    if (!is2018()) return *this;
+    if (! isTight() || pt() < 15.) return *this;
+    double newPt = 0.;
+    if ((eta() > -2.5 && eta() < -1.3) && (phi() > -1.57 && phi() < -0.87)) {
+        newPt = pt() * 0.8;
+        return variedJet(newPt);
+    } else if ((eta() > -3.0 && eta() < -2.5) && (phi() > -1.57 && phi() < -0.87)) {
+        newPt = pt() * 0.65;
+        return variedJet(newPt);
+    } else {
+        return *this;
+    }
+}
+
 
 bool Jet::isGood() const{
     return selector->isGood();

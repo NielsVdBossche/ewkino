@@ -233,6 +233,10 @@ JetCollection JetCollection::JECGroupedDownCollection( unsigned source ) const{
 }
 
 
+JetCollection JetCollection::HEMIssue() const {
+    return buildVariedCollection( &Jet::HEMIssue );
+}
+
 JetCollection JetCollection::getVariedJetCollection( const std::string& variation) const{
     if( variation == "nominal" ){
         return this->goodJetCollection();

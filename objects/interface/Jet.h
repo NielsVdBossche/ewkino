@@ -62,6 +62,7 @@ class Jet : public PhysicsObject{
         Jet JetJECGroupedUp( const unsigned source_id ) const;
         Jet JetJECSourcesDown( const unsigned source_id ) const;
         Jet JetJECSourcesUp( const unsigned source_id ) const;
+        Jet HEMIssue() const;
 
         //check if any of the jet variations passes the selection
         bool isGoodAnyVariation() const;

@@ -1,0 +1,12 @@
+universe    =   vanilla
+executable  =   trainMVALean.sh
+
+log         =   /user/nivanden/condor/logs/trainMVALean_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainMVALean_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainMVALean_$(ClusterId)_$(Process).out
+
+arguments   =   "sampleLists/SL_Binary_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/AllVariablesDL.txt"
+queue
+
+arguments   =   "sampleLists/SL_Binary_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/AllVariablesML.txt"
+queue
