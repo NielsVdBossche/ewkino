@@ -143,7 +143,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        bool useSplitJEC = false;
+        bool useSplitJEC = true;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
