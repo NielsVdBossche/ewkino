@@ -23,7 +23,6 @@ JetInfo::JetInfo( const TreeReader& treeReader,
 		  const bool readGroupedJECVariations ){
     _JECSources = std::vector<std::string>();
     _JECGrouped = std::vector<std::string>();
-    std::cout << readAllJECVariations << readGroupedJECVariations << std::endl;
     if (readAllJECVariations) {
         _sourcesJEC_Ids = treeReader._sourcesJEC_Ids;
 
