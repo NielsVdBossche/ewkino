@@ -26,6 +26,7 @@ enum shapeUncId {
     JEC,
     JECFlavorQCD,
     MET,
+    HEMIssue,
     end  /// always at the end for easier loops
 };
 

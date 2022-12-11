@@ -93,7 +93,7 @@ bool EventFourT::passBaselineEventSelection() {
     //if (n_lep == 2 && mediumLeps->hasOSPair()) return false;
 
     //if (! passLeptonSelection()) return false;
-    //std::cout << "pqss lep sel" << std::endl;
+    //std::cout << "pass lep sel" << std::endl;
     //if (mediumLeps->size() < 2) return false;
     //if (mediumLeps->size() == 2 && mediumLeps->hasOSPair()) return false;
 
@@ -183,6 +183,7 @@ bool EventFourT::passLeptonSelection() {
     }
     
     nLep = (*mediumLeps)->size();
+    (*mediumLeps)->sortByPt();
     return true;
 }
 
@@ -366,6 +367,18 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& 
             met = event->met().pt(); // event->met().MetJECUp(variation).pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECDownGroupedFlavorQCD(flavor));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().pt(); // event->met().MetJECDown(variation).pt();
+        }
+    } else if (id == shapeUncId::HEMIssue) { 
+        if (up) {
+            jets = new JetCollection(event->getJetCollectionPtr()->HEMIssue());
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().HEMIssue(*jets).pt();
+        } else {
+            jets = event->getJetCollectionPtr();
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().pt(); // event->met().MetJECDown(variation).pt();

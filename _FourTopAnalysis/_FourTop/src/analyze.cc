@@ -69,7 +69,7 @@ void FourTop::analyze(std::string method) {
         std::cout << "Running method " << "ChargeDD" << std::endl;
     } else if (method == "nonPromptDD") {
         initFakerate();
-        processes = {"nonPromptDD"};
+        processes = {"nonPromptElectron", "nonPromptMuon"};
         selection->setSelectionType(selectionType::NPDD);
         useUncertainties = false;
         st = selectionType::NPDD;
@@ -77,7 +77,7 @@ void FourTop::analyze(std::string method) {
         std::cout << "Running method " << "NP DD" << std::endl;
     } else if (method == "nonPromptDDControl") {
         initFakerate();
-        processes = {"nonPrompt"};
+        processes = {"nonPromptElectron", "nonPromptMuon"};
         selection->setSelectionType(selectionType::NPDD);
         isNPControl = true;
         useUncertainties = false;
@@ -127,6 +127,7 @@ void FourTop::analyze(std::string method) {
     std::vector<std::string> JECQCDComponents;
     std::vector<unsigned> JECQCDComponents_flavor;
     std::vector<std::string> wzSFRegions;
+    std::vector<std::string> zzSFRegions;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -141,7 +142,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        bool useSplitJEC = true;
+        bool useSplitJEC = false;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
@@ -192,6 +193,8 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
+                //zzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4PlusJet"};
+                //mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
             }
         }
         
@@ -269,6 +272,13 @@ void FourTop::analyze(std::string method) {
             } else if (st == selectionType::NPDD) {
                 // apply appropriate weights
                 weight *= FakeRateWeight();
+                for (auto lepton : *selection->getMediumLepCol()) {
+                    if (lepton->isFO() && ! lepton->isTight()) {
+                        if (lepton->isMuon()) processNb = 1;
+                        break;
+                    }
+                }
+
                 if (currentEvent->isMC() && ! isNPControl) {
                     weight *= -1;
                     // should all leptons be prompt?
@@ -463,6 +473,27 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight, weight);
                         }
                     }
+                //else if (uncID == shapeUncId::ZZSF) {
+                //  if (sampleReweighter) {
+                //      for (int i=0; i < 5; i++) {
+                //          if (selection->numberOfJets() == i || (i == 4 && selection->numberOfJets() >= 4)) {
+                //              weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                //              weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                //          }
+                //          std::string zzSFRegion = zzSFRegions[i];
+                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight * weightUp, weight * weightDown);
+                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
+                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                //      }
+                //      weightUp = 1.;
+                //      weightDown = 1.;
+                //  } else {
+                //      for (std::string zzSFRegion : zzSFRegions) {
+                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight, weight);
+                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight, weight);
+                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
+                //      }
+                //  }
                 } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
 
@@ -493,13 +524,13 @@ void FourTop::analyze(std::string method) {
                     for (std::string jecSource : JECSourcesGrouped) {
                         if (stringTools::stringContains(jecSource, "Total")) continue;
                         if (considerBTagShape) {
-                            //std::string sourceUp = jecSource + "Up";
-                            //std::string sourceDown = jecSource + "Down";
-                            //
-                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            std::string sourceUp = jecSource + "Up";
+                            std::string sourceDown = jecSource + "Down";
+                            
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
@@ -524,13 +555,13 @@ void FourTop::analyze(std::string method) {
                         std::string jecVar = "FlavorQCD";
                         unsigned flavor = JECQCDComponents_flavor[i];
                         if (considerBTagShape) {
-                            //std::string sourceUp = "FlavorQCDUp";
-                            //std::string sourceDown = "FlavorQCDDown";
-                            //
-                            //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
-                            //weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
-                            //                    / reweighter["bTag_shape"]->weight( *currentEvent );
+                            std::string sourceUp = "FlavorQCDUp";
+                            std::string sourceDown = "FlavorQCDDown";
+                            
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecVar, flavor);
@@ -621,11 +652,17 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("ee");
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
+
+        if (currClass == eventClass::ssdl && selection->GetDLMVA()->getClassAndScore().first == MVAClasses::TTTT) subClasses.push_back("pureSig");
     } else if (currClass == eventClass::trilep) {
         if (selection->getMediumLepCol()->hasOSSFPair()) {
             subClasses.push_back("OSSF");
         } else {
             subClasses.push_back("noOSSF");
+        }
+    } else if (currClass == eventClass::crz3L && onlyCR) {
+        if (selection->numberOfLooseBJets() >= 2 && selection->numberOfJets() >= 3) {
+            subClasses.push_back("SigZVeto");
         }
     }
 
@@ -639,7 +676,11 @@ CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
         std::string sampleName = samp.fileName();
         if (stringTools::stringStartsWith(sampleName, "WZTo") || stringTools::stringStartsWith(sampleName, "WZ_")) {
             sampleReweighter->addReweighter("WZ", std::make_shared< ReweighterSample >("WZ", dir));
-        } //else if (stringTools::stringStartsWith(sampleName, "ZG")) {
+        } //else if (stringTools::stringStartsWith(sampleName, "ZZTo") || stringTools::stringStartsWith(sampleName, "ZZ_")) {
+          //  sampleReweighter->addReweighter("ZZ", std::make_shared< ReweighterSample >("ZZ", dir));
+        //}
+        
+        //else if (stringTools::stringStartsWith(sampleName, "ZG")) {
           //  sampleReweighter->addReweighter("ZG", std::make_shared< ReweighterSample >("ZG", dir));
         //}
     }
@@ -723,8 +764,8 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
 
     std::map<eventClass, std::string> namingScheme = {
             {fail, "fail"},
-            {dy, "DY"},
-            {ttbar, "TTBar"},
+            {dy, "_DY"},
+            {ttbar, "_TTBar"},
             {crwz, "CRWZ"},
             {crzz, "CRZZ"},
             {cr_conv, "CR-Conversion"},
@@ -737,25 +778,32 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             {trilep, ""},
             {fourlep, ""}};
 
-    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm"};
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
+    std::vector<std::string> crzSubChannels = {"SigZVeto"};
 
     if (considerRegion == eventClass::fail) {
         if (bdtOutput) {
+            offsets[eventClass::dy] = mgrAll->at(eventClass::dy)->getHistInfo()->size() + mva_DL->getMaxClass();
+            offsets[eventClass::ttbar] = mgrAll->at(eventClass::ttbar)->getHistInfo()->size() + mva_DL->getMaxClass();
             offsets[eventClass::crz3L] = mgrAll->at(eventClass::crz3L)->getHistInfo()->size() + mva_ML->getMaxClass();
             offsets[eventClass::crz4L] = mgrAll->at(eventClass::crz4L)->getHistInfo()->size() + mva_ML->getMaxClass();
             offsets[eventClass::cro3L] = mgrAll->at(eventClass::cro3L)->getHistInfo()->size() + mva_ML->getMaxClass();  
             offsets[eventClass::cro] = mgrAll->at(eventClass::cro)->getHistInfo()->size() + mva_DL->getMaxClass();
             offsets[eventClass::crw] = mgrAll->at(eventClass::crw)->getHistInfo()->size() + mva_DL->getMaxClass();
 
+            mgrAll->at(eventClass::dy)->updateHistInfo(mva_DL->createHistograms("_DY", true));
+            mgrAll->at(eventClass::ttbar)->updateHistInfo(mva_DL->createHistograms("_TTBar", true));
             mgrAll->at(eventClass::crz3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-Z", true));
             mgrAll->at(eventClass::crz4L)->updateHistInfo(mva_ML->createHistograms("_CR-4L-Z", true));
             mgrAll->at(eventClass::cro3L)->updateHistInfo(mva_ML->createHistograms("_CR-3L-2J1B", true));
             mgrAll->at(eventClass::cro)->updateHistInfo(mva_DL->createHistograms("_CR-2L-23J1B", true));
             mgrAll->at(eventClass::crw)->updateHistInfo(mva_DL->createHistograms("_CR-2L-45J2B", true));
 
+            mgrAll->at(eventClass::dy)->set2DHistInfo(mva_DL->create2DHistograms("_DY", true));
+            mgrAll->at(eventClass::ttbar)->set2DHistInfo(mva_DL->create2DHistograms("_TTBar", true));
             mgrAll->at(eventClass::crz3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-Z", true));
             mgrAll->at(eventClass::crz4L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-4L-Z", true));
             mgrAll->at(eventClass::cro3L)->set2DHistInfo(mva_ML->create2DHistograms("_CR-3L-2J1B", true));
@@ -764,6 +812,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
         }
         
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
+        if (onlyCR) mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
         if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
 
         if (! onlyCR) {
@@ -785,9 +834,9 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             mgrAll->at(eventClass::trilep)->addSubChannels(trilepSubChannels);
         }
     } else {
-        if (bdtOutput && considerRegion >= unsigned(eventClass::crz3L)) {
+        if (bdtOutput && (considerRegion >= unsigned(eventClass::crz3L) || considerRegion == unsigned(eventClass::dy) || considerRegion == unsigned(eventClass::ttbar))) {
             //std::cout << "bdt output" << std::endl;
-            if (considerRegion == eventClass::cro || considerRegion == eventClass::crw || considerRegion == eventClass::ssdl) {
+            if (considerRegion == eventClass::cro || considerRegion == eventClass::crw || considerRegion == eventClass::ssdl || considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
                 offsets[considerRegion] = mgrAll->at(considerRegion)->getHistInfo()->size() + mva_DL->getMaxClass();
                 mgrAll->at(considerRegion)->updateHistInfo(mva_DL->createHistograms(namingScheme[considerRegion], true));
                 mgrAll->at(considerRegion)->set2DHistInfo(mva_DL->create2DHistograms(namingScheme[considerRegion], true));
@@ -805,6 +854,8 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
     }
     if (! bdtOutput) {
         offsets = {
+            {eventClass::dy, 0},
+            {eventClass::ttbar, 0},
             {eventClass::crwz, 0},
             {eventClass::cr_conv, 0},
             {eventClass::crzz, 0},

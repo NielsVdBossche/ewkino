@@ -29,7 +29,9 @@ class Met : public PhysicsObject {
 
 	Met getVariedMet( const std::string& variation ) const;
 
-        Met getVariedMet(JetCollection nomJets, std::string variation, unsigned flavor, bool up) const;
+        Met getVariedMet(JetCollection& nomJets, std::string variation, unsigned flavor, bool up) const;
+
+        Met HEMIssue(JetCollection&) const;
 
         //maximum variations of met pT
         double maxPtAnyVariation() const;
