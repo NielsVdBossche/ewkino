@@ -536,7 +536,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
     std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
 
     for (long unsigned entry = 0; entry < availableEntries; ++entry) {
-        //if (entry>1000) break;
+        //if (entry>100000) break;
         Event event;
         if (jec) event = tempTree.buildEvent(entry, false, false, false, true);
         else event = tempTree.buildEvent(entry);
@@ -562,6 +562,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
         double ht = event.HT();
 
         for (unsigned i=0; i < bTagVar.size(); i++) {
+            //if (i>0) break;
             std::string bVar = bTagVar[i];
 
             JetCollection currentJets;
@@ -596,6 +597,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             int nLeps = event.numberOfTightLeptons();
             if (nLeps > 4) nLeps = 4;
 
+            if (njets >= 20) njets = 19;
             if (ht < 2000.) {
                 averageOfWeightsMap[nLeps-2][bVar]->Fill(njets, ht, btagreweight);
                 nEntriesMap[nLeps-2][bVar]->Fill(njets, ht, 1.);

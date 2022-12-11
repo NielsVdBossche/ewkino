@@ -43,7 +43,7 @@ void FourTop::analyze(std::string method) {
         if (leanEventSelection && !testRun && (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy)) {
             addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
         } else if (leanEventSelection && !testRun) {
-            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/LeanNewNew");
         } else if (!testRun) {
             addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
         }
