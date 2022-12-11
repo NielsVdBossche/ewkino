@@ -530,7 +530,7 @@ double ReweighterBTagShape::weightNoNorm(const Event &event) const
 }
 
 double ReweighterBTagShape::weightJecVar(const Event &event,
-                                         const std::string &jecVariation) const
+                                         const std::string &jecVariation, bool grouped, const unsigned var ) const
 {
     // same as weight but with propagation of jec variations
     // jecvar is expected to be of the form e.g. AbsoluteScaleUp or AbsoluteScaleDown
@@ -560,13 +560,14 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
         //throw std::invalid_argument(msg);
     }
     double weight = 1.;
-    for (const auto &jetPtr : event.getJetCollection(jecVariation))
+    for (const auto &jetPtr : event.getJetCollectionPtr()->getVariedJetCollection(var, isup, grouped))
     {
         if (isup)
             weight *= this->weightUp(*jetPtr, varName);
         else
             weight *= this->weightDown(*jetPtr, varName);
     }
+
     return weight  / getNormFactor(event, jecVariation, jesVarName);
 }
 
