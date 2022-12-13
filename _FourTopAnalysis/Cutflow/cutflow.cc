@@ -240,7 +240,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
             if ((nLeps == 2 && selection->getHT() < 280) || (nLeps == 3 && selection->getHT() < 200)) continue;
             cutflowHist->Fill(13., weight);
-            eventTagsOutput << currentEvent->eventNumber() << std::endl;
+            if (nominalClass == eventClass::ssdl) eventTagsOutput << currentEvent->eventNumber() << std::endl;
 
             if (selection->numberOfLooseBJets() == 2) currentHistSet->at(20)->Fill(selection->numberOfJets(), weight);
             if (selection->numberOfLooseBJets() == 3) currentHistSet->at(21)->Fill(selection->numberOfJets(), weight);
