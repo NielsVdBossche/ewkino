@@ -257,8 +257,8 @@ Jet Jet::JetJECUp( const std::string source ) const{
 }
 
 Jet Jet::HEMIssue() const {
-    if (!is2018()) return *this;
-    if (! isTight() || pt() < 15.) return *this;
+    if (! is2018()) return variedJet(pt());
+    if (! isTight() || pt() < 15.) return variedJet(pt());
     double newPt = 0.;
     if ((eta() > -2.5 && eta() < -1.3) && (phi() > -1.57 && phi() < -0.87)) {
         newPt = pt() * 0.8;
@@ -267,7 +267,8 @@ Jet Jet::HEMIssue() const {
         newPt = pt() * 0.65;
         return variedJet(newPt);
     } else {
-        return *this;
+        newPt = pt();
+        return variedJet(newPt);
     }
 }
 
