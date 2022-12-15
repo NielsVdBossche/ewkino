@@ -53,7 +53,7 @@ if __name__ == "__main__":
     runData = False
     customSamplelistName = ""
     specificSample = ""
-    specificEra = "1"
+    specificEra = ""
 
     useOSDL = False
     
