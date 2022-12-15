@@ -114,6 +114,14 @@ void FourTop::cutFlow(std::string& sortingMode) {
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
 
+    std::vector<unsigned long> evNbs = {282124, 282864, 283586, 283905, 283936, 548982, 615684, 682301, 712028, 712057, 
+            712199, 712800, 712849, 770093, 891544, 896198, 896314, 896382, 927158, 927395, 
+            958217, 958304, 958608, 959203, 961251, 961485, 1018199, 1018319, 1019000, 1019519, 
+            1050902, 1093192, 1093833, 1598281, 1598570, 1906027, 1906159, 1906316, 1906652, 
+            12372968, 13845208, 13845310, 13994079};
+
+    std::vector<unsigned long> evaluatedEvNbs;
+
     std::vector<Sample> sampleVec = treeReader->sampleVector();
     for (unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex) {
         treeReader->initSample();
@@ -153,6 +161,12 @@ void FourTop::cutFlow(std::string& sortingMode) {
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr(entry);
+            // check if eventnumber matches any in evNbs
+            unsigned long evNb = currentEvent->eventNumber();
+
+            if (std::find(evNbs.begin(), evNbs.end(),evNb) == evNbs.end()) continue;
+            evaluatedEvNbs.push_back(evNb);
+            eventTagsOutput << evNb << std::endl;
             selection->addNewEvent(currentEvent); 
             if (! currentEvent->passMetFilters()) continue;
 
@@ -160,13 +174,17 @@ void FourTop::cutFlow(std::string& sortingMode) {
             //if (! selection->leptonsArePrompt()) continue;
             //if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
 
+            eventTagsOutput << "pass lepton selection: " << std::endl;
             if (!selection->passLeptonSelection()) continue;
 
+            eventTagsOutput << "true" << std::endl;
             std::shared_ptr<TH1D> cutflowHist;
             std::vector<std::shared_ptr<TH1D>>* currentHistSet;
 
             int nLeps = selection->numberOfLeps();
             int nTightLeps = nLeps;
+
+            eventTagsOutput << "nLeps == " << nLeps << std::endl;
 
             if (nLeps < 2) continue;
 
@@ -186,7 +204,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             selection->classifyEvent();
             eventClass nominalClass = selection->getCurrentClass();
 
-            std::cout << nLeps << std::endl;
+            //std::cout << nLeps << std::endl;
             cutflowHist->Fill(0., weight);
             
 
@@ -201,23 +219,34 @@ void FourTop::cutFlow(std::string& sortingMode) {
             cutflowHist->Fill(6., weight);
             
             currentEvent->sortLeptonsByPt();
+            
+            eventTagsOutput << "Lepton pts for trigger: " << selection->getLepton(0)->pt() << " " << selection->getLepton(1)->pt() << std::endl;
 
             if (selection->getLepton(0)->pt() < 25 || selection->getLepton(1)->pt() < 20) continue;
 
             cutflowHist->Fill(7., weight);
             
+            eventTagsOutput << "pass low mass veto: " << std::endl;
 
             // Remove mass resonances
             if (! selection->passLowMassVeto()) continue;
 
+            eventTagsOutput << "true" << std::endl;
+
+
             cutflowHist->Fill(8., weight);
             
+            eventTagsOutput << "Z veto: " << std::endl;
 
             if (!selection->passZBosonVeto()) continue;
+            eventTagsOutput << "Passed" << std::endl;
+
             cutflowHist->Fill(9., weight);
             
 
             currentHistSet->at(13)->Fill(currentEvent->numberOfJets(), weight);
+            eventTagsOutput << "NJets " << selection->numberOfJets() << std::endl;
+
 
             if ((nLeps == 2 && selection->numberOfJets() < 4) || (nLeps == 3 && selection->numberOfJets() < 3) || (nLeps == 4 && selection->numberOfJets() < 2)) continue;
             cutflowHist->Fill(10., weight);
@@ -230,13 +259,18 @@ void FourTop::cutFlow(std::string& sortingMode) {
             currentHistSet->at(14)->Fill(selection->numberOfLooseBJets(), weight);
             currentHistSet->at(15)->Fill(selection->numberOfMediumBJets(), weight);
 
+            eventTagsOutput << "Loose Bs " << selection->numberOfLooseBJets() << std::endl;
+
             if ((nLeps < 4 && selection->numberOfLooseBJets() < 2) || (nLeps == 4 && selection->numberOfLooseBJets() < 1)) continue;
             cutflowHist->Fill(11., weight);
             
 
+
             if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6)) continue;
             cutflowHist->Fill(12., weight);
             
+            eventTagsOutput << "HT " << selection->getHT() << std::endl;
+
 
             currentHistSet->at(18)->Fill(selection->getHT(), weight);
 
@@ -289,6 +323,11 @@ void FourTop::cutFlow(std::string& sortingMode) {
     TriLManager->writeNonpromptHistograms();
     FourLManager->writeNonpromptHistograms();
     garbageManager->writeNonpromptHistograms();
+
+    std::cout << "evaluated " << evaluatedEvNbs.size() << "/" << evNbs.size() << std::endl;
+    for (auto el : evaluatedEvNbs) {
+        std::cout << el << std::endl;
+    }
 
     outfile->Close();
 }
