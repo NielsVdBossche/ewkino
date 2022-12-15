@@ -545,6 +545,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
 
     // Set branch addresses and branch pointers
     checkCurrentTree();
+    hasPLInfo = false;
 
     _currentTreePtr->SetMakeClass(1);
 
@@ -760,6 +761,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     }
 
     if (containsParticleLevelInfo()) {
+        hasPLInfo = true;
+
         _currentTreePtr->SetBranchAddress("_pl_met",                   &_pl_met,                   &b__pl_met);
         _currentTreePtr->SetBranchAddress("_pl_metPhi",                &_pl_metPhi,                &b__pl_metPhi);
         _currentTreePtr->SetBranchAddress("_pl_nPh",                   &_pl_nPh,                   &b__pl_nPh);

@@ -30,6 +30,7 @@
 #include "Event/src/LheCollection.cc"
 #include "Event/src/SusyMassInfo.cc"
 #include "Event/src/EventTags.cc"
+#include "Event/src/ParticleLevelInfo.cc"
 #include "Event/src/Event.cc"
 
 //include Tools code 

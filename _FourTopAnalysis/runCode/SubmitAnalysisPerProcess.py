@@ -8,7 +8,8 @@ import sys
 
 sampleListPath = "../../sampleLists/"
 # sampleLists = ["2016PreVFP", "2016PostVFP", "2017", "2018"]
-sampleLists = ["2016PreVFP_fullStat", "2016PostVFP_fullStat", "2017_fullStat", "2018_fullStat"]
+#sampleLists = ["2016PreVFP_fullStat", "2016PostVFP_fullStat", "2017_fullStat", "2018_fullStat"]
+sampleLists = ["GP_Samples"]
 # sampleLists = ["Data16PreVFP", "Data16PostVFP", "Data17", "Data18"]
 # sampleLists = ["OSDL_2016PreVFP", "OSDL_2016PostVFP", "OSDL_2017", "OSDL_2018"]
 
