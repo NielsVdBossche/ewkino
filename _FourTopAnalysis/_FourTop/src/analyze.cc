@@ -143,6 +143,8 @@ void FourTop::analyze(std::string method) {
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
         bool useSplitJEC = true;
+        bool splitAdditionalBees = false;
+        unsigned nominalBees = 0;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
@@ -154,6 +156,12 @@ void FourTop::analyze(std::string method) {
             if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
                 mgrAll->changePrimaryProcess(currProcName);
+                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt) {
+                    std::string bbName = currProcName + "bb";
+                    mgrAll->changeProcess(1, bbName);
+                    nominalBees = 2;
+                    splitAdditionalBees = true;
+                }
             }
         }
 
@@ -293,6 +301,10 @@ void FourTop::analyze(std::string method) {
 
                 if (weight == 0.) continue; // event only contains muons if this is the case
                 if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
+            }
+
+            if (splitAdditionalBees && st == selectionType::MCPrompt) {
+                if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):

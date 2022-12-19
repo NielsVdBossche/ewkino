@@ -33,19 +33,19 @@ double FourTop::ChmisIDWeight() {
 
 void FourTop::initFakerate() {
     std::string filename = "fakeRateMap_data_";
-
+    std::string filenameYear = yearString;
     if (yearString == "2016PreVFP") {
-        //filename = "";
+        filenameYear = "2016Merged";
     } else if( yearString == "2016PostVFP" ){
-        //filename= "";
+        filenameYear = "2016Merged";
     } else if( yearString == "2017" ){
         //filename = "";
     } else {
         //filename = "";
     }
 
-    std::string fullPathElectron = "DatadrivenInput/nonprompt/" + filename + "electron_" + yearString + "_mT.root";
-    std::string fullPathMuon = "DatadrivenInput/nonprompt/" + filename + "muon_" + yearString + "_mT.root";
+    std::string fullPathElectron = "DatadrivenInput/nonprompt/" + filename + "electron_" + filenameYear + "_mT.root";
+    std::string fullPathMuon = "DatadrivenInput/nonprompt/" + filename + "muon_" + filenameYear + "_mT.root";
 
 
     TFile* elWeightFile = TFile::Open( fullPathElectron.c_str() );

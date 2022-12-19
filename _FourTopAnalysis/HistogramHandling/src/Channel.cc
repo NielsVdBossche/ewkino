@@ -102,6 +102,7 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bo
     while (id != shapeUncId::end) {
         if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
             //std::cout << "envelope " << id << std::endl;
+            
             uncHistMap[shapeUncId(id)] = new UncertaintyEnvelope(translateUnc, shapeUncId(id), nominalHistograms);
         } else {
             //std::cout << "current uncertainty " << id << std::endl;
@@ -110,6 +111,27 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bo
         id++;
     }
 }
+
+void Channel::initializeAdditionalHistogramStack(std::string& newProcess, bool uncertainties) {
+    // build uncertainty class objects, histogramsets etc etc
+    nominalHistograms->addProcess(newProcess);
+        
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->initializeAdditionalHistogramStack(newProcess, uncertainties);
+        }
+    }
+    
+    if (! uncertainties) return;
+
+    unsigned id = 0;
+
+    while (id != shapeUncId::end) {
+        uncHistMap[shapeUncId(id)]->addProcess(newProcess);
+        id++;
+    }
+}
+
 
 void Channel::changeProcess(unsigned index, std::string& newTitle, bool uncertainties) {
     nominalHistograms->changeProcess(index, newTitle);

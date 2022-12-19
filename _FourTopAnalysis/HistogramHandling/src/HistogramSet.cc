@@ -33,6 +33,13 @@ void HistogramSet::changeProcess(unsigned index, std::string& newTitle) {
     processHistName[index] = newTitle;
 }
 
+void HistogramSet::addProcess(std::string& title) {
+    processHistName.push_back(title);
+    HistogramContainer* newHists = new HistogramContainer(processHist[0]->getHistInfo(), processHist[0]->get2DHistInfo());
+    processHist.push_back(newHists);
+}
+
+
 void HistogramSet::newSample(std::string& uniqueSampleName) {
     for (unsigned i=0; i<processHist.size(); i++) {
         std::string uniqueName = additionalFlags + "_" + uniqueSampleName + "_" + processHistName[i];

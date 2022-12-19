@@ -17,6 +17,7 @@ public:
 
     //void newSample(std::string& uniqueName) {};
     virtual void changeProcess(unsigned index, std::string& newProcess);
+    virtual void addProcess(std::string& newProc);
 
     void fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, unsigned subProc);
     void fillEnvelopeSingles(std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, unsigned subProc);

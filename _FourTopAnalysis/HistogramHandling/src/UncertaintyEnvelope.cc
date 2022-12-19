@@ -57,6 +57,13 @@ void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess)
     }
 }
 
+void UncertaintyEnvelope::addProcess(std::string& newProc) {
+    for (auto env : envelopeHists) {
+        env->addProcess(newProc);
+    }
+}
+
+
 void UncertaintyEnvelope::fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, unsigned subProc) {
     for (unsigned i=0; i < weight.size(); i++) {
         envelopeHists[i]->fillHistograms(subProc, fillVec, weight[i]);

@@ -43,6 +43,12 @@ void Uncertainty::changeProcess(unsigned index, std::string& newTitle) {
     }
 }
 
+void Uncertainty::addProcess(std::string& newProc) {
+    upHists->addProcess(newProc);
+    downHists->addProcess(newProc);
+}
+
+
 
 void Uncertainty::fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc) {
     upHists->fillHistograms(subProc, fillVec, weightUp);

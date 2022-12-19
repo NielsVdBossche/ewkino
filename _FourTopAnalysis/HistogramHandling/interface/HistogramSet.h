@@ -24,6 +24,7 @@ class HistogramSet {
 
         //void addProcesses(std::vector<std::string>& processNames);
         void changeProcess(unsigned index, std::string& newTitle);
+        void addProcess(std::string& newProc);
 
         void fillHistograms(unsigned subProcess, std::vector<double>& fillVec, double eventWeight);
         void fill2DHistograms(unsigned subProcess, std::vector<std::pair<double, double>>& fillVec, double eventWeight);
