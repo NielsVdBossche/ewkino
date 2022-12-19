@@ -156,7 +156,7 @@ void FourTop::analyze(std::string method) {
             if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
                 mgrAll->changePrimaryProcess(currProcName);
-                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt) {
+                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL()) {
                     std::string bbName = currProcName + "bb";
                     mgrAll->changeProcess(1, bbName);
                     nominalBees = 2;
@@ -303,7 +303,7 @@ void FourTop::analyze(std::string method) {
                 if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             }
 
-            if (splitAdditionalBees && st == selectionType::MCPrompt) {
+            if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                 if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
             }
 
