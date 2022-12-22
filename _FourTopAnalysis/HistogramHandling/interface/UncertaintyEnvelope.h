@@ -8,7 +8,7 @@
 class UncertaintyEnvelope : public Uncertainty {
 private:
     std::vector<HistogramSet*> envelopeHists;
-    std::string process;
+    std::vector<std::string> processes;
 public:
     UncertaintyEnvelope(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms);
     //~UncertaintyEnvelope();
