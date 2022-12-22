@@ -144,6 +144,7 @@ void UncertaintyEnvelope::finalizeEnvelope(unsigned subProc) {
 void UncertaintyEnvelope::writeHistogramsEnvelope(unsigned processNb) {
     finalizeEnvelope(processNb);
     //outfile->cd("Uncertainties");
+    std::string process = processes[processNb];
     gDirectory->cd(process.c_str());
     if (! gDirectory->GetDirectory(getName().c_str())) {
         gDirectory->mkdir(getName().c_str());
