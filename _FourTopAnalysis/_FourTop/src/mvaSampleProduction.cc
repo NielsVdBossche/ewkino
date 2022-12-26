@@ -112,7 +112,10 @@ void FourTop::createMVATrainingSamples() {
     currentEvent = new Event();
 
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
-    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
+    ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
+
+    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, false );
+    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
 
     delete selection;
     selection = new EventFourTLoose();
@@ -147,7 +150,8 @@ void FourTop::createMVATrainingSamples() {
             // first mass cleaning just to get rid of shit
             if (! selection->passLowMassVeto()) {
                 continue;
-            } else if (! selection->passZBosonVeto()) {
+            }
+            if (! selection->passZBosonVeto()) {
                 continue;
             }
 
