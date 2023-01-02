@@ -112,10 +112,12 @@ void FourTop::createMVATrainingSamples() {
     currentEvent = new Event();
 
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
-    ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
+    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector() );
 
-    CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, false );
-    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
+    //ReweighterBTagShape** btagReweighter = new ReweighterBTagShape*();
+//
+    //CombinedReweighter reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, false );
+    //addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
 
     delete selection;
     selection = new EventFourTLoose();
