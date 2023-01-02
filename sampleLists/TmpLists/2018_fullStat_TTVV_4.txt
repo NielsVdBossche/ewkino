@@ -1,1 +1,1 @@
-TTVV            ../skims_v4/2018/TTZH_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.00113
+TTVV            ../skims_v4/2018/TTZZ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                    0.001386

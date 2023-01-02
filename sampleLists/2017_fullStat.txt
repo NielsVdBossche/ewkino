@@ -2,7 +2,7 @@ SSWW            ../skims_v4/2017/SSWW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIIS
 
 # ttbar           ../skims_v4/2017/TTToHadronic_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                                             377.96
 ttbar           ../skims_v4/2017/analysisSamples/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                                                88.40
-ttbar           ../skims_v4/2017/analysisSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                                         365.34
+ttbar           ../skims_v4/2017/analysisSamples/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6_FIX.root                                         365.34
 
 # ttG             ../skims_v4/2017/TTGamma_Hadronic_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                                       6.162
 ttG             ../skims_v4/2017/analysisSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6.root                                         2.22
