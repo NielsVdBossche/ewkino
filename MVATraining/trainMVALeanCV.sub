@@ -1,9 +1,9 @@
 universe    =   vanilla
 executable  =   trainMVALeanCV.sh
 
-log         =   /user/nivanden/condor/logs/trainMVALeanCV_$(ClusterId).log
-error       =   /user/nivanden/condor/error/trainMVALeanCV_$(ClusterId).err
-output      =   /user/nivanden/condor/output/trainMVALeanCV_$(ClusterId).out
+log         =   /user/nivanden/condor/logs/trainMVALeanCV_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainMVALeanCV_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainMVALeanCV_$(ClusterId)_$(Process).out
 
 arguments   =   " sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/VariableSelectionDL.txt CV"
 queue
