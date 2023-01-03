@@ -32,7 +32,7 @@ void FourTop::analyze(std::string method) {
     // reweighter creation
 
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
-    ReweighterBTagShape** btagReweighter;
+    ReweighterBTagShape** btagReweighter = nullptr;
     CombinedReweighter reweighter;
     CombinedSampleReweighter* sampleReweighter = nullptr;
     if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
