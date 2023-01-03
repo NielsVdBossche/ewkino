@@ -41,12 +41,12 @@ std::vector<HistInfo> Channel::hardCopyInfoVector(std::vector<HistInfo>* infoVec
     return newInfoVec;
 }
 
-std::vector<HistInfo_2D> Channel::hardCopy2DInfoVector(std::vector<HistInfo_2D>* infoVec) {
+std::vector<HistInfo_2D> Channel::hardCopy2DInfoVector(std::vector<HistInfo_2D> infoVec) {
     std::vector<HistInfo_2D> newInfoVec;
 
-    for (unsigned i = 0; i < infoVec->size(); i++) {
-        std::string newName = infoVec->at(i).name() + SubChannelName;
-        HistInfo_2D hardCopy(infoVec->at(i));
+    for (unsigned i = 0; i < infoVec.size(); i++) {
+        std::string newName = infoVec[i].name() + SubChannelName;
+        HistInfo_2D hardCopy(infoVec[i]);
         hardCopy.setName(newName);
         newInfoVec.push_back(hardCopy);
     }
@@ -92,7 +92,7 @@ void Channel::updateHistInfo(std::vector<HistInfo> extraInfo) {
 }
 
 void Channel::set2DHistInfo(std::vector<HistInfo_2D> new2DInfo) {
-    twoDimInfo = new std::vector<HistInfo_2D>(new2DInfo);
+    twoDimInfo = new std::vector<HistInfo_2D>(hardCopy2DInfoVector(new2DInfo));
 }
 
 void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties) {

@@ -26,7 +26,7 @@ class Channel {
         std::map<std::string, Channel*>* subChannels = nullptr;
 
         std::vector<HistInfo> hardCopyInfoVector(std::vector<HistInfo>* infoVec);
-        std::vector<HistInfo_2D> hardCopy2DInfoVector(std::vector<HistInfo_2D>* infoVec);
+        std::vector<HistInfo_2D> hardCopy2DInfoVector(std::vector<HistInfo_2D> infoVec);
     public:
         Channel(std::string& channel, std::vector<HistInfo>* histInfo);
         Channel(std::string& channel, std::string& subChannel, std::vector<HistInfo>* histInfo);
