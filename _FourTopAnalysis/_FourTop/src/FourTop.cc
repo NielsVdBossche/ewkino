@@ -161,6 +161,8 @@ FourTop::~FourTop() {
     if (MisIDRates) delete MisIDRates;
     if (FakeRatesElectron) delete FakeRatesElectron;
     if (FakeRatesMuon) delete FakeRatesMuon;
+
+    if (currentEvent) delete currentEvent;
     //outfile->Close();
 }
 
