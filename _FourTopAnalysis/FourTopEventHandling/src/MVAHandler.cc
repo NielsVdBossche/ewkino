@@ -189,10 +189,10 @@ void MVAHandler_4T::initReader() {
     }
 }
 
-std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {
+std::vector<HistInfo> MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
-    std::vector<HistInfo>* histInfoVec = new std::vector<HistInfo>;
+    std::vector<HistInfo> histInfoVec;
 
     if (currentConfig < 2) {
         identifier += "_Binary";
@@ -223,23 +223,23 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
         std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis, 100, 0., 1.));
+        histInfoVec.push_back(HistInfo(name, xaxis, 100, 0., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis , 240, 0.4, 1.));
+        histInfoVec.push_back(HistInfo(name, xaxis , 240, 0.4, 1.));
     }
 
     return histInfoVec;
 }
 
-std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string additionalFlag, bool fourLep) {
+std::vector<HistInfo_2D> MVAHandler_4T::create2DHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
-    std::vector<HistInfo_2D>* histInfoVec = new std::vector<HistInfo_2D>;
+    std::vector<HistInfo_2D> histInfoVec;
 
     if (currentConfig < 2) {
         identifier += "_Binary";
@@ -270,7 +270,7 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string addition
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
         std::string yaxis = "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)];
 
-        histInfoVec->push_back(HistInfo_2D(name, xaxis, 20, 0., 1., yaxis, 20, 0., 1.));
+        histInfoVec.push_back(HistInfo_2D(name, xaxis, 20, 0., 1., yaxis, 20, 0., 1.));
     }
 
     return histInfoVec;

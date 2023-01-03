@@ -61,7 +61,7 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
 
     for (unsigned i=0; i<newSubChannels.size(); i++) {
         (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo);
-        (*subChannels)[newSubChannels[i]]->set2DHistInfo(twoDimInfo);
+        (*subChannels)[newSubChannels[i]]->set2DHistInfo(*twoDimInfo);
     }
 }
 
@@ -87,15 +87,12 @@ void Channel::SetPrintAllUncertaintyVariations(bool setting) {
     }
 }
 
-void Channel::updateHistInfo(std::vector<HistInfo>* extraInfo) {
-    std::vector<HistInfo> extraInfoCopy = hardCopyInfoVector(extraInfo);
-    delete extraInfo;
-    oneDimInfo->insert(oneDimInfo->end(), extraInfoCopy.begin(), extraInfoCopy.end());
+void Channel::updateHistInfo(std::vector<HistInfo> extraInfo) {
+    oneDimInfo->insert(oneDimInfo->end(), extraInfo.begin(), extraInfo.end());
 }
 
-void Channel::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
-    twoDimInfo = new std::vector<HistInfo_2D>(hardCopy2DInfoVector(new2DInfo));
-    delete new2DInfo;
+void Channel::set2DHistInfo(std::vector<HistInfo_2D> new2DInfo) {
+    twoDimInfo = new std::vector<HistInfo_2D>(new2DInfo);
 }
 
 void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties) {

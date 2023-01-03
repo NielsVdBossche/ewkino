@@ -36,8 +36,8 @@ class Channel {
         // initialization functions
         void addSubChannels(std::vector<std::string>& subchannels);
 
-        void updateHistInfo(std::vector<HistInfo>* extraInfo);
-        void set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo);
+        void updateHistInfo(std::vector<HistInfo> extraInfo);
+        void set2DHistInfo(std::vector<HistInfo_2D> new2DInfo);
 
         std::vector<HistInfo>* getHistInfo() {return oneDimInfo;}
         std::vector<HistInfo_2D>* get2DHistInfo() {return twoDimInfo;}
