@@ -23,6 +23,11 @@ EventFourT::EventFourT() {
     topReco = new TopReconstructionNew(this);
 }
 
+EventFourT::~EventFourT() {
+    cleanSelection();
+    delete topReco;
+};
+
 void EventFourT::cleanSelection() {
     delete mediumLeps;
     delete looseLeps;
