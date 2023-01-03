@@ -10,6 +10,7 @@ class GeneratorInfo{
     
     public:
         GeneratorInfo( const TreeReader& );
+        ~GeneratorInfo();
 
         unsigned numberOfLheWeights() const{ return _numberOfLheWeights; }
 

@@ -1,15 +1,19 @@
 #include "../interface/LheParticle.h"
 
-LheParticle::LheParticle(const TreeReader& treeReader, const unsigned lheIndex) :
-    PhysicsObject(treeReader._lhePt[lheIndex], treeReader._lheEta[lheIndex], treeReader._lhePhi[lheIndex], treeReader._lheE[lheIndex], treeReader.is2016(), treeReader.is2016PreVFP(), treeReader.is2016PostVFP(), treeReader.is2017(), treeReader.is2018()),
-    _lheStatus(treeReader._lheStatus[lheIndex]),
-    _lhePdgId(treeReader._lhePdgId[lheIndex]),
-    _lheMother1(treeReader._lheMother1[lheIndex]),
-    _lheMother2(treeReader._lheMother2[lheIndex]),
-    _lheMass(treeReader._lheMass[lheIndex]) {
-    
+LheParticle::LheParticle(const TreeReader& treeReader, const unsigned lheIndex) : 
+    PhysicsObject(treeReader._lhePt[lheIndex], treeReader._lheEta[lheIndex], 
+                treeReader._lhePhi[lheIndex], treeReader._lheE[lheIndex], 
+                treeReader.is2016(), 
+                treeReader.is2016PreVFP(), 
+                treeReader.is2016PostVFP(), 
+                treeReader.is2017(), 
+                treeReader.is2018()),
+            _lheStatus(treeReader._lheStatus[lheIndex]),
+            _lhePdgId(treeReader._lhePdgId[lheIndex]),
+            _lheMother1(treeReader._lheMother1[lheIndex]),
+            _lheMother2(treeReader._lheMother2[lheIndex]),
+            _lheMass(treeReader._lheMass[lheIndex]) {
 }
-
 
 LheParticle::~LheParticle() {
 

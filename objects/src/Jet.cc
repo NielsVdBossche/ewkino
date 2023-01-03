@@ -39,13 +39,13 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     selector( new JetSelector( this ) )
 {
     if( readAllJECVariations ){
-	for( const auto mapEl: treeReader._jetSmearedPt_JECSourcesUp ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECSourcesUp ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECSourcesUp");
 	    _pt_JECSourcesUp.insert( {key,mapEl.second[jetIndex]} );
 	}
-	for( const auto mapEl: treeReader._jetSmearedPt_JECSourcesDown ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECSourcesDown ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECSourcesDown");
@@ -53,13 +53,13 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
 	}
     }
     if( readGroupedJECVariations ){
-	for( const auto mapEl: treeReader._jetSmearedPt_JECGroupedUp ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECGroupedUp ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECGroupedUp");
 	    _pt_JECGroupedUp.insert( {key,mapEl.second[jetIndex]} );
 	}
-	for( const auto mapEl: treeReader._jetSmearedPt_JECGroupedDown ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECGroupedDown ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECGroupedDown");

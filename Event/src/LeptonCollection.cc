@@ -28,7 +28,7 @@ LeptonCollection::LeptonCollection( const TreeReader& treeReader ){
     }
 }
 
-/*
+
 MuonCollection LeptonCollection::muonCollection() const{
     std::vector< std::shared_ptr< Muon > > muonVector;
     for( const auto& leptonPtr : *this ){
@@ -70,7 +70,7 @@ LightLeptonCollection LeptonCollection::lightLeptonCollection() const{
         }
     }
     return LightLeptonCollection( lightLeptonVector );
-}*/
+}
 
 MuonCollection* LeptonCollection::muonCollectionPtr() const{
     std::vector< std::shared_ptr< Muon > > muonVector;
@@ -107,7 +107,7 @@ TauCollection* LeptonCollection::tauCollectionPtr() const{
 
 LightLeptonCollection* LeptonCollection::lightLeptonCollectionPtr() const{
     std::vector< std::shared_ptr< LightLepton > > lightLeptonVector;
-    for( const auto leptonPtr : *this ){
+    for( const auto& leptonPtr : *this ){
         if( leptonPtr->isLightLepton() ){
             lightLeptonVector.push_back( std::static_pointer_cast< LightLepton >( leptonPtr ) );
         }

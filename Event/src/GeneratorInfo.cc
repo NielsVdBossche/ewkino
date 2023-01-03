@@ -39,6 +39,9 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     _numberOfPdfVariations = std::min( std::max( treeReader._nLheWeights, unsigned(9) ) - 9, unsigned(103)); 
 }
 
+GeneratorInfo::~GeneratorInfo() {
+    delete lheCollectionPtr;
+}
 
 double retrieveWeight( const double* array, const unsigned index, const unsigned offset, const unsigned maximumIndex, const std::string& name ){
     if( index >= maximumIndex ){

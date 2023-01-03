@@ -27,6 +27,13 @@ HistogramSet::HistogramSet(HistogramSet* copy, std::string& name) {
     }
 }
 
+HistogramSet::~HistogramSet() {
+    for (auto& it : processHist) {
+        delete it;
+    }
+}
+
+
 void HistogramSet::changeProcess(unsigned index, std::string& newTitle) {
     // if (processHistName[index] != newTitle) flushOldHistograms();
 

@@ -12,8 +12,20 @@ Channel::Channel(std::string& channel, std::string& subChannel, std::vector<Hist
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }
 
-Channel::~Channel() {
+Channel::~Channel() {   
+    delete oneDimInfo;
+    delete nominalHistograms;
+    if (twoDimInfo != nullptr) delete twoDimInfo;
 
+    if (subChannels) {
+        for (auto& it : *subChannels) {
+            delete it.second;
+        }
+    }
+
+    for (auto& it : uncHistMap) {
+        delete it.second;
+    }
 }
 
 std::vector<HistInfo> Channel::hardCopyInfoVector(std::vector<HistInfo>* infoVec) {

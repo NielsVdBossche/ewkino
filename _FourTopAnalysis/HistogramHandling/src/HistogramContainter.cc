@@ -8,6 +8,11 @@ HistogramContainer::HistogramContainer(std::vector<HistInfo>* oneDim, std::vecto
 
 }
 
+HistogramContainer::~HistogramContainer() {
+    if (oneDims) delete oneDims;
+    if (twoDims) delete twoDims;
+}
+
 void HistogramContainer::fillHistograms(std::vector<double>& fillVec, double eventWeight) {
     // fill hists
     for (size_t dist = 0; dist < fillVec.size(); dist++) {
