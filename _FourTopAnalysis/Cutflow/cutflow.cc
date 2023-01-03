@@ -155,7 +155,6 @@ void FourTop::cutFlow(std::string& sortingMode) {
         std::string samplename = treeReader->sampleVector()[0].uniqueName();
         eventTagsOutput.open("Output/EventTags_" + samplename + ".txt");
         
-
         for (long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry) {
             delete currentEvent;
 
@@ -164,9 +163,11 @@ void FourTop::cutFlow(std::string& sortingMode) {
             // check if eventnumber matches any in evNbs
             unsigned long evNb = currentEvent->eventNumber();
 
-            if (std::find(evNbs.begin(), evNbs.end(),evNb) == evNbs.end()) continue;
+            if (std::find(evNbs.begin(), evNbs.end(), evNb) == evNbs.end()) continue;
             evaluatedEvNbs.push_back(evNb);
+            eventTagsOutput << std::endl << std::endl;
             eventTagsOutput << evNb << std::endl;
+
             selection->addNewEvent(currentEvent); 
             if (! currentEvent->passMetFilters()) continue;
 
@@ -174,6 +175,11 @@ void FourTop::cutFlow(std::string& sortingMode) {
             //if (! selection->leptonsArePrompt()) continue;
             //if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
 
+            for (auto lep : currentEvent->lightLeptonCollection()) {
+                if (! lep->isLoose()) continue;
+                if (lep->isElectron() && lep->leptonMVATOPUL() < 0.81) eventTagsOutput << "score too low: " << lep->leptonMVATOPUL() << std::endl;
+                if (lep->isMuon() && lep->leptonMVATOPUL() < 0.64) eventTagsOutput << "score too low: " << lep->leptonMVATOPUL() << std::endl;             
+            }
             eventTagsOutput << "pass lepton selection: " << std::endl;
             if (!selection->passLeptonSelection()) continue;
 
@@ -185,6 +191,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             int nTightLeps = nLeps;
 
             eventTagsOutput << "nLeps == " << nLeps << std::endl;
+            if (nLeps > 2) continue;
 
             if (nLeps < 2) continue;
 

@@ -342,7 +342,7 @@ void FourTop::analyze(std::string method) {
             }
 
             // Systematics
-            if (currentEvent->isData() || ! useUncertainties || processNb > 0) continue;
+            if (currentEvent->isData() || ! useUncertainties || (processNb > 0 && st != selectionType::MCPrompt)) continue;
 
             //// Start filling histograms
             // loop uncertainties
@@ -632,9 +632,17 @@ void FourTop::analyze(std::string method) {
         if (printEventTags) {
             eventTagsOutput.close();
         }
+
+        if (splitAdditionalBees) {
+            std::string anotherName = "somethingbb";
+
+            mgrAll->changeProcess(1, anotherName);
+        }
+
     }
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
+    
 
     outfile->Close();
 }

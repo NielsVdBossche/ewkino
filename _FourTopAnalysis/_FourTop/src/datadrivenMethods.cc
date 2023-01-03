@@ -49,12 +49,12 @@ void FourTop::initFakerate() {
 
 
     TFile* elWeightFile = TFile::Open( fullPathElectron.c_str() );
-    FakeRatesElectron = dynamic_cast< TH2D* >( elWeightFile->Get( ("fakeRate_electron_" + yearString).c_str()) );
+    FakeRatesElectron = dynamic_cast< TH2D* >( elWeightFile->Get( ("fakeRate_electron_" + filenameYear).c_str()) );
     FakeRatesElectron->SetDirectory( gROOT );
     elWeightFile->Close();
 
     TFile* muWeightFile = TFile::Open( fullPathMuon.c_str() );
-    FakeRatesMuon = dynamic_cast< TH2D* >( muWeightFile->Get( ("fakeRate_muon_" + yearString).c_str()) );
+    FakeRatesMuon = dynamic_cast< TH2D* >( muWeightFile->Get( ("fakeRate_muon_" + filenameYear).c_str()) );
     FakeRatesMuon->SetDirectory( gROOT );
     muWeightFile->Close();
 }

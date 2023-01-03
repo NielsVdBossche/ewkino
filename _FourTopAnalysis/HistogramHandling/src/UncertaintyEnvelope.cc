@@ -31,7 +31,7 @@ void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess)
 
     if (process != "") {
         writeHistogramsEnvelope(index);
-    } else {
+    } else if (index == 0) {
         for (unsigned j=1; j < getUpHists()->getProcessNames().size(); j++){
             getUpHists()->newSample(empty, j);
             getDownHists()->newSample(empty, j);
@@ -49,7 +49,7 @@ void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess)
     getDownHists()->changeProcess(index, newProcess);
     getDownHists()->newSample(empty, index);
 
-    process = newProcess;
+    processes[index] = newProcess;
     for (unsigned i=0; i < envelopeHists.size(); i++) {
         envelopeHists[i]->changeProcess(index, newProcess);
         envelopeHists[i]->newSample(empty, index);
@@ -57,10 +57,13 @@ void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess)
 }
 
 void UncertaintyEnvelope::addProcess(std::string& newProc) {
+    std::string empty = "";
     for (auto env : envelopeHists) {
-        env->addProcess(newProc);
+        env->addProcess(empty);
     }
-    processes.push_back("");
+    getUpHists()->addProcess(empty);
+    getDownHists()->addProcess(empty);
+    processes.push_back(empty);
     changeProcess(processes.size()-1, newProc);
 }
 
