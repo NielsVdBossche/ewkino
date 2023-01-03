@@ -13,9 +13,9 @@ void FourTop::fillMVAVariables(bool isML) {
 
     n_jets_f         =  selection->getJetCol()->size();
     n_bjets_f        =  selection->numberOfMediumBJets();
-    deltaRBjets      =  (n_bjets_f >= 2. ? mindR_Bjets[0] : 5.);
     n_b_loose        =  selection->numberOfLooseBJets();
     n_b_tight        =  selection->numberOfTightBJets();
+    deltaRBjets      =  (n_b_loose >= 2. ? mindR_Bjets[0] : 5.);
     dRleps           =  deltaR(*lightLeps->at(0), *lightLeps->at(1));
     aziAngle         =  deltaPhi(*lightLeps->at(0), *lightLeps->at(1));
     ht               =  selection->getJetCol()->scalarPtSum();
@@ -134,8 +134,8 @@ void FourTop::fillMVAVariables(bool isML) {
     mtSubLeadLepMET = mt(*lightLeps->at(1), selection->getEvent()->met());
     m2ll = mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selection->getEvent()->met());
 
-    m2bb = (n_bjets_f >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
-    m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
+    m2bb = (n_b_loose >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
+    m2lblb = (n_b_loose >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
 
     n_mu = selection->getMediumLepCol()->numberOfMuons();
     chargeSum = selection->getMediumLepCol()->sumCharges();

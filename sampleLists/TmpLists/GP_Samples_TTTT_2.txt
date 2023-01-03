@@ -1,0 +1,1 @@
+TTTT        ../skims_v6/2017/analysisSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v1_singlelepton_MC_2017_UL_GenPart.root                                             0.01337

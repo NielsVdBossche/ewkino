@@ -44,6 +44,7 @@ class Channel {
         Uncertainty* getUncertainty(shapeUncId id) {return uncHistMap[id];}
 
         void initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties);
+        void initializeAdditionalHistogramStack(std::string& newProcess, bool uncertainties);
         void SetPrintAllUncertaintyVariations(bool setting);
 
         //void subDivisions(std::vector<std::string>& divs);

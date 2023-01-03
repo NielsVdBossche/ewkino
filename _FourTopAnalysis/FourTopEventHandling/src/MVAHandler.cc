@@ -25,7 +25,8 @@ void MVAHandler_4T::initReader() {
             //weightFilePath += "FourTopClassification_UL_2022-10-12_11-41__BDT_VAR_DLG_B_1250_4_20_0.05_5_0.5.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
-            weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2023-01-02_15-29__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -36,7 +37,8 @@ void MVAHandler_4T::initReader() {
             //weightFilePath += "FourTopClassification_UL_2022-10-12_12-08__BDT_VAR_MLG_B_1000_3_20_0.1_1_0.25.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
             //weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
-            weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2023-01-02_15-29__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
         } else {
             weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
         }
@@ -57,7 +59,7 @@ void MVAHandler_4T::initReader() {
         reader->AddVariable("dr_leps", &dRleps);
         //reader->AddVariable("aziAngle", &aziAngle);
         reader->AddVariable("ht", &ht);
-        reader->AddVariable("mToPt", &massToPt);
+        //reader->AddVariable("mToPt", &massToPt);
         reader->AddVariable("min_dr_lep_b", &min_dr_lep_b);
         //reader->AddVariable("sec_min_dr_lep_b", &sec_min_dr_lep_b);
         reader->AddVariable("pt_jet_one", &ptJetOne);
@@ -89,14 +91,14 @@ void MVAHandler_4T::initReader() {
         reader->AddVariable("MET", &met);
     } else {
         reader->AddVariable("N_jets", &n_jets_f);
-        reader->AddVariable("N_b", &n_bjets_f);
+        //reader->AddVariable("N_b", &n_bjets_f);
         reader->AddVariable("N_b_tight", &n_b_tight);
-        //reader->AddVariable("N_b_loose", &n_b_loose);
+        reader->AddVariable("N_b_loose", &n_b_loose);
         reader->AddVariable("dr_bJets", &deltaRBjets);
         reader->AddVariable("dr_leps", &dRleps);
         reader->AddVariable("aziAngle", &aziAngle);
         reader->AddVariable("ht", &ht);
-        reader->AddVariable("mToPt", &massToPt);
+        //reader->AddVariable("mToPt", &massToPt);
         reader->AddVariable("min_dr_lep_b", &min_dr_lep_b);
         reader->AddVariable("sec_min_dr_lep_b", &sec_min_dr_lep_b);
         reader->AddVariable("pt_jet_one", &ptJetOne);

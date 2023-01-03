@@ -107,7 +107,19 @@ void ChannelManager::changePrimaryProcess(std::string& newPrimProc) {
 void ChannelManager::changeProcess(unsigned procNumber, std::string& newProc) {
     // make sure the process exists in the outputfile both for uncertainties as for nominal case
     outfile->cd("Uncertainties");
-    processHistName[procNumber] = newProc;
+    if (processHistName.size() > procNumber) {
+        processHistName[procNumber] = newProc;
+    } else {
+        if (procNumber == processHistName.size()) {
+            processHistName.push_back(newProc);
+            for (auto it : mapping) {
+                it.second->initializeAdditionalHistogramStack(newProc, useUncertainties);
+            }
+        } else {
+            std::cerr << "ERROR: ChannelManager: Only " << processHistName.size() << " processes defined while trying to change number " << procNumber << std::endl;
+            exit(1);
+        }
+    }
     for (auto it : mapping) {
         it.second->changeProcess(procNumber, newProc, useUncertainties);
     }

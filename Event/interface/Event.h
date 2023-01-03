@@ -12,6 +12,7 @@
 #include "JetInfo.h"
 #include "EventTags.h"
 #include "SusyMassInfo.h"
+#include "ParticleLevelInfo.h"
 #include "../../objects/interface/Met.h"
 #include "../../objects/interface/PhysicsObject.h"
 
@@ -62,7 +63,7 @@ class Event {
 	    JetInfo* getJetInfoPtr() const{ return _jetInfoPtr; }
         EventTags* getEventTagsPtr() const{ return _eventTagsPtr; }
         GeneratorInfo* getGeneratorInfoPtr() const;
-
+        ParticleLevelInfo* GetPLInfoPtr() const { return _particleLevelInfoPtr; }
         // return jet collection and met with varied JEC/JER/Uncl uncertainties
         JetCollection getJetCollection( const std::string& variation ) const{ 
             return (*_jetCollectionPtr).getVariedJetCollection( variation); }
@@ -258,6 +259,7 @@ class Event {
         unsigned _numberOfVertices = 0;
         double _weight = 1;
         const Sample* _samplePtr = nullptr;
+        ParticleLevelInfo* _particleLevelInfoPtr = nullptr;
 
         JetCollection* _bJetCollectionPtr = nullptr; // jets selected at the general b-tag WP
 

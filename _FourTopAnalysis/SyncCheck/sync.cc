@@ -102,9 +102,18 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
                 ElectronCollection electrons = event.electronCollection();
                 electrons.sortByPt();
                 std::cout << "mismatch in ";
-                if (numberOfLooseElectronsSync != numberOfLooseElectrons) std::cout << "number of loose electrons " << numberOfLooseElectronsSync << " " << numberOfLooseElectrons;
-                if (numberOfFOElectronsSync != numberOfFOElectrons) std::cout << "number of FO electrons " << numberOfFOElectronsSync << " " << numberOfFOElectrons;
-                if (numberOfTightElectronsSync != numberOfTightElectrons) std::cout << "number of Tight electrons " << numberOfTightElectronsSync << " " << numberOfTightElectrons;
+                if (numberOfLooseElectronsSync != numberOfLooseElectrons) {
+                    std::cout << "number of loose electrons " << numberOfLooseElectronsSync << " " << numberOfLooseElectrons;
+                }
+                if (numberOfFOElectronsSync != numberOfFOElectrons) {
+                    std::cout << "number of FO electrons " << numberOfFOElectronsSync << " " << numberOfFOElectrons;
+                    elFOMismatch++;
+                }
+                if (numberOfTightElectronsSync != numberOfTightElectrons) {
+                    std::cout << "number of Tight electrons " << numberOfTightElectronsSync << " " << numberOfTightElectrons;
+                    elTightMismatch++;
+                }
+
                 std::cout << std::endl;
                 unsigned looseCounter = 0;
                 
@@ -135,9 +144,17 @@ void syncCheckLoop(std::string& syncfile, std::string& ownSampleList) {
                 MuonCollection muons = event.muonCollection();
                 muons.sortByPt();
                 std::cout << "mismatch in ";
-                if (numberOfLooseMuonsSync != numberOfLooseMuons) std::cout << "number of loose Muons " << numberOfLooseMuonsSync << " " << numberOfLooseMuons;;
-                if (numberOfFOMuonsSync != numberOfFOMuons) std::cout << "number of FO Muons " << numberOfFOMuonsSync << " " << numberOfFOMuons;;
-                if (numberOfTightMuonsSync != numberOfTightMuons) std::cout << "number of Tight Muons " << numberOfTightMuonsSync << " " << numberOfTightMuons;;
+                if (numberOfLooseMuonsSync != numberOfLooseMuons) {
+                    std::cout << "number of loose Muons " << numberOfLooseMuonsSync << " " << numberOfLooseMuons;
+                }
+                if (numberOfFOMuonsSync != numberOfFOMuons) {
+                    std::cout << "number of FO Muons " << numberOfFOMuonsSync << " " << numberOfFOMuons;
+                    muFOMismatch++;
+                }
+                if (numberOfTightMuonsSync != numberOfTightMuons) {
+                    std::cout << "number of Tight Muons " << numberOfTightMuonsSync << " " << numberOfTightMuons;
+                    muTightMismatch++;
+                }
                 std::cout << std::endl;
                 unsigned looseCounter = 0;
                 for (unsigned i=0; i<syncTreeContent->muons_is_loose->size(); i++) {

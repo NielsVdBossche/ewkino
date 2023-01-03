@@ -378,7 +378,7 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned vari
             bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().HEMIssue(*jets).pt();
         } else {
-            jets = new JetCollection(*event->getJetCollectionPtr());
+            jets = new JetCollection(*(event->getJetCollectionPtr()));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
             met = event->met().pt(); // event->met().MetJECDown(variation).pt();

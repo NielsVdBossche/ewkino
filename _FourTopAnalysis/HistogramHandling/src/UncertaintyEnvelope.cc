@@ -8,7 +8,7 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
     Uncertainty(translateUnc, id, histograms) 
     {
 
-    process = "";
+    processes = {""};
 
     int variations = 0;
     if (id == shapeUncId::qcdScale) {
@@ -25,14 +25,13 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
 }
 
 void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess) {
-    if (process == newProcess) return;
-
+    if (processes[index] == newProcess) return;
+    std::string process = processes[index];
     std::string empty = "";
 
     if (process != "") {
         writeHistogramsEnvelope(index);
-
-    } else {
+    } else if (index == 0) {
         for (unsigned j=1; j < getUpHists()->getProcessNames().size(); j++){
             getUpHists()->newSample(empty, j);
             getDownHists()->newSample(empty, j);
@@ -46,16 +45,28 @@ void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess)
 
 
     getUpHists()->changeProcess(index, newProcess);
-    getUpHists()->newSample(empty, 0);
+    getUpHists()->newSample(empty, index);
     getDownHists()->changeProcess(index, newProcess);
-    getDownHists()->newSample(empty, 0);
+    getDownHists()->newSample(empty, index);
 
-    process = newProcess;
+    processes[index] = newProcess;
     for (unsigned i=0; i < envelopeHists.size(); i++) {
         envelopeHists[i]->changeProcess(index, newProcess);
-        envelopeHists[i]->newSample(empty, 0);
+        envelopeHists[i]->newSample(empty, index);
     }
 }
+
+void UncertaintyEnvelope::addProcess(std::string& newProc) {
+    std::string empty = "";
+    for (auto env : envelopeHists) {
+        env->addProcess(empty);
+    }
+    getUpHists()->addProcess(empty);
+    getDownHists()->addProcess(empty);
+    processes.push_back(empty);
+    changeProcess(processes.size()-1, newProc);
+}
+
 
 void UncertaintyEnvelope::fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, unsigned subProc) {
     for (unsigned i=0; i < weight.size(); i++) {
@@ -136,6 +147,7 @@ void UncertaintyEnvelope::finalizeEnvelope(unsigned subProc) {
 void UncertaintyEnvelope::writeHistogramsEnvelope(unsigned processNb) {
     finalizeEnvelope(processNb);
     //outfile->cd("Uncertainties");
+    std::string process = processes[processNb];
     gDirectory->cd(process.c_str());
     if (! gDirectory->GetDirectory(getName().c_str())) {
         gDirectory->mkdir(getName().c_str());

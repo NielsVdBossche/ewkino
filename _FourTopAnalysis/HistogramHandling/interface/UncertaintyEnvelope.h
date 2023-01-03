@@ -8,7 +8,7 @@
 class UncertaintyEnvelope : public Uncertainty {
 private:
     std::vector<HistogramSet*> envelopeHists;
-    std::string process;
+    std::vector<std::string> processes;
 public:
     UncertaintyEnvelope(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms);
     //~UncertaintyEnvelope();
@@ -17,6 +17,7 @@ public:
 
     //void newSample(std::string& uniqueName) {};
     virtual void changeProcess(unsigned index, std::string& newProcess);
+    virtual void addProcess(std::string& newProc);
 
     void fillEnvelope(std::vector<double>& fillVec, std::vector<double> weight, unsigned subProc);
     void fillEnvelopeSingles(std::vector<std::pair<int, double>>& fillVec, std::vector<double> weight, unsigned subProc);

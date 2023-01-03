@@ -144,6 +144,8 @@ void FourTop::analyze(std::string method) {
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
         bool useSplitJEC = true;
+        bool splitAdditionalBees = false;
+        unsigned nominalBees = 0;
         
         if (! treeReader->isData()) {
             // check if TTbar or TTGamma sample
@@ -155,6 +157,12 @@ void FourTop::analyze(std::string method) {
             if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
                 mgrAll->changePrimaryProcess(currProcName);
+                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL()) {
+                    std::string bbName = currProcName + "bb";
+                    mgrAll->changeProcess(1, bbName);
+                    nominalBees = 2;
+                    splitAdditionalBees = true;
+                }
             }
         }
 
@@ -306,6 +314,10 @@ void FourTop::analyze(std::string method) {
                 if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             }
 
+            if (splitAdditionalBees && st == selectionType::MCPrompt ) {
+                if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
+            }
+
             // Basic non-prompt handling (using MC to estimate the contribution):
             std::vector<double> fillVec;
             std::vector<std::pair<double, double>> fillVec2D;
@@ -341,7 +353,7 @@ void FourTop::analyze(std::string method) {
             }
 
             // Systematics
-            if (currentEvent->isData() || ! useUncertainties || processNb > 0) continue;
+            if (currentEvent->isData() || ! useUncertainties || (processNb > 0 && st != selectionType::MCPrompt)) continue;
 
             //// Start filling histograms
             // loop uncertainties
@@ -623,9 +635,17 @@ void FourTop::analyze(std::string method) {
         if (printEventTags) {
             eventTagsOutput.close();
         }
+
+        if (splitAdditionalBees) {
+            std::string anotherName = "somethingbb";
+
+            mgrAll->changeProcess(1, anotherName);
+        }
+
     }
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
+    
 
     outfile->Close();
 }

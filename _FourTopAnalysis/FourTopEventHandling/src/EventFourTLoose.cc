@@ -37,7 +37,7 @@ void EventFourTLoose::classifyEvent() {
             double m3l = (*getLepton(0) + *getLepton(1) + *getLepton(2)).mass();
             double m2l = getMediumLepCol()->bestZBosonCandidateMass();
             
-            if (! passZBosonVeto() && fabs(m3l - particle::mZ) > 15. && getMET() > 50) {
+            if (! passZBosonVeto() && fabs(m3l - particle::mZ) > 15. && getMET() > 30) {
                 SetEventClass(eventClass::crwz);
             } else if (fabs(m3l - particle::mZ) < 15. && m2l < 75) {
                 SetEventClass(eventClass::cr_conv);

@@ -33,28 +33,28 @@ double FourTop::ChmisIDWeight() {
 
 void FourTop::initFakerate() {
     std::string filename = "fakeRateMap_data_";
-
+    std::string filenameYear = yearString;
     if (yearString == "2016PreVFP") {
-        //filename = "";
+        filenameYear = "2016Merged";
     } else if( yearString == "2016PostVFP" ){
-        //filename= "";
+        filenameYear = "2016Merged";
     } else if( yearString == "2017" ){
         //filename = "";
     } else {
         //filename = "";
     }
 
-    std::string fullPathElectron = "DatadrivenInput/nonprompt/" + filename + "electron_" + yearString + "_mT.root";
-    std::string fullPathMuon = "DatadrivenInput/nonprompt/" + filename + "muon_" + yearString + "_mT.root";
+    std::string fullPathElectron = "DatadrivenInput/nonprompt/" + filename + "electron_" + filenameYear + "_mT.root";
+    std::string fullPathMuon = "DatadrivenInput/nonprompt/" + filename + "muon_" + filenameYear + "_mT.root";
 
 
     TFile* elWeightFile = TFile::Open( fullPathElectron.c_str() );
-    FakeRatesElectron = dynamic_cast< TH2D* >( elWeightFile->Get( ("fakeRate_electron_" + yearString).c_str()) );
+    FakeRatesElectron = dynamic_cast< TH2D* >( elWeightFile->Get( ("fakeRate_electron_" + filenameYear).c_str()) );
     FakeRatesElectron->SetDirectory( gROOT );
     elWeightFile->Close();
 
     TFile* muWeightFile = TFile::Open( fullPathMuon.c_str() );
-    FakeRatesMuon = dynamic_cast< TH2D* >( muWeightFile->Get( ("fakeRate_muon_" + yearString).c_str()) );
+    FakeRatesMuon = dynamic_cast< TH2D* >( muWeightFile->Get( ("fakeRate_muon_" + filenameYear).c_str()) );
     FakeRatesMuon->SetDirectory( gROOT );
     muWeightFile->Close();
 }

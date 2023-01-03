@@ -264,6 +264,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
         HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),        
         HistInfo( "N_mu_" + flag, "N_{#mu}", int(minMaxNMu.second -  minMaxNMu.first), minMaxNMu.first, minMaxNMu.second),
+        //HistInfo( "PLBees_" + flag, "N_{b}", 7, -0.5, 6.5)
     };
 
     if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
@@ -408,6 +409,7 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         event->getMediumLepCol()->scalarPtSum(),
         double(event->numberOfLeps()),
         double(event->getMediumLepCol()->numberOfMuons()),
+        //double(event->getEvent()->GetPLInfoPtr()->GetParticleLevelBees()),
     };
 
     if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
