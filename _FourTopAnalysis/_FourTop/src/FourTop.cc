@@ -154,7 +154,13 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
 }
 
 FourTop::~FourTop() {
+    if (mva_DL) delete mva_DL;
+    if (mva_ML) delete mva_ML;
+    delete selection;
 
+    if (MisIDRates) delete MisIDRates;
+    if (FakeRatesElectron) delete FakeRatesElectron;
+    if (FakeRatesMuon) delete FakeRatesMuon;
     //outfile->Close();
 }
 

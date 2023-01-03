@@ -59,6 +59,9 @@ Event::~Event(){
     if( hasSusyMassInfo() ){
         delete _susyMassInfoPtr;
     }
+    if (hasPLInfo()){
+        delete _particleLevelInfoPtr;
+    }
 }
 
 

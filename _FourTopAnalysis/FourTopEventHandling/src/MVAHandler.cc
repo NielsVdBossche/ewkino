@@ -9,6 +9,10 @@ MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventFourT* selec, bool isLean) 
     initReader();
 }
 
+MVAHandler_4T::~MVAHandler_4T() {
+    delete reader;
+}
+
 void MVAHandler_4T::initReader() {
     reader = new TMVA::Reader("!Color:!Silent");
 
@@ -177,7 +181,12 @@ void MVAHandler_4T::initReader() {
 */
     reader->BookMVA("BDTCurr", weightFilePath);
 
-    createHistograms("");
+    if (currentConfig < 2) {
+    } else if (currentConfig < 4) {
+        maxClass = 3;
+    } else if (currentConfig < 6) {
+        maxClass = 4;
+    }
 }
 
 std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {

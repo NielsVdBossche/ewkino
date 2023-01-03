@@ -11,7 +11,7 @@ private:
     std::vector<std::string> processes;
 public:
     UncertaintyEnvelope(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms);
-    //~UncertaintyEnvelope();
+    ~UncertaintyEnvelope();
 
     void finalizeEnvelope(unsigned subProc);
 

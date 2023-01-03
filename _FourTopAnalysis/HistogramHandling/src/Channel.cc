@@ -89,12 +89,13 @@ void Channel::SetPrintAllUncertaintyVariations(bool setting) {
 
 void Channel::updateHistInfo(std::vector<HistInfo>* extraInfo) {
     std::vector<HistInfo> extraInfoCopy = hardCopyInfoVector(extraInfo);
-
+    delete extraInfo;
     oneDimInfo->insert(oneDimInfo->end(), extraInfoCopy.begin(), extraInfoCopy.end());
 }
 
 void Channel::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
     twoDimInfo = new std::vector<HistInfo_2D>(hardCopy2DInfoVector(new2DInfo));
+    delete new2DInfo;
 }
 
 void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties) {

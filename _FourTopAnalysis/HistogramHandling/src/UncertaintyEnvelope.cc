@@ -24,6 +24,12 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
     }
 }
 
+UncertaintyEnvelope::~UncertaintyEnvelope() {
+    for (auto& it : envelopeHists) {
+        delete it;
+    }
+}
+
 void UncertaintyEnvelope::changeProcess(unsigned index, std::string& newProcess) {
     if (processes[index] == newProcess) return;
     std::string process = processes[index];

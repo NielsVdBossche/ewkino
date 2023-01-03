@@ -642,9 +642,10 @@ void FourTop::analyze(std::string method) {
     }
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
-    
 
     outfile->Close();
+
+    delete btagReweighter;
 }
 
 bool FourTop::eventPassesTriggers() {

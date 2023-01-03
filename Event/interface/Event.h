@@ -287,6 +287,9 @@ class Event {
         bool hasSusyMassInfo() const{ return ( _susyMassInfoPtr != nullptr ); }
         void checkSusyMassInfo() const;
 
+        // check particle level info
+        bool hasPLInfo() const {return (_particleLevelInfoPtr != nullptr); }
+
 	Event variedLeptonCollectionEvent(
                     LeptonCollection (LeptonCollection::*variedCollection)() const ) const;
 };
