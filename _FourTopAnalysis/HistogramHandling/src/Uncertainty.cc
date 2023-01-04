@@ -16,7 +16,6 @@ Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeU
 }
 
 Uncertainty::~Uncertainty() {
-    delete bareHists;
     delete upHists;
     delete downHists;
 

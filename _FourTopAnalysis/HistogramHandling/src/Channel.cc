@@ -24,6 +24,7 @@ Channel::~Channel() {
     }
 
     for (auto& it : uncHistMap) {
+        std::cout << it.second->getName();
         delete it.second;
     }
 }
