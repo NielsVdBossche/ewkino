@@ -44,7 +44,7 @@ class ReweighterBTagShape: public Reweighter{
 	
 	double weight( const Event& event ) const;
 	double weightUp( const Event& event, const std::string& systematic ) const;
-        double weightDown( const Event&, const std::string& systematic ) const;
+    double weightDown( const Event&, const std::string& systematic ) const;
 	double weightJecVar( const Event& event, const std::string& jecVariation, bool grouped, const unsigned var  ) const;
 	double weightJecVar_FlavorFilter(const Event &event, const std::string &jecVariation, unsigned flavor) const;
 	double weightNoNorm( const Event& event) const;
