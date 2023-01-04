@@ -1,5 +1,5 @@
 executable = MainAnalysis.sh
-arguments = $(Samplelist) $(Method) timestamp=2022-12-09_11-30
+arguments = $(Samplelist) $(Method) timestamp=2023-01-04_10-27
 
 output = /user/nivanden/condor/output/analysis_exec_$(method)_$(ClusterId)_$(ProcId).out
 error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcId).err
@@ -27,7 +27,6 @@ queue 1 Samplelist, Method from (
 	TmpLists/2016PreVFP_fullStat_TTX_2.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_VVV_0.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_VVV_1.txt, MCPrompt
-	TmpLists/2016PreVFP_fullStat_VVV_2.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_WZ_0.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_Z_0.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_Z_1.txt, MCPrompt
@@ -51,7 +50,6 @@ queue 1 Samplelist, Method from (
 	TmpLists/2016PostVFP_fullStat_TTVV_2.txt, MCPrompt
 	TmpLists/2016PostVFP_fullStat_TTVV_3.txt, MCPrompt
 	TmpLists/2016PostVFP_fullStat_TTVV_4.txt, MCPrompt
-	TmpLists/2016PostVFP_fullStat_TTVV_5.txt, MCPrompt
 	TmpLists/2016PostVFP_fullStat_TTW_0.txt, MCPrompt
 	TmpLists/2016PostVFP_fullStat_TTZ_0.txt, MCPrompt
 	TmpLists/2016PostVFP_fullStat_THQ_0.txt, MCPrompt
@@ -120,13 +118,11 @@ queue 1 Samplelist, Method from (
 	TmpLists/2018_fullStat_TTVV_2.txt, MCPrompt
 	TmpLists/2018_fullStat_TTVV_3.txt, MCPrompt
 	TmpLists/2018_fullStat_TTVV_4.txt, MCPrompt
-	TmpLists/2018_fullStat_TTVV_5.txt, MCPrompt
 	TmpLists/2018_fullStat_TTW_0.txt, MCPrompt
 	TmpLists/2018_fullStat_TTZ_0.txt, MCPrompt
 	TmpLists/2018_fullStat_THQ_0.txt, MCPrompt
 	TmpLists/2018_fullStat_TTX_0.txt, MCPrompt
 	TmpLists/2018_fullStat_TTX_1.txt, MCPrompt
-	TmpLists/2018_fullStat_TTX_2.txt, MCPrompt
 	TmpLists/2018_fullStat_VVV_0.txt, MCPrompt
 	TmpLists/2018_fullStat_VVV_1.txt, MCPrompt
 	TmpLists/2018_fullStat_VVV_2.txt, MCPrompt
@@ -198,7 +194,6 @@ queue 1 Samplelist, Method from (
 	TmpLists/2016PreVFP_fullStat_TTX_2.txt, nonPromptDD
 	TmpLists/2016PreVFP_fullStat_VVV_0.txt, nonPromptDD
 	TmpLists/2016PreVFP_fullStat_VVV_1.txt, nonPromptDD
-	TmpLists/2016PreVFP_fullStat_VVV_2.txt, nonPromptDD
 	TmpLists/2016PreVFP_fullStat_WZ_0.txt, nonPromptDD
 	TmpLists/2016PreVFP_fullStat_Z_0.txt, nonPromptDD
 	TmpLists/2016PreVFP_fullStat_Z_1.txt, nonPromptDD
@@ -222,7 +217,6 @@ queue 1 Samplelist, Method from (
 	TmpLists/2016PostVFP_fullStat_TTVV_2.txt, nonPromptDD
 	TmpLists/2016PostVFP_fullStat_TTVV_3.txt, nonPromptDD
 	TmpLists/2016PostVFP_fullStat_TTVV_4.txt, nonPromptDD
-	TmpLists/2016PostVFP_fullStat_TTVV_5.txt, nonPromptDD
 	TmpLists/2016PostVFP_fullStat_TTW_0.txt, nonPromptDD
 	TmpLists/2016PostVFP_fullStat_TTZ_0.txt, nonPromptDD
 	TmpLists/2016PostVFP_fullStat_THQ_0.txt, nonPromptDD
@@ -291,13 +285,11 @@ queue 1 Samplelist, Method from (
 	TmpLists/2018_fullStat_TTVV_2.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTVV_3.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTVV_4.txt, nonPromptDD
-	TmpLists/2018_fullStat_TTVV_5.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTW_0.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTZ_0.txt, nonPromptDD
 	TmpLists/2018_fullStat_THQ_0.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTX_0.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTX_1.txt, nonPromptDD
-	TmpLists/2018_fullStat_TTX_2.txt, nonPromptDD
 	TmpLists/2018_fullStat_VVV_0.txt, nonPromptDD
 	TmpLists/2018_fullStat_VVV_1.txt, nonPromptDD
 	TmpLists/2018_fullStat_VVV_2.txt, nonPromptDD
