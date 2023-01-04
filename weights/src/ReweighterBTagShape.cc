@@ -194,6 +194,8 @@ void ReweighterBTagShape::initialize(const std::vector<Sample> &samples,
         std::map<int, double> averageOfWeights = this->calcAverageOfWeights(sample,
                                                                             numberOfEntries);
         this->setNormFactors(sample, averageOfWeights, 2);
+        this->setNormFactors(sample, averageOfWeights, 3);
+        this->setNormFactors(sample, averageOfWeights, 4);
     }
     std::cout << "done initializing ReweighterBTagShape" << std::endl;
 }
@@ -323,7 +325,7 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
     // retrieve the normalization factor
     // note: if no normalization factor was initialized for this jet multiplicity,
     //	     the value for lower jet multiplicities is retrieved instead.
-    //std::cout << njets << " njets & syst " << systematic << " for jec var "<< jecVariation << std::endl;
+    //std::cout << nLeptons << "+" << njets << " nleps+njets & syst " << systematic << " for jec var "<< jecVariation << std::endl;
     for (int n = njets; n >= 0; n--)
     {   
         //std::cout << "get norm factor" << std::endl;
@@ -655,6 +657,7 @@ std::map<int, double> ReweighterBTagShape::calcAverageOfWeights(const Sample &sa
         // do basic jet cleaning
         event.cleanJetsFromFOLeptons();
         event.jetCollection().selectGoodJets();
+        if (event.numberOfFOLeptons() < 2) continue;
 
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = this->weight(event);

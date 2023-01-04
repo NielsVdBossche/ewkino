@@ -19,6 +19,7 @@ enum skimCondition {
     fakerate,
     light_SSdilepton_or_trilep,
     lightDileptonSkim,
+    lightDileptonExclSkim,
     fourTopBase,
     fourTopMva,
 };
@@ -33,6 +34,7 @@ bool passFakeRateSkim( Event& );
 bool passSkim( Event&, skimCondition );
 
 bool passLightDileptonSkim(Event &);
+bool passLightDileptonExclSkim(Event &);
 bool passLightTrilepSkim(Event&);
 bool passLightDLSameChargeSkim(Event&);
 bool passLight_SSdilepton_or_trilep(Event&);

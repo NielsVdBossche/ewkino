@@ -9,11 +9,11 @@ import shutil
 import subprocess
 import sys
 
-base_directory = "/pnfs/iihe/cms/store/user/nivanden/skims_v4/rawSkims/"
+base_directory = "/pnfs/iihe/cms/store/user/nivanden/skims_v6/rawSkims/"
 analysisSubDir = "analysisSamples"
 mvaSubDir = "mvaSamples"
 
-finalOutputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v4/"
+finalOutputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v6/"
 
 if (sys.argv[1] == '0'):
     skimVersion = ["2016_ULpreVFP", "RunIISummer20UL16MiniAODAPV", "MiniAOD2016preVFP", "2016_ULpreVFP_Nov"]
@@ -70,8 +70,8 @@ def mergeTuples(mergableDir):
     return
 
 
-processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTToSemiLeptonic_TuneCP5_13TeV", "TTTo2L2Nu_TuneCP5_13TeV", "TTTT", "TTGamma_Dilept", "TTGamma_SingleLept"]
-fractions = [0.25, 0.25, 0.25, 0.4, 0.4, 0.1, 0.2, 0.2]
+processes = ["TTZToLLNuNu", "TTWJetsToLNu", "ttHJetToNonbb", "TTTT"]
+fractions = [0.25, 0.25, 0.25, 0.1]
 
 folders = [(element, frac) for process, frac in zip(processes, fractions) for element in glob.glob(base_directory + "*" + process + "*")]
 

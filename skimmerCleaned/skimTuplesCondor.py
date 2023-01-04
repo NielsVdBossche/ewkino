@@ -59,14 +59,14 @@ if __name__ == '__main__' :
 
         #split_files in lists of files_per_job
         for chunk in listParts( root_files, files_per_job ):
+            script_name = 'skimmer.sh'
             
             #make a job script 
-            script_name = 'skimmer.sh'
             commands = []
             for f in chunk :
                 skim_command = './skimmer {} {} {}'.format( f, output_directory, skim_condition )
                 commands.append(skim_command)
 
             jobCommands.append(commands)                    
-        
+        #print(jobCommands)
         submitCommandsetsAsCondorCluster(script_name, jobCommands)
