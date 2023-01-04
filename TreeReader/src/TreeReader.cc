@@ -186,6 +186,9 @@ void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
         _jetPt_JECSourcesUp_Ids[mapEl.first] = ctr;
 
         std::string down = stringTools::replace(mapEl.first, "Up", "Down");
+        if (stringTools::stringContains(mapEl.first, "PileUp")) {
+            down = stringTools::replace(down, "PileDown", "PileUp");
+        }
         b__jetPt_JECSourcesDown[down] = nullptr;
         _jetPt_JECSourcesDown_Ids[down] = ctr;
 
@@ -194,6 +197,9 @@ void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
         _jetSmearedPt_JECSourcesUp_Ids[smeared] = ctr;
 
         std::string smeareddown = stringTools::replace(smeared, "Up", "Down");
+        if (stringTools::stringContains(smeared, "PileUp")) {
+            smeareddown = stringTools::replace(smeareddown, "PileDown", "PileUp");
+        }
         b__jetSmearedPt_JECSourcesDown[smeareddown] = nullptr;
         _jetSmearedPt_JECSourcesDown_Ids[smeareddown] = ctr;
 
@@ -206,10 +212,16 @@ void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
         _corrMETy_JECSourcesUp_Ids[corrmetY] = ctr;
 
         std::string corrmetXDown = stringTools::replace(corrmetX, "Up", "Down");
+        if (stringTools::stringContains(corrmetX, "PileUp")) {
+            corrmetXDown = stringTools::replace(corrmetXDown, "PileDown", "PileUp");
+        }
         b__corrMETx_JECSourcesDown[corrmetXDown] = nullptr;
         _corrMETx_JECSourcesDown_Ids[corrmetXDown] = ctr;
 
         std::string corrmetYDown = stringTools::replace(corrmetY, "Up", "Down");
+        if (stringTools::stringContains(corrmetY, "PileUp")) {
+            corrmetYDown = stringTools::replace(corrmetYDown, "PileDown", "PileUp");
+        }
         b__corrMETy_JECSourcesDown[corrmetYDown] = nullptr;
         _corrMETy_JECSourcesDown_Ids[corrmetYDown] = ctr;
         
