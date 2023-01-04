@@ -99,7 +99,7 @@ class FourTop {
         // Prepare
         void createMVAHandlers();
         void addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir);
-        void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::string& var, bool jec, bool up);
+        //void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::string& var, bool jec, bool up);
         void generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::vector<std::string>& variations, bool jec);
 
         // Event selection components

@@ -297,7 +297,7 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
 
     }
 }
-
+/*
 void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::string& var, bool jec, bool up) {
     // calculate the average of b-tag weights in a given sample
     // the return type is a map of jet multiplicity to average of weights
@@ -402,7 +402,7 @@ void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter,
     averageOfWeights->Write(("bTagNormFactors_" + bTagVar).c_str(), TObject::kOverwrite);
     normFile->Close();
 }
-
+*/
 
 void cleanLastBins(std::shared_ptr<TH1D> num, std::shared_ptr<TH1D> denom) {
     for (int i = num->GetNbinsX()+1; i > 1; i--) {
@@ -561,7 +561,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
             double btagreweight;
             if (jec && ! flavorQCD_Vars) {
-                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i]);
+                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i], true, event.jetInfo().groupedJECVariationsMap()->at(jecVarForSelection[i]));
             } else if (jec && flavorQCD_Vars) {
                 bool up = i % 2 == 0;
                 if (up) {
