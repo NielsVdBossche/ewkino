@@ -125,10 +125,10 @@ def submitCommandsAsCondorCluster(name, commands, stdout=None, stderr=None, log=
     with open(jdname,'a') as script:
         for command in commands[1:]:
             [thisexe,thisargstring] = command.split(' ',1)
-            thisnargs = len(thisargstring.split(' '))
-            if( thisexe!=exe or thisnargs!=nargs):
-                print('### ERROR ###: commands are not compatible to put in same cluster')
-                return
+            #thisnargs = len(thisargstring.split(' '))
+            #if( thisexe!=exe or thisnargs!=nargs):
+            #    print('### ERROR ###: commands are not compatible to put in same cluster')
+            #    return
 
             script.write('arguments = "{}"\n'.format(thisargstring))
             script.write('queue\n\n')
