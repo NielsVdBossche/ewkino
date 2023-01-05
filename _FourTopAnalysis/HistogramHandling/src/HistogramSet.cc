@@ -27,11 +27,25 @@ HistogramSet::HistogramSet(HistogramSet* copy, std::string& name) {
     }
 }
 
+HistogramSet::~HistogramSet() {
+    for (auto& it : processHist) {
+        delete it;
+    }
+}
+
+
 void HistogramSet::changeProcess(unsigned index, std::string& newTitle) {
     // if (processHistName[index] != newTitle) flushOldHistograms();
 
     processHistName[index] = newTitle;
 }
+
+void HistogramSet::addProcess(std::string& title) {
+    processHistName.push_back(title);
+    HistogramContainer* newHists = new HistogramContainer(processHist[0]->getHistInfo(), processHist[0]->get2DHistInfo());
+    processHist.push_back(newHists);
+}
+
 
 void HistogramSet::newSample(std::string& uniqueSampleName) {
     for (unsigned i=0; i<processHist.size(); i++) {

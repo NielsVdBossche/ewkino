@@ -1,0 +1,1 @@
+Xgamma          ../skims_v2/2017/analysisSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_Nov.root          7.509

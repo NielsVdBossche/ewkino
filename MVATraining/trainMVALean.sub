@@ -1,8 +1,12 @@
 universe    =   vanilla
 executable  =   trainMVALean.sh
 
-log         =   /user/nivanden/condor/logs/trainMVALean_$(ClusterId).log
-error       =   /user/nivanden/condor/error/trainMVALean_$(ClusterId).err
-output      =   /user/nivanden/condor/output/trainMVALean_$(ClusterId).out
+log         =   /user/nivanden/condor/logs/trainMVALean_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainMVALean_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainMVALean_$(ClusterId)_$(Process).out
 
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/VariableSelectionML.txt"
 queue

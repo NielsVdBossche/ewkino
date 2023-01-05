@@ -39,13 +39,13 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     selector( new JetSelector( this ) )
 {
     if( readAllJECVariations ){
-	for( const auto mapEl: treeReader._jetSmearedPt_JECSourcesUp ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECSourcesUp ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECSourcesUp");
 	    _pt_JECSourcesUp.insert( {key,mapEl.second[jetIndex]} );
 	}
-	for( const auto mapEl: treeReader._jetSmearedPt_JECSourcesDown ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECSourcesDown ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECSourcesDown");
@@ -53,13 +53,13 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
 	}
     }
     if( readGroupedJECVariations ){
-	for( const auto mapEl: treeReader._jetSmearedPt_JECGroupedUp ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECGroupedUp ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECGroupedUp");
 	    _pt_JECGroupedUp.insert( {key,mapEl.second[jetIndex]} );
 	}
-	for( const auto mapEl: treeReader._jetSmearedPt_JECGroupedDown ){
+	for( const auto &mapEl: treeReader._jetSmearedPt_JECGroupedDown ){
 	    std::string key = mapEl.first;
 	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
 	    key = stringTools::removeOccurencesOf(key,"_JECGroupedDown");
@@ -254,6 +254,22 @@ Jet Jet::JetJECUp( const std::string source ) const{
         if(source==mapEl.first) newpt = mapEl.second;
     }
     return variedJet( newpt );
+}
+
+Jet Jet::HEMIssue() const {
+    if (! is2018()) return variedJet(pt());
+    if (! isTight() || pt() < 15.) return variedJet(pt());
+    double newPt = 0.;
+    if ((eta() > -2.5 && eta() < -1.3) && (phi() > -1.57 && phi() < -0.87)) {
+        newPt = pt() * 0.8;
+        return variedJet(newPt);
+    } else if ((eta() > -3.0 && eta() < -2.5) && (phi() > -1.57 && phi() < -0.87)) {
+        newPt = pt() * 0.65;
+        return variedJet(newPt);
+    } else {
+        newPt = pt();
+        return variedJet(newPt);
+    }
 }
 
 

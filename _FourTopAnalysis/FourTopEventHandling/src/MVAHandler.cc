@@ -5,8 +5,12 @@
 #include "../../../memleak/debug_new.h"
 #endif
 
-MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventFourT* selec) : currentConfig(config), selection(selec) {
+MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventFourT* selec, bool isLean) : currentConfig(config), selection(selec), lean(isLean) {
     initReader();
+}
+
+MVAHandler_4T::~MVAHandler_4T() {
+    delete reader;
 }
 
 void MVAHandler_4T::initReader() {
@@ -14,22 +18,122 @@ void MVAHandler_4T::initReader() {
 
     std::string weightFilePath = "../MVATraining/VeryEpicLoader/weights/";
     if (currentConfig == Binary_DL) {
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_UL_2022-10-14_11-51__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
     } else if (currentConfig == Binary_ML) {
         isML = true;
-        weightFilePath += "WEIGHTS";
+        weightFilePath += "FourTopClassification_UL_2022-10-14_11-50__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
     } else if (currentConfig == TriClass_DL) {
-        weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        if (lean) {
+            //weightFilePath += "FourTopClassification_OrigSel_TEST__DL_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_LeanSel_DL_BDTG_B_2000_6_20_0.1_1_1.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-12_11-41__BDT_VAR_DLG_B_1250_4_20_0.05_5_0.5.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2023-01-02_15-29__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
+        } else {
+            weightFilePath += "FourTopClassification__OrigSel_DL_BDTG_B_1000_3_0.1_20.weights.xml";
+        }
     } else if (currentConfig == TriClass_ML) {
+        if (lean) {
+            //weightFilePath += "FourTopClassification_OrigSel_TEST__ML_BDTG_B_1000_3_20_0.1_5_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_LeanSel_ML_BDTG_B_1500_5_20_0.08_1_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-12_12-08__BDT_VAR_MLG_B_1000_3_20_0.1_1_0.25.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-13_15-31__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-17_11-09__BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            //weightFilePath += "FourTopClassification_UL_2022-10-22_12-24__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+            weightFilePath += "FourTopClassification_UL_2023-01-02_15-29__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml";
+        } else {
+            weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
+        }
         isML = true;
-        weightFilePath += "FourTopClassification__OrigSel_ML_BDTG_B_1000_3_0.1_20.weights.xml";
     } else if (currentConfig == FourClass_DL) {
         weightFilePath += "WEIGHTS";
     } else if (currentConfig == FourClass_ML) {
         isML = true;
         weightFilePath += "WEIGHTS";
     }
-
+    
+    if (isML) {
+        reader->AddVariable("N_jets", &n_jets_f);
+        //reader->AddVariable("N_b", &n_bjets_f);
+        reader->AddVariable("N_b_tight", &n_b_tight);
+        //reader->AddVariable("N_b_loose", &n_b_loose);
+        reader->AddVariable("dr_bJets", &deltaRBjets);
+        reader->AddVariable("dr_leps", &dRleps);
+        //reader->AddVariable("aziAngle", &aziAngle);
+        reader->AddVariable("ht", &ht);
+        //reader->AddVariable("mToPt", &massToPt);
+        reader->AddVariable("min_dr_lep_b", &min_dr_lep_b);
+        //reader->AddVariable("sec_min_dr_lep_b", &sec_min_dr_lep_b);
+        reader->AddVariable("pt_jet_one", &ptJetOne);
+        //reader->AddVariable("pt_jet_two", &ptJetTwo);
+        reader->AddVariable("pt_jet_three", &ptJetThree);
+        //reader->AddVariable("pt_jet_four", &ptJetFour);
+        reader->AddVariable("pt_jet_five", &ptJetFive);
+        //reader->AddVariable("pt_jet_six", &ptJetSix);
+        reader->AddVariable("pt_lep_one", &ptLepOne);
+        reader->AddVariable("pt_lep_two", &ptLepTwo);
+        reader->AddVariable("pt_lep_three", &ptLepTwo);
+        //reader->AddVariable("bTagLead", &bTagLead);
+        reader->AddVariable("bTagSub", &bTagSub);
+        reader->AddVariable("bTagThird", &bTagThird);
+        //reader->AddVariable("bTagFourth", &bTagFourth);
+        reader->AddVariable("bTagPtLead", &bTagPtLead);
+        reader->AddVariable("bTagPtSub", &bTagPtSub);
+        reader->AddVariable("bTagPtThird", &bTagPtThird);
+        reader->AddVariable("bTagPtFourth", &bTagPtFourth);
+        reader->AddVariable("m2ll", &m2ll);
+        //reader->AddVariable("m2bb", &m2bb);
+        //reader->AddVariable("m2lblb", &m2lblb);
+        reader->AddVariable("mtLeadLepMET", &mtLeadLepMET);
+        reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
+        reader->AddVariable("massBestTop", &massBestTop);
+        reader->AddVariable("massBestTopW", &massBestTopW);
+        //reader->AddVariable("massSecTop", &massSecTop);
+        //reader->AddVariable("massSecTopW", &massSecTopW);
+        reader->AddVariable("MET", &met);
+    } else {
+        reader->AddVariable("N_jets", &n_jets_f);
+        //reader->AddVariable("N_b", &n_bjets_f);
+        reader->AddVariable("N_b_tight", &n_b_tight);
+        reader->AddVariable("N_b_loose", &n_b_loose);
+        reader->AddVariable("dr_bJets", &deltaRBjets);
+        reader->AddVariable("dr_leps", &dRleps);
+        reader->AddVariable("aziAngle", &aziAngle);
+        reader->AddVariable("ht", &ht);
+        //reader->AddVariable("mToPt", &massToPt);
+        reader->AddVariable("min_dr_lep_b", &min_dr_lep_b);
+        reader->AddVariable("sec_min_dr_lep_b", &sec_min_dr_lep_b);
+        reader->AddVariable("pt_jet_one", &ptJetOne);
+        reader->AddVariable("pt_jet_two", &ptJetTwo);
+        //reader->AddVariable("pt_jet_three", &ptJetThree);
+        reader->AddVariable("pt_jet_four", &ptJetFour);
+        reader->AddVariable("pt_jet_five", &ptJetFive);
+        //reader->AddVariable("pt_jet_six", &ptJetSix);
+        reader->AddVariable("pt_lep_one", &ptLepOne);
+        reader->AddVariable("pt_lep_two", &ptLepTwo);
+        //reader->AddVariable("bTagLead", &bTagLead);
+        reader->AddVariable("bTagSub", &bTagSub);
+        reader->AddVariable("bTagThird", &bTagThird);
+        reader->AddVariable("bTagFourth", &bTagFourth);
+        reader->AddVariable("bTagPtLead", &bTagPtLead);
+        reader->AddVariable("bTagPtSub", &bTagPtSub);
+        reader->AddVariable("bTagPtThird", &bTagPtThird);
+        //reader->AddVariable("bTagPtFourth", &bTagPtFourth);
+        //reader->AddVariable("m2ll", &m2ll);
+        reader->AddVariable("m2bb", &m2bb);
+        reader->AddVariable("m2lblb", &m2lblb);
+        reader->AddVariable("mtLeadLepMET", &mtLeadLepMET);
+        reader->AddVariable("mtSubLeadLepMET", &mtSubLeadLepMET);
+        reader->AddVariable("massBestTop", &massBestTop);
+        reader->AddVariable("massBestTopW", &massBestTopW);
+        reader->AddVariable("massSecTop", &massSecTop);
+        reader->AddVariable("massSecTopW", &massSecTopW);
+        reader->AddVariable("MET", &met);
+    }
+    
+/*
     reader->AddVariable("N_jets", &n_jets_f);
     reader->AddVariable("N_b", &n_bjets_f);
     reader->AddVariable("N_b_tight", &n_b_tight);
@@ -66,23 +170,29 @@ void MVAHandler_4T::initReader() {
     reader->AddVariable("massSecTop",      &massSecTop);
     reader->AddVariable("massSecTopW",     &massSecTopW);
     reader->AddVariable("MET",             &met);
-
+    
     if (!isML) {
+
     }
 
     if (isML) {
         reader->AddVariable("pt_lep_three", &ptLepThree);
     }
-
+*/
     reader->BookMVA("BDTCurr", weightFilePath);
 
-    createHistograms("");
+    if (currentConfig < 2) {
+    } else if (currentConfig < 4) {
+        maxClass = 3;
+    } else if (currentConfig < 6) {
+        maxClass = 4;
+    }
 }
 
-std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {
+std::vector<HistInfo> MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
-    std::vector<HistInfo>* histInfoVec = new std::vector<HistInfo>;
+    std::vector<HistInfo> histInfoVec;
 
     if (currentConfig < 2) {
         identifier += "_Binary";
@@ -95,17 +205,17 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
     }
 
     if (fourLep) {
-        identifier += "_4L";
+        identifier += "_SR-4L";
     } else if (isML) {
-        identifier += "_3L";
+        identifier += "_SR-3L";
     } else {
-        identifier += "_DL";
+        identifier += "_SR-2L";
     }
 
     std::map<MVAClasses, std::string> translator = {
         {TTTT, "Signal"},
         {TTBar, "TTBar"},
-        {TTW, "TTW"},
+        {TTW, "TTV"},
         {TTZH, "TTZH"}
     }; // Review names when appropriate
 
@@ -113,23 +223,23 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
         std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis, 15, 0., 1.));
+        histInfoVec.push_back(HistInfo(name, xaxis, 100, 0., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis , 15, 0., 1.));
+        histInfoVec.push_back(HistInfo(name, xaxis , 240, 0.4, 1.));
     }
 
     return histInfoVec;
 }
 
-std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string additionalFlag, bool fourLep) {
+std::vector<HistInfo_2D> MVAHandler_4T::create2DHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
-    std::vector<HistInfo_2D>* histInfoVec = new std::vector<HistInfo_2D>;
+    std::vector<HistInfo_2D> histInfoVec;
 
     if (currentConfig < 2) {
         identifier += "_Binary";
@@ -140,11 +250,11 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string addition
     }
 
     if (fourLep) {
-        identifier += "_4L";
+        identifier += "_SR-4L";
     } else if (isML) {
-        identifier += "_3L";
+        identifier += "_SR-3L";
     } else {
-        identifier += "_DL";
+        identifier += "_SR-2L";
     }
 
     std::map<MVAClasses, std::string> translator = {
@@ -160,7 +270,7 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string addition
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
         std::string yaxis = "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)];
 
-        histInfoVec->push_back(HistInfo_2D(name, xaxis, 15, 0., 1., yaxis, 15, 0., 1.));
+        histInfoVec.push_back(HistInfo_2D(name, xaxis, 20, 0., 1., yaxis, 20, 0., 1.));
     }
 
     return histInfoVec;
@@ -264,7 +374,9 @@ void MVAHandler_4T::fillVariables() {
     sec_min_dr_lep_b =  (mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.);
 
     jetCol->sortByPt();
-    ptJetOne         =  jetCol->at(0)->pt();
+    ptJetOne         =  (n_jets_f >= 1 ? jetCol->at(0)->pt() : 0.);
+    ptJetTwo         =  (n_jets_f >= 2 ? jetCol->at(1)->pt() : 0.);
+    ptJetThree       =  (n_jets_f >= 3 ? jetCol->at(2)->pt() : 0.);
     ptJetFour        =  (n_jets_f >= 4 ? jetCol->at(3)->pt() : 0.);
     ptJetFive        =  (n_jets_f >= 5 ? jetCol->at(4)->pt() : 0.);
     ptJetSix         =  (n_jets_f >= 6 ? jetCol->at(5)->pt() : 0.);

@@ -28,18 +28,18 @@ class SampleCrossSections{
 
         size_type numberOfPsVariations() const{ return psCrossSectionRatios.size(); }
 		double crossSectionRatio_psVar( const size_type ) const;
-		double crossSectionRatio_ISR_InverseSqrt2() const{ return crossSectionRatio_psVar( 2 ); }
-		double crossSectionRatio_FSR_InverseSqrt2() const{ return crossSectionRatio_psVar( 3 ); }
-		double crossSectionRatio_ISR_Sqrt2() const{ return crossSectionRatio_psVar( 4 ); }
-		double crossSectionRatio_FSR_Sqrt2() const{ return crossSectionRatio_psVar( 5 ); }
-		double crossSectionRatio_ISR_0p5() const{ return crossSectionRatio_psVar( 6 ); }
-		double crossSectionRatio_FSR_0p5() const{ return crossSectionRatio_psVar( 7 ); }
-		double crossSectionRatio_ISR_2() const{ return crossSectionRatio_psVar( 8 ); }
-		double crossSectionRatio_FSR_2() const{ return crossSectionRatio_psVar( 9 ); }
-		double crossSectionRatio_ISR_0p25() const{ return crossSectionRatio_psVar( 10 ); }
-		double crossSectionRatio_FSR_0p25() const{ return crossSectionRatio_psVar( 11 ); }
-		double crossSectionRatio_ISR_4() const{ return crossSectionRatio_psVar( 12 ); }
-		double crossSectionRatio_FSR_4() const{ return crossSectionRatio_psVar( 13 ); }
+		double crossSectionRatio_FSR_InverseSqrt2() const{ return crossSectionRatio_psVar( 2 ); }
+		double crossSectionRatio_FSR_Sqrt2() const{ return crossSectionRatio_psVar( 3 ); }
+		double crossSectionRatio_FSR_0p5() const{ return crossSectionRatio_psVar( 4 ); }
+		double crossSectionRatio_FSR_2() const{ return crossSectionRatio_psVar( 5 ); }
+		double crossSectionRatio_FSR_0p25() const{ return crossSectionRatio_psVar( 6 ); }
+		double crossSectionRatio_FSR_4() const{ return crossSectionRatio_psVar( 7 ); }
+		double crossSectionRatio_ISR_InverseSqrt2() const{ return crossSectionRatio_psVar( 24 ); }
+		double crossSectionRatio_ISR_Sqrt2() const{ return crossSectionRatio_psVar( 25 ); }
+		double crossSectionRatio_ISR_0p5() const{ return crossSectionRatio_psVar( 26 ); }
+		double crossSectionRatio_ISR_2() const{ return crossSectionRatio_psVar( 27 ); }
+		double crossSectionRatio_ISR_0p25() const{ return crossSectionRatio_psVar( 28 ); }
+		double crossSectionRatio_ISR_4() const{ return crossSectionRatio_psVar( 29 ); }
 
 	private:
 		std::vector< double > lheCrossSectionRatios;

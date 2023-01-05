@@ -5,4 +5,4 @@ log         =   /user/nivanden/condor/logs/trainSampleProd_$(ClusterId)_$(Proces
 error       =   /user/nivanden/condor/error/trainSampleProd_$(ClusterId)_$(Process).err
 output      =   /user/nivanden/condor/output/trainSampleProd_$(ClusterId)_$(Process).out
 
-queue 1 arguments in PreVFP, PostVFP, 17, 18
+queue 1 arguments in TmpLists/trainingSamples_UL_new_TTTT_0.txt, TmpLists/trainingSamples_UL_new_TTTT_1.txt, TmpLists/trainingSamples_UL_new_TTTT_2.txt, TmpLists/trainingSamples_UL_new_TTTT_3.txt, TmpLists/trainingSamples_UL_new_TTH_0.txt, TmpLists/trainingSamples_UL_new_TTH_1.txt, TmpLists/trainingSamples_UL_new_TTH_2.txt, TmpLists/trainingSamples_UL_new_TTZ_0.txt, TmpLists/trainingSamples_UL_new_TTZ_1.txt, TmpLists/trainingSamples_UL_new_TTZ_2.txt, TmpLists/trainingSamples_UL_new_TTZ_3.txt, TmpLists/trainingSamples_UL_new_TTW_0.txt, TmpLists/trainingSamples_UL_new_TTW_1.txt, TmpLists/trainingSamples_UL_new_TTW_2.txt, TmpLists/trainingSamples_UL_new_TTW_3.txt

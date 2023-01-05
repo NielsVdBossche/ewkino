@@ -1,0 +1,1 @@
+DY          ../skims_OSDL/2017/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_ULv6_1pp.root            15810.0

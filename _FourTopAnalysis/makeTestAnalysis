@@ -1,0 +1,13 @@
+CC=g++ -Wall -Wextra -O3 -g 
+CFLAGS= -Wl,--no-as-needed,-lpthread
+CXXFLAGS = -std=gnu++17
+LDFLAGS=`root-config --glibs --cflags` -lTMVA
+SOURCES= testRun.cc ../codeLibrary.o _FourTop/src/*.cc FourTopEventHandling/src/*.cc histogramSetups/*.cc additionalTools/src/*.cc TopQuarkReconstruction/src/*.cc HistogramHandling/src/*.cc SampleSF/src/*.cc
+OBJECTS=$(SOURCES:.cc=.o)
+EXECUTABLE=testAnalysisExec
+
+all: 
+	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
+	
+clean:
+	rm -rf *o $(EXECUTABLE)

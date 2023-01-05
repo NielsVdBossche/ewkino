@@ -12,6 +12,7 @@
 #include "JetInfo.h"
 #include "EventTags.h"
 #include "SusyMassInfo.h"
+#include "ParticleLevelInfo.h"
 #include "../../objects/interface/Met.h"
 #include "../../objects/interface/PhysicsObject.h"
 
@@ -62,7 +63,7 @@ class Event {
 	    JetInfo* getJetInfoPtr() const{ return _jetInfoPtr; }
         EventTags* getEventTagsPtr() const{ return _eventTagsPtr; }
         GeneratorInfo* getGeneratorInfoPtr() const;
-
+        ParticleLevelInfo* GetPLInfoPtr() const { return _particleLevelInfoPtr; }
         // return jet collection and met with varied JEC/JER/Uncl uncertainties
         JetCollection getJetCollection( const std::string& variation ) const{ 
             return (*_jetCollectionPtr).getVariedJetCollection( variation); }
@@ -101,18 +102,20 @@ class Event {
 
         //lepton selection and cleaning
         void selectLooseLeptons(){ _leptonCollectionPtr->selectLooseLeptons(); }
+        void selectLooseV2Leptons(){ _leptonCollectionPtr->selectLooseV2Leptons(); }
         void selectFOLeptons(){ _leptonCollectionPtr->selectFOLeptons(); }
         void selectTightLeptons(){ _leptonCollectionPtr->selectTightLeptons(); }
        	void cleanElectronsFromLooseMuons( const double coneSize = 0.05 ){ _leptonCollectionPtr->cleanElectronsFromLooseMuons( coneSize ); }
+       	void cleanElectronsFromLooseV2Muons( const double coneSize = 0.05 ){ _leptonCollectionPtr->cleanElectronsFromLooseV2Muons( coneSize ); }
         void cleanElectronsFromFOMuons( const double coneSize = 0.05 ){ _leptonCollectionPtr->cleanElectronsFromFOMuons( coneSize ); }
         void cleanTausFromLooseLightLeptons( const double coneSize = 0.4 ){ _leptonCollectionPtr->cleanTausFromLooseLightLeptons( coneSize ); }
         void cleanTausFromFOLightLeptons( const double coneSize = 0.4 ){ _leptonCollectionPtr->cleanTausFromFOLightLeptons( coneSize ); }
 
         //separate lepton flavor collections
-        MuonCollection muonCollection() const{ return *_leptonCollectionPtr->muonCollectionPtr(); }
-        ElectronCollection electronCollection() const{ return *_leptonCollectionPtr->electronCollectionPtr(); }
-        TauCollection tauCollection() const{ return *_leptonCollectionPtr->tauCollectionPtr(); }
-        LightLeptonCollection lightLeptonCollection() const{ return *_leptonCollectionPtr->lightLeptonCollectionPtr(); }
+        MuonCollection muonCollection() const{ return _leptonCollectionPtr->muonCollection(); }
+        ElectronCollection electronCollection() const{ return _leptonCollectionPtr->electronCollection(); }
+        TauCollection tauCollection() const{ return _leptonCollectionPtr->tauCollection(); }
+        LightLeptonCollection lightLeptonCollection() const{ return _leptonCollectionPtr->lightLeptonCollection(); }
         LeptonCollection::size_type numberOfMuons() const{ return _leptonCollectionPtr->numberOfMuons(); }
         LeptonCollection::size_type numberOfElectrons() const{ return _leptonCollectionPtr->numberOfElectrons(); }
         LeptonCollection::size_type numberOfTaus() const{ return _leptonCollectionPtr->numberOfTaus(); }
@@ -256,6 +259,7 @@ class Event {
         unsigned _numberOfVertices = 0;
         double _weight = 1;
         const Sample* _samplePtr = nullptr;
+        ParticleLevelInfo* _particleLevelInfoPtr = nullptr;
 
         JetCollection* _bJetCollectionPtr = nullptr; // jets selected at the general b-tag WP
 
@@ -282,6 +286,9 @@ class Event {
         //check the presence of susy information
         bool hasSusyMassInfo() const{ return ( _susyMassInfoPtr != nullptr ); }
         void checkSusyMassInfo() const;
+
+        // check particle level info
+        bool hasPLInfo() const {return (_particleLevelInfoPtr != nullptr); }
 
 	Event variedLeptonCollectionEvent(
                     LeptonCollection (LeptonCollection::*variedCollection)() const ) const;

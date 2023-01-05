@@ -1,8 +1,0 @@
-universe    =   vanilla
-executable  =   trainMVA.sh
-
-log         =   /user/nivanden/condor/logs/trainMVA_$(ClusterId).log
-error       =   /user/nivanden/condor/error/trainMVA_$(ClusterId).err
-output      =   /user/nivanden/condor/output/trainMVA_$(ClusterId).out
-
-queue

@@ -16,13 +16,13 @@ Met::Met( const TreeReader& treeReader,
     _phi_UnclUp( treeReader._metPhi_UnclUp )
 {
     if( readAllJECVariations ){
-	for( const auto mapEl: treeReader._corrMETx_JECSourcesUp ){
+	for( const auto& mapEl: treeReader._corrMETx_JECSourcesUp ){
             std::string key = mapEl.first;
             key = stringTools::removeOccurencesOf(key,"_corrMETx_");
             key = stringTools::removeOccurencesOf(key,"_JECSourcesUp");
             _JECSources.push_back( key ); // assume they are the same for Up/Down and x/y!
         }
-	for( const std::string key: _JECSources ){
+	for( const std::string& key: _JECSources ){
 	    _pxy_JECSourcesUp.insert( {key, std::make_pair( 
 		treeReader._corrMETx_JECSourcesUp.at("_corrMETx_"+key+"_JECSourcesUp"), 
 		treeReader._corrMETy_JECSourcesUp.at("_corrMETy_"+key+"_JECSourcesUp"))} );
@@ -32,13 +32,13 @@ Met::Met( const TreeReader& treeReader,
 	}
     }
     if( readGroupedJECVariations ){
-        for( const auto mapEl: treeReader._corrMETx_JECGroupedUp ){
+        for( const auto& mapEl: treeReader._corrMETx_JECGroupedUp ){
             std::string key = mapEl.first;
             key = stringTools::removeOccurencesOf(key,"_corrMETx_");
             key = stringTools::removeOccurencesOf(key,"_JECGroupedUp");
             _JECGrouped.push_back( key ); // assume they are the same for Up/Down and x/y!
         }
-	for( const std::string key: _JECGrouped ){
+	for( const std::string& key: _JECGrouped ){
             _pxy_JECGroupedUp.insert( {key, std::make_pair( 
                 treeReader._corrMETx_JECGroupedUp.at("_corrMETx_"+key+"_JECGroupedUp"),  
                 treeReader._corrMETy_JECGroupedUp.at("_corrMETy_"+key+"_JECGroupedUp"))} );
@@ -106,6 +106,22 @@ Met Met::MetJECUp( const std::string source ) const{
     return variedMetPxPy( newpxy.first, newpxy.second );
 }
 
+Met Met::HEMIssue(JetCollection& nominalJets) const {
+    LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
+    for (const auto& jetPtr : nominalJets) {
+        double ptNom = jetPtr->pt();
+        Jet varJet = jetPtr->HEMIssue();
+        double ptdiff = ptNom - varJet.pt();
+        if (fabs(ptdiff) > 1e-1) {
+            ret += LorentzVector(ptdiff, 0., jetPtr->phi(), ptdiff);
+        }
+    }
+    Met variedMet( *this );
+    variedMet.setLorentzVector(ret.pt(), eta(), ret.phi(), ret.pt() );
+    return variedMet;
+}
+
+
 Met Met::getVariedMet( const std::string& variation ) const{
     if( variation == "nominal" ){
         return *this;
@@ -163,3 +179,27 @@ std::ostream& Met::print( std::ostream& os ) const{
     os << " / pt_JECDown = " << _pt_JECDown << " / phi_JECDown = " << _phi_JECDown << " / pt_JECUp = " << _pt_JECUp << " / phi_JECUp = " << _phi_JECUp << " / pt_UnclDown = " << _pt_UnclDown << " / phi_UnclDown = " << _phi_UnclDown << " / pt_UnclUp = " << _pt_UnclUp << " / phi_UnclUp = " << _phi_UnclUp;
     return os;
 }
+
+Met Met::getVariedMet(JetCollection& nomJets, std::string variation, unsigned flavor, bool up) const {
+    // rough approach
+    // generate lorentzvector corresponding to met
+    LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
+
+    for (const auto& jetPtr : nomJets) {
+        double ptNom = jetPtr->pt();
+        if (jetPtr->hadronFlavor() != flavor) continue;
+        
+        std::shared_ptr<Jet> varJet;
+        if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECUp( variation ));
+        else varJet = std::make_shared< Jet >(jetPtr->JetJECDown( variation ));
+
+        double ptdiff = ptNom - varJet->pt();
+
+        ret += LorentzVector(ptdiff, 0., jetPtr->phi(), ptdiff);
+    }
+
+    Met variedMet( *this );
+    variedMet.setLorentzVector(ret.pt(), eta(), ret.phi(), ret.pt() );
+    return variedMet;
+}
+

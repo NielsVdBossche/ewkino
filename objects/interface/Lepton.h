@@ -46,12 +46,16 @@ class Lepton : public PhysicsObject {
         unsigned provenance() const;
         unsigned provenanceCompressed() const;
         unsigned provenanceConversion() const;
-        bool isChargeFlip() const{ return ( charge() != matchCharge() ); }
+        bool isChargeFlip() const{ return ( charge() == -1 * matchCharge() ); }
+        bool isChargeMisMatch() const{ return ( charge() != matchCharge() ); }
+
 
         //lepton id decisions 
         bool isLoose() const{ return selector->isLoose(); }
+        bool isLooseV2() const{ return selector->isLooseV2(); }
         bool isFO() const{ return selector->isFO(); }
         bool isTight() const{ return selector->isTight(); }
+        bool isTightCharge() const {return selector->isTightCharge();}
         virtual bool isGood() const override{ return isFO(); }
 
         //cone-correction for fake-rate prediction

@@ -45,6 +45,12 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
 	    JetCollection JECDownCollection( std::string source ) const;
 	    JetCollection getVariedJetCollection( const std::string& variation ) const;
 
+        JetCollection JECUpGroupedFlavorQCD(unsigned flavor) const;
+        JetCollection JECGroupedFlavorQCD(unsigned flavor, bool up) const;
+        JetCollection JECDownGroupedFlavorQCD(unsigned flavor) const;
+
+        JetCollection HEMIssue() const;
+
 
         //select jets
         void selectGoodJets();
@@ -83,8 +89,9 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
     
         //build JetCollection of varied Jets
         JetCollection buildVariedCollection( Jet (Jet::*variedJet)() const ) const;
-	    JetCollection buildVariedCollection( Jet (Jet::*variedJet)(std::string) const, 
-	    std::string ) const;
+	    JetCollection buildVariedCollection( Jet (Jet::*variedJet)(std::string) const, std::string ) const;
+	    JetCollection buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(std::string) const, std::string, unsigned ) const;
+
 
         //number of b-taged jets with variation
         std::vector< size_type > countsAnyVariation( bool ( Jet::*passSelection )() const ) const;

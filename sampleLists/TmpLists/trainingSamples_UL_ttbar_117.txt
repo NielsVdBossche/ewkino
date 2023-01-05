@@ -1,0 +1,1 @@
+ttbar            ../skims_v5/2016PreVFP/TTToSemiLeptonic_TuneCP5up_13TeV-powheg-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_fourTopBase_MC_ttbar_2016_ULpreVFP.root                           365.34

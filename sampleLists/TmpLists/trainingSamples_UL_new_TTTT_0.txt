@@ -1,0 +1,1 @@
+TTTT             ../skims_v6/2016PostVFP/mvaSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v1_singlelepton_MC_2016_ULpostVFP_GP.root                       0.01197

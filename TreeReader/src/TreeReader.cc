@@ -251,6 +251,14 @@ bool TreeReader::containsGeneratorInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_gen_" );
 }
 
+bool TreeReader::containsFullGeneratorInfo() const{
+    return treeHasBranchWithName( _currentTreePtr, "_gen_pt" );
+}
+
+bool TreeReader::containsParticleLevelInfo() const{
+    return treeHasBranchWithName( _currentTreePtr, "_pl_" );
+}
+
 bool TreeReader::containsLheInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_lhePt" );
 }
@@ -537,6 +545,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
 
     // Set branch addresses and branch pointers
     checkCurrentTree();
+    hasPLInfo = false;
 
     _currentTreePtr->SetMakeClass(1);
 
@@ -601,6 +610,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("_leptonMvaTTH", _leptonMvaTTH, &b__leptonMvaTTH);
     _currentTreePtr->SetBranchAddress("_leptonMvatZq", _leptonMvatZq, &b__leptonMvatZq);
     _currentTreePtr->SetBranchAddress("_leptonMvaTOP", _leptonMvaTOP, &b__leptonMvaTOP);
+    _currentTreePtr->SetBranchAddress("_leptonMvaTOPUL", _leptonMvaTOPUL, &b__leptonMvaTOPUL);
+    _currentTreePtr->SetBranchAddress("_leptonMvaTOPv2UL", _leptonMvaTOPULv2, &b__leptonMvaTOPv2UL);
     _currentTreePtr->SetBranchAddress("_lPOGVeto", _lPOGVeto, &b__lPOGVeto);
     _currentTreePtr->SetBranchAddress("_lPOGLoose", _lPOGLoose, &b__lPOGLoose);
     _currentTreePtr->SetBranchAddress("_lPOGMedium", _lPOGMedium, &b__lPOGMedium);
@@ -610,30 +621,33 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("_decayModeFinding", _decayModeFinding, &b__decayModeFinding);
     _currentTreePtr->SetBranchAddress("_decayModeFindingNew", _decayModeFindingNew, &b__decayModeFindingNew);
     _currentTreePtr->SetBranchAddress("_tauMuonVetoLoose", _tauMuonVetoLoose, &b__tauMuonVetoLoose);
-    _currentTreePtr->SetBranchAddress("_tauMuonVetoTight", _tauMuonVetoTight, &b__tauMuonVetoTight);
-    _currentTreePtr->SetBranchAddress("_tauEleVetoVLoose", _tauEleVetoVLoose, &b__tauEleVetoVLoose);
-    _currentTreePtr->SetBranchAddress("_tauEleVetoLoose", _tauEleVetoLoose, &b__tauEleVetoLoose);
-    _currentTreePtr->SetBranchAddress("_tauEleVetoMedium", _tauEleVetoMedium, &b__tauEleVetoMedium);
-    _currentTreePtr->SetBranchAddress("_tauEleVetoTight", _tauEleVetoTight, &b__tauEleVetoTight);
-    _currentTreePtr->SetBranchAddress("_tauEleVetoVTight", _tauEleVetoVTight, &b__tauEleVetoVTight);
-    _currentTreePtr->SetBranchAddress("_tauPOGVLoose2015", _tauPOGVLoose2015, &b__tauPOGVLoose2015);
-    _currentTreePtr->SetBranchAddress("_tauPOGLoose2015", _tauPOGLoose2015, &b__tauPOGLoose2015);
-    _currentTreePtr->SetBranchAddress("_tauPOGMedium2015", _tauPOGMedium2015, &b__tauPOGMedium2015);
-    _currentTreePtr->SetBranchAddress("_tauPOGTight2015", _tauPOGTight2015, &b__tauPOGTight2015);
-    _currentTreePtr->SetBranchAddress("_tauPOGVTight2015", _tauPOGVTight2015, &b__tauPOGVTight2015);
-    _currentTreePtr->SetBranchAddress("_tauVLooseMvaNew2015", _tauVLooseMvaNew2015, &b__tauVLooseMvaNew2015);
-    _currentTreePtr->SetBranchAddress("_tauLooseMvaNew2015", _tauLooseMvaNew2015, &b__tauLooseMvaNew2015);
-    _currentTreePtr->SetBranchAddress("_tauMediumMvaNew2015", _tauMediumMvaNew2015, &b__tauMediumMvaNew2015);
-    _currentTreePtr->SetBranchAddress("_tauTightMvaNew2015", _tauTightMvaNew2015, &b__tauTightMvaNew2015);
-    _currentTreePtr->SetBranchAddress("_tauVTightMvaNew2015", _tauVTightMvaNew2015, &b__tauVTightMvaNew2015);
-    _currentTreePtr->SetBranchAddress("_tauPOGVVLoose2017v2", _tauPOGVVLoose2017v2, &b__tauPOGVVLoose2017v2);
-    _currentTreePtr->SetBranchAddress("_tauPOGVTight2017v2", _tauPOGVTight2017v2, &b__tauPOGVTight2017v2);
-    _currentTreePtr->SetBranchAddress("_tauPOGVVTight2017v2", _tauPOGVVTight2017v2, &b__tauPOGVVTight2017v2);
-    _currentTreePtr->SetBranchAddress("_tauVLooseMvaNew2017v2", _tauVLooseMvaNew2017v2, &b__tauVLooseMvaNew2017v2);
-    _currentTreePtr->SetBranchAddress("_tauLooseMvaNew2017v2", _tauLooseMvaNew2017v2, &b__tauLooseMvaNew2017v2);
-    _currentTreePtr->SetBranchAddress("_tauMediumMvaNew2017v2", _tauMediumMvaNew2017v2, &b__tauMediumMvaNew2017v2);
-    _currentTreePtr->SetBranchAddress("_tauTightMvaNew2017v2", _tauTightMvaNew2017v2, &b__tauTightMvaNew2017v2);
-    _currentTreePtr->SetBranchAddress("_tauVTightMvaNew2017v2", _tauVTightMvaNew2017v2, &b__tauVTightMvaNew2017v2);
+
+    if (treeHasBranchWithName(_currentTreePtr, "_tauMuonVetoTight")) {
+        _currentTreePtr->SetBranchAddress("_tauMuonVetoTight", _tauMuonVetoTight, &b__tauMuonVetoTight);
+        _currentTreePtr->SetBranchAddress("_tauEleVetoVLoose", _tauEleVetoVLoose, &b__tauEleVetoVLoose);
+        _currentTreePtr->SetBranchAddress("_tauEleVetoLoose", _tauEleVetoLoose, &b__tauEleVetoLoose);
+        _currentTreePtr->SetBranchAddress("_tauEleVetoMedium", _tauEleVetoMedium, &b__tauEleVetoMedium);
+        _currentTreePtr->SetBranchAddress("_tauEleVetoTight", _tauEleVetoTight, &b__tauEleVetoTight);
+        _currentTreePtr->SetBranchAddress("_tauEleVetoVTight", _tauEleVetoVTight, &b__tauEleVetoVTight);
+        _currentTreePtr->SetBranchAddress("_tauPOGVLoose2015", _tauPOGVLoose2015, &b__tauPOGVLoose2015);
+        _currentTreePtr->SetBranchAddress("_tauPOGLoose2015", _tauPOGLoose2015, &b__tauPOGLoose2015);
+        _currentTreePtr->SetBranchAddress("_tauPOGMedium2015", _tauPOGMedium2015, &b__tauPOGMedium2015);
+        _currentTreePtr->SetBranchAddress("_tauPOGTight2015", _tauPOGTight2015, &b__tauPOGTight2015);
+        _currentTreePtr->SetBranchAddress("_tauPOGVTight2015", _tauPOGVTight2015, &b__tauPOGVTight2015);
+        _currentTreePtr->SetBranchAddress("_tauVLooseMvaNew2015", _tauVLooseMvaNew2015, &b__tauVLooseMvaNew2015);
+        _currentTreePtr->SetBranchAddress("_tauLooseMvaNew2015", _tauLooseMvaNew2015, &b__tauLooseMvaNew2015);
+        _currentTreePtr->SetBranchAddress("_tauMediumMvaNew2015", _tauMediumMvaNew2015, &b__tauMediumMvaNew2015);
+        _currentTreePtr->SetBranchAddress("_tauTightMvaNew2015", _tauTightMvaNew2015, &b__tauTightMvaNew2015);
+        _currentTreePtr->SetBranchAddress("_tauVTightMvaNew2015", _tauVTightMvaNew2015, &b__tauVTightMvaNew2015);
+        _currentTreePtr->SetBranchAddress("_tauPOGVVLoose2017v2", _tauPOGVVLoose2017v2, &b__tauPOGVVLoose2017v2);
+        _currentTreePtr->SetBranchAddress("_tauPOGVTight2017v2", _tauPOGVTight2017v2, &b__tauPOGVTight2017v2);
+        _currentTreePtr->SetBranchAddress("_tauPOGVVTight2017v2", _tauPOGVVTight2017v2, &b__tauPOGVVTight2017v2);
+        _currentTreePtr->SetBranchAddress("_tauVLooseMvaNew2017v2", _tauVLooseMvaNew2017v2, &b__tauVLooseMvaNew2017v2);
+        _currentTreePtr->SetBranchAddress("_tauLooseMvaNew2017v2", _tauLooseMvaNew2017v2, &b__tauLooseMvaNew2017v2);
+        _currentTreePtr->SetBranchAddress("_tauMediumMvaNew2017v2", _tauMediumMvaNew2017v2, &b__tauMediumMvaNew2017v2);
+        _currentTreePtr->SetBranchAddress("_tauTightMvaNew2017v2", _tauTightMvaNew2017v2, &b__tauTightMvaNew2017v2);
+        _currentTreePtr->SetBranchAddress("_tauVTightMvaNew2017v2", _tauVTightMvaNew2017v2, &b__tauVTightMvaNew2017v2);
+    }
 
     _currentTreePtr->SetBranchAddress("_relIso", _relIso, &b__relIso);
     _currentTreePtr->SetBranchAddress("_relIso0p4", _relIso0p4, &b__relIso0p4);
@@ -726,7 +740,50 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
         _currentTreePtr->SetBranchAddress("_lProvenanceConversion", _lProvenanceConversion, &b__lProvenanceConversion);
         _currentTreePtr->SetBranchAddress("_ttgEventType", &_ttgEventType, &b__ttgEventType);
         _currentTreePtr->SetBranchAddress("_zgEventType", &_zgEventType, &b__zgEventType);
-    } 
+
+        if ( containsFullGeneratorInfo() ) {
+            _currentTreePtr->SetBranchAddress("_gen_n",                                        &_gen_n,                                        &b__gen_n);
+            _currentTreePtr->SetBranchAddress("_gen_pt",                                       _gen_pt,                                       &b__gen_pt);
+            _currentTreePtr->SetBranchAddress("_gen_eta",                                      _gen_eta,                                      &b__gen_eta);
+            _currentTreePtr->SetBranchAddress("_gen_phi",                                      _gen_phi,                                      &b__gen_phi);
+            _currentTreePtr->SetBranchAddress("_gen_E",                                        _gen_E,                                        &b__gen_E);
+            _currentTreePtr->SetBranchAddress("_gen_pdgId",                                    _gen_pdgId,                                    &b__gen_pdgId);
+            _currentTreePtr->SetBranchAddress("_gen_charge",                                   _gen_charge,                                   &b__gen_charge);
+            _currentTreePtr->SetBranchAddress("_gen_status",                                   _gen_status,                                   &b__gen_status);
+            _currentTreePtr->SetBranchAddress("_gen_isPromptFinalState",                       _gen_isPromptFinalState,                       &b__gen_isPromptFinalState);
+            _currentTreePtr->SetBranchAddress("_gen_isDirectPromptTauDecayProductFinalState",  _gen_isDirectPromptTauDecayProductFinalState,  &b__gen_isDirectPromptTauDecayProductFinalState);
+            _currentTreePtr->SetBranchAddress("_gen_isLastCopy",                               _gen_isLastCopy,                               &b__gen_isLastCopy);
+            _currentTreePtr->SetBranchAddress("_gen_index",                                    _gen_index,                                    &b__gen_index);
+            _currentTreePtr->SetBranchAddress("_gen_motherIndex",                              _gen_motherIndex,                              &b__gen_motherIndex);
+            _currentTreePtr->SetBranchAddress("_gen_daughter_n",                               _gen_daughter_n,                               &b__gen_daughter_n);
+            _currentTreePtr->SetBranchAddress("_gen_daughterIndex",                            _gen_daughterIndex,                            &b__gen_daughterIndex);
+        }
+    }
+
+    if (containsParticleLevelInfo()) {
+        hasPLInfo = true;
+
+        _currentTreePtr->SetBranchAddress("_pl_met",                   &_pl_met,                   &b__pl_met);
+        _currentTreePtr->SetBranchAddress("_pl_metPhi",                &_pl_metPhi,                &b__pl_metPhi);
+        _currentTreePtr->SetBranchAddress("_pl_nPh",                   &_pl_nPh,                   &b__pl_nPh);
+        _currentTreePtr->SetBranchAddress("_pl_phPt",                  _pl_phPt,                  &b__pl_phPt);
+        _currentTreePtr->SetBranchAddress("_pl_phEta",                 _pl_phEta,                 &b__pl_phEta);
+        _currentTreePtr->SetBranchAddress("_pl_phPhi",                 _pl_phPhi,                 &b__pl_phPhi);
+        _currentTreePtr->SetBranchAddress("_pl_phE",                   _pl_phE,                   &b__pl_phE);
+        _currentTreePtr->SetBranchAddress("_pl_nL",                    &_pl_nL,                    &b__pl_nL);
+        _currentTreePtr->SetBranchAddress("_pl_lPt",                   _pl_lPt,                   &b__pl_lPt);
+        _currentTreePtr->SetBranchAddress("_pl_lEta",                  _pl_lEta,                  &b__pl_lEta);
+        _currentTreePtr->SetBranchAddress("_pl_lPhi",                  _pl_lPhi,                  &b__pl_lPhi);
+        _currentTreePtr->SetBranchAddress("_pl_lE",                    _pl_lE,                    &b__pl_lE);
+        _currentTreePtr->SetBranchAddress("_pl_lFlavor",               _pl_lFlavor,               &b__pl_lFlavor);
+        _currentTreePtr->SetBranchAddress("_pl_lCharge",               _pl_lCharge,               &b__pl_lCharge);
+        _currentTreePtr->SetBranchAddress("_pl_nJets",                 &_pl_nJets,                 &b__pl_nJets);
+        _currentTreePtr->SetBranchAddress("_pl_jetPt",                 _pl_jetPt,                 &b__pl_jetPt);
+        _currentTreePtr->SetBranchAddress("_pl_jetEta",                _pl_jetEta,                &b__pl_jetEta);
+        _currentTreePtr->SetBranchAddress("_pl_jetPhi",                _pl_jetPhi,                &b__pl_jetPhi);
+        _currentTreePtr->SetBranchAddress("_pl_jetE",                  _pl_jetE,                  &b__pl_jetE);
+        _currentTreePtr->SetBranchAddress("_pl_jetHadronFlavor",       _pl_jetHadronFlavor,       &b__pl_jetHadronFlavor);
+    }
 
     if (containsLheInfo()) {
         _currentTreePtr->SetBranchAddress("_nLheTau", &_nLheTau, &b__nLheTau);
@@ -742,7 +799,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
         _currentTreePtr->SetBranchAddress("_lheMass", _lheMass, &b__lheMass);
     }
 
-    if( !is2018() && isMC() ){
+    if( isMC() ){
         _currentTreePtr->SetBranchAddress("_prefireWeight", &_prefireWeight, &b__prefireWeight);
         _currentTreePtr->SetBranchAddress("_prefireWeightDown", &_prefireWeightDown, &b__prefireWeightDown);
         _currentTreePtr->SetBranchAddress("_prefireWeightUp", &_prefireWeightUp, &b__prefireWeightUp);
@@ -864,6 +921,8 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     outputTree->Branch("_leptonMvaTTH",                 &_leptonMvaTTH,                 "_leptonMvaTTH[_nLight]/D");
     outputTree->Branch("_leptonMvatZq",                 &_leptonMvatZq,                 "_leptonMvatZq[_nLight]/D");
     outputTree->Branch("_leptonMvaTOP",                 &_leptonMvaTOP,                 "_leptonMvaTOP[_nLight]/D");
+    outputTree->Branch("_leptonMvaTOPUL",               &_leptonMvaTOPUL,               "_leptonMvaTOPUL[_nLight]/D");
+    outputTree->Branch("_leptonMvaTOPv2UL",             &_leptonMvaTOPULv2,             "_leptonMvaTOPv2UL[_nLight]/D");
     outputTree->Branch("_lPOGVeto",                     &_lPOGVeto,                     "_lPOGVeto[_nL]/O");
     outputTree->Branch("_lPOGLoose",                    &_lPOGLoose,                    "_lPOGLoose[_nL]/O");
     outputTree->Branch("_lPOGMedium",                   &_lPOGMedium,                   "_lPOGMedium[_nL]/O");
@@ -871,33 +930,36 @@ void TreeReader::setOutputTree( TTree* outputTree ){
 
     outputTree->Branch("_tauDecayMode",                 &_tauDecayMode,                 "_tauDecayMode[_nL]/i");
     outputTree->Branch("_decayModeFinding",             &_decayModeFinding,             "_decayModeFinding[_nL]/O");
-   	outputTree->Branch("_decayModeFindingNew",          &_decayModeFindingNew,          "_decayModeFindingNew[_nL]/O");
-    outputTree->Branch("_tauPOGVLoose2015",             &_tauPOGVLoose2015,             "_tauPOGVLoose2015[_nL]/O");
-    outputTree->Branch("_tauPOGLoose2015",              &_tauPOGLoose2015,              "_tauPOGLoose2015[_nL]/O");
-    outputTree->Branch("_tauPOGMedium2015",             &_tauPOGMedium2015,             "_tauPOGMedium2015[_nL]/O");
-    outputTree->Branch("_tauPOGTight2015",              &_tauPOGTight2015,              "_tauPOGTight2015[_nL]/O");
-    outputTree->Branch("_tauPOGVTight2015",             &_tauPOGVTight2015,             "_tauPOGVTight2015[_nL]/O");
-    outputTree->Branch("_tauVLooseMvaNew2015",          &_tauVLooseMvaNew2015,          "_tauVLooseMvaNew2015[_nL]/O");
-    outputTree->Branch("_tauLooseMvaNew2015",           &_tauLooseMvaNew2015,           "_tauLooseMvaNew2015[_nL]/O");
-    outputTree->Branch("_tauMediumMvaNew2015",          &_tauMediumMvaNew2015,          "_tauMediumMvaNew2015[_nL]/O");
-    outputTree->Branch("_tauTightMvaNew2015",           &_tauTightMvaNew2015,           "_tauTightMvaNew2015[_nL]/O");
-    outputTree->Branch("_tauVTightMvaNew2015",          &_tauVTightMvaNew2015,          "_tauVTightMvaNew2015[_nL]/O");
-    outputTree->Branch("_tauPOGVVLoose2017v2",          &_tauPOGVVLoose2017v2,          "_tauPOGVVLoose2017v2[_nL]/O");
-    outputTree->Branch("_tauPOGVTight2017v2",           &_tauPOGVTight2017v2,           "_tauPOGVTight2017v2[_nL]/O");
-    outputTree->Branch("_tauPOGVVTight2017v2",          &_tauPOGVVTight2017v2,          "_tauPOGVVTight2017v2[_nL]/O");
-    outputTree->Branch("_tauVLooseMvaNew2017v2",        &_tauVLooseMvaNew2017v2,        "_tauVLooseMvaNew2017v2[_nL]/O");
-    outputTree->Branch("_tauLooseMvaNew2017v2",         &_tauLooseMvaNew2017v2,         "_tauLooseMvaNew2017v2[_nL]/O");
-    outputTree->Branch("_tauMediumMvaNew2017v2",        &_tauMediumMvaNew2017v2,        "_tauMediumMvaNew2017v2[_nL]/O");
-    outputTree->Branch("_tauTightMvaNew2017v2",         &_tauTightMvaNew2017v2,         "_tauTightMvaNew2017v2[_nL]/O");
-    outputTree->Branch("_tauVTightMvaNew2017v2",        &_tauVTightMvaNew2017v2,        "_tauVTightMvaNew2017v2[_nL]/O");
-	outputTree->Branch("_tauMuonVetoLoose",             &_tauMuonVetoLoose,             "_tauMuonVetoLoose[_nL]/O");
-    outputTree->Branch("_tauMuonVetoTight",             &_tauMuonVetoTight,             "_tauMuonVetoTight[_nL]/O");
-    outputTree->Branch("_tauEleVetoVLoose",             &_tauEleVetoVLoose,             "_tauEleVetoVLoose[_nL]/O");
-    outputTree->Branch("_tauEleVetoLoose",              &_tauEleVetoLoose,              "_tauEleVetoLoose[_nL]/O");
-    outputTree->Branch("_tauEleVetoMedium",             &_tauEleVetoMedium,             "_tauEleVetoMedium[_nL]/O");
-    outputTree->Branch("_tauEleVetoTight",              &_tauEleVetoTight,              "_tauEleVetoTight[_nL]/O");
-    outputTree->Branch("_tauEleVetoVTight",             &_tauEleVetoVTight,             "_tauEleVetoVTight[_nL]/O"); 
-    
+    outputTree->Branch("_decayModeFindingNew",          &_decayModeFindingNew,          "_decayModeFindingNew[_nL]/O");
+    outputTree->Branch("_tauMuonVetoLoose",             &_tauMuonVetoLoose,             "_tauMuonVetoLoose[_nL]/O");
+
+    if (treeHasBranchWithName(_currentTreePtr, "_tauMuonVetoTight")) {
+        outputTree->Branch("_tauPOGVLoose2015",             &_tauPOGVLoose2015,             "_tauPOGVLoose2015[_nL]/O");
+        outputTree->Branch("_tauPOGLoose2015",              &_tauPOGLoose2015,              "_tauPOGLoose2015[_nL]/O");
+        outputTree->Branch("_tauPOGMedium2015",             &_tauPOGMedium2015,             "_tauPOGMedium2015[_nL]/O");
+        outputTree->Branch("_tauPOGTight2015",              &_tauPOGTight2015,              "_tauPOGTight2015[_nL]/O");
+        outputTree->Branch("_tauPOGVTight2015",             &_tauPOGVTight2015,             "_tauPOGVTight2015[_nL]/O");
+        outputTree->Branch("_tauVLooseMvaNew2015",          &_tauVLooseMvaNew2015,          "_tauVLooseMvaNew2015[_nL]/O");
+        outputTree->Branch("_tauLooseMvaNew2015",           &_tauLooseMvaNew2015,           "_tauLooseMvaNew2015[_nL]/O");
+        outputTree->Branch("_tauMediumMvaNew2015",          &_tauMediumMvaNew2015,          "_tauMediumMvaNew2015[_nL]/O");
+        outputTree->Branch("_tauTightMvaNew2015",           &_tauTightMvaNew2015,           "_tauTightMvaNew2015[_nL]/O");
+        outputTree->Branch("_tauVTightMvaNew2015",          &_tauVTightMvaNew2015,          "_tauVTightMvaNew2015[_nL]/O");
+        outputTree->Branch("_tauPOGVVLoose2017v2",          &_tauPOGVVLoose2017v2,          "_tauPOGVVLoose2017v2[_nL]/O");
+        outputTree->Branch("_tauPOGVTight2017v2",           &_tauPOGVTight2017v2,           "_tauPOGVTight2017v2[_nL]/O");
+        outputTree->Branch("_tauPOGVVTight2017v2",          &_tauPOGVVTight2017v2,          "_tauPOGVVTight2017v2[_nL]/O");
+        outputTree->Branch("_tauVLooseMvaNew2017v2",        &_tauVLooseMvaNew2017v2,        "_tauVLooseMvaNew2017v2[_nL]/O");
+        outputTree->Branch("_tauLooseMvaNew2017v2",         &_tauLooseMvaNew2017v2,         "_tauLooseMvaNew2017v2[_nL]/O");
+        outputTree->Branch("_tauMediumMvaNew2017v2",        &_tauMediumMvaNew2017v2,        "_tauMediumMvaNew2017v2[_nL]/O");
+        outputTree->Branch("_tauTightMvaNew2017v2",         &_tauTightMvaNew2017v2,         "_tauTightMvaNew2017v2[_nL]/O");
+        outputTree->Branch("_tauVTightMvaNew2017v2",        &_tauVTightMvaNew2017v2,        "_tauVTightMvaNew2017v2[_nL]/O");
+        outputTree->Branch("_tauMuonVetoTight",             &_tauMuonVetoTight,             "_tauMuonVetoTight[_nL]/O");
+        outputTree->Branch("_tauEleVetoVLoose",             &_tauEleVetoVLoose,             "_tauEleVetoVLoose[_nL]/O");
+        outputTree->Branch("_tauEleVetoLoose",              &_tauEleVetoLoose,              "_tauEleVetoLoose[_nL]/O");
+        outputTree->Branch("_tauEleVetoMedium",             &_tauEleVetoMedium,             "_tauEleVetoMedium[_nL]/O");
+        outputTree->Branch("_tauEleVetoTight",              &_tauEleVetoTight,              "_tauEleVetoTight[_nL]/O");
+        outputTree->Branch("_tauEleVetoVTight",             &_tauEleVetoVTight,             "_tauEleVetoVTight[_nL]/O"); 
+    }
+
     outputTree->Branch("_relIso",                       &_relIso,                       "_relIso[_nLight]/D");
     outputTree->Branch("_relIso0p4",                    &_relIso0p4,                    "_relIso0p4[_nLight]/D");
     outputTree->Branch("_relIso0p4MuDeltaBeta",         &_relIso0p4MuDeltaBeta,         "_relIso0p4MuDeltaBeta[_nMu]/D");
@@ -978,7 +1040,48 @@ void TreeReader::setOutputTree( TTree* outputTree ){
         outputTree->Branch("_gen_lIsPrompt",             &_gen_lIsPrompt,             "_gen_lIsPrompt[_gen_nL]/O");
         outputTree->Branch("_ttgEventType",              &_ttgEventType,              "_ttgEventType/i");
         outputTree->Branch("_zgEventType",               &_zgEventType,               "_zgEventType/i");
+
+        if ( containsFullGeneratorInfo() ) {
+            outputTree->Branch("_gen_n",                                        &_gen_n,                                        "_gen_n/I");
+            outputTree->Branch("_gen_pt",                                       &_gen_pt,                                       "_gen_pt[_gen_n]/D");
+            outputTree->Branch("_gen_eta",                                      &_gen_eta,                                      "_gen_eta[_gen_n]/D");
+            outputTree->Branch("_gen_phi",                                      &_gen_phi,                                      "_gen_phi[_gen_n]/D");
+            outputTree->Branch("_gen_E",                                        &_gen_E,                                        "_gen_E[_gen_n]/D");
+            outputTree->Branch("_gen_pdgId",                                    &_gen_pdgId,                                    "_gen_pdgId[_gen_n]/I");
+            outputTree->Branch("_gen_charge",                                   &_gen_charge,                                   "_gen_charge[_gen_n]/I");
+            outputTree->Branch("_gen_status",                                   &_gen_status,                                   "_gen_status[_gen_n]/I");
+            outputTree->Branch("_gen_isPromptFinalState",                       &_gen_isPromptFinalState,                       "_gen_isPromptFinalState[_gen_n]/O");
+            outputTree->Branch("_gen_isDirectPromptTauDecayProductFinalState",  &_gen_isDirectPromptTauDecayProductFinalState,  "_gen_isDirectPromptTauDecayProductFinalState[_gen_n]/O");
+            outputTree->Branch("_gen_isLastCopy",                               &_gen_isLastCopy,                               "_gen_isLastCopy[_gen_n]/O");
+            outputTree->Branch("_gen_index",                                    &_gen_index,                                    "_gen_index[_gen_n]/I");
+            outputTree->Branch("_gen_motherIndex",                              &_gen_motherIndex,                              "_gen_motherIndex[_gen_n]/I");
+            outputTree->Branch("_gen_daughter_n",                               &_gen_daughter_n,                               "_gen_daughter_n[_gen_n]/I");
+            outputTree->Branch("_gen_daughterIndex",                            &_gen_daughterIndex,                            "_gen_daughterIndex[_gen_n][10]/I");
+        }
     } 
+
+    if (containsParticleLevelInfo()) {
+        outputTree->Branch("_pl_met",                   &_pl_met,                   "_pl_met/D");
+        outputTree->Branch("_pl_metPhi",                &_pl_metPhi,                "_pl_metPhi/D");
+        outputTree->Branch("_pl_nPh",                   &_pl_nPh,                   "_pl_nPh/i");
+        outputTree->Branch("_pl_phPt",                  &_pl_phPt,                  "_pl_phPt[_pl_nPh]/D");
+        outputTree->Branch("_pl_phEta",                 &_pl_phEta,                 "_pl_phEta[_pl_nPh]/D");
+        outputTree->Branch("_pl_phPhi",                 &_pl_phPhi,                 "_pl_phPhi[_pl_nPh]/D");
+        outputTree->Branch("_pl_phE",                   &_pl_phE,                   "_pl_phE[_pl_nPh]/D");
+        outputTree->Branch("_pl_nL",                    &_pl_nL,                    "_pl_nL/i");
+        outputTree->Branch("_pl_lPt",                   &_pl_lPt,                   "_pl_lPt[_pl_nL]/D");
+        outputTree->Branch("_pl_lEta",                  &_pl_lEta,                  "_pl_lEta[_pl_nL]/D");
+        outputTree->Branch("_pl_lPhi",                  &_pl_lPhi,                  "_pl_lPhi[_pl_nL]/D");
+        outputTree->Branch("_pl_lE",                    &_pl_lE,                    "_pl_lE[_pl_nL]/D");
+        outputTree->Branch("_pl_lFlavor",               &_pl_lFlavor,               "_pl_lFlavor[_pl_nL]/i");
+        outputTree->Branch("_pl_lCharge",               &_pl_lCharge,               "_pl_lCharge[_pl_nL]/I");
+        outputTree->Branch("_pl_nJets",                 &_pl_nJets,                 "_pl_nJets/i");
+        outputTree->Branch("_pl_jetPt",                 &_pl_jetPt,                 "_pl_jetPt[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetEta",                &_pl_jetEta,                "_pl_jetEta[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetPhi",                &_pl_jetPhi,                "_pl_jetPhi[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetE",                  &_pl_jetE,                  "_pl_jetE[_pl_nJets]/D");
+        outputTree->Branch("_pl_jetHadronFlavor",       &_pl_jetHadronFlavor,       "_pl_jetHadronFlavor[_pl_nJets]/i");
+    }
 
     if (containsLheInfo()) {
         outputTree->Branch("_nLheTau",                   &_nLheTau,                   "_nLheTau/i");
@@ -994,7 +1097,7 @@ void TreeReader::setOutputTree( TTree* outputTree ){
         outputTree->Branch("_lheMass",                   &_lheMass,                   "_lheMass[_nLheParticles]/F");
     }
 
-    if( !is2018() && isMC() ){
+    if( isMC() ){
        	outputTree->Branch("_prefireWeight",             &_prefireWeight,             "_prefireWeight/F");
         outputTree->Branch("_prefireWeightUp",           &_prefireWeightUp,           "_prefireWeightUp/F");
         outputTree->Branch("_prefireWeightDown",         &_prefireWeightDown,         "_prefireWeightDown/F"); 
@@ -1084,6 +1187,8 @@ void TreeReader::setLeanOutputTree( TTree* outputTree ){
     outputTree->Branch("_lElectronHOverE",              &_lElectronHOverE,              "_lElectronHOverE[_nLight]/D");
     outputTree->Branch("_lElectronSigmaIetaIeta",       &_lElectronSigmaIetaIeta,       "_lElectronSigmaIetaIeta[_nLight]/D");
     outputTree->Branch("_leptonMvaTOP",                 &_leptonMvaTOP,                 "_leptonMvaTOP[_nLight]/D");
+    outputTree->Branch("_leptonMvaTOPUL",               &_leptonMvaTOPUL,               "_leptonMvaTOPUL[_nLight]/D");
+    outputTree->Branch("_leptonMvaTOPv2UL",             &_leptonMvaTOPULv2,             "_leptonMvaTOPv2UL[_nLight]/D");
     outputTree->Branch("_lPOGVeto",                     &_lPOGVeto,                     "_lPOGVeto[_nL]/O");
     outputTree->Branch("_lPOGLoose",                    &_lPOGLoose,                    "_lPOGLoose[_nL]/O");
     outputTree->Branch("_lPOGMedium",                   &_lPOGMedium,                   "_lPOGMedium[_nL]/O");

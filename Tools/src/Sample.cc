@@ -178,7 +178,7 @@ Sample::Sample( std::istream& is, const std::string& directory ){
 
 void Sample::setIsData(){
     _isData = false;
-    static std::vector<std::string> dataNames = { "data", "SingleMuon", "SingleElectron", "SingleMuon", "DoubleMuon", "DoubleEG", "EGamma", "JetHT", "MET" };
+    static std::vector<std::string> dataNames = { "data", "SingleMuon", "SingleElectron", "SingleMuon", "DoubleMuon", "DoubleEG", "EGamma", "JetHT", "MET", "Data" };
     for( auto it = dataNames.cbegin(); it != dataNames.cend(); ++it ){
         if( _fileName.find( *it ) != std::string::npos ){
             _isData = true;
@@ -284,15 +284,22 @@ std::vector< Sample > readSampleList( const std::string& listFile, const std::st
         throw std::invalid_argument( "Sample list '" + listFile + "' does not exist." );
     }
     
-	
 	std::vector< Sample> sampleList;
 
     //read sample info from txt file
     std::ifstream inFile(listFile);
-    while( !inFile.eof() ){
-        sampleList.push_back( Sample( inFile, directory ) );
+    std::string line;
+    while (std::getline(inFile, line)) {
+        bool lineToConsider = true;
+        //skip comments or empty lines 
+        lineToConsider = considerLine( line );
+        if( !lineToConsider ) continue;
+        std::cout << "consider line" << std::endl;
+
+        Sample extraSample = Sample( line, directory ); 
+
+        sampleList.push_back( extraSample );
     }
-    sampleList.pop_back();
 
     //close file after usage
     inFile.close();

@@ -12,6 +12,18 @@ bool LeptonSelector::isLoose() const{
     return false;
 }
 
+bool LeptonSelector::isLooseV2() const{
+    if( !isLooseV2Base() ) return false;
+
+    if( is2016PreVFP() ){ return isLooseV22016PreVFP(); }
+    else if( is2016PostVFP() ){ return isLooseV22016PostVFP(); }
+    else if( is2016() ){ return isLooseV22016(); } 
+    else if( is2017() ){ return isLooseV22017(); } 
+    else if( is2018() ){ return isLooseV22018(); }
+    return false;
+}
+
+
 
 bool LeptonSelector::isFO() const{
     if( !isFOBase() ) return false;

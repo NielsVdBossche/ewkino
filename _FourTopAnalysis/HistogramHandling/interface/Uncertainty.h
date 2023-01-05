@@ -20,9 +20,13 @@ enum shapeUncId {
     isrNorm,
     fsrShape,
     fsrNorm,
+    WZSF,
     JER_1p93,
     JER_2p5,
     JEC,
+    JECFlavorQCD,
+    MET,
+    HEMIssue,
     end  /// always at the end for easier loops
 };
 
@@ -39,12 +43,15 @@ class Uncertainty {
 
         std::map<std::string, HistogramSet*>* upSubMap = nullptr;
         std::map<std::string, HistogramSet*>* downSubMap = nullptr;
+
+        bool printAllVariations = false;
     public:
         Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms);
-        virtual ~Uncertainty() {};
+        virtual ~Uncertainty();
 
         virtual void newSample(std::string& uniqueName);
         virtual void changeProcess(unsigned index, std::string& newTitle);
+        virtual void addProcess(std::string& newProc);
         //virtual void newProcess(std::string& newProcess, TFile* outfile);
 
         void fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc);
@@ -55,6 +62,12 @@ class Uncertainty {
         void fillUpOrDownSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weight, bool up, unsigned subProc);
         void fillUpOrDown2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weight, bool up, unsigned subProc);
 
+        void fillSubUpOrDownHistograms(std::string& subUnc, std::vector<double>& fillVec, double weight, bool up, unsigned subProc);
+        void fillSubUpOrDownSingleHistograms(std::string& subUnc, std::vector<std::pair<int, double>>& fillVec, double weight, bool up, unsigned subProc);
+        void fillSubUpOrDown2DHistograms(std::string& subUnc, std::vector<std::pair<double, double>>& fillVec, double weight, bool up, unsigned subProc);
+
+        bool GetPrintAllVariations() {return printAllVariations;}
+        void SetPrintAllVariations(bool printVars) {printAllVariations = printVars;}
 
         shapeUncId getID() const {return id;}
         std::string getName() const {return name;}
@@ -63,9 +76,9 @@ class Uncertainty {
 
         void addSubUncertainties(std::vector<std::string>& subUnc);
 
-        void fillSubHistograms(std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc);
-        void fillSubSingleHistograms(std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
-        void fillSub2DHistograms(std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
+        void fillSubHistograms(std::string& subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc);
+        void fillSubSingleHistograms(std::string& subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
+        void fillSub2DHistograms(std::string& subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc);
 
         virtual void writeHistograms(unsigned subProc);
         void writeSubHistograms(unsigned subProc);

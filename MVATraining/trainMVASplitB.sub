@@ -1,0 +1,9 @@
+universe    =   vanilla
+executable  =   trainMVALean.sh
+
+log         =   /user/nivanden/condor/logs/trainMVALean_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainMVALean_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainMVALean_$(ClusterId)_$(Process).out
+
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_DL_SPLIT no Settingfiles/VariableSelectionDL.txt"
+queue

@@ -1,0 +1,1 @@
+WZ              ../skims_v4/2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v3_singlelepton_MC_2017_ULv6_5pp.root                                           4.9173

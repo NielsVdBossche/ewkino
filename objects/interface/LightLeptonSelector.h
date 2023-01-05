@@ -12,6 +12,7 @@ class LightLeptonSelector : public LeptonSelector {
         LightLepton( const LightLepton& ) : lightLeptonPtr( &LightLepton ) {}
         
         virtual bool isLoose() const override;
+        virtual bool isLooseV2() const override;
         virtual bool isGood() const override;
         virtual bool isTight() const override;
 

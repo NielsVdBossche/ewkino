@@ -111,6 +111,36 @@ JetCollection JetCollection::buildVariedCollection( Jet (Jet::*variedJet)(std::s
     return JetCollection( jetVector );
 }
 
+JetCollection JetCollection::buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(std::string) const, std::string variationArg, unsigned flavor ) const{
+    // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    for( const auto& jetPtr : *this ){
+        //jets are NOT shared between collections!
+        if (jetPtr->hadronFlavor() == flavor) {
+            jetVector.push_back( std::make_shared< Jet >( (*jetPtr.*variedJet)( variationArg ) ) );
+        } else {
+            jetVector.push_back( std::make_shared< Jet >( *jetPtr ) );
+        }
+    }
+    return JetCollection( jetVector );
+}
+
+JetCollection JetCollection::JECUpGroupedFlavorQCD(unsigned flavor) const {
+    return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
+}
+
+JetCollection JetCollection::JECDownGroupedFlavorQCD(unsigned flavor) const {
+    return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
+}
+
+JetCollection JetCollection::JECGroupedFlavorQCD(unsigned flavor, bool isup) const {
+    if (isup) {
+        return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
+    } else {    
+        return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
+    }
+}
+
 JetCollection JetCollection::JECDownCollection() const{
     return buildVariedCollection( &Jet::JetJECDown );
 }
@@ -149,6 +179,10 @@ JetCollection JetCollection::JECUpCollection( std::string source ) const{
 
 JetCollection JetCollection::JECDownCollection( std::string source ) const{
     return buildVariedCollection( &Jet::JetJECDown, source );
+}
+
+JetCollection JetCollection::HEMIssue() const {
+    return buildVariedCollection( &Jet::HEMIssue );
 }
 
 JetCollection JetCollection::getVariedJetCollection( const std::string& variation) const{

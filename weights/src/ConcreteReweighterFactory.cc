@@ -3,6 +3,7 @@
 //include ROOT classes
 #include "TFile.h"
 #include "TH2.h"
+#include "TCanvas.h"
 
 //include other parts of framework
 #include "../../Tools/interface/analysisTools.h"
@@ -278,13 +279,13 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     std::string bTagSFFileName;
 
     if (year == "2016PreVFP") {
-        bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_v2.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_NEW.csv";
     } else if( year == "2016PostVFP" ){
-        bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_v3.csv";
+        bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_NEW.csv";
     } else if( year == "2017" ){
-        bTagSFFileName = "reshaping_deepJet_106XUL17_v3.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL17_NEW.csv";
     } else {
-        bTagSFFileName = "reshaping_deepJet_106XUL18_v2.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL18_NEW.csv";
     }
 
     //std::string weightDirectory = stringTools::formatDirectoryName( weightDirectory );
@@ -306,7 +307,7 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
 
 }
 
-CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string& weightDirectory, const std::string& year, const std::vector< Sample >& samples, ReweighterBTagShape** btagReweighter ) const {
+CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string& weightDirectory, const std::string& year, const std::vector< Sample >& samples, ReweighterBTagShape** btagReweighter, bool testRun ) const {
 
     analysisTools::checkYearString( year );
 
@@ -339,42 +340,54 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     // note: these files are not present in the repository, replace by code below in order for the reweighter to work!
     /*TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/leptonSF_m_" + year + "_3lTight.root" ).c_str() );
     std::shared_ptr< TH2 > muonSFHist( dynamic_cast< TH2* >( muonSFFile->Get( "SFglobal" ) ) ); */
-    TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/PRE_UL_muonTOPLeptonMVAMedium040" + year + ".root" ).c_str() );
-
-    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( 
-	muonSFFile->Get( "SF" ) ) );
+    TFile* muonSFFile = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_ALL_UL" + year + ".root" ).c_str());
+    
+    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFFile->Get( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
+    //std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( muonSFHist_nomCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt" ) ) );
     muonSFHist_nom->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( 
-        muonSFFile->Get( "SFTotSys" ) ) );
+    
+    //TFile* muonSFFileSyst = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst_UL" + year + ".root" ).c_str());
+
+    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFFile->Get( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
+    //std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( muonSFHist_systCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_combined_syst" ) ) );
     muonSFHist_syst->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( 
-        muonSFFile->Get( "SFTotStat" ) ) );
+
+    //muonSFFileSyst->Close();
+
+    //TFile* muonSFFileStat = TFile::Open(( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat_UL" + year + ".root" ).c_str());
+
+    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFFile->Get( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
+    //std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( muonSFHist_statCanv->GetPrimitive( "NUM_LeptonMvaMedium_DEN_TrackerMuons_abseta_pt_stat" ) ) );
     muonSFHist_stat->SetDirectory( gROOT );
+    //muonSFFileStat->Close();
+    
     muonSFFile->Close();
+    
     for(int i = 0; i <= muonSFHist_nom->GetNbinsX()+1; ++i){
         for(int j = 0; j <= muonSFHist_nom->GetNbinsY()+1; ++j){
             // process values
             muonSFHist_nom->SetBinError(i,j,0.);
             muonSFHist_syst->SetBinError(i,j,muonSFHist_syst->GetBinContent(i,j));
             muonSFHist_syst->SetBinContent(i,j,1.);
-            muonSFHist_stat->SetBinError(i,j,muonSFHist_stat->GetBinContent(i,j));
+            // muonSFHist_stat->SetBinError(i,j,muonSFHist_stat->GetBinContent(i,j));
             muonSFHist_stat->SetBinContent(i,j,1.);
         }
     }
-
     MuonReweighter muonReweighter_nom( muonSFHist_nom, new TightSelector );
     combinedReweighter.addReweighter("muonID",std::make_shared<ReweighterMuons>(muonReweighter_nom));
     MuonReweighter muonReweighter_syst( muonSFHist_syst, new TightSelector );
     combinedReweighter.addReweighter("muonIDSyst",std::make_shared<ReweighterMuons>(muonReweighter_syst));
     MuonReweighter muonReweighter_stat( muonSFHist_stat, new TightSelector );
     combinedReweighter.addReweighter("muonIDStat",std::make_shared<ReweighterMuons>(muonReweighter_stat));
-    muonSFFile->Close();
+    //muonSFFile->Close();
+
+
 
     //make electron ID Reweighter
     // note: these files are not present in the repository, replace by code below in order for the reweighter to work!
     /*TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF/leptonSF_e_" + year + "_3lTight.root" ).c_str() );
     std::shared_ptr< TH2 > electronSFHist( dynamic_cast< TH2* >( eleSFFile->Get( "SFglobal" ) ) ); */
-    TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/PRE_UL_SF_EG_" + year + ".root" ).c_str() );
+    TFile* eleSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/egammaEffi.txt_EGM2D_TOPULMVA_UL" + year + ".root" ).c_str() );
     // load the scalefactor histogram and set the errors to zero,
     // load the systematic errors and set the bin contents to one,
     // (note: the histogram syst contains the relative uncertainties as bin contents (?))
@@ -411,14 +424,38 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     // step 1: set correct csv file
     std::string bTagSFFileName;
 
+    std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
+                                        "lfstats1","lfstats2","cferr1","cferr2",
+                                        "jesAbsolute", "jesBBEC1", 
+                                        "jesEC2", "jesFlavorQCD", "jesHF",
+                                        "jesRelativeBal"};
+    std::vector<std::string> variations_stat = {"jesAbsolute_", "jesBBEC1_", "jesEC2_",
+                                        "jesHF_", "jesRelativeSample_"};
+
     if (year == "2016PreVFP") {
-        bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_v2.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2016";
+            variations.push_back(var);
+        }
     } else if( year == "2016PostVFP" ){
-        bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_v3.csv";
+        bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2016";
+            variations.push_back(var);
+        }
     } else if( year == "2017" ){
-        bTagSFFileName = "reshaping_deepJet_106XUL17_v3.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL17_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2017";
+            variations.push_back(var);
+        }
     } else {
-        bTagSFFileName = "reshaping_deepJet_106XUL18_v2.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL18_NEW.csv";
+        for (auto var : variations_stat) {
+            var += "2018";
+            variations.push_back(var);
+        }
     }
 
     std::cout << "bTag SF file: " << bTagSFFileName << std::endl;
@@ -427,14 +464,15 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     // step 2: set other parameters
     std::string flavor = "all";
     std::string bTagAlgo = "deepFlavor";
-    std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
-                                        "lfstats1","lfstats2","cferr1","cferr2" };
+
     // step 3: make the reweighter
-    std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
-    //reweighterBTagShape->initialize(samples, 0);
-    *btagReweighter = reweighterBTagShape.get();
-    
-    combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
+    if (! testRun) {
+        std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, samples );
+        //reweighterBTagShape->initialize(samples, 0);
+        *btagReweighter = reweighterBTagShape.get();
+        
+        combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
+    }
 
     combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
 

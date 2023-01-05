@@ -28,7 +28,7 @@ LeptonCollection::LeptonCollection( const TreeReader& treeReader ){
     }
 }
 
-/*
+
 MuonCollection LeptonCollection::muonCollection() const{
     std::vector< std::shared_ptr< Muon > > muonVector;
     for( const auto& leptonPtr : *this ){
@@ -64,13 +64,13 @@ TauCollection LeptonCollection::tauCollection() const{
 
 LightLeptonCollection LeptonCollection::lightLeptonCollection() const{
     std::vector< std::shared_ptr< LightLepton > > lightLeptonVector;
-    for( const auto leptonPtr : *this ){
+    for( const auto& leptonPtr : *this ){
         if( leptonPtr->isLightLepton() ){
             lightLeptonVector.push_back( std::static_pointer_cast< LightLepton >( leptonPtr ) );
         }
     }
     return LightLeptonCollection( lightLeptonVector );
-}*/
+}
 
 MuonCollection* LeptonCollection::muonCollectionPtr() const{
     std::vector< std::shared_ptr< Muon > > muonVector;
@@ -107,7 +107,7 @@ TauCollection* LeptonCollection::tauCollectionPtr() const{
 
 LightLeptonCollection* LeptonCollection::lightLeptonCollectionPtr() const{
     std::vector< std::shared_ptr< LightLepton > > lightLeptonVector;
-    for( const auto leptonPtr : *this ){
+    for( const auto& leptonPtr : *this ){
         if( leptonPtr->isLightLepton() ){
             lightLeptonVector.push_back( std::static_pointer_cast< LightLepton >( leptonPtr ) );
         }
@@ -119,6 +119,9 @@ void LeptonCollection::selectLooseLeptons(){
     selectObjects( &Lepton::isLoose );
 }
 
+void LeptonCollection::selectLooseV2Leptons(){
+    selectObjects( &Lepton::isLooseV2 );
+}
 
 void LeptonCollection::selectFOLeptons(){
     selectObjects( &Lepton::isFO );
@@ -129,6 +132,9 @@ void LeptonCollection::selectTightLeptons(){
     selectObjects( &Lepton::isTight );
 }
 
+void LeptonCollection::selectTightChargeLeptons() {
+    selectObjects( &Lepton::isTightCharge );
+}
 
 LeptonCollection LeptonCollection::selectedCollection( void (LeptonCollection::*applySelection)() ) const{
     LeptonCollection lepCol( *this );
@@ -149,6 +155,10 @@ LeptonCollection LeptonCollection::FOLeptonCollection() const{
 
 LeptonCollection LeptonCollection::tightLeptonCollection() const{
     return selectedCollection( &LeptonCollection::selectTightLeptons );
+}
+
+LeptonCollection LeptonCollection::tightChargeCollection() const {
+    return selectedCollection( &LeptonCollection::selectTightChargeLeptons );
 }
 
 
@@ -223,6 +233,10 @@ void LeptonCollection::cleanTausFromLightLeptons( bool (Lepton::*passSelection)(
 
 void LeptonCollection::cleanElectronsFromLooseMuons( const double coneSize ){
     return cleanElectronsFromMuons( &Lepton::isLoose, coneSize );
+}
+
+void LeptonCollection::cleanElectronsFromLooseV2Muons( const double coneSize ){
+    return cleanElectronsFromMuons( &Lepton::isLooseV2, coneSize );
 }
 
 
@@ -429,6 +443,15 @@ double LeptonCollection::bestZBosonCandidateMass() const{
 void LeptonCollection::removeTaus(){
     selectObjects( &Lepton::isLightLepton );
 }
+
+int LeptonCollection::sumCharges() {
+    int sum = 0;
+    for( const_iterator l1It = cbegin(); l1It != cend(); ++l1It ){
+        sum += (*l1It)->charge();
+    }
+    return sum;
+}
+
 
 LeptonCollection LeptonCollection::buildVariedElectronCollection(
 		    Electron (Electron::*variedElectron)() const ) const{

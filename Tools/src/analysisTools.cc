@@ -139,8 +139,9 @@ bool analysisTools::fileIs2016PreVFP( const std::string& filePath ){
     if( stringTools::stringContains( filePath, "Run2016B" )
 	|| stringTools::stringContains( filePath, "Run2016C" )
 	|| stringTools::stringContains( filePath, "Run2016D" )
-	|| stringTools::stringContains( filePath, "Run2016E" )
-	|| stringTools::stringContains( filePath, "Run2016F" ) ) return true;
+	|| stringTools::stringContains( filePath, "Run2016E" ) ) return true;
+
+    if (stringTools::stringContains( filePath, "Run2016F" ) && stringTools::stringContains( filePath, "HIPM" )) return true;
     // for combined data
     if( stringTools::stringContains( filePath, "Run2016PreVFP" ) ) return true;
     if( stringTools::stringContains( filePath, "Run2016preVFP" ) ) return true;
@@ -163,6 +164,8 @@ bool analysisTools::fileIs2016PostVFP( const std::string& filePath ){
     // need to check 2016PreVFP first since overlapping names for simulation
     if( fileIs2016PreVFP( filePath ) ) return false;
     // for data split in eras
+    if (stringTools::stringContains( filePath, "Run2016F" ) && ! stringTools::stringContains( filePath, "HIPM" )) return true;
+
     if( stringTools::stringContains( filePath, "Run2016G" ) 
         || stringTools::stringContains( filePath, "Run2016H" ) ) return true;
     // for combined data
@@ -182,7 +185,8 @@ bool analysisTools::fileIs2016PostVFP( const std::string& filePath ){
 
 bool analysisTools::fileIs2017( const std::string& filePath ){
     return ( stringTools::stringContains( filePath, "MiniAOD2017" ) // pre-UL simulation
-	|| stringTools::stringContains( filePath, "Summer20UL17" ) // UL simulation
+    	|| stringTools::stringContains( filePath, "Summer20UL17" ) // UL simulation
+        || stringTools::stringContains( filePath, "Summer19UL17" ) // UL simulation
         || stringTools::stringContains( filePath, "Run2017" ) // data
         || stringTools::stringContains( filePath, "Fall17" ) // tag given by skimmer
         || stringTools::stringEndsWith( filePath, "data_2017.root" )
@@ -191,13 +195,15 @@ bool analysisTools::fileIs2017( const std::string& filePath ){
         || stringTools::stringContains( filePath, "_2017_v" )
         || stringTools::stringStartsWith( stringTools::fileNameFromPath( filePath ), "2017" )
         || stringTools::stringContains(filePath, "Summer20UL17")
+        || stringTools::stringContains(filePath, "Data-UL2017")
     );
 }
 
 
 bool analysisTools::fileIs2018( const std::string& filePath ){
     return ( stringTools::stringContains( filePath, "MiniAOD2018" ) // pre-UL simulation
-	|| stringTools::stringContains( filePath, "Summer20UL18" ) // UL simulation
+	    || stringTools::stringContains( filePath, "Summer20UL18" ) // UL simulation
+        || stringTools::stringContains( filePath, "Summer19UL18" ) // UL simulation
         || stringTools::stringContains( filePath, "Run2018" ) // data
         || stringTools::stringContains( filePath, "Autumn18" ) // tag given by skimmer
         || stringTools::stringEndsWith( filePath, "data_2018.root" )

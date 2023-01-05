@@ -4,181 +4,9 @@
 #include "../../memleak/debug_new.h" 
 #endif
 
-std::vector<double> fourTopHists::fillLepInfoDL(Event* event) {
-
-    std::vector<double> fillVal = {
-        event->lightLepton(0).pt(),
-        event->lightLepton(1).pt(),
-        event->lightLepton(0).eta(),
-        event->lightLepton(1).eta(),
-        event->lightLepton(0).phi(),
-        event->lightLepton(1).phi(),
-        event->lightLepton(0).energy(),
-        event->lightLepton(1).energy(),
-        event->lightLepton(0).leptonMVATOP(),
-        event->lightLepton(1).leptonMVATOP()
-    };
-
-    return fillVal;
-}
-
-std::vector<double> fourTopHists::fillLepInfoML(Event* event) {
-    std::vector<double> fillVal = {
-        event->lightLepton(0).pt(),
-        event->lightLepton(1).pt(),
-        event->lightLepton(2).pt(),
-        event->lightLepton(0).eta(),
-        event->lightLepton(1).eta(),
-        event->lightLepton(2).eta(),
-        event->lightLepton(0).phi(),
-        event->lightLepton(1).phi(),
-        event->lightLepton(2).phi(),
-        event->lightLepton(0).energy(),
-        event->lightLepton(1).energy(),
-        event->lightLepton(2).energy(),
-        event->lightLepton(0).leptonMVATOP(),
-        event->lightLepton(1).leptonMVATOP(),
-        event->lightLepton(2).leptonMVATOP()
-    };
-
-    return fillVal;
-}
-
-
-std::vector<double> fourTopHists::fillJetInfoDL(Event* event) {
-    JetCollection jets = event->jetCollection();
-
-    std::vector<double> fillVal = {
-        jets[0].pt(),
-        jets[1].pt(),
-        jets[2].pt(),
-        jets[3].pt(),
-        double(event->mediumBTagCollection().size()),
-        jets.scalarPtSum()
-    };
-
-    return fillVal;
-}
-
-std::vector<double> fourTopHists::fillJetInfoML(Event* event) {
-    JetCollection jets = event->jetCollection();
-
-    std::vector<double> fillVal = {
-        jets[0].pt(),
-        jets[1].pt(),
-        jets[2].pt(),
-        jets[3].pt(),
-        double(event->mediumBTagCollection().size()),
-        jets.scalarPtSum()
-    };
-
-    return fillVal;
-}
-
-std::vector<double> fourTopHists::fillAllHistsDL(Event* event) {
-    JetCollection jets = event->jetCollection();
-    JetCollection bJets = event->mediumBTagCollection();
-    LeptonCollection lightLeps = event->leptonCollection();
-    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
-    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(bJets, lightLeps);
-
-
-    std::vector<double> fillVal = {
-        event->lightLepton(0).pt(),
-        event->lightLepton(1).pt(),
-        event->lightLepton(0).eta(),
-        event->lightLepton(1).eta(),
-        event->lightLepton(0).phi(),
-        event->lightLepton(1).phi(),
-        event->lightLepton(0).energy(),
-        event->lightLepton(1).energy(),
-        event->lightLepton(0).leptonMVATOP(),
-        event->lightLepton(1).leptonMVATOP(),
-
-        jets[0].pt(),
-        jets[1].pt(),
-        jets[2].pt(),
-        jets[3].pt(),
-        double(event->mediumBTagCollection().size()),
-        double(event->looseBTagCollection().size()),
-        double(event->tightBTagCollection().size()),
-        double(event->numberOfJets()),
-
-        jets.scalarPtSum(),
-        event->metPt(),
-
-        // Calculate DR? What is best way...
-        mindR_Bjets[0],
-
-        mindR_Bjet_lep[0],
-        mindR_Bjet_lep[1],
-
-        event->LT(),
-
-        (event->lepton(0).isElectron() ? event->electron(0).numberOfMissingHits() : -1.),
-        (event->lepton(1).isElectron() ? (*(event->electronCollection().end() - 1))->numberOfMissingHits() : -1.) // This is why  the approach in Event.h is stupid
-        
-    };
-
-    return fillVal;
-
-}
-
-std::vector<double> fourTopHists::fillAllHistsML(Event* event) {
-
-    JetCollection jets = event->jetCollection();
-    JetCollection bJets = event->mediumBTagCollection();
-    LeptonCollection lightLeps = event->leptonCollection();
-    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(bJets);
-    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(bJets, lightLeps);
-
-
-    std::vector<double> fillVal = {
-        event->lightLepton(0).pt(),
-        event->lightLepton(1).pt(),
-        event->lightLepton(2).pt(),
-        event->lightLepton(0).eta(),
-        event->lightLepton(1).eta(),
-        event->lightLepton(2).eta(),
-        event->lightLepton(0).phi(),
-        event->lightLepton(1).phi(),
-        event->lightLepton(2).phi(),
-        event->lightLepton(0).energy(),
-        event->lightLepton(1).energy(),
-        event->lightLepton(2).energy(),
-        event->lightLepton(0).leptonMVATOP(),
-        event->lightLepton(1).leptonMVATOP(),
-        event->lightLepton(2).leptonMVATOP(),
-
-        jets[0].pt(),
-        jets[1].pt(),
-        jets[2].pt(),
-        jets[3].pt(),
-        double(event->mediumBTagCollection().size()),
-        double(event->looseBTagCollection().size()),
-        double(event->tightBTagCollection().size()),
-        double(event->numberOfJets()),
-
-        jets.scalarPtSum(),
-        event->metPt(),
-
-        mindR_Bjets[0],
-
-        mindR_Bjet_lep[0],
-        mindR_Bjet_lep[1],
-
-        event->LT()
-
-
-    };
-
-    return fillVal;
-
-}
-
-std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec, bool fourLep) {
+std::vector<double> fourTopHists::fillAllHists(EventFourT* selec) {
     MVAHandler_4T* mva;
-    if (multilep) {
+    if (selec->numberOfLeps() > 2) {
         mva = selec->GetMLMVA();
     } else {
         mva = selec->GetDLMVA();
@@ -195,11 +23,14 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     //std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
     //std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *((LeptonCollection*)lightLeps));
     
-    int nb = bJets->size();
+    //int nb = bJets->size();
 
     jets->sortByPt();
 
     std::vector<double> fillVal = {
+        0.5,
+        double(selec->getMediumLepCol()->numberOfMuons()),
+        double(selec->getMediumLepCol()->numberOfElectrons()),
         (*lightLeps)[0].pt(),
         (*lightLeps)[1].pt(),
         (*lightLeps)[0].eta(),
@@ -216,11 +47,13 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         (jets->size() > 2 ? (*jets)[2].pt() : 0.),
         (jets->size() > 3 ? (*jets)[3].pt() : 0.),
         double(bJets->size()),
+        double(selec->numberOfMediumBJets()),
         double(selec->numberOfLooseBJets()),
         double(selec->numberOfTightBJets()),
         double(jets->size()),
 
         jets->scalarPtSum(),
+        jets->scalarPtSum() / double(jets->size()),
         selec->getEvent()->metPt(),
 
         // Calculate DR? What is best way...
@@ -245,7 +78,11 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
         mva->m2bb, //(nb >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
         mva->m2lblb, //(nb >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selec->getEvent()->met()) : -1),
 
-
+        mva->dRleps,
+        mva->aziAngle,
+        mva->ptJetFive,
+        mva->ptJetSix,
+        mva->massToPt
     };
 
     jets->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
@@ -292,14 +129,23 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     fillVal.push_back(mva->massSecTopW);   //topReco->getSecondBestRecoTop().second);
 
 
-    if (multilep) {
+    if (selec->getCurrentClass() == eventClass::trilep || selec->getCurrentClass() == eventClass::fourlep) {
         fillVal.push_back((*lightLeps)[2].pt());
         fillVal.push_back((*lightLeps)[2].eta());
         fillVal.push_back((*lightLeps)[2].phi());
         fillVal.push_back((*lightLeps)[2].energy());
         fillVal.push_back((*lightLeps)[2].leptonMVATOP());
 
-        if (fourLep) {
+        double triMass = 0.;
+
+        Lepton* l1 = selec->getLepton(0);
+        Lepton* l2 = selec->getLepton(1);
+        Lepton* l3 = selec->getLepton(2);
+
+        triMass = (*l1 + *l2 + *l3).mass();
+        fillVal.push_back(triMass);
+
+        if (selec->getCurrentClass() == eventClass::fourlep) {
             fillVal.push_back((*lightLeps)[3].pt());
             fillVal.push_back((*lightLeps)[3].eta());
             fillVal.push_back((*lightLeps)[3].phi());
@@ -311,20 +157,22 @@ std::vector<double> fourTopHists::fillAllHists(bool multilep, EventFourT* selec,
     return fillVal;
 }
 
-std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
+std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* selec){
     JetCollection* jets = selec->getJetCol();
     JetCollection* bJets = selec->getBtagJetCol();
-    LightLeptonCollection* lightLeps;
-    if (selec->isEventNormalSelected()) {
-        lightLeps = (LightLeptonCollection*) selec->getMediumLepCol();
-    } else {
-        lightLeps = (LightLeptonCollection*) selec->getAltLeptonCol();
-    }
+    LeptonCollection* lightLeps;
+    lightLeps = selec->getMediumLepCol();
+    
+    std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
+    std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *lightLeps);
 
     //int nb = bJets->size();
     int nlep = lightLeps->size();
 
     std::vector<double> fillVal = {
+        0.5,
+        double(selec->getMediumLepCol()->numberOfMuons()),
+        double(selec->getMediumLepCol()->numberOfElectrons()),
         (*lightLeps)[0].pt(),
         (*lightLeps)[1].pt(),
         (*lightLeps)[0].eta(),
@@ -333,6 +181,8 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
         (*lightLeps)[1].energy(),
 
         double(bJets->size()),
+        double(selec->numberOfMediumBJets()),
+        double(selec->numberOfTightBJets()),
         double(jets->size()),
 
         jets->scalarPtSum(),
@@ -340,25 +190,117 @@ std::vector<double> fourTopHists::fillAllLean(bool multilep, EventFourT* selec){
 
         lightLeps->scalarPtSum(), // LT
         double(lightLeps->size()),
+
+                // Calculate DR? What is best way...
+        (bJets->size() >= 2. ? mindR_Bjets[0] : 5.),
+
+        mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[0] : 5.,
+        mindR_Bjet_lep.size() > 0 ? mindR_Bjet_lep[1] : 5.
     };
-
-
-
     
     if (selec->getEvent()->hasOSSFLeptonPair()) {
         double mass = selec->getEvent()->bestZBosonCandidateMass();
         fillVal.push_back(mass);
     } else {
         fillVal.push_back(0.);
-
     }
 
-    if (multilep) {
+    Lepton* l1 = selec->getLepton(0);
+    Lepton* l2 = selec->getLepton(1);
+
+    double diMass = (*l1 + *l2).mass();
+    fillVal.push_back(diMass);
+
+    if (evClass == eventClass::cro) {
+        int count = 0;
+        if (selec->numberOfJets() < 4) {
+            count += 1;
+        }
+        if (selec->numberOfLooseBJets() < 2) {
+            count += 2;
+        }
+        if (selec->getHT() < 280) {
+            count += 4;
+        }
+        fillVal.push_back(count);
+    } else if (evClass == eventClass::cro3L) {
+        int count = 0;
+        if (selec->numberOfJets() < 3) {
+            count += 1;
+        }
+        if (selec->numberOfLooseBJets() < 2) {
+            count += 2;
+        }
+        fillVal.push_back(count);
+    }
+
+    if (evClass != eventClass::crwz && evClass != eventClass::cr_conv) {
+        MVAHandler_4T* mva;
+        if (selec->numberOfLeps() > 2) {
+            mva = selec->GetMLMVA();
+        } else {
+            mva = selec->GetDLMVA();
+        }
+        fillVal.push_back(mva->m2ll);
+        fillVal.push_back(mva->m2bb);
+        fillVal.push_back(mva->m2lblb);
+    }
+
+    if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].pt() : 0.);
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].eta() : 0.);
         fillVal.push_back(nlep >= 3? (*lightLeps)[2].energy() : 0.);
-    }
 
+        double triMass = 0.;
+
+        Lepton* l1 = selec->getLepton(0);
+        Lepton* l2 = selec->getLepton(1);
+        Lepton* l3 = selec->getLepton(2);
+
+        triMass = (*l1 + *l2 + *l3).mass();
+        fillVal.push_back(triMass);
+
+        if (evClass == eventClass::crz4L || evClass == eventClass::crzz) {
+            std::pair<std::size_t, std::size_t> indices = selec->getMediumLepCol()->bestZBosonCandidateIndices();
+            std::vector<size_t> relIndices;
+            for (size_t i=0; i<4; i++) {
+                if (i == indices.first || i == indices.second) continue;
+                relIndices.push_back(i);
+            }
+            if (relIndices.size() > 2) fillVal.push_back(0.);
+            else {
+                Lepton* l1New = selec->getLepton(relIndices[0]);
+                Lepton* l2New = selec->getLepton(relIndices[1]);
+                double twoMass = (*l1New + *l2New).mass();
+                fillVal.push_back(twoMass);
+            }
+        }
+
+        if (evClass == eventClass::crwz) {
+            std::pair<std::size_t, std::size_t> indices = selec->getMediumLepCol()->bestZBosonCandidateIndices();
+            std::size_t otherIndex = 0;
+            while ((otherIndex == indices.first || otherIndex == indices.second) && otherIndex < 3) {
+                otherIndex++;
+            }
+            Lepton* otherLepton = selec->getLepton(otherIndex);
+            double mtValue = mt(*otherLepton, selec->getEvent()->met());
+            fillVal.push_back(mtValue);
+        }
+    }
+    
     return fillVal;
 }
 
+
+std::vector<double> fourTopHists::fillTestHists(eventClass evClass, EventFourT* selec) {
+    LeptonCollection* leps;
+    leps = selec->getMediumLepCol();
+
+    leps->selectTightChargeLeptons();
+
+    std::vector<double> fillVal = {
+        (double) leps->size()
+    };
+    
+    return fillVal;
+}

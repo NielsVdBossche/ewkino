@@ -35,6 +35,7 @@ class TreeReader {
         static const unsigned nJets_max = 100;
         static const unsigned gen_nL_max = 20;
         static const unsigned lhe_n_max = 20;
+        static const unsigned gen_n_max = 1000;
 	// global event variables and weights
         ULong_t         _runNb;
         ULong_t         _lumiBlock;
@@ -47,7 +48,7 @@ class TreeReader {
         UInt_t          _nLheWeights;
         Double_t        _lheWeight[148];
         UInt_t          _nPsWeights;
-        Double_t        _psWeight[14];
+        Double_t        _psWeight[46];
         Float_t         _nTrueInt;
         Double_t        _lheHTIncoming;
 	// generator variables
@@ -64,6 +65,24 @@ class TreeReader {
         Bool_t          _gen_lIsPrompt[gen_nL_max];   
         UInt_t          _ttgEventType;
         UInt_t          _zgEventType;
+
+        // all generator variables
+        UInt_t     _gen_n;
+        Double_t   _gen_pt[gen_n_max];
+        Double_t   _gen_eta[gen_n_max];
+        Double_t   _gen_phi[gen_n_max];
+        Double_t   _gen_E[gen_n_max];
+        Int_t      _gen_pdgId[gen_n_max];
+        Int_t      _gen_charge[gen_n_max];
+        Int_t      _gen_status[gen_n_max];
+        Bool_t     _gen_isPromptFinalState[gen_n_max];
+        Bool_t     _gen_isDirectPromptTauDecayProductFinalState[gen_n_max];
+        Bool_t     _gen_isLastCopy[gen_n_max];
+        Int_t      _gen_index[gen_n_max];
+        Int_t      _gen_motherIndex[gen_n_max];
+        Int_t      _gen_daughter_n[gen_n_max];
+        Int_t      _gen_daughterIndex[gen_n_max][10];
+
         // lhe variables
         UInt_t          _nLheTau;
         UInt_t          _nLheParticles;
@@ -135,6 +154,8 @@ class TreeReader {
         Double_t        _leptonMvaTTH[nL_max];
         Double_t        _leptonMvatZq[nL_max];
 	Double_t        _leptonMvaTOP[nL_max];
+	Double_t        _leptonMvaTOPUL[nL_max];
+	Double_t        _leptonMvaTOPULv2[nL_max];
         Bool_t          _lPOGVeto[nL_max];   
         Bool_t          _lPOGLoose[nL_max];   
         Bool_t          _lPOGMedium[nL_max];   
@@ -263,6 +284,39 @@ class TreeReader {
         std::map< std::string, bool > _triggerMap;
         std::map< std::string, bool > _MetFilterMap;
 
+        // particle level branches
+        static const unsigned pl_nL_max = 10;
+        static const unsigned pl_nPh_max = 5;
+        static const unsigned pl_nJet_max = 10;
+        
+        //particle level MET
+        double   _pl_met;
+        double   _pl_metPhi;
+
+        //particle level photons
+        unsigned _pl_nPh = 0;
+        double   _pl_phPt[pl_nPh_max];
+        double   _pl_phEta[pl_nPh_max];
+        double   _pl_phPhi[pl_nPh_max];
+        double   _pl_phE[pl_nPh_max];
+
+        //particle level leptons
+        unsigned _pl_nL = 0;
+        double   _pl_lPt[pl_nL_max];
+        double   _pl_lEta[pl_nL_max];
+        double   _pl_lPhi[pl_nL_max];
+        double   _pl_lE[pl_nL_max];
+        unsigned _pl_lFlavor[pl_nL_max];
+        int      _pl_lCharge[pl_nL_max];
+
+        //particle level jets
+        unsigned _pl_nJets = 0;
+        double   _pl_jetPt[pl_nJet_max];
+        double   _pl_jetEta[pl_nJet_max];
+        double   _pl_jetPhi[pl_nJet_max];
+        double   _pl_jetE[pl_nJet_max];
+        unsigned _pl_jetHadronFlavor[pl_nJet_max];
+
         //weight including cross section scaling 
         double          _scaledWeight;
 
@@ -300,6 +354,7 @@ class TreeReader {
         //Get entry from Tree, should not be used except for test purposes
         void GetEntry(const Sample&, long unsigned );
         void GetEntry(long unsigned );
+        TTree* GetTree() {return _currentTreePtr;}
 
         //Build event (this will implicitly use GetEntry )
         //Use these functions in analysis code 
@@ -330,6 +385,8 @@ class TreeReader {
 
         //check whether generator info is present in current tree
         bool containsGeneratorInfo() const;
+        bool containsFullGeneratorInfo() const;
+        bool containsParticleLevelInfo() const;
         bool containsLheInfo() const;
         
         //check whether SUSY mass info is present in the current sample
@@ -352,6 +409,7 @@ class TreeReader {
         bool isSMSignal() const;
         bool isNewPhysicsSignal() const;
         bool isSusy() const{ return _isSusy; }
+        bool hasPL() const { return hasPLInfo;}
 
         //access number of samples and current sample
         const Sample& currentSample() const{ return *_currentSamplePtr; }
@@ -394,6 +452,9 @@ class TreeReader {
 
         //cache whether current sample is SUSY to avoid having to check the branch names for each event
         bool _isSusy = false;
+        
+        // same for PL info
+        bool hasPLInfo = false;
 
         //check whether current sample is initialized, throw an error if it is not 
         void checkCurrentSample() const;
@@ -521,6 +582,8 @@ class TreeReader {
         TBranch        *b__leptonMvaTTH;
         TBranch        *b__leptonMvatZq;
 	TBranch        *b__leptonMvaTOP;
+	TBranch        *b__leptonMvaTOPUL;
+	TBranch        *b__leptonMvaTOPv2UL;
         TBranch        *b__lPOGVeto;   
         TBranch        *b__lPOGLoose;   
         TBranch        *b__lPOGMedium;   
@@ -643,6 +706,44 @@ class TreeReader {
 
         std::map< std::string, TBranch* > b__triggerMap;
         std::map< std::string, TBranch* > b__MetFilterMap; 
+
+        // all generator variables
+        TBranch        *b__gen_n;
+        TBranch        *b__gen_pt;
+        TBranch        *b__gen_eta;
+        TBranch        *b__gen_phi;
+        TBranch        *b__gen_E;
+        TBranch        *b__gen_pdgId;
+        TBranch        *b__gen_charge;
+        TBranch        *b__gen_status;
+        TBranch        *b__gen_isPromptFinalState;
+        TBranch        *b__gen_isDirectPromptTauDecayProductFinalState;
+        TBranch        *b__gen_isLastCopy;
+        TBranch        *b__gen_index;
+        TBranch        *b__gen_motherIndex;
+        TBranch        *b__gen_daughter_n;
+        TBranch        *b__gen_daughterIndex;
+
+        TBranch        *b__pl_met;
+        TBranch        *b__pl_metPhi;
+        TBranch        *b__pl_nPh;
+        TBranch        *b__pl_phPt;
+        TBranch        *b__pl_phEta;
+        TBranch        *b__pl_phPhi;
+        TBranch        *b__pl_phE;
+        TBranch        *b__pl_nL;
+        TBranch        *b__pl_lPt;
+        TBranch        *b__pl_lEta;
+        TBranch        *b__pl_lPhi;
+        TBranch        *b__pl_lE;
+        TBranch        *b__pl_lFlavor;
+        TBranch        *b__pl_lCharge;
+        TBranch        *b__pl_nJets;
+        TBranch        *b__pl_jetPt;
+        TBranch        *b__pl_jetEta;
+        TBranch        *b__pl_jetPhi;
+        TBranch        *b__pl_jetE;
+        TBranch        *b__pl_jetHadronFlavor;
 };
 
 #endif

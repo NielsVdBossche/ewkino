@@ -1,0 +1,3462 @@
+executable = trainAllMVA8.sh
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+
+output = /user/nivanden/condor/output/trainAllMVA_$(ClusterId)_$(ProcId).out
+error = /user/nivanden/condor/error/trainAllMVA_$(ClusterId)_$(ProcId).err
+log = /user/nivanden/condor/logs/trainAllMVA_$(ClusterId)_$(ProcId).log
+
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 3 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 4 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 5 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1000 6 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 3 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 4 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 5 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1250 6 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 3 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 4 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 5 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 1500 6 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 3 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 4 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 5 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.01 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.05 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 1 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 1 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 1 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 5 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 5 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 5 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 10 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 10 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 10 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 20 0.25 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 20 0.5 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL search 2000 6 20 0.1 20 1.0 Settingfiles/VariableSelectionDL.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 3 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 4 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 5 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1000 6 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 3 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 4 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 5 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1250 6 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 3 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 4 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 5 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 1500 6 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 3 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 4 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 5 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.01 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.05 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 1 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 1 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 1 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 5 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 5 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 5 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 10 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 10 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 10 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 20 0.25 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 20 0.5 Settingfiles/VariableSelectionML.txt"
+queue
+
+arguments = "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML search 2000 6 20 0.1 20 1.0 Settingfiles/VariableSelectionML.txt"
+queue
+

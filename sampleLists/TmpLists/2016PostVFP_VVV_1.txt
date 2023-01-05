@@ -1,0 +1,1 @@
+VVV         ../skims_v4/2016PostVFP/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13_ext1-v2_singlelepton_MC_2016_ULpostVFPv6.root                                               0.05565

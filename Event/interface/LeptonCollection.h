@@ -19,12 +19,12 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
     public:
         LeptonCollection( const TreeReader& );
         LeptonCollection() = default;
-        /*
+        
         MuonCollection muonCollection() const;
         ElectronCollection electronCollection() const;
         TauCollection tauCollection() const;
         LightLeptonCollection lightLeptonCollection() const;
-        */
+        
         MuonCollection* muonCollectionPtr() const;
         ElectronCollection* electronCollectionPtr() const;
         TauCollection* tauCollectionPtr() const;
@@ -32,19 +32,23 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
 
         //select leptons
         void selectLooseLeptons();
+        void selectLooseV2Leptons();
         void selectFOLeptons();
         void selectTightLeptons();
+        void selectTightChargeLeptons();
 
         //build collection of leptons passing certain selection
         LeptonCollection looseLeptonCollection() const;
         LeptonCollection FOLeptonCollection() const;
         LeptonCollection tightLeptonCollection() const;
+        LeptonCollection tightChargeCollection() const;
 
         //build collection of the X leading leptons 
         LeptonCollection leadingLeptonCollection( const size_type );
 
         //clean electrons and taus 
         void cleanElectronsFromLooseMuons( const double coneSize = 0.05 );
+        void cleanElectronsFromLooseV2Muons( const double coneSize = 0.05 );
         void cleanElectronsFromFOMuons( const double coneSize = 0.05 );
         void cleanTausFromLooseLightLeptons( const double coneSize = 0.4 );
         void cleanTausFromFOLightLeptons( const double coneSize = 0.4 );
@@ -81,6 +85,8 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
 
         //remove tau leptons from collection
         void removeTaus();
+
+        int sumCharges();
 
 	// build varied collections
 	LeptonCollection electronScaleUpCollection() const;

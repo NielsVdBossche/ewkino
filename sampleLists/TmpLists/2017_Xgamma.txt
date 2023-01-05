@@ -1,3 +1,0 @@
-Xgamma          2017/analysisSamples/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL.root                                                            2.22
-Xgamma          2017/TTGamma_Hadronic_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL.root                                                                          6.162
-Xgamma          2017/analysisSamples/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_2017_UL.root                                                        7.509

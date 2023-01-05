@@ -23,17 +23,10 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     }
 
     if( _numberOfPsWeights > maxNumberOfPsWeights ){
-        throw std::out_of_range( "_numberOfPsWeights is larger than 14, which is the maximum array size of _psWeights." );
+        throw std::out_of_range( "_numberOfPsWeights is larger than 46, which is the maximum array size of _psWeights." );
     }
     for( unsigned i = 0; i < _numberOfPsWeights; ++i ){
         _psWeights[i] = treeReader._psWeight[i];
-    }
-
-    //prefire weights are not defined for 2018 events, set them to unity
-    if( treeReader.is2018() ){
-        _prefireWeight = 1.;
-        _prefireWeightDown = 1.;
-        _prefireWeightUp = 1.;
     }
 
     if (treeReader.containsLheInfo()) {
@@ -43,9 +36,12 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     _firstScaleIndex = 0;
     _numberOfScaleVariations = std::min( treeReader._nLheWeights, unsigned(9) );
     _firstPdfIndex = 9;
-    _numberOfPdfVariations = std::min( std::max( treeReader._nLheWeights, unsigned(9) ) - 9, unsigned(100)); 
+    _numberOfPdfVariations = std::min( std::max( treeReader._nLheWeights, unsigned(9) ) - 9, unsigned(103)); 
 }
 
+GeneratorInfo::~GeneratorInfo() {
+    delete lheCollectionPtr;
+}
 
 double retrieveWeight( const double* array, const unsigned index, const unsigned offset, const unsigned maximumIndex, const std::string& name ){
     if( index >= maximumIndex ){
@@ -57,7 +53,7 @@ double retrieveWeight( const double* array, const unsigned index, const unsigned
 
 
 double GeneratorInfo::relativeWeightPdfVar( const unsigned pdfIndex ) const{
-    return retrieveWeight( _lheWeights, pdfIndex, 9, std::min( std::max( _numberOfLheWeights, unsigned(9) ) - 9, unsigned(100) ), "pdf" );
+    return retrieveWeight( _lheWeights, pdfIndex, 9, std::min( std::max( _numberOfLheWeights, unsigned(9) ) - 9, unsigned(103) ), "pdf" );
 }
 
 
@@ -67,5 +63,5 @@ double GeneratorInfo::relativeWeightScaleVar( const unsigned scaleIndex ) const{
 
 
 double GeneratorInfo::relativeWeightPsVar( const unsigned psIndex ) const{
-    return retrieveWeight( _psWeights, psIndex, 0, std::min( _numberOfPsWeights, unsigned(14) ), "parton shower" ); 
+    return retrieveWeight( _psWeights, psIndex, 0, std::min( _numberOfPsWeights, unsigned(45) ), "parton shower" ); 
 }

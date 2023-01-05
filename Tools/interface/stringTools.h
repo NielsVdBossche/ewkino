@@ -66,5 +66,8 @@ namespace stringTools{
     std::vector< std::string > split( const std::string& s, const std::vector< std::string >& substring );
     std::vector< std::string > split( const std::string& s, std::initializer_list< std::string > );
     std::vector< std::string > split( const std::string& s );
+
+    // merge string
+    std::string mergeString(const std::vector<std::string>& splitString, const std::string& substring);
 }
 #endif

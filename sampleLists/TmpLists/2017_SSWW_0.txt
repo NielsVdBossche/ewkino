@@ -1,0 +1,1 @@
+SSWW            ../skims_v4/2017/SSWW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_additions.root                                                   0.02794

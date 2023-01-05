@@ -41,6 +41,7 @@ class MVAHandler_4T {
         int maxClass = 1;
 
         EventFourT* selection;
+        bool lean;
 
 
         std::vector<double> scoresCurrent;
@@ -59,12 +60,12 @@ class MVAHandler_4T {
         Float_t m2ll, m2bb, m2lblb, mtLeadLepMET, mtSubLeadLepMET, met;
 
 
-        MVAHandler_4T(MVAConfigs config, EventFourT* selec);
+        MVAHandler_4T(MVAConfigs config, EventFourT* selec, bool isLean);
         ~MVAHandler_4T();
         
         void initReader();
-        std::vector<HistInfo>* createHistograms(std::string additionalFlag, bool fourLep = false);
-        std::vector<HistInfo_2D>* create2DHistograms(std::string additionalFlag, bool fourLep = false);
+        std::vector<HistInfo> createHistograms(std::string additionalFlag, bool fourLep = false);
+        std::vector<HistInfo_2D> create2DHistograms(std::string additionalFlag, bool fourLep = false);
 
         int getMaxClass() const {return maxClass;}
 

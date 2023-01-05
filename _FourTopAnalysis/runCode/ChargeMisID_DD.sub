@@ -6,9 +6,9 @@ log         =   /user/nivanden/condor/logs/analysis_year_$(Method)_$(ClusterId)_
 error       =   /user/nivanden/condor/error/analysis_year_$(Method)_$(ClusterId)_$(Process).err
 output      =   /user/nivanden/condor/output/analysis_year_$(Method)_$(ClusterId)_$(Process).out
 
-queue 1 Filename, Method in (
-    Data16Pre.txt ChargeDD
-    Data16Post.txt ChargeDD
+queue 1 Filename, Method from (
+    Data16PreVFP.txt ChargeDD
+    Data16PostVFP.txt ChargeDD
     Data17.txt ChargeDD
     Data18.txt ChargeDD
 )

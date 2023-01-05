@@ -1,0 +1,55 @@
+universe    =   vanilla
+executable  =   trainMVALean.sh
+
+log         =   /user/nivanden/condor/logs/trainMVALean_$(ClusterId)_$(Process).log
+error       =   /user/nivanden/condor/error/trainMVALean_$(ClusterId)_$(Process).err
+output      =   /user/nivanden/condor/output/trainMVALean_$(ClusterId)_$(Process).out
+
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_5.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_6.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_7.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_8.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_9.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_10.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_11.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_12.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_13.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_14.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_15.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_16.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt DL_tree_loose BDT_VAR_DL no Settingfiles/DL_17.txt"
+queue
+
+
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_5.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_6.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_7.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_8.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_9.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_10.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_11.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_12.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_13.txt"
+queue
+arguments   =   "sampleLists/SL_UL.txt ML_tree_loose BDT_VAR_ML no Settingfiles/ML_14.txt"
+queue

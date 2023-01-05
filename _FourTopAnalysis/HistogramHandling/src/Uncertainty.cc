@@ -15,6 +15,24 @@ Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeU
     downHists = new HistogramSet(histograms, downFlag);
 }
 
+Uncertainty::~Uncertainty() {
+    delete upHists;
+    delete downHists;
+
+    if (upSubMap) {
+        for (auto& it : *upSubMap) {
+            delete it.second;
+        }
+        delete upSubMap;
+    }
+    if (downSubMap) {
+        for (auto& it : *downSubMap) {
+            delete it.second;
+        }
+        delete downSubMap;
+    }
+}
+
 void Uncertainty::newSample(std::string& uniqueName) {
     upHists->newSample(uniqueName);
     downHists->newSample(uniqueName);
@@ -42,6 +60,12 @@ void Uncertainty::changeProcess(unsigned index, std::string& newTitle) {
         }
     }
 }
+
+void Uncertainty::addProcess(std::string& newProc) {
+    upHists->addProcess(newProc);
+    downHists->addProcess(newProc);
+}
+
 
 
 void Uncertainty::fillHistograms(std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc) {
@@ -123,6 +147,30 @@ void Uncertainty::fillUpOrDown2DHistograms(std::vector<std::pair<double, double>
     } 
 }
 
+void Uncertainty::fillSubUpOrDownHistograms(std::string& subUnc, std::vector<double>& fillVec, double weight, bool up, unsigned subProc) {
+    if (up) {
+        upSubMap->at(subUnc)->fillHistograms(subProc, fillVec, weight);
+    } else {
+        downSubMap->at(subUnc)->fillHistograms(subProc, fillVec, weight);
+    } 
+}
+
+void Uncertainty::fillSubUpOrDownSingleHistograms(std::string& subUnc, std::vector<std::pair<int, double>>& fillVec, double weight, bool up, unsigned subProc) {
+    if (up) {
+        upSubMap->at(subUnc)->fillSingleHistograms(subProc, fillVec, weight);
+    } else {
+        downSubMap->at(subUnc)->fillSingleHistograms(subProc, fillVec, weight);
+    }
+}
+
+void Uncertainty::fillSubUpOrDown2DHistograms(std::string& subUnc, std::vector<std::pair<double, double>>& fillVec, double weight, bool up, unsigned subProc) {
+    if (up) {
+        upSubMap->at(subUnc)->fill2DHistograms(subProc, fillVec, weight);
+    } else {
+        downSubMap->at(subUnc)->fill2DHistograms(subProc, fillVec, weight);
+    } 
+}
+
 void Uncertainty::addSubUncertainties(std::vector<std::string>& subUnc) {
     upSubMap = new std::map<std::string, HistogramSet*>();
     downSubMap = new std::map<std::string, HistogramSet*>();
@@ -135,7 +183,7 @@ void Uncertainty::addSubUncertainties(std::vector<std::string>& subUnc) {
     }
 }
 
-void Uncertainty::fillSubHistograms(std::string subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc) {
+void Uncertainty::fillSubHistograms(std::string& subUnc, std::vector<double>& fillVec, double weightUp, double weightDown, unsigned subProc) {
     HistogramSet* localUpHists = upSubMap->at(subUnc);
     HistogramSet* localDownHists = downSubMap->at(subUnc);
     
@@ -143,7 +191,7 @@ void Uncertainty::fillSubHistograms(std::string subUnc, std::vector<double>& fil
     localDownHists->fillHistograms(subProc, fillVec, weightDown);
 }
 
-void Uncertainty::fillSubSingleHistograms(std::string subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {
+void Uncertainty::fillSubSingleHistograms(std::string& subUnc, std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {
     HistogramSet* localUpHists = upSubMap->at(subUnc);
     HistogramSet* localDownHists = downSubMap->at(subUnc);
     
@@ -151,7 +199,7 @@ void Uncertainty::fillSubSingleHistograms(std::string subUnc, std::vector<std::p
     localDownHists->fillSingleHistograms(subProc, fillVec, weightDown);
 }
 
-void Uncertainty::fillSub2DHistograms(std::string subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {
+void Uncertainty::fillSub2DHistograms(std::string& subUnc, std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {
     HistogramSet* localUpHists = upSubMap->at(subUnc);
     HistogramSet* localDownHists = downSubMap->at(subUnc);
     

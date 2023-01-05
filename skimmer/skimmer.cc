@@ -69,6 +69,20 @@ void skimFile( const std::string& pathToFile, const std::string& outputDirectory
 
     //close output file
     outputFilePtr->Close();
+
+    TreeReader checkOutputTree;
+    checkOutputTree.initSampleFromFile(outputFilePath);
+    TTree* currentTree = checkOutputTree.GetTree();
+
+    for (unsigned long long i=0; i<currentTree->GetEntries(); i++) {
+        try {
+            currentTree->GetEntry(i);
+        } catch(const std::exception& e) {
+            std::cerr << e.what() << '\n';
+            std::cerr << "outputfile " << outputFilePath << " is corrupted. Exiting..." << std::endl;
+            exit(1);
+        }   
+    }
 }
 
 /*

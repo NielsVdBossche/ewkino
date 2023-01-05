@@ -19,18 +19,22 @@ class MVAHandler_4T;
 ///enum shapeUncId;
 
 class EventFourT {
+    protected:
+        void SetEventClass(eventClass newClass) {currentClass = newClass;}
     private:
         Event* event = nullptr;
 
         LeptonCollection* looseLeps;
         LeptonCollection* foLeps;
-        LeptonCollection* mediumLeps; // leptons used in the analysis
+        LeptonCollection* tightLeps;
+        LeptonCollection** mediumLeps; // leptons used in the analysis
 
         // These should only be used to increase nonprompt yield. Should be triggered by other functions and only done when ttbar sample used
         // Additionally, the event selection based on these should take into account the full event selection but allow one of the leptons to be loose
         LeptonCollection* altLeps; 
 
         eventClass currentClass = fail;
+        eventClass relevantRegion = fail;
         // selection type: makes difference in weight calculation and lepton selection
         selectionType selType = MCAll;
 
@@ -41,19 +45,23 @@ class EventFourT {
         double ht, met;
 
         bool isNormalSelected;
-
+        bool bdtOutput = true;
+        
         TopReconstructionNew* topReco;
         std::vector<double> scoresMVA;
         
         MVAHandler_4T* dl_MVA, *ml_MVA;
 
         std::map<eventClass, int> offsets;
-
+        
+        std::function<std::vector<double>(const eventClass, EventFourT*)> histFiller = HistogramConfig::fillNominalHists;
     public:
 
         EventFourT();
-        ~EventFourT() {cleanSelection();};
+        virtual ~EventFourT();
 
+        void setFillerFunction(std::function<std::vector<double>(const eventClass, EventFourT*)> newHistFiller) {histFiller = newHistFiller;};
+        void setPrintBDTOutput(bool newSettings) {bdtOutput = newSettings;}
         void setSelectionType(selectionType st) {selType = st;}
         
         void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}
@@ -66,12 +74,12 @@ class EventFourT {
         void addNewEvent(Event* newEvent);
 
         Event* getEvent() {return event;};
-        Lepton* getLepton(size_t index) {return mediumLeps->at(index);}
+        Lepton* getLepton(size_t index) {return (*mediumLeps)->at(index);}
         Jet* getJet(size_t index) {return jets->at(index);}
         Jet* getBtagJet(size_t index) {return bTagJets->at(index);}
 
         LeptonCollection* getLooseLepCol() {return looseLeps;}
-        LeptonCollection* getMediumLepCol() {return mediumLeps;}
+        LeptonCollection* getMediumLepCol() {return *mediumLeps;}
         JetCollection* getJetCol() {return jets;}
         JetCollection* getBtagJetCol() {return bTagJets;}
 
@@ -94,13 +102,18 @@ class EventFourT {
         bool passFullEventSelection();
         bool passLeanSelection();
         bool passZBosonVeto();
+        bool passSingleZBosonVeto();
         bool passLowMassVeto();
-        void classifyEvent();
 
         bool leptonsArePrompt();
+        bool leptonsAreNotChargeFlip();
+        bool leptonsAreNotChargeMisMatch();
         bool leptonsAreTight();
 
-        eventClass classifyUncertainty(shapeUncId id, bool up);
+        virtual void classifyEvent();
+        //void classifyEventLean();
+
+        eventClass classifyUncertainty(shapeUncId id, bool up, std::string& variation, unsigned flavor=0);
         std::vector<double> fillVector();
         std::vector<std::pair<int, double>> singleFillEntries();
         std::vector<std::pair<double, double>> fillVector2D();
@@ -119,7 +132,20 @@ class EventFourT {
         
         // HistogramFillers
         //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
+
+
+        // overlap removal
+        bool hasLeptonFromMEExternalConversion();
+        bool leptonFromMEExternalConversion(Lepton* lepton);
+        bool passPhotonOverlapRemoval();
+
+        selectionType GetST() {return selType;}
+        eventClass GetRelRegion() {return relevantRegion;}
+        void SetRelRegion(eventClass region) {relevantRegion = region;}
+
+        int NumberOfBFlavorJets();
 };
 
-bool leptonPtReq(const Lepton& lep);
+bool selectLeptonsLooseMVA(const Lepton& lepton);
+
 #endif

@@ -104,6 +104,10 @@ bool TauSelector::isTight2018() const{
     return true;
 }
 
+// Tight charge requirement
+bool TauSelector::isTightCharge() const {
+    return true;
+}
 
 /*
 cone correction
@@ -112,4 +116,36 @@ cone correction
 
 double TauSelector::coneCorrection() const{
     return 1;
+}
+
+bool TauSelector::isLooseV2Base() const{
+    if( tauPtr->pt() < 20 ) return false;
+    if( fabs( tauPtr->eta() ) >= 2.3 ) return false;
+    if( ! tauPtr->passDecayModeFinding() ) return false;
+    if( ! tauPtr->passVLooseMVAOld2017() ) return false;
+    return true;
+}
+
+
+bool TauSelector::isLooseV22016() const{
+    return true;
+}
+
+bool TauSelector::isLooseV22016PreVFP() const{
+    return true;
+}
+
+
+bool TauSelector::isLooseV22016PostVFP() const{
+    return true;
+}
+
+
+bool TauSelector::isLooseV22017() const{
+    return true;
+}
+
+
+bool TauSelector::isLooseV22018() const{
+    return true;
 }

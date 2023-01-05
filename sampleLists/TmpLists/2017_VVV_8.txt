@@ -1,0 +1,2 @@
+VVV             ../../lwezenbe/skimmedTuples/HNL/default/UL2017/Reco/VBF_HToZZTo4L_M125_TuneCP5_13TeV_powheg2_JHUGenV7011_pythia8.root                                                                              0.001034                forceIs2017
+VVV             ../../lwezenbe/skimmedTuples/HNL/default/UL2017/Reco/VBF_HToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8.root                                                                            3.9347              forceIs2017
