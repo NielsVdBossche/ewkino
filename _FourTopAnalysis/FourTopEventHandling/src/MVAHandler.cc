@@ -233,6 +233,13 @@ std::vector<HistInfo> MVAHandler_4T::createHistograms(std::string additionalFlag
         histInfoVec.push_back(HistInfo(name, xaxis , 240, 0.4, 1.));
     }
 
+    for (int el = 0; el < maxClass; el++) {
+        std::string name = "BDT_Finalresult_tanh_" + translator[(MVAClasses) el] + identifier + additionalFlag;
+        std::string xaxis = "BDT score' " + translator[(MVAClasses) el];
+
+        histInfoVec.push_back(HistInfo(name, xaxis , 100, 0.5, 3.));
+    }
+
     return histInfoVec;
 }
 
@@ -301,9 +308,10 @@ void MVAHandler_4T::fillHistograms(std::vector<std::shared_ptr<TH1D>>& histogram
         histogram::fillValue(histograms[i].get(), scoresCurrent[i], weight);
     }
 
-    std::pair<MVAClasses, double> classific = getClassAndScore();
-
-    histogram::fillValue(histograms[classific.first + maxClass].get(), classific.second, weight);
+    std::map<int, double> classific = getClassAndScore();
+    for (auto& el : classific) {
+        histogram::fillValue(histograms[el.first + maxClass].get(), el.second, weight);
+    }
 }
 
 void MVAHandler_4T::fill2DHistograms(std::vector<std::shared_ptr<TH2D>>& histograms, double weight) {
@@ -417,12 +425,20 @@ void MVAHandler_4T::fillVariables() {
     m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
 }
 
-std::pair<MVAClasses, double> MVAHandler_4T::getClassAndScore() {
+std::map<int, double> MVAHandler_4T::getClassAndScore() {
+    std::map<int, double> ret;
     if (maxClass == 1) {
-        return {(MVAClasses) 0, scoresCurrent[0]};
+        ret[0] = scoresCurrent[0];
+        return ret;
     }
 
     int indexMaxScore = std::max_element(scoresCurrent.begin(),scoresCurrent.end()) - scoresCurrent.begin();
+    ret[indexMaxScore] = scoresCurrent[indexMaxScore];
 
-    return {(MVAClasses) indexMaxScore, scoresCurrent[indexMaxScore]};
+    int indexScoreTwo = indexMaxScore + maxClass;
+    double score = scoresCurrent[indexMaxScore];
+    if (score >= 1.) score = 0.9999;
+    ret[indexScoreTwo] = atanh((score + 1.) * 0.5);
+
+    return ret;
 }

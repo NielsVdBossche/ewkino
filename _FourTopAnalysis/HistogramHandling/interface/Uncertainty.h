@@ -27,7 +27,10 @@ enum shapeUncId {
     JECFlavorQCD,
     MET,
     HEMIssue,
-    end  /// always at the end for easier loops
+    end,  /// always at the end for easier loops
+    FR_mu,
+    FR_el,
+    endNP
 };
 
 class Uncertainty {
