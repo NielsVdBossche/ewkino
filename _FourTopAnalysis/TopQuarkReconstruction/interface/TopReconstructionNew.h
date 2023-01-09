@@ -14,7 +14,7 @@ class TopReconstructionNew {
         std::pair<double, double> bestTop, secondBestTop;
     public:
         TopReconstructionNew(EventFourT* selection) : selection(selection) {};
-        ~TopReconstructionNew();
+        ~TopReconstructionNew() {};
 
         void RecoBestTwoTops();
         std::pair<double, double> getBestTop(std::vector<unsigned>& excludedJets);

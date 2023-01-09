@@ -32,7 +32,7 @@ void FourTop::analyze(std::string method) {
     // reweighter creation
 
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
-    ReweighterBTagShape** btagReweighter;
+    ReweighterBTagShape** btagReweighter = nullptr;
     CombinedReweighter reweighter;
     CombinedSampleReweighter* sampleReweighter = nullptr;
     if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
@@ -227,7 +227,8 @@ void FourTop::analyze(std::string method) {
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (testRun && entry > 10000) break;
+            if (testRun && entry > 100) break;
+            //std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
@@ -259,10 +260,10 @@ void FourTop::analyze(std::string method) {
             // Add lepton selection boolean call here!
 
             if (! selection->passLeptonSelection()) continue;
-            //if (testRun) std::cout << "pass lepton selection" << std::endl;
+            if (testRun) std::cout << "pass lepton selection" << std::endl;
             selection->classifyEvent();
             unsigned processNb = 0;
-            //if (testRun) std::cout << "process nb " << processNb << std::endl;
+            if (testRun) std::cout << "process nb " << processNb << std::endl;
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
@@ -338,7 +339,7 @@ void FourTop::analyze(std::string method) {
             // if region != considerRegion && considerRegion != fail: skip
 
             if (FillRegion(nominalClass, st)) {
-                //if (testRun) std::cout << "is fill " << std::endl;
+                if (testRun) std::cout << "is fill " << std::endl;
 
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
@@ -466,6 +467,12 @@ void FourTop::analyze(std::string method) {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
+                } else if (uncID == shapeUncId::FR_mu) {
+                    weightUp = FakeRateWeightVariation(true, false) / FakeRateWeight();
+                    weightDown = FakeRateWeightVariation(false, false) / FakeRateWeight();
+                } else if (uncID == shapeUncId::FR_el) {
+                    weightUp = FakeRateWeightVariation(true, true) / FakeRateWeight();
+                    weightDown = FakeRateWeightVariation(false, true) / FakeRateWeight();
                 } else if (uncID == shapeUncId::WZSF) {
                     if (sampleReweighter) {
                         for (int i=0; i < 7; i++) {
@@ -597,7 +604,7 @@ void FourTop::analyze(std::string method) {
                     }
                 }
 
-                if (uncID < shapeUncId::JER_1p93) {
+                if (uncID < shapeUncId::JER_1p93 || uncID == shapeUncId::FR_mu || uncID == shapeUncId::FR_el) {
                     uncWrapper->fillAllUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
@@ -645,9 +652,10 @@ void FourTop::analyze(std::string method) {
     }
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
-    
-
+    //delete mgrAll;
     outfile->Close();
+
+    delete btagReweighter;
 }
 
 bool FourTop::eventPassesTriggers() {
@@ -676,7 +684,7 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
 
-        if (currClass == eventClass::ssdl && selection->GetDLMVA()->getClassAndScore().first == MVAClasses::TTTT) subClasses.push_back("pureSig");
+        if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
     } else if (currClass == eventClass::trilep) {
         if (selection->getMediumLepCol()->hasOSSFPair()) {
             subClasses.push_back("OSSF");

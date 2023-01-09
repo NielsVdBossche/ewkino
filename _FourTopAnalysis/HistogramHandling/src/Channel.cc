@@ -12,8 +12,21 @@ Channel::Channel(std::string& channel, std::string& subChannel, std::vector<Hist
     oneDimInfo = new std::vector<HistInfo>(hardCopyInfoVector(histInfo));
 }
 
-Channel::~Channel() {
+Channel::~Channel() {   
+    delete oneDimInfo;
+    delete nominalHistograms;
+    if (twoDimInfo != nullptr) delete twoDimInfo;
 
+    if (subChannels) {
+        for (auto& it : *subChannels) {
+            delete it.second;
+        }
+    }
+
+    for (auto& it : uncHistMap) {
+        std::cout << it.second->getName();
+        delete it.second;
+    }
 }
 
 std::vector<HistInfo> Channel::hardCopyInfoVector(std::vector<HistInfo>* infoVec) {
@@ -29,12 +42,12 @@ std::vector<HistInfo> Channel::hardCopyInfoVector(std::vector<HistInfo>* infoVec
     return newInfoVec;
 }
 
-std::vector<HistInfo_2D> Channel::hardCopy2DInfoVector(std::vector<HistInfo_2D>* infoVec) {
+std::vector<HistInfo_2D> Channel::hardCopy2DInfoVector(std::vector<HistInfo_2D> infoVec) {
     std::vector<HistInfo_2D> newInfoVec;
 
-    for (unsigned i = 0; i < infoVec->size(); i++) {
-        std::string newName = infoVec->at(i).name() + SubChannelName;
-        HistInfo_2D hardCopy(infoVec->at(i));
+    for (unsigned i = 0; i < infoVec.size(); i++) {
+        std::string newName = infoVec[i].name() + SubChannelName;
+        HistInfo_2D hardCopy(infoVec[i]);
         hardCopy.setName(newName);
         newInfoVec.push_back(hardCopy);
     }
@@ -49,7 +62,7 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
 
     for (unsigned i=0; i<newSubChannels.size(); i++) {
         (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo);
-        (*subChannels)[newSubChannels[i]]->set2DHistInfo(twoDimInfo);
+        (*subChannels)[newSubChannels[i]]->set2DHistInfo(*twoDimInfo);
     }
 }
 
@@ -75,13 +88,11 @@ void Channel::SetPrintAllUncertaintyVariations(bool setting) {
     }
 }
 
-void Channel::updateHistInfo(std::vector<HistInfo>* extraInfo) {
-    std::vector<HistInfo> extraInfoCopy = hardCopyInfoVector(extraInfo);
-
-    oneDimInfo->insert(oneDimInfo->end(), extraInfoCopy.begin(), extraInfoCopy.end());
+void Channel::updateHistInfo(std::vector<HistInfo> extraInfo) {
+    oneDimInfo->insert(oneDimInfo->end(), extraInfo.begin(), extraInfo.end());
 }
 
-void Channel::set2DHistInfo(std::vector<HistInfo_2D>* new2DInfo) {
+void Channel::set2DHistInfo(std::vector<HistInfo_2D> new2DInfo) {
     twoDimInfo = new std::vector<HistInfo_2D>(hardCopy2DInfoVector(new2DInfo));
 }
 

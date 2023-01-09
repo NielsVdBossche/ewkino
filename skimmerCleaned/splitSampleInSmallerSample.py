@@ -79,7 +79,6 @@ for folder, currFrac in folders:
         for f in files:
             if ".root" in f: os.remove(f)
 
-
     # list files in folder, copy (by random choice to right subdir)
     for file in os.listdir(folder):
         r = random.random()
@@ -87,8 +86,7 @@ for folder, currFrac in folders:
             # accept
             shutil.copy2(os.path.join(folder, file), outputRed)
 
-
     # once files are moved, merge samples from these new folders to subfolders in respective years.
 
-    mergeTuples(outputRed)
+    #mergeTuples(outputRed)
 

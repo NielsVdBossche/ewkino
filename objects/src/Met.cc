@@ -20,7 +20,7 @@ Met::Met( const TreeReader& treeReader,
     if (readAllJECVariations) {
         _pxy_JECSourcesUp = std::vector<std::pair<double,double> >(_JECSources->size());
         _pxy_JECSourcesDown = std::vector<std::pair<double,double> >(_JECSources->size());
-        for (const auto elMap : *_JECSources) {
+        for (const auto& elMap : *_JECSources) {
             _pxy_JECSourcesUp[elMap.second] = std::make_pair(
                                                treeReader._corrMETx_JECSourcesUp[elMap.second],
                                                treeReader._corrMETy_JECSourcesUp[elMap.second]);
@@ -34,7 +34,7 @@ Met::Met( const TreeReader& treeReader,
         _pxy_JECGroupedUp = std::vector<std::pair<double,double> >(_JECGrouped->size());
         _pxy_JECGroupedDown = std::vector<std::pair<double,double> >(_JECGrouped->size());
 
-        for (const auto elMap : *_JECGrouped) {
+        for (const auto& elMap : *_JECGrouped) {
             _pxy_JECGroupedUp[elMap.second] = std::make_pair(
                                                treeReader._corrMETx_JECGroupedUp[elMap.second],
                                                treeReader._corrMETy_JECGroupedUp[elMap.second]);

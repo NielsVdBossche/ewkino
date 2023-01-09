@@ -6,11 +6,6 @@ error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcI
 log = /user/nivanden/condor/logs/analysis_exec_$(method)_$(ClusterId)_$(ProcId).log
 
 queue 1 Samplelist, Method from (
-	TmpLists/2016PreVFP_fullStat_SSWW_0.txt, MCPrompt
-	TmpLists/2016PreVFP_fullStat_ttbar_0.txt, MCPrompt
-	TmpLists/2016PreVFP_fullStat_ttbar_1.txt, MCPrompt
-	TmpLists/2016PreVFP_fullStat_ttG_0.txt, MCPrompt
-	TmpLists/2016PreVFP_fullStat_ttG_1.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_TTH_0.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_TTTT_0.txt, MCPrompt
 	TmpLists/2016PreVFP_fullStat_TTVV_0.txt, MCPrompt
@@ -77,40 +72,6 @@ queue 1 Samplelist, Method from (
 	TmpLists/2017_fullStat_ttG_0.txt, MCPrompt
 	TmpLists/2017_fullStat_ttG_1.txt, MCPrompt
 	TmpLists/2017_fullStat_TTH_0.txt, MCPrompt
-	TmpLists/2017_fullStat_TTTT_0.txt, MCPrompt
-	TmpLists/2017_fullStat_TTVV_0.txt, MCPrompt
-	TmpLists/2017_fullStat_TTVV_1.txt, MCPrompt
-	TmpLists/2017_fullStat_TTVV_2.txt, MCPrompt
-	TmpLists/2017_fullStat_TTVV_3.txt, MCPrompt
-	TmpLists/2017_fullStat_TTVV_4.txt, MCPrompt
-	TmpLists/2017_fullStat_TTVV_5.txt, MCPrompt
-	TmpLists/2017_fullStat_TTW_0.txt, MCPrompt
-	TmpLists/2017_fullStat_TTZ_0.txt, MCPrompt
-	TmpLists/2017_fullStat_THQ_0.txt, MCPrompt
-	TmpLists/2017_fullStat_TTX_0.txt, MCPrompt
-	TmpLists/2017_fullStat_TTX_1.txt, MCPrompt
-	TmpLists/2017_fullStat_TTX_2.txt, MCPrompt
-	TmpLists/2017_fullStat_VVV_0.txt, MCPrompt
-	TmpLists/2017_fullStat_VVV_1.txt, MCPrompt
-	TmpLists/2017_fullStat_VVV_2.txt, MCPrompt
-	TmpLists/2017_fullStat_WZ_0.txt, MCPrompt
-	TmpLists/2017_fullStat_Z_0.txt, MCPrompt
-	TmpLists/2017_fullStat_Z_1.txt, MCPrompt
-	TmpLists/2017_fullStat_ZG_0.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_0.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_1.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_2.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_3.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_4.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_5.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_6.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_7.txt, MCPrompt
-	TmpLists/2017_fullStat_ZZ-H_8.txt, MCPrompt
-	TmpLists/2018_fullStat_SSWW_0.txt, MCPrompt
-	TmpLists/2018_fullStat_ttbar_0.txt, MCPrompt
-	TmpLists/2018_fullStat_ttbar_1.txt, MCPrompt
-	TmpLists/2018_fullStat_ttG_0.txt, MCPrompt
-	TmpLists/2018_fullStat_ttG_1.txt, MCPrompt
 	TmpLists/2018_fullStat_TTH_0.txt, MCPrompt
 	TmpLists/2018_fullStat_TTTT_0.txt, MCPrompt
 	TmpLists/2018_fullStat_TTVV_0.txt, MCPrompt
@@ -244,40 +205,6 @@ queue 1 Samplelist, Method from (
 	TmpLists/2017_fullStat_ttG_0.txt, nonPromptDD
 	TmpLists/2017_fullStat_ttG_1.txt, nonPromptDD
 	TmpLists/2017_fullStat_TTH_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTTT_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTVV_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTVV_1.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTVV_2.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTVV_3.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTVV_4.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTVV_5.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTW_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTZ_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_THQ_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTX_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTX_1.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTX_2.txt, nonPromptDD
-	TmpLists/2017_fullStat_VVV_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_VVV_1.txt, nonPromptDD
-	TmpLists/2017_fullStat_VVV_2.txt, nonPromptDD
-	TmpLists/2017_fullStat_WZ_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_Z_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_Z_1.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZG_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_1.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_2.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_3.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_4.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_5.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_6.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_7.txt, nonPromptDD
-	TmpLists/2017_fullStat_ZZ-H_8.txt, nonPromptDD
-	TmpLists/2018_fullStat_SSWW_0.txt, nonPromptDD
-	TmpLists/2018_fullStat_ttbar_0.txt, nonPromptDD
-	TmpLists/2018_fullStat_ttbar_1.txt, nonPromptDD
-	TmpLists/2018_fullStat_ttG_0.txt, nonPromptDD
-	TmpLists/2018_fullStat_ttG_1.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTH_0.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTTT_0.txt, nonPromptDD
 	TmpLists/2018_fullStat_TTVV_0.txt, nonPromptDD

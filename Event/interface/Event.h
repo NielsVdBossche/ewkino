@@ -112,10 +112,10 @@ class Event {
         void cleanTausFromFOLightLeptons( const double coneSize = 0.4 ){ _leptonCollectionPtr->cleanTausFromFOLightLeptons( coneSize ); }
 
         //separate lepton flavor collections
-        MuonCollection muonCollection() const{ return *_leptonCollectionPtr->muonCollectionPtr(); }
-        ElectronCollection electronCollection() const{ return *_leptonCollectionPtr->electronCollectionPtr(); }
-        TauCollection tauCollection() const{ return *_leptonCollectionPtr->tauCollectionPtr(); }
-        LightLeptonCollection lightLeptonCollection() const{ return *_leptonCollectionPtr->lightLeptonCollectionPtr(); }
+        MuonCollection muonCollection() const{ return _leptonCollectionPtr->muonCollection(); }
+        ElectronCollection electronCollection() const{ return _leptonCollectionPtr->electronCollection(); }
+        TauCollection tauCollection() const{ return _leptonCollectionPtr->tauCollection(); }
+        LightLeptonCollection lightLeptonCollection() const{ return _leptonCollectionPtr->lightLeptonCollection(); }
         LeptonCollection::size_type numberOfMuons() const{ return _leptonCollectionPtr->numberOfMuons(); }
         LeptonCollection::size_type numberOfElectrons() const{ return _leptonCollectionPtr->numberOfElectrons(); }
         LeptonCollection::size_type numberOfTaus() const{ return _leptonCollectionPtr->numberOfTaus(); }
@@ -286,6 +286,9 @@ class Event {
         //check the presence of susy information
         bool hasSusyMassInfo() const{ return ( _susyMassInfoPtr != nullptr ); }
         void checkSusyMassInfo() const;
+
+        // check particle level info
+        bool hasPLInfo() const {return (_particleLevelInfoPtr != nullptr); }
 
 	Event variedLeptonCollectionEvent(
                     LeptonCollection (LeptonCollection::*variedCollection)() const ) const;

@@ -74,11 +74,13 @@ std::vector<std::pair<int, double>> EventFourT::singleFillEntries() {
     if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
 
     if (bdtOutput) {
-        std::pair<MVAClasses, double> classAndScore = currentMVA->getClassAndScore();
+        std::map<int, double> classAndScore = currentMVA->getClassAndScore();
         int offset = offsets[currentClass];
-        singleEntries.push_back({offset + classAndScore.first, classAndScore.second});
-        if (currentClass == eventClass::fourlep && classAndScore.first == MVAClasses::TTBar) {
-            singleEntries.push_back({offset + MVAClasses::TTW, scoresMVA[2]}); // good enough
+        for (auto& el : classAndScore) {
+            singleEntries.push_back({offset + el.first, el.second});
+            if (currentClass == eventClass::fourlep && el.first == int(MVAClasses::TTBar)) {
+                singleEntries.push_back({offset + MVAClasses::TTW, scoresMVA[2]}); // good enough
+            }
         }
     }
     return singleEntries;

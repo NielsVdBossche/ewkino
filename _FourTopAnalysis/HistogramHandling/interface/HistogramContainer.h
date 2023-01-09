@@ -13,13 +13,15 @@
 
 class HistogramContainer {
     private:
+        // is this used?
         std::vector<std::vector<std::shared_ptr<TH1D>>*> oldHists;
         std::vector<std::vector<std::shared_ptr<TH2D>>*> oldHists2D;
 
-
+        // should be deleted
         std::vector<std::shared_ptr<TH1D>>* oneDims = nullptr;
         std::vector<std::shared_ptr<TH2D>>* twoDims = nullptr;
         
+        // managed by channel - no hard copy
         std::vector<HistInfo>* oneDimInfo;
         std::vector<HistInfo_2D>* twoDimInfo = nullptr;
 

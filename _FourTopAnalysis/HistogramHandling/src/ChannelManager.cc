@@ -11,6 +11,7 @@ ChannelManager::ChannelManager(TFile* outputFile, bool generateChannels) : outfi
         if (it.first == eventClass::fail) continue;
         std::vector<HistInfo>* histInfoVec = HistogramConfig::getNominalHists(it.first);
         mapping[it.first] = new Channel(it.second, histInfoVec);
+        delete histInfoVec;
     }
 }
 
@@ -18,6 +19,7 @@ ChannelManager::ChannelManager(TFile* outputFile, eventClass classToPlot) : outf
     std::vector<HistInfo>* histInfoVec = HistogramConfig::getNominalHists(classToPlot);
     std::string name = namingScheme[classToPlot];
     mapping[classToPlot] = new Channel(name, histInfoVec);
+    delete histInfoVec;
 }
 
 
@@ -27,6 +29,7 @@ ChannelManager::ChannelManager(TFile* outputFile, std::map<eventClass, std::stri
     for (auto it : names) {
         std::vector<HistInfo>* histInfoVec = HistogramConfig::getNominalHists(it.first);
         mapping[it.first] = new Channel(it.second, histInfoVec);
+        delete histInfoVec;
     }
 }
 
@@ -35,6 +38,7 @@ ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histI
         if (it.first == eventClass::fail) continue;
         std::vector<HistInfo>* histInfoVec = histInfoGenerator(it.first);
         mapping[it.first] = new Channel(it.second, histInfoVec);
+        delete histInfoVec;
     }
 }
 
@@ -45,11 +49,14 @@ ChannelManager::ChannelManager(TFile* outputFile, eventClass classToPlots, std::
     std::string regionName = namingScheme[classToPlots];
     std::cout << regionName << std::endl;
     mapping[classToPlots] = new Channel(regionName, histInfoVec);
+    delete histInfoVec;
 }
 
 
 ChannelManager::~ChannelManager() {
-
+    for (auto& it : mapping) {
+        delete it.second;
+    }
 }
 
 void ChannelManager::addChannels(std::map< eventClass, std::function<std::vector<HistInfo>*(const eventClass)>>& histInfoGenMap) {

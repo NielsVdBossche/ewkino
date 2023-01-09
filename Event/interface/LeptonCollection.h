@@ -19,12 +19,12 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
     public:
         LeptonCollection( const TreeReader& );
         LeptonCollection() = default;
-        /*
+        
         MuonCollection muonCollection() const;
         ElectronCollection electronCollection() const;
         TauCollection tauCollection() const;
         LightLeptonCollection lightLeptonCollection() const;
-        */
+        
         MuonCollection* muonCollectionPtr() const;
         ElectronCollection* electronCollectionPtr() const;
         TauCollection* tauCollectionPtr() const;

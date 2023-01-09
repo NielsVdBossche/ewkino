@@ -58,7 +58,7 @@ class EventFourT {
     public:
 
         EventFourT();
-        virtual ~EventFourT() {cleanSelection();};
+        virtual ~EventFourT();
 
         void setFillerFunction(std::function<std::vector<double>(const eventClass, EventFourT*)> newHistFiller) {histFiller = newHistFiller;};
         void setPrintBDTOutput(bool newSettings) {bdtOutput = newSettings;}

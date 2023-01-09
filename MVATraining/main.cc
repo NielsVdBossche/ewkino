@@ -107,8 +107,8 @@ int main(int argc, char const *argv[]) {
             std::string tmpname = variables_short + "_" + setup;
             if (!useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT(factory, data, tmpname, 2000, 4, 20, 0.10, 1, 1.);
             else if (!useCV && (conf == BDT_VAR_ML || conf == BDT_ML)) mvaSetupManager::addBDT(factory, data, tmpname, 1500, 4, 20, 0.08, 1, 0.6);
-            else if (useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT_CV(cv, data, tmpname, 2000, 6, 20, 0.10, 1, 1.);
-            else if (useCV) mvaSetupManager::addBDT_CV(cv, data, tmpname, 1500, 5, 20, 0.08, 1, 0.6);
+            else if (useCV && (conf == BDT_VAR_DL || conf == BDT_DL)) mvaSetupManager::addBDT_CV(cv, data, tmpname, 2000, 4, 20, 0.10, 1, 1.);
+            else if (useCV) mvaSetupManager::addBDT_CV(cv, data, tmpname, 1500, 4, 20, 0.08, 1, 0.6);
             else if (conf == BDT_DL_SPLIT) mvaSetupManager::addBDTs_SplitB(factory, data, variableVector);
 
         }

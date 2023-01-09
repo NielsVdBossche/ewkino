@@ -42,18 +42,18 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     selector( new JetSelector( this ) )
 {
     if (readAllJECVariations) {
-        for (const auto mapEl : treeReader._jetSmearedPt_JECSourcesUp) {
+        for (const auto& mapEl : treeReader._jetSmearedPt_JECSourcesUp) {
             _pt_JECSourcesUp.push_back(mapEl[jetIndex]);
         }
-        for (const auto mapEl : treeReader._jetSmearedPt_JECSourcesDown) {
+        for (const auto& mapEl : treeReader._jetSmearedPt_JECSourcesDown) {
             _pt_JECSourcesDown.push_back(mapEl[jetIndex]);
         }
     }
     if (readGroupedJECVariations) {
-        for (const auto mapEl : treeReader._jetSmearedPt_JECGroupedUp) {
+        for (const auto& mapEl : treeReader._jetSmearedPt_JECGroupedUp) {
             _pt_JECGroupedUp.push_back(mapEl[jetIndex]);
         }
-        for (const auto mapEl : treeReader._jetSmearedPt_JECGroupedDown) {
+        for (const auto& mapEl : treeReader._jetSmearedPt_JECGroupedDown) {
             _pt_JECGroupedDown.push_back(mapEl[jetIndex]);
         }
     }

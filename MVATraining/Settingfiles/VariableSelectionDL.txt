@@ -1,14 +1,14 @@
 # list of all variables for the BDT. 
 # 
 N_jets
-N_b
+#N_b
 N_b_tight
-#N_b_loose
+N_b_loose
 dr_bJets
 dr_leps
 aziAngle
 ht
-mToPt
+#mToPt
 min_dr_lep_b
 sec_min_dr_lep_b
 pt_jet_one

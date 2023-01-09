@@ -27,7 +27,10 @@ enum shapeUncId {
     JECFlavorQCD,
     MET,
     HEMIssue,
-    end  /// always at the end for easier loops
+    end,  /// always at the end for easier loops
+    FR_mu,
+    FR_el,
+    endNP
 };
 
 class Uncertainty {
@@ -47,7 +50,7 @@ class Uncertainty {
         bool printAllVariations = false;
     public:
         Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms);
-        virtual ~Uncertainty() {};
+        virtual ~Uncertainty();
 
         virtual void newSample(std::string& uniqueName);
         virtual void changeProcess(unsigned index, std::string& newTitle);

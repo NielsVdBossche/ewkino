@@ -279,13 +279,13 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     std::string bTagSFFileName;
 
     if (year == "2016PreVFP") {
-        bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_v2.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_NEW.csv";
     } else if( year == "2016PostVFP" ){
-        bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_v3.csv";
+        bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_NEW.csv";
     } else if( year == "2017" ){
-        bTagSFFileName = "reshaping_deepJet_106XUL17_v3.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL17_NEW.csv";
     } else {
-        bTagSFFileName = "reshaping_deepJet_106XUL18_v2.csv";
+        bTagSFFileName = "reshaping_deepJet_106XUL18_NEW.csv";
     }
 
     //std::string weightDirectory = stringTools::formatDirectoryName( weightDirectory );
@@ -363,14 +363,6 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     
     muonSFFile->Close();
     
-    MuonReweighter muonReweighter_nom( muonSFHist_nom, new TightSelector );
-    combinedReweighter.addReweighter("muonID",std::make_shared<ReweighterMuons>(muonReweighter_nom));
-    MuonReweighter muonReweighter_syst( muonSFHist_syst, new TightSelector );
-    combinedReweighter.addReweighter("muonIDSyst",std::make_shared<ReweighterMuons>(muonReweighter_syst));
-    MuonReweighter muonReweighter_stat( muonSFHist_stat, new TightSelector );
-    combinedReweighter.addReweighter("muonIDStat",std::make_shared<ReweighterMuons>(muonReweighter_stat));
-    muonSFFile->Close();
-
     for(int i = 0; i <= muonSFHist_nom->GetNbinsX()+1; ++i){
         for(int j = 0; j <= muonSFHist_nom->GetNbinsY()+1; ++j){
             // process values
@@ -381,40 +373,15 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
             muonSFHist_stat->SetBinContent(i,j,1.);
         }
     }
-
-    /*
-    TFile* muonSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/leptonSF_UL/PRE_UL_muonTOPLeptonMVAMedium040" + year + ".root" ).c_str() );
-
-    std::shared_ptr< TH2 > muonSFHist_nom( dynamic_cast< TH2* >( 
-	muonSFFile->Get( "SF" ) ) );
-    muonSFHist_nom->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > muonSFHist_syst( dynamic_cast< TH2* >( 
-        muonSFFile->Get( "SFTotSys" ) ) );
-    muonSFHist_syst->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > muonSFHist_stat( dynamic_cast< TH2* >( 
-        muonSFFile->Get( "SFTotStat" ) ) );
-    muonSFHist_stat->SetDirectory( gROOT );
-    muonSFFile->Close();
-    for(int i = 0; i <= muonSFHist_nom->GetNbinsX()+1; ++i){
-        for(int j = 0; j <= muonSFHist_nom->GetNbinsY()+1; ++j){
-            // process values
-            muonSFHist_nom->SetBinError(i,j,0.);
-            muonSFHist_syst->SetBinError(i,j,muonSFHist_syst->GetBinContent(i,j));
-            muonSFHist_syst->SetBinContent(i,j,1.);
-            muonSFHist_stat->SetBinError(i,j,muonSFHist_stat->GetBinContent(i,j));
-            muonSFHist_stat->SetBinContent(i,j,1.);
-        }
-    }
-
     MuonReweighter muonReweighter_nom( muonSFHist_nom, new TightSelector );
     combinedReweighter.addReweighter("muonID",std::make_shared<ReweighterMuons>(muonReweighter_nom));
     MuonReweighter muonReweighter_syst( muonSFHist_syst, new TightSelector );
     combinedReweighter.addReweighter("muonIDSyst",std::make_shared<ReweighterMuons>(muonReweighter_syst));
     MuonReweighter muonReweighter_stat( muonSFHist_stat, new TightSelector );
     combinedReweighter.addReweighter("muonIDStat",std::make_shared<ReweighterMuons>(muonReweighter_stat));
-    muonSFFile->Close();
+    //muonSFFile->Close();
 
-    */
+
 
     //make electron ID Reweighter
     // note: these files are not present in the repository, replace by code below in order for the reweighter to work!

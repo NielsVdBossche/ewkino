@@ -9,6 +9,10 @@ MVAHandler_4T::MVAHandler_4T(MVAConfigs config, EventFourT* selec, bool isLean) 
     initReader();
 }
 
+MVAHandler_4T::~MVAHandler_4T() {
+    delete reader;
+}
+
 void MVAHandler_4T::initReader() {
     reader = new TMVA::Reader("!Color:!Silent");
 
@@ -177,13 +181,18 @@ void MVAHandler_4T::initReader() {
 */
     reader->BookMVA("BDTCurr", weightFilePath);
 
-    createHistograms("");
+    if (currentConfig < 2) {
+    } else if (currentConfig < 4) {
+        maxClass = 3;
+    } else if (currentConfig < 6) {
+        maxClass = 4;
+    }
 }
 
-std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {
+std::vector<HistInfo> MVAHandler_4T::createHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
-    std::vector<HistInfo>* histInfoVec = new std::vector<HistInfo>;
+    std::vector<HistInfo> histInfoVec;
 
     if (currentConfig < 2) {
         identifier += "_Binary";
@@ -214,23 +223,30 @@ std::vector<HistInfo>* MVAHandler_4T::createHistograms(std::string additionalFla
         std::string name = "BDTScore_" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis, 100, 0., 1.));
+        histInfoVec.push_back(HistInfo(name, xaxis, 100, 0., 1.));
     }
 
     for (int el = 0; el < maxClass; el++) {
         std::string name = "BDT_Finalresult" + translator[(MVAClasses) el] + identifier + additionalFlag;
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
 
-        histInfoVec->push_back(HistInfo(name, xaxis , 240, 0.4, 1.));
+        histInfoVec.push_back(HistInfo(name, xaxis , 240, 0.4, 1.));
+    }
+
+    for (int el = 0; el < maxClass; el++) {
+        std::string name = "BDT_Finalresult_tanh_" + translator[(MVAClasses) el] + identifier + additionalFlag;
+        std::string xaxis = "BDT score' " + translator[(MVAClasses) el];
+
+        histInfoVec.push_back(HistInfo(name, xaxis , 100, 0.5, 3.));
     }
 
     return histInfoVec;
 }
 
-std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string additionalFlag, bool fourLep) {
+std::vector<HistInfo_2D> MVAHandler_4T::create2DHistograms(std::string additionalFlag, bool fourLep) {
     std::string identifier = "";
 
-    std::vector<HistInfo_2D>* histInfoVec = new std::vector<HistInfo_2D>;
+    std::vector<HistInfo_2D> histInfoVec;
 
     if (currentConfig < 2) {
         identifier += "_Binary";
@@ -261,7 +277,7 @@ std::vector<HistInfo_2D>* MVAHandler_4T::create2DHistograms(std::string addition
         std::string xaxis = "BDT score " + translator[(MVAClasses) el];
         std::string yaxis = "BDT score " + translator[(MVAClasses) ((el + 1) % maxClass)];
 
-        histInfoVec->push_back(HistInfo_2D(name, xaxis, 20, 0., 1., yaxis, 20, 0., 1.));
+        histInfoVec.push_back(HistInfo_2D(name, xaxis, 20, 0., 1., yaxis, 20, 0., 1.));
     }
 
     return histInfoVec;
@@ -292,9 +308,10 @@ void MVAHandler_4T::fillHistograms(std::vector<std::shared_ptr<TH1D>>& histogram
         histogram::fillValue(histograms[i].get(), scoresCurrent[i], weight);
     }
 
-    std::pair<MVAClasses, double> classific = getClassAndScore();
-
-    histogram::fillValue(histograms[classific.first + maxClass].get(), classific.second, weight);
+    std::map<int, double> classific = getClassAndScore();
+    for (auto& el : classific) {
+        histogram::fillValue(histograms[el.first + maxClass].get(), el.second, weight);
+    }
 }
 
 void MVAHandler_4T::fill2DHistograms(std::vector<std::shared_ptr<TH2D>>& histograms, double weight) {
@@ -408,12 +425,20 @@ void MVAHandler_4T::fillVariables() {
     m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
 }
 
-std::pair<MVAClasses, double> MVAHandler_4T::getClassAndScore() {
+std::map<int, double> MVAHandler_4T::getClassAndScore() {
+    std::map<int, double> ret;
     if (maxClass == 1) {
-        return {(MVAClasses) 0, scoresCurrent[0]};
+        ret[0] = scoresCurrent[0];
+        return ret;
     }
 
     int indexMaxScore = std::max_element(scoresCurrent.begin(),scoresCurrent.end()) - scoresCurrent.begin();
+    ret[indexMaxScore] = scoresCurrent[indexMaxScore];
 
-    return {(MVAClasses) indexMaxScore, scoresCurrent[indexMaxScore]};
+    int indexScoreTwo = indexMaxScore + maxClass;
+    double score = scoresCurrent[indexMaxScore];
+    if (score >= 1.) score = 0.9999;
+    ret[indexScoreTwo] = atanh((score + 1.) * 0.5);
+
+    return ret;
 }
