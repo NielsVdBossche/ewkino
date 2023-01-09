@@ -123,7 +123,7 @@ void mvaSetupManager::addNN(TMVA::Factory* factory, TMVA::DataLoader* dataloader
 }
 
 TMVA::CrossValidation* mvaSetupManager::useCrossValidation(TMVA::DataLoader* dataloader, TFile* outputFile, mvaConfiguration config) {
-    TString optstring = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=Multiclass:NumFolds=10";
+    TString optstring = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P:AnalysisType=Multiclass:NumFolds=10:FoldFileOutput=True";
     TMVA::CrossValidation* cv = new TMVA::CrossValidation("k-fold_cv_4T", dataloader, outputFile, optstring);
 
     return cv;
