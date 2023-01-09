@@ -37,8 +37,8 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     _pt_JERDown( treeReader._jetSmearedPt_JERDown[jetIndex] ),
     _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),
 
-    _JECSources_Ids(treeReader._sourcesJEC_Ids),
-    _JECGrouped_Ids(treeReader._groupedJEC_Ids),
+    _JECSources_Ids(readAllJECVariations ? treeReader._sourcesJEC_Ids : nullptr),
+    _JECGrouped_Ids(readGroupedJECVariations ? treeReader._groupedJEC_Ids : nullptr),
     selector( new JetSelector( this ) )
 {
     if (readAllJECVariations) {
@@ -95,6 +95,8 @@ Jet::Jet( const Jet& rhs ) :
     _pt_JECSourcesDown( rhs._pt_JECSourcesDown ),
     _pt_JECGroupedUp( rhs._pt_JECGroupedUp ),
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
+    _JECSources_Ids(rhs._JECSources_Ids),
+    _JECGrouped_Ids(rhs._JECGrouped_Ids),
     selector( new JetSelector( this ) )
     {}
 
@@ -114,6 +116,8 @@ Jet::Jet( Jet&& rhs ) noexcept :
     _pt_JECSourcesDown( rhs._pt_JECSourcesDown ),
     _pt_JECGroupedUp( rhs._pt_JECGroupedUp ),
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
+    _JECSources_Ids(rhs._JECSources_Ids),
+    _JECGrouped_Ids(rhs._JECGrouped_Ids),
     selector( new JetSelector( this ) )
     {}
 
@@ -221,16 +225,20 @@ Jet Jet::JetJER_1p93_To_2p5_Up() const {
 
 Jet Jet::JetJECUp( const std::string source ) const {
     double newpt = 0.;
-    if (_JECSources_Ids && _JECSources_Ids->size() > 0) {
-        for (auto mapEl : *_JECSources_Ids) {
+    if (_JECGrouped_Ids && _JECGrouped_Ids->size() > 0) {
+        for (auto& mapEl : *_JECGrouped_Ids) {
             if (source == mapEl.first) {
-                newpt = _pt_JECSourcesUp[mapEl.second];
+                newpt = _pt_JECGroupedUp[mapEl.second];
+                return variedJet(newpt);
             }
         }
     }
-    if (_JECGrouped_Ids && _JECGrouped_Ids->size() > 0) {
-        for (auto mapEl : *_JECGrouped_Ids) {
-            if (source == mapEl.first) newpt = _pt_JECGroupedUp[mapEl.second];
+    if (_JECSources_Ids && _JECSources_Ids->size() > 0) {
+        for (auto& mapEl : *_JECSources_Ids) {
+            if (source == mapEl.first) {
+                newpt = _pt_JECSourcesUp[mapEl.second];
+                return variedJet(newpt);
+            }
         }
     }
 
@@ -238,16 +246,20 @@ Jet Jet::JetJECUp( const std::string source ) const {
 }
 Jet Jet::JetJECDown( const std::string source ) const {
     double newpt = 0.;
-    if (_JECSources_Ids) {
-        for (auto mapEl : *_JECSources_Ids) {
+    if (_JECGrouped_Ids) {
+        for (auto& mapEl : *_JECGrouped_Ids) {
             if (source == mapEl.first) {
-                newpt = _pt_JECSourcesDown[mapEl.second];
+                newpt = _pt_JECGroupedDown[mapEl.second];
+                return variedJet(newpt);
             }
         }
     }
-    if (_JECGrouped_Ids) {
-        for (auto mapEl : *_JECGrouped_Ids) {
-            if (source == mapEl.first) newpt = _pt_JECGroupedDown[mapEl.second];
+    if (_JECSources_Ids) {
+        for (auto& mapEl : *_JECSources_Ids) {
+            if (source == mapEl.first) {
+                newpt = _pt_JECSourcesDown[mapEl.second];
+                return variedJet(newpt);
+            }
         }
     }
     return variedJet(newpt);
