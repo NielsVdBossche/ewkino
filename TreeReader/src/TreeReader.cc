@@ -502,6 +502,10 @@ void TreeReader::initSampleFromFile( const std::string& pathToFile,
 			    is2016PostVFP, is2017, is2018, isData() );
 
     //initialize tree
+    if (_groupedJEC_Ids == nullptr) {
+        _sourcesJEC_Ids = new std::map<std::string, size_t>();
+        _groupedJEC_Ids = new std::map<std::string, size_t>();
+    }
     initTree( resetTriggersAndFilters );
 
     //check whether current sample is a SUSY sample
