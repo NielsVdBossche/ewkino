@@ -834,7 +834,7 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
             fillVal.push_back(event->getLepton(2)->pt());
             fillVal.push_back((*event->getLepton(1)+*event->getLepton(2)).mass());
             fillVal.push_back((*event->getLepton(0)+*event->getLepton(2)).mass());
-            fillVal.push_back(event->getMediumLepCol()->bestZBosonCandidateMass());
+            if (event->getEvent()->hasOSSFLightLeptonPair()) fillVal.push_back(event->getMediumLepCol()->bestZBosonCandidateMass());
             fillVal.push_back((*event->getLepton(0)+*event->getLepton(1)+*event->getLepton(2)).mass());
         }
 
