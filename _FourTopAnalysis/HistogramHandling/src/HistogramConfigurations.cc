@@ -346,9 +346,9 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
             HistInfo("NB_Tight_"+flag, "N_{b}^{tight}", 7, -0.5, 6.5),
 
             HistInfo("minDR_bb_"+flag, "min #Delta R(b,b)", 12, 0, 4.8),
-            HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 12, 0, 4.8),
+            HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 48, 0, 4.8),
             HistInfo("DPhi_l1l2_"+flag, "#Delta#phi (l1,l2)", 48, 0., M_PI),
-            HistInfo("DEta_l1l2_"+flag, "#Delta#eta (l1,l2)", 12, 0., 4.8),
+            HistInfo("DEta_l1l2_"+flag, "#Delta#eta (l1,l2)", 48, 0., 4.8),
             HistInfo("HT_"+flag, "H_{T} [GeV]", 21, minMaxHT.first, minMaxHT.second),
             HistInfo("PT_miss_"+flag, "p_{T}^{miss} [GeV]", 30, 0., 300.),
             HistInfo("max_M_over_PT_jet_"+flag, "#frac{M}{p_{T}}", 30, 0.1, 0.4),
@@ -385,6 +385,8 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
             HistInfo("MT2_lblb_"+flag, "m_{T2}(l+b) [GeV]", 15, 0, 150),
 
             HistInfo( "InvMassSpectruml1l2_" + flag, "M_{ll} [GeV]", 50, 0., 150.),
+
+            HistInfo("LooseLeps_"+flag, "nL", 7, -0.5, 6.5)
         };
         if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
             histInfoVec->push_back( HistInfo("pt_l3_"+flag, "p_{T}(l3) [GeV]", 11, 10, 120) );
@@ -392,6 +394,11 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
             histInfoVec->push_back( HistInfo( "InvMassSpectruml1l3_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120));
             histInfoVec->push_back( HistInfo( "InvMassSpectrumZ_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120));
             histInfoVec->push_back( HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 18, 76, 150));
+
+            histInfoVec->push_back( HistInfo("min_DR_ll_"+flag, "Min. #Delta R(l,l)", 48, 0, 4.8) );
+            histInfoVec->push_back( HistInfo("min_DPhi_l1l2_"+flag, "Min. #Delta#phi (l,l)", 48, 0., M_PI) );
+            histInfoVec->push_back( HistInfo("min_DEta_l1l2_"+flag, "Min. #Delta#eta (l,l)", 48, 0., 4.8) );
+
         }
     } else {
         *histInfoVec = {
@@ -826,7 +833,9 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
             mva->m2bb,
             mva->m2lblb,
 
-            (*event->getLepton(0)+*event->getLepton(1)).mass()
+            (*event->getLepton(0)+*event->getLepton(1)).mass(),
+
+            double(event->getLooseLepCol()->size() - event->getMediumLepCol()->size())
         };
         if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
             fillVal.push_back(event->getLepton(2)->pt());
@@ -834,7 +843,14 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
             fillVal.push_back((*event->getLepton(0)+*event->getLepton(2)).mass());
             if (event->getEvent()->hasOSSFLightLeptonPair()) fillVal.push_back(event->getMediumLepCol()->bestZBosonCandidateMass());
             fillVal.push_back((*event->getLepton(0)+*event->getLepton(1)+*event->getLepton(2)).mass());
-        }
+
+            std::vector<double> minDRLeps = calculators::mindRLeptons(*event->getMediumLepCol());
+            std::vector<double> minDEtaLeps = calculators::mindEtaLeptons(*event->getMediumLepCol());
+            std::vector<double> minDPhiLeps = calculators::mindPhiLeptons(*event->getMediumLepCol());
+            fillVal.push_back(minDRLeps[0]);
+            fillVal.push_back(minDEtaLeps[0]);
+            fillVal.push_back(minDPhiLeps[0]);
+        }   
 
     } else {
         fillVal = {

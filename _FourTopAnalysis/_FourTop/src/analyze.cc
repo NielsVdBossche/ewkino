@@ -691,10 +691,12 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         } else {
             subClasses.push_back("noOSSF");
         }
-    } else if (currClass == eventClass::crz3L && onlyCR) {
+    } else if (currClass == eventClass::crz3L) {
         if (selection->numberOfLooseBJets() >= 2 && selection->numberOfJets() >= 3) {
             subClasses.push_back("SigZVeto");
         }
+        if (selection->numberOfMediumBJets() >= 1) subClasses.push_back("OneMedB");
+        if (selection->numberOfMediumBJets() > 1) subClasses.push_back("TwoMedB");
     }
 
     return subClasses;
@@ -813,7 +815,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
-    std::vector<std::string> crzSubChannels = {"SigZVeto"};
+    std::vector<std::string> crzSubChannels = {"SigZVeto", "OneMedB", "TwoMedB"};
 
     if (considerRegion == eventClass::fail) {
         if (bdtOutput) {
@@ -842,8 +844,8 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
         }
         
+        mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
-        if (onlyCR) mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
         if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
 
         if (! onlyCR) {
