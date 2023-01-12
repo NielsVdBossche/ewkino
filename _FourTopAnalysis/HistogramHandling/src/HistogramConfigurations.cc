@@ -776,11 +776,9 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
     std::vector<double> fillVal;
     if (unsigned(evClass) >= eventClass::ssdl || unsigned(evClass) >= eventClass::crwz) {
         MVAHandler_4T* mva;
-        if (evClass == eventClass::ssdl) {
-            mva = event->GetDLMVA();
-        } else {
-            mva = event->GetMLMVA();
-        }
+        mva = event->GetDLMVA();
+        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass > eventClass::ssdl) mva = event->GetMLMVA();;
+
         fillVal = {
             0.5,
             double(event->numberOfJets()),
@@ -830,7 +828,7 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
 
             (*event->getLepton(0)+*event->getLepton(1)).mass()
         };
-        if (evClass == eventClass::trilep || evClass == eventClass::fourlep) {
+        if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
             fillVal.push_back(event->getLepton(2)->pt());
             fillVal.push_back((*event->getLepton(1)+*event->getLepton(2)).mass());
             fillVal.push_back((*event->getLepton(0)+*event->getLepton(2)).mass());

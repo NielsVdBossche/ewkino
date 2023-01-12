@@ -62,7 +62,7 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
 
     for (unsigned i=0; i<newSubChannels.size(); i++) {
         (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo);
-        (*subChannels)[newSubChannels[i]]->set2DHistInfo(*twoDimInfo);
+        if (twoDimInfo) (*subChannels)[newSubChannels[i]]->set2DHistInfo(*twoDimInfo);
     }
 }
 

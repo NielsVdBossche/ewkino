@@ -227,7 +227,7 @@ void FourTop::analyze(std::string method) {
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (testRun && entry > 100) break;
+            if (testRun && entry > 10000) break;
             //std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
@@ -339,7 +339,7 @@ void FourTop::analyze(std::string method) {
             // if region != considerRegion && considerRegion != fail: skip
 
             if (FillRegion(nominalClass, st)) {
-                if (testRun) std::cout << "is fill " << std::endl;
+                if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
 
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
