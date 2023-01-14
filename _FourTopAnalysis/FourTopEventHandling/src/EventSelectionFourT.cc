@@ -203,10 +203,10 @@ bool EventFourT::passLowMassVeto() {
         //veto SF pairs of low mass
         Lepton& lepton1 = *( leptonPtrPair.first );
         Lepton& lepton2 = *( leptonPtrPair.second );
-        if(! sameFlavor( lepton1, lepton2 ) ){
-            continue;
-        }
-        if(( lepton1 + lepton2 ).mass() < 12){
+        //if(! sameFlavor( lepton1, lepton2 ) ){
+        //    continue;
+        //}
+        if(( lepton1 + lepton2 ).mass() < 20.){
             return false;
         }
     }

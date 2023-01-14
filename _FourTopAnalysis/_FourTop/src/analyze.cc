@@ -655,7 +655,7 @@ void FourTop::analyze(std::string method) {
     //delete mgrAll;
     outfile->Close();
 
-    delete btagReweighter;
+    //delete btagReweighter;
 }
 
 bool FourTop::eventPassesTriggers() {
