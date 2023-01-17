@@ -15,6 +15,17 @@ Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeU
     downHists = new HistogramSet(histograms, downFlag);
 }
 
+Uncertainty::Uncertainty(std::string& uncName, shapeUncId uncID, HistogramSet* histograms) : id(uncID) {
+    name = uncName;
+    std::string upFlag = uncName + "_Up";
+    std::string downFlag = uncName + "_Down";
+
+    bareHists = histograms;
+
+    upHists = new HistogramSet(histograms, upFlag);
+    downHists = new HistogramSet(histograms, downFlag);
+}
+
 Uncertainty::~Uncertainty() {
     delete upHists;
     delete downHists;

@@ -47,6 +47,7 @@ class Channel {
         void initializeHistogramStack(std::vector<std::string>& divsInitial, bool uncertainties);
         void initializeAdditionalHistogramStack(std::string& newProcess, bool uncertainties);
         void SetPrintAllUncertaintyVariations(bool setting);
+        void addUncertainty(std::string& uncName, unsigned id);
 
         //void subDivisions(std::vector<std::string>& divs);
         void changeProcess(unsigned index, std::string& newTitle, bool uncertainties);

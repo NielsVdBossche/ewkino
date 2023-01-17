@@ -61,6 +61,7 @@ class ChannelManager {
         void writeUncertaintyEnvelopeHistograms(unsigned subProc);
 
         void SetPrintAllUncertaintyVariations(bool setting);
+        void addUncertainty(std::string& uncName, unsigned id);
 
         // series of functions passing through
         std::map<shapeUncId, std::string> getTranslateUnc() {return mapping.begin()->second->getTranslateUnc();}

@@ -119,6 +119,15 @@ void FourTop::analyze(std::string method) {
 
     mgrAll->initHistogramStacks(processes, useUncertainties);
 
+    if (st == selectionType::NPDD) {
+        std::string frEl = "FRElectron";
+        std::string frMu = "FRMuon";
+
+        mgrAll->addUncertainty(frEl, 0);
+        mgrAll->addUncertainty(frMu, 1);
+        useUncertainties = false;
+    }
+
     std::cout << "event loop" << std::endl;
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
@@ -166,7 +175,7 @@ void FourTop::analyze(std::string method) {
             }
         }
 
-        if (useUncertainties && ! treeReader->isData()) {
+        if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
             //mgrAll->SetPrintAllUncertaintyVariations(true);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
@@ -354,8 +363,9 @@ void FourTop::analyze(std::string method) {
             }
 
             // Systematics
-            if (currentEvent->isData() || ! useUncertainties || (processNb > 0 && st != selectionType::MCPrompt)) continue;
-
+            if (! useUncertainties)
+            if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt || st != selectionType::NPDD))) continue;
+        
             //// Start filling histograms
             // loop uncertainties
             Channel* uncWrapper;
@@ -378,6 +388,7 @@ void FourTop::analyze(std::string method) {
                     uncID++;
                     continue;
                 }
+                if (st == selectionType::NPDD && uncID > 1) break; 
                 double weightUp = 1.;
                 double weightDown = 1.;
                 eventClass upClass = eventClass::fail;
@@ -387,7 +398,13 @@ void FourTop::analyze(std::string method) {
 
                 //std::cout << uncID << std::endl;
 
-                if (uncID <= shapeUncId::pileup) {
+                if (uncID == 0 && st == selectionType::NPDD) {
+                    weightUp = FakeRateWeightVariation(true, false) / FakeRateWeight();
+                    weightDown = FakeRateWeightVariation(false, false) / FakeRateWeight();
+                } else if (uncID == 1 && st == selectionType::NPDD) {
+                    weightUp = FakeRateWeightVariation(true, true) / FakeRateWeight();
+                    weightDown = FakeRateWeightVariation(false, true) / FakeRateWeight();
+                } else if (uncID <= shapeUncId::pileup) {
                     // all uncertainties with simple reweighting
                     std::string id = uncTranslateMap[shapeUncId(uncID)];
                     double weightNominalInv = 1. / reweighter[ id ]->weight( *currentEvent );
@@ -467,12 +484,6 @@ void FourTop::analyze(std::string method) {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
-                } else if (uncID == shapeUncId::FR_mu) {
-                    weightUp = FakeRateWeightVariation(true, false) / FakeRateWeight();
-                    weightDown = FakeRateWeightVariation(false, false) / FakeRateWeight();
-                } else if (uncID == shapeUncId::FR_el) {
-                    weightUp = FakeRateWeightVariation(true, true) / FakeRateWeight();
-                    weightDown = FakeRateWeightVariation(false, true) / FakeRateWeight();
                 } else if (uncID == shapeUncId::WZSF) {
                     if (sampleReweighter) {
                         for (int i=0; i < 7; i++) {
@@ -604,7 +615,7 @@ void FourTop::analyze(std::string method) {
                     }
                 }
 
-                if (uncID < shapeUncId::JER_1p93 || uncID == shapeUncId::FR_mu || uncID == shapeUncId::FR_el) {
+                if (uncID < shapeUncId::JER_1p93) {
                     uncWrapper->fillAllUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);

@@ -24,6 +24,26 @@ UncertaintyEnvelope::UncertaintyEnvelope(std::map<shapeUncId, std::string>& tran
     }
 }
 
+//UncertaintyEnvelope::UncertaintyEnvelope(std::string& uncName, shapeUncId uncID, HistogramSet* histograms) :
+//    Uncertainty(uncName, uncID, histograms) 
+//    {
+//
+//    processes = {""};
+//
+//    int variations = 0;
+//    if (uncID == shapeUncId::qcdScale) {
+//        variations = 6;
+//    } else if (uncID == shapeUncId::pdfShapeVar) {
+//        variations = 100;
+//        SetPrintAllVariations(true);
+//    }
+//
+//    for (int i=0; i < variations; i++) {
+//        std::string otherName = getName() + "_" + std::to_string(i);
+//        envelopeHists.push_back(new HistogramSet(histograms, otherName));
+//    }
+//}
+
 UncertaintyEnvelope::~UncertaintyEnvelope() {
     for (auto& it : envelopeHists) {
         delete it;
