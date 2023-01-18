@@ -228,6 +228,7 @@ void FourTop::analyze(std::string method) {
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             if (testRun && entry > 10000) break;
+            //if (entry > 10000) break;
             //std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
@@ -260,10 +261,10 @@ void FourTop::analyze(std::string method) {
             // Add lepton selection boolean call here!
 
             if (! selection->passLeptonSelection()) continue;
-            if (testRun) std::cout << "pass lepton selection" << std::endl;
+            //if (testRun) std::cout << "pass lepton selection" << std::endl;
             selection->classifyEvent();
             unsigned processNb = 0;
-            if (testRun) std::cout << "process nb " << processNb << std::endl;
+            //if (testRun) std::cout << "process nb " << processNb << std::endl;
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
@@ -339,7 +340,7 @@ void FourTop::analyze(std::string method) {
             // if region != considerRegion && considerRegion != fail: skip
 
             if (FillRegion(nominalClass, st)) {
-                if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
+                //if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
 
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
