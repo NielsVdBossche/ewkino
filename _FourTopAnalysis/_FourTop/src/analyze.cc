@@ -125,7 +125,7 @@ void FourTop::analyze(std::string method) {
 
         mgrAll->addUncertainty(frEl, 0);
         mgrAll->addUncertainty(frMu, 1);
-        useUncertainties = false;
+        useUncertainties = true;
     }
 
     std::cout << "event loop" << std::endl;
@@ -364,7 +364,7 @@ void FourTop::analyze(std::string method) {
 
             // Systematics
             if (! useUncertainties)
-            if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt || st != selectionType::NPDD))) continue;
+            if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt && st != selectionType::NPDD))) continue;
         
             //// Start filling histograms
             // loop uncertainties
