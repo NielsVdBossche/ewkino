@@ -541,6 +541,7 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
     std::string varName;
     std::string jesVarName;
     bool isup = true;
+    //std::cout << "preprocess" << std::endl;
     if (stringTools::stringEndsWith(jecVar, "Up"))
     {
         varName = "jes" + jecVar.substr(0, jecVar.size() - 2);
@@ -561,14 +562,21 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
         return this->weight(event, "central");
         //throw std::invalid_argument(msg);
     }
+    //std::cout << "safety checked" << std::endl;
+
     double weight = 1.;
+    //std::cout << "getting collection" << std::endl;
+
     for (const auto &jetPtr : event.getJetCollectionPtr()->getVariedJetCollection(var, isup, grouped))
-    {
+    {   
+        //std::cout << "loop";
+
         if (isup)
             weight *= this->weightUp(*jetPtr, varName);
         else
             weight *= this->weightDown(*jetPtr, varName);
     }
+    //std::cout << " LOOPED " << std::endl;
 
     return weight  / getNormFactor(event, jecVariation, jesVarName);
 }
