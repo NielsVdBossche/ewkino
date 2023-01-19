@@ -1,5 +1,5 @@
 executable = MainAnalysis.sh
-arguments = $(Samplelist) $(Method) timestamp=2023-01-09_16-15 plotString=NoBDTOutputOnlyBDTVariables
+arguments = $(Samplelist) $(Method) timestamp=2023-01-18_23-31
 
 output = /user/nivanden/condor/output/analysis_exec_$(method)_$(ClusterId)_$(ProcId).out
 error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcId).err
@@ -306,22 +306,5 @@ queue 1 Samplelist, Method from (
 	TmpLists/2018_fullStat_ZZ-H_6.txt, nonPromptDD
 	TmpLists/2018_fullStat_ZZ-H_7.txt, nonPromptDD
 	TmpLists/2018_fullStat_ZZ-H_8.txt, nonPromptDD
-	TmpLists/Data16PreVFP_Obs_0.txt, Obs
-	TmpLists/Data16PreVFP_Obs_1.txt, Obs
-	TmpLists/Data16PreVFP_Obs_2.txt, Obs
-	TmpLists/Data16PreVFP_Obs_3.txt, Obs
-	TmpLists/Data16PreVFP_Obs_4.txt, Obs
-	TmpLists/Data16PostVFP_Obs_0.txt, Obs
-	TmpLists/Data16PostVFP_Obs_1.txt, Obs
-	TmpLists/Data16PostVFP_Obs_2.txt, Obs
-	TmpLists/Data17_Obs_0.txt, Obs
-	TmpLists/Data17_Obs_1.txt, Obs
-	TmpLists/Data17_Obs_2.txt, Obs
-	TmpLists/Data17_Obs_3.txt, Obs
-	TmpLists/Data17_Obs_4.txt, Obs
-	TmpLists/Data18_Obs_0.txt, Obs
-	TmpLists/Data18_Obs_1.txt, Obs
-	TmpLists/Data18_Obs_2.txt, Obs
-	TmpLists/Data18_Obs_3.txt, Obs
 )
 
