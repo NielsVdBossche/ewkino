@@ -197,7 +197,8 @@ bool EventFourT::passFullEventSelection() {
 
 bool EventFourT::passLowMassVeto() {  
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
-
+    double masscut = 12.;
+    if (foLeps->size() == 2) masscut = 20.;
     for( const auto& leptonPtrPair : looseLeps->pairCollection() ){
 
         //veto SF pairs of low mass
@@ -206,7 +207,7 @@ bool EventFourT::passLowMassVeto() {
         //if(! sameFlavor( lepton1, lepton2 ) ){
         //    continue;
         //}
-        if(( lepton1 + lepton2 ).mass() < 20.){
+        if (( lepton1 + lepton2 ).mass() < masscut){
             return false;
         }
     }

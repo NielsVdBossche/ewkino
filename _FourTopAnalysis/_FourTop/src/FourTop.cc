@@ -464,7 +464,15 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
             double btagreweight;
             if (jec && ! flavorQCD_Vars) {
-                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i], true, event.jetInfo().groupedJECVariationsMap()->at(jecVarForSelection[i]));
+                std::string varname
+                if (stringTools::stringEndsWith(jecVarForSelection[i], "Up")) {
+                    varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 2);
+                }
+                else if (stringTools::stringEndsWith(jecVarForSelection[i], "Down")) {
+                    varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 4);
+                }
+                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i], true, event.jetInfo().groupedJECVariationsMap()->at(varname));
+
             } else if (jec && flavorQCD_Vars) {
                 bool up = i % 2 == 0;
                 if (up) {

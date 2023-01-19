@@ -236,7 +236,7 @@ void FourTop::analyze(std::string method) {
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (testRun && entry > 10000) break;
+            if (testRun && entry > 100000) break;
             //if (entry > 10000) break;
             //std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
@@ -400,11 +400,11 @@ void FourTop::analyze(std::string method) {
                 //std::cout << uncID << std::endl;
 
                 if (uncID == 0 && st == selectionType::NPDD) {
-                    weightUp = FakeRateWeightVariation(true, false) / FakeRateWeight();
-                    weightDown = FakeRateWeightVariation(false, false) / FakeRateWeight();
-                } else if (uncID == 1 && st == selectionType::NPDD) {
                     weightUp = FakeRateWeightVariation(true, true) / FakeRateWeight();
                     weightDown = FakeRateWeightVariation(false, true) / FakeRateWeight();
+                } else if (uncID == 1 && st == selectionType::NPDD) {
+                    weightUp = FakeRateWeightVariation(true, false) / FakeRateWeight();
+                    weightDown = FakeRateWeightVariation(false, false) / FakeRateWeight();
                 } else if (uncID <= shapeUncId::pileup) {
                     // all uncertainties with simple reweighting
                     std::string id = uncTranslateMap[shapeUncId(uncID)];
