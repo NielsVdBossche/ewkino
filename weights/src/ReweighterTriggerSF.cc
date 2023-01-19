@@ -8,7 +8,7 @@ ReweighterTrigger::ReweighterTrigger(const std::shared_ptr<TH2>& scalefactors, E
 
 double ReweighterTrigger::weight( const Event& event, double (&retrieveValue)( TH2*, const double, const double ) ) const {
     if (selector->passSelection(event)) {
-        return retrieveValue(sfMap.get(), event.lepton(0).pt(), event.lepton(1).pt());
+        return retrieveValue(sfMap.get(), event.lepton(0).uncorrectedPt(), event.lepton(1).uncorrectedPt());
     } else {
         return 1.;
     }
