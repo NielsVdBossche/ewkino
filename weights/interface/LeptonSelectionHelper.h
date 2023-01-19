@@ -4,8 +4,6 @@
 //include other parts of framework
 #include "../../objects/interface/Lepton.h"
 
-
-
 class LeptonSelectionHelper{
     
     public:
