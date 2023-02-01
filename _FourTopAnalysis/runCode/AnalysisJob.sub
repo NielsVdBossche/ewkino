@@ -1,5 +1,5 @@
 executable = MainAnalysis.sh
-arguments = $(Samplelist) $(Method) timestamp=2023-01-18_15-37 plotString=OnlyBDTVariables
+arguments = $(Samplelist) $(Method) timestamp=2023-01-19_23-37 plotString=OnlyBDTVariables
 
 output = /user/nivanden/condor/output/analysis_exec_$(method)_$(ClusterId)_$(ProcId).out
 error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcId).err
