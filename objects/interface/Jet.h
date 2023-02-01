@@ -5,6 +5,7 @@
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
 #include "../../Tools/interface/stringTools.h"
+#include "../../CMSSW_imports/interface/JECWrapper.h"
 //#include "JetSelector.h"
 
 
@@ -62,6 +63,7 @@ class Jet : public PhysicsObject{
         Jet JetJECGroupedUp( const unsigned source_id ) const;
         Jet JetJECSourcesDown( const unsigned source_id ) const;
         Jet JetJECSourcesUp( const unsigned source_id ) const;
+        Jet JetJECUp
         Jet HEMIssue() const;
 
         //check if any of the jet variations passes the selection
