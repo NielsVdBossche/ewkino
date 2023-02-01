@@ -35,6 +35,13 @@ class HistInfo_2D : public HistInfo {
             setYBinWidth();
         }
 
+        virtual TH2D* makeHistPtr_2D(const std::string& histName) const {
+            TH2D* hist = new TH2D( histName.c_str(), ( histName + ";" + xLabel + ";" + yLabel + ";Events").c_str(),  nBins, xMin, xMax, nYBins, yMin, yMax);
+            hist->Sumw2();
+            
+            return hist;
+        }
+
         virtual std::shared_ptr<TH2D> makeHist_2D(const std::string& histName) const {
             std::shared_ptr<TH2D> hist = std::make_shared<TH2D>( histName.c_str(), ( histName + ";" + xLabel + ";" + yLabel + ";Events").c_str(),  nBins, xMin, xMax, nYBins, yMin, yMax);
             hist->Sumw2();

@@ -18,8 +18,8 @@ class HistogramSet {
         ~HistogramSet();
 
         HistogramContainer* getHistogramContainer(unsigned subProc) {return processHist[subProc];}
-        std::vector<std::shared_ptr<TH1D>>* getHistograms(unsigned subProc) {return processHist[subProc]->getHistograms();};
-        std::vector<std::shared_ptr<TH2D>>* get2DHistograms(unsigned subProc) {return processHist[subProc]->get2DHistograms();};
+        std::vector<TH1D*>* getHistograms(unsigned subProc) {return processHist[subProc]->getHistograms();};
+        std::vector<TH2D*>* get2DHistograms(unsigned subProc) {return processHist[subProc]->get2DHistograms();};
         std::vector<std::string>& getProcessNames() {return processHistName;}
 
         //void addProcesses(std::vector<std::string>& processNames);

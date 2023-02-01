@@ -35,6 +35,32 @@ class HistInfo{
             setBinWidth();
         }
 
+        TH1D* makeHistPtr( const std::string& histName ) const{
+            
+            //make ylabel
+            std::string yLabel = "Events";
+            
+            //don't add a binWidth to the y label if there is only one bin, or the x labels are custom text
+            if( nBins > 1 && binLabels.empty() ){
+                yLabel += (" / " + stringTools::doubleToString( getBinWidth(), 2 ) );
+                //check if the xLabel has a unit, if so add it to the y label too
+                if( xLabel.find("GeV") != std::string::npos ){
+                    yLabel += " GeV";                    
+                }
+            }
+
+    
+            TH1D* hist = new TH1D( histName.c_str(), ( histName + ";" + xLabel + ";" + yLabel).c_str(),  nBins, xMin, xMax);
+            hist->Sumw2();
+
+            //set bin labels if they were initialized 
+            if( !( binLabels.empty() ) ){
+            	for(unsigned bin = 0; bin < nBins; ++bin){
+        			hist->GetXaxis()->SetBinLabel( bin + 1, binLabels[bin].c_str() );
+    			}
+            }
+            return hist;
+        }
 
         std::shared_ptr<TH1D> makeHist( const std::string& histName ) const{
             
