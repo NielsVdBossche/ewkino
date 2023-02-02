@@ -68,10 +68,12 @@ void HistogramContainer::newSample(std::string& uniqueSampleName) {
 void HistogramContainer::writeHistograms() {
     for( size_t dist = 0; dist < oneDimInfo->size(); ++dist ) {
         oneDims->at(dist)->Write(TString(oneDimInfo->at(dist).name()), TObject::kOverwrite);
+        delete oneDims->at(dist);
     }
     if (twoDimInfo) {
         for( size_t dist = 0; dist < twoDimInfo->size(); ++dist ) {
             twoDims->at(dist)->Write(TString(twoDimInfo->at(dist).name()), TObject::kOverwrite);
+            delete twoDims->at(dist);
         }
     }
 }
