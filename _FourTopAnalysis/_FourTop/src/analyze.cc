@@ -237,9 +237,9 @@ void FourTop::analyze(std::string method) {
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (testRun && entry > 100000) break;
+            if (testRun && entry > 1000) break;
             //if (entry > 10000) break;
-            //std::cout << entry << std::endl;
+            std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
@@ -271,10 +271,10 @@ void FourTop::analyze(std::string method) {
             // Add lepton selection boolean call here!
 
             if (! selection->passLeptonSelection()) continue;
-            //if (testRun) std::cout << "pass lepton selection" << std::endl;
+            if (testRun) std::cout << "pass lepton selection" << std::endl;
             selection->classifyEvent();
             unsigned processNb = 0;
-            //if (testRun) std::cout << "process nb " << processNb << std::endl;
+            if (testRun) std::cout << "process nb " << processNb << std::endl;
 
             double weight = currentEvent->weight();
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
@@ -351,7 +351,7 @@ void FourTop::analyze(std::string method) {
             // if region != considerRegion && considerRegion != fail: skip
 
             if (FillRegion(nominalClass, st)) {
-                //if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
+                if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
 
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
@@ -376,7 +376,8 @@ void FourTop::analyze(std::string method) {
             // Systematics
             if (! useUncertainties)
             if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt && st != selectionType::NPDD))) continue;
-        
+
+            if (testRun) std::cout << "uncertainty time" << std::endl;
             //// Start filling histograms
             // loop uncertainties
             Channel* uncWrapper;
@@ -410,7 +411,7 @@ void FourTop::analyze(std::string method) {
                 std::vector<std::string> subChannelsUp;
                 std::vector<std::string> subChannelsDown;
 
-                //std::cout << uncID << std::endl;
+                //if (testRun) std::cout << uncID << std::endl;
 
                 if (uncID == 0 && st == selectionType::NPDD) {
                     weightUp = FakeRateWeightVariation(true, true) / FakeRateWeight();
@@ -584,6 +585,7 @@ void FourTop::analyze(std::string method) {
                 //  }
                 } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
+                    //std::cout << "check? " << std::endl;
 
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
                         //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
@@ -622,7 +624,11 @@ void FourTop::analyze(std::string method) {
                         if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
                     }
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
+                    //if (testRun) std::cout << "prestart? " << std::endl;
+
                     for (auto jecSource : JECSourcesGrouped) {
+                        //std::cout << "start? " << std::endl;
+
                         if (stringTools::stringContains(jecSource.first, "Total")) continue;
                         std::string jecSourceStr = jecSource.first;
                         if (considerBTagShape) {
@@ -634,12 +640,24 @@ void FourTop::analyze(std::string method) {
                             weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown, true, jecSource.second) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
+                        //std::cout << "classify? " << std::endl;
+
 
                         upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource.second);
+                        //std::cout << "classify unc " << std::endl;
+
                         fillVecUp = selection->fillVector();
+                        //std::cout << "fillvec " << std::endl;
+
                         singleEntriesUp = selection->singleFillEntries();
+                       // std::cout << "singles " << std::endl;
+
                         fillVec2DUp = selection->fillVector2D();
+                        //std::cout << "try first? " << std::endl;
+
                         if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
+                        //std::cout << "first done? " << std::endl;
+
 
                         downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource.second);
                         fillVecDown = selection->fillVector();
@@ -653,13 +671,25 @@ void FourTop::analyze(std::string method) {
                         if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                         if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
                         if (useNpNmDistributions) {
+                            //std::cout << "problem? " << std::endl;
+
                             double mod = 1.;
                             std::vector<double> fillVecEmpty = {};
                             std::vector<std::pair<double, double>> fillVec2DEmpty = {};
+                            //std::cout << "set? " << std::endl;
 
                             if (selection->getLepton(0)->charge() > 0) mod = -1.;
-                            if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
-                            if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                            //std::cout << "got mod? " << std::endl;
+
+                            if (FillRegion(upClass, st)) {
+                                //std::cout << "fill up? " << std::endl;
+                             
+                                mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
+                            }
+                            if (FillRegion(downClass, st)) {
+                                //std::cout << "fill down? " << std::endl;
+                                mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                            }
                         }
                     }
                 } else if (uncID == shapeUncId::JECFlavorQCD && useSplitJEC) {
@@ -762,7 +792,7 @@ void FourTop::analyze(std::string method) {
     }
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
-    delete mgrAll;
+    //delete mgrAll;
     outfile->Close();
 
     //delete btagReweighter;
