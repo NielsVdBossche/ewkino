@@ -51,6 +51,9 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 testRun = true;
             } else if (stringTools::stringContains(it, "plotString=")) {
                 plotString = stringTools::split(it, "=")[1];
+            } else if (stringTools::stringContains(it, "inclusiveClasses")) {
+                overarchClasses = true;
+                selection->setOverarchClasses(overarchClasses);
             }
         }
 
