@@ -20,7 +20,15 @@ class MVAHandler_4T;
 
 class EventFourT {
     protected:
-        void SetEventClass(eventClass newClass) {currentClass = newClass;}
+        void SetEventClass(eventClass newClass) {
+                if (overarchClasses) {
+                    if (newClass == eventClass::cro || newClass == eventClass::crw || newClass == eventClass::ssdl) currentClass = eventClass::ssdl;
+                    else if (newClass == eventClass::crz3L || newClass == eventClass::cro3L || newClass == eventClass::trilep) currentClass = eventClass::trilep;
+                    else if (newClass == eventClass::crz4L || newClass == eventClass::fourlep) currentClass = eventClass::fourlep;
+                    else currentClass = newClass;
+                }
+                else currentClass = newClass;
+            }
     private:
         Event* event = nullptr;
 
@@ -46,6 +54,7 @@ class EventFourT {
 
         bool isNormalSelected;
         bool bdtOutput = true;
+        bool overarchClasses = false;
         
         TopReconstructionNew* topReco;
         std::vector<double> scoresMVA;
@@ -62,6 +71,7 @@ class EventFourT {
 
         void setFillerFunction(std::function<std::vector<double>(const eventClass, EventFourT*)> newHistFiller) {histFiller = newHistFiller;};
         void setPrintBDTOutput(bool newSettings) {bdtOutput = newSettings;}
+        void setOverarchClasses(bool newSettings) {overarchClasses = newSettings;}
         void setSelectionType(selectionType st) {selType = st;}
         
         void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}

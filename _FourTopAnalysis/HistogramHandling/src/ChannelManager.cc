@@ -31,6 +31,8 @@ ChannelManager::ChannelManager(TFile* outputFile, std::map<eventClass, std::stri
         mapping[it.first] = new Channel(it.second, histInfoVec);
         delete histInfoVec;
     }
+
+    namingScheme = names;
 }
 
 ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass)) : outfile(outputFile) {

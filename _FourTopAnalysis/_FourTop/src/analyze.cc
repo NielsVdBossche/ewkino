@@ -585,8 +585,6 @@ void FourTop::analyze(std::string method) {
                 //  }
                 } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
-                    //std::cout << "check? " << std::endl;
-
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
                         //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
                         //                    / reweighter["bTag_shape"]->weight( *currentEvent );
@@ -825,12 +823,15 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         else subClasses.push_back("em");
 
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
+        else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
     } else if (currClass == eventClass::trilep) {
         if (selection->getMediumLepCol()->hasOSSFPair()) {
             subClasses.push_back("OSSF");
         } else {
             subClasses.push_back("noOSSF");
         }
+        if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
+        else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
     } else if (currClass == eventClass::crz3L) {
         if (selection->numberOfLooseBJets() >= 2 && selection->numberOfJets() >= 3) {
             subClasses.push_back("SigZVeto");
@@ -951,10 +952,10 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             {trilep, ""},
             {fourlep, ""}};
 
-    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig"};
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig", "pureTTV"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
-    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
+    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF", "pureSig", "pureTTV"};
     std::vector<std::string> crzSubChannels = {"SigZVeto", "OneMedB", "TwoMedB"};
 
     if (considerRegion == eventClass::fail) {
@@ -1071,7 +1072,7 @@ std::vector<std::pair<int, double>> FourTop::FillNpNmDistributions(eventClass cu
     std::vector<double> singleEntriesVector = HistogramConfig::fillNpNmHistograms(currentClass, selection);
     int minOffset = offsets[currentClass] + 6;
 
-    for (int i=0; i<singleEntriesVector.size(); i++) {
+    for (unsigned i=0; i<singleEntriesVector.size(); i++) {
         singleEntriesNpNm.push_back({minOffset+i, singleEntriesVector[i]});
     }
     return singleEntriesNpNm;

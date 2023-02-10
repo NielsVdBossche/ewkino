@@ -232,7 +232,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         minMaxHT = {200, 1000};
         minMaxNMu = {-0.5, 3.5};
     } else if (evClass == eventClass::crz4L) {
-        minMaxNjets = {1.5, 6.5};
+        minMaxNjets = {1.5, 8.5};
         minMaxNBjets = {0.5, 4.5};
         minMaxHT = {0, 1000};
         minMaxNMu = {-0.5, 4.5};

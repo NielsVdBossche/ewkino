@@ -48,6 +48,7 @@ class FourTop {
         bool testRun = false;
         bool useUncertainties = true;
         bool useNpNmDistributions = false;
+        bool overarchClasses = false;
 
         std::string plotString = "Minimal";
         eventClass considerRegion = eventClass::fail;
