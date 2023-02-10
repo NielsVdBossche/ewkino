@@ -90,6 +90,8 @@ if __name__ == "__main__":
             sets = {"MCAll" : [mcSL_GP], "MCPrompt" : [mcSL_GP]}
         elif "miss" in optionLower:
             sets = {"MCAll" : [mc_miss], "nonPromptDD" : [mc_miss], "ChargeDD" : [dataSL], "MCPrompt" : [mc_miss], "nonPromptDDControl" : [mc_miss], "MCAllBJetTest" : [mc_miss]}
+        elif "inclusiveclasses" in optionLower:
+            additionalArgs.append(option)
         else:
             print("Unrecognized option: {}. Usage: ./RunAnalysis.py <AnalysisType> [-CR] [-LEAN] [path/to/samplelist] [era=[16Pre, 16Post, 17, 18]]".format(option))
 
