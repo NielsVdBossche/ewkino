@@ -85,8 +85,8 @@ void Uncertainty::fillHistograms(std::vector<double>& fillVec, double weightUp, 
 }
 
 void Uncertainty::fillSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {
-        upHists->fillSingleHistograms(subProc, fillVec, weightUp);
-        downHists->fillSingleHistograms(subProc, fillVec, weightDown);
+    upHists->fillSingleHistograms(subProc, fillVec, weightUp);
+    downHists->fillSingleHistograms(subProc, fillVec, weightDown);
 }
 
 void Uncertainty::fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {

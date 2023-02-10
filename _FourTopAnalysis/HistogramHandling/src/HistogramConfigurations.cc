@@ -862,3 +862,53 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
     return fillVal;
 }
 
+std::vector<HistInfo> HistogramConfig::createNpNmHistograms(const eventClass evClass) {
+    std::vector< HistInfo > histInfoVec;
+
+    if (evClass != eventClass::ssdl && evClass != eventClass::crw && evClass != eventClass::cro) return histInfoVec;
+    std::map<eventClass, std::string> flagMapping = {
+            {fail, "fail"},
+            {dy, "DY"},
+            {ttbar, "TTBar"},
+            {crwz, "CRWZ"},
+            {crzz, "CRZZ"},
+            {cr_conv, "CR-Conversion"},
+            {crz3L, "CR-3L-Z"},
+            {crz4L, "CR-4L-Z"},
+            {cro, "CR-2L-23J1B"},
+            {cro3L, "CR-3L-2J1B"},
+            {crw, "CR-2L-45J2B"},
+            {ssdl, "SR-2L"},
+            {trilep, "SR-3L"},
+            {fourlep, "SR-4L"}
+    };
+
+    std::string flag = flagMapping[evClass];
+
+    histInfoVec = {
+        HistInfo("Yield_"+flag, "Yield", 1, 0., 1.),
+        HistInfo( "N_mediumB_jets_" + flag, "N_{b}^{medium}", 6, -0.5, 5.5),
+        HistInfo( "N_looseB_jets_" + flag, "N_{b}^{loose}", 6, 0.5, 6.5),
+        HistInfo( "N_tightB_jets_" + flag, "N_{b}^{tight}", 4, -0.5, 3.5),
+        HistInfo( "N_jets_" + flag, "N_{jets}", 9, 1.5, 10.5),
+
+    };
+
+    return histInfoVec;
+}
+
+std::vector<double> HistogramConfig::fillNpNmHistograms(const eventClass evClass, EventFourT* event) {
+    std::vector<double> fillVal;
+
+    if (evClass != eventClass::ssdl && evClass != eventClass::crw && evClass != eventClass::cro) return fillVal;
+
+    fillVal = {
+        0.5,
+        double(event->numberOfMediumBJets()),
+        double(event->numberOfLooseBJets()),
+        double(event->numberOfTightBJets()),
+        double(event->numberOfJets()),
+    };
+
+    return fillVal;
+}

@@ -279,6 +279,28 @@ JetCollection JetCollection::getVariedJetCollection( unsigned source, bool isUp,
     }
 }
 
+#if JECONRUNTIME
+JetCollection JetCollection::JECCustomCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const {
+    
+    // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    std::shared_ptr< JetCorrectorParameters> jetCorrUncParams = jecwrapper->GetJetCorrectionUncertainty(id);
+    for( const auto& jetPtr : *this ){
+        JetCorrectionUncertainty* jetCorrUnc = new JetCorrectionUncertainty( *( jetCorrUncParams ) );
+        //jets are NOT shared between collections!
+        if (isUp) jetVector.push_back( std::make_shared< Jet >( jetPtr->JetJECUp(jetCorrUnc) ) );
+        else jetVector.push_back( std::make_shared< Jet >( jetPtr->JetJECDown(jetCorrUnc) ) );
+
+        delete jetCorrUnc;
+    }
+    return JetCollection( jetVector );
+}
+
+JetCollection JetCollection::JECCustomGoodCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const {
+    return JECCustomCollection(jecwrapper, id, isUp).goodJetCollection();
+}
+
+#endif
 
 
 JetCollection::size_type JetCollection::numberOfLooseBTaggedJets() const{

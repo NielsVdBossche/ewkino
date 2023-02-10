@@ -72,3 +72,7 @@
 #include "weights/src/ReweighterTriggerSF.cc"
 #include "weights/src/CombinedReweighter.cc"
 #include "weights/src/ConcreteReweighterFactory.cc"
+
+#if JECONRUNTIME
+#include "CMSSW_imports/src/JECWrapper.cc"
+#endif

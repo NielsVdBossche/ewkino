@@ -220,4 +220,3 @@ Met Met::getVariedMet(JetCollection& nomJets, unsigned variationSource, unsigned
     variedMet.setLorentzVector(ret.pt(), eta(), ret.phi(), ret.pt() );
     return variedMet;
 }
-

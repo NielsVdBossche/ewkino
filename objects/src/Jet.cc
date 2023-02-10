@@ -265,6 +265,32 @@ Jet Jet::JetJECDown( const std::string source ) const {
     return variedJet(newpt);
 }
 
+#if JECONRUNTIME
+
+Jet Jet::JetJECUp(JetCorrectionUncertainty* jetCorrUnc) {
+    jetCorrUnc->setJetPt( pt() );
+    jetCorrUnc->setJetEta( eta() );
+
+    double uncJec = jetCorrUnc->getUncertainty( true );
+
+    double newPt = pt()*( 1 + uncJec );
+
+    return variedJet(newPt);
+}
+
+Jet Jet::JetJECDown(JetCorrectionUncertainty* jetCorrUnc) {
+    jetCorrUnc->setJetPt( pt() );
+    jetCorrUnc->setJetEta( eta() );
+
+    double uncJec = jetCorrUnc->getUncertainty( true );
+
+    double newPt = pt()*( 1 - uncJec );
+
+    return variedJet(newPt);
+}
+
+#endif
+
 Jet Jet::JetJECGroupedDown( const unsigned source_id ) const{
     // note: this function checks both all and grouped variations,
     // need to check if there is no overlap in names between them!

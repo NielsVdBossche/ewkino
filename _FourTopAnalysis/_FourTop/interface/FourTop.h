@@ -47,6 +47,8 @@ class FourTop {
         bool printEventTags = false;
         bool testRun = false;
         bool useUncertainties = true;
+        bool useNpNmDistributions = false;
+
         std::string plotString = "Minimal";
         eventClass considerRegion = eventClass::fail;
         selectionType st = selectionType::MCAll;
@@ -132,6 +134,8 @@ class FourTop {
         std::vector<std::string> GetSubClasses(eventClass currClass);
 
         CombinedSampleReweighter* createSampleReweighter(std::string dir);
+
+        std::vector<std::pair<int, double>> FillNpNmDistributions(eventClass currentClass, std::map<eventClass,int>& offsets);
 };
 
 

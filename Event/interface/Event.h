@@ -16,7 +16,6 @@
 #include "../../objects/interface/Met.h"
 #include "../../objects/interface/PhysicsObject.h"
 
-
 class TreeReader;
 class MuonCollection;
 class ElectronCollection;

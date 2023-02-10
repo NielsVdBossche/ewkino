@@ -47,6 +47,10 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection JECGroupedDownCollection( unsigned source ) const;
 	    JetCollection getVariedJetCollection( const std::string& variation ) const;
         JetCollection getVariedJetCollection( unsigned source, bool isUp, bool isGrouped) const;
+        #if JECONRUNTIME
+        JetCollection JECCustomCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const;
+        JetCollection JECCustomGoodCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const;
+        #endif
 
         JetCollection JECGroupedFlavorQCD(unsigned sourceID, unsigned flavor, bool up) const;
         JetCollection JECUpGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const;
@@ -85,6 +89,7 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         void cleanJetsFromTightLeptons( const LeptonCollection&, const double coneSize = 0.4 );
 
     
+        JetCollection( const std::vector< std::shared_ptr< Jet > >& jetVector ) : PhysicsObjectCollection< Jet >( jetVector ) {}
     private:
         
         //clean jets 
@@ -92,7 +97,6 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
 
         //build JetCollection of jets satisfying a certain requirement
         JetCollection buildSubCollection( bool (Jet::*passSelection)() const ) const;
-        JetCollection( const std::vector< std::shared_ptr< Jet > >& jetVector ) : PhysicsObjectCollection< Jet >( jetVector ) {}
     
         //build JetCollection of varied Jets
         JetCollection buildVariedCollection( Jet (Jet::*variedJet)() const ) const;

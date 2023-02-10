@@ -15,6 +15,9 @@ namespace HistogramConfig {
     std::vector<double> fillMinimalHists(const eventClass evClass, EventFourT* event);
     std::vector<double> fillNominalHists(const eventClass evClass, EventFourT* event);
     std::vector<double> fillAllBDTVarsHists(const eventClass evClass, EventFourT* event);
+
+    std::vector<HistInfo> createNpNmHistograms(const eventClass evClass);
+    std::vector<double> fillNpNmHistograms(const eventClass evClass, EventFourT* event);
 }
 
 

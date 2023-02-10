@@ -1,41 +1,44 @@
 #include "../interface/JECWrapper.h"
 
+#include "../../Event/interface/Event.h"
 JECWrapper::JECWrapper(std::string& uncertaintyFile, std::vector<std::string>& jecSources) {
     unsigned counter = 0;
     for( const auto& source : jecSources ){
         uncertaintyMapping[source] = counter;
-        JetCorrectorParameters* jetCorrParameters = new JetCorrectorParameters(uncertaintyFile, source );
-
-        jetCorrUncertainty[ counter ] = std::make_shared< JetCorrectionUncertainty >(uncertaintyFile, source );
-
+        jetCorrUncertainty[ counter ] = std::make_shared<JetCorrectorParameters>(uncertaintyFile, source );
         counter++;
     }
 }
 
 
-// main function called to fill uncertainties
-// need a jetcorrectorParameters object clearly:
-//   jetSourcesCorParameters[ source ] = std::make_shared< JetCorrectorParameters >( (iConfig.getParameter<edm::FileInPath>("jecUncertaintySourcesFile") ).fullPath(), source );
-// per source:
-//     std::vector< std::string > jecSources = {"AbsoluteStat", "AbsoluteScale", "AbsoluteMPFBias", "Fragmentation", "SinglePionECAL", "SinglePionHCAL", "FlavorQCD", "FlavorZJet", "FlavorPhotonJet", "FlavorPureGluon", "FlavorPureQuark", "FlavorPureCharm", "FlavorPureBottom", "TimePtEta", "RelativeJEREC1", "RelativeJEREC2", "RelativeJERHF", "RelativePtBB", "RelativePtEC1", "RelativePtEC2", "RelativePtHF", "RelativeBal", "RelativeSample", "RelativeFSR", "RelativeStatFSR", "RelativeStatEC", "RelativeStatHF", "PileUpDataMC", "PileUpPtRef", "PileUpPtBB", "PileUpPtEC1", "PileUpPtEC2", "PileUpPtHF", "PileUpMuZero", "PileUpEnvelope", "SubTotalPileUp", "SubTotalRelative", "SubTotalPt", "SubTotalScale", "SubTotalAbsolute", "SubTotalMC", "TotalNoFlavor", "TotalNoTime" ,"TotalNoFlavorNoTime", "Total" };
+std::pair<JetCollection, Met> JECWrapper::VaryJetsAndMet(Event& event, unsigned id, bool isUp) {
+    JetCollection nominalJets = event.jetCollection();
 
-JetCollection JECWrapper::VariedJetCollection(unsigned variation, bool up, JetCollection& nominalJetCollection) {
-    
-}
+        // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    std::shared_ptr< JetCorrectorParameters> jetCorrUncParams = GetJetCorrectionUncertainty(id);
 
+    Met met = event.met();
+    LorentzVector retMet = LorentzVector(met.pt(), met.eta(), met.phi(), met.energy());
 
+    for( const auto& jetPtr : nominalJets ){
+        JetCorrectionUncertainty* jetCorrUnc = new JetCorrectionUncertainty( *( jetCorrUncParams ) );
+        double ptNom = jetPtr->pt();
+        
+        std::shared_ptr<Jet> variedJet;
+        if (isUp) variedJet = std::make_shared< Jet >( jetPtr->JetJECUp(jetCorrUnc) );
+        else variedJet = std::make_shared< Jet >( jetPtr->JetJECDown(jetCorrUnc) );
 
-template< typename T > void fillJetUncertaintySources( const std::map< std::string, std::shared_ptr< JetCorrectorParameters> >& jetCorrParameters,  T& sourcesMapDown, T& sourcesMapUp, const pat::Jet& jet, const unsigned jetIndex ){
-    for( const auto& source : jetCorrParameters ){
-        JetCorrectionUncertainty* jetCorUnc = new JetCorrectionUncertainty( *( source.second ) );
-        jetCorUnc->setJetPt( jet.pt() );
-        jetCorUnc->setJetEta( jet.eta() );
+        jetVector.push_back(variedJet);
+        double ptdiff = ptNom - variedJet->pt();
 
-        double uncJec = jetCorUnc->getUncertainty( true );
-
-        sourcesMapDown[ source.first ][ jetIndex ] = jet.pt()*( 1 - uncJec );
-        sourcesMapUp[ source.first ][ jetIndex ] = jet.pt()*( 1 + uncJec );
-
-        delete jetCorUnc;
+        retMet += LorentzVector(ptdiff, 0., jetPtr->phi(), ptdiff);
+        delete jetCorrUnc;
     }
+
+    Met variedMet( met );
+    variedMet.setLorentzVector(retMet.pt(), met.eta(), retMet.phi(), retMet.pt() );
+
+
+    return {JetCollection( jetVector ), variedMet};
 }

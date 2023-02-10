@@ -9,6 +9,7 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
+    useNpNmDistributions = true;
     bool isNPControl = false;
     double chMisCorr = 0.;
 
@@ -333,6 +334,7 @@ void FourTop::analyze(std::string method) {
             std::vector<double> fillVec;
             std::vector<std::pair<double, double>> fillVec2D;
             std::vector<std::pair<int, double>> singleEntries;
+            std::vector<std::pair<int, double>> singleEntriesNpNm;
             std::vector<std::string> subChannels;
 
             // fill all histograms
@@ -354,13 +356,21 @@ void FourTop::analyze(std::string method) {
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
                 fillVec2D = selection->fillVector2D();
-
                 subChannels = GetSubClasses(nominalClass);
 
                 // make function bundling this behaviour.
                 mgrAll->at(nominalClass)->fillAllHistograms(subChannels, processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
                 mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
+
+                if (useNpNmDistributions) {
+                    singleEntriesNpNm = FillNpNmDistributions(nominalClass, offsets);
+                    if (selection->getLepton(0)->charge() > 0) {
+                        mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntriesNpNm, weight);
+                    } else {
+                        mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntriesNpNm, -1. * weight);
+                    }
+                }
             }
 
             // Systematics
@@ -382,6 +392,9 @@ void FourTop::analyze(std::string method) {
             std::vector<std::pair<int, double>> singleEntriesDown = singleEntries;
             std::vector<std::pair<double, double>> fillVec2DUp = fillVec2D;
             std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
+            std::vector<std::pair<int, double>> singleEntriesNpNmUp = singleEntriesNpNm;
+            std::vector<std::pair<int, double>> singleEntriesNpNmDown = singleEntriesNpNm;
+
 
             unsigned uncID = 0;
             while (uncID < shapeUncId::end) {
@@ -427,6 +440,17 @@ void FourTop::analyze(std::string method) {
                     uncWrapper->fillAllEnvelope(subChannels, shapeUncId::qcdScale, processNb, fillVec, qcdvariations);
                     uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::qcdScale, processNb, singleEntries, qcdvariations);
                     uncWrapper->fillAllEnvelope2Ds(subChannels, shapeUncId::qcdScale, processNb, fillVec2D, qcdvariations);
+                    if (useNpNmDistributions) {
+                        if (selection->getLepton(0)->charge() > 0) {
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::qcdScale, processNb, singleEntriesNpNm, qcdvariations);
+                        } else {
+                            std::vector<double> qcdVariationsNegs;
+                            for (auto qcdVar : qcdvariations) {
+                                qcdVariationsNegs.push_back(-1. * qcdVar);
+                            }
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::qcdScale, processNb, singleEntriesNpNm, qcdVariationsNegs);
+                        }
+                    }
                 } else if (uncID == shapeUncId::pdfShapeVar) {
                     std::vector<double> pdfVariations;
                     if (hasValidPdfs && xsecs.get()->numberOfLheVariations() > 9) {
@@ -452,7 +476,17 @@ void FourTop::analyze(std::string method) {
                     uncWrapper->fillAllEnvelope(subChannels, shapeUncId::pdfShapeVar, processNb, fillVec, pdfVariations);
                     uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::pdfShapeVar, processNb, singleEntries, pdfVariations);
                     uncWrapper->fillAllEnvelope2Ds(subChannels, shapeUncId::pdfShapeVar, processNb, fillVec2D, pdfVariations);
-
+                    if (useNpNmDistributions) {
+                        if (selection->getLepton(0)->charge() > 0) {
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::pdfShapeVar, processNb, singleEntriesNpNm, pdfVariations);
+                        } else {
+                            std::vector<double> pdfVariationsNegs;
+                            for (auto pdfVar : pdfVariations) {
+                                pdfVariationsNegs.push_back(-1. * pdfVar);
+                            }
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::pdfShapeVar, processNb, singleEntriesNpNm, pdfVariationsNegs);
+                        }
+                    }
                 } else if (uncID == shapeUncId::bTagShape) {
                     if (considerBTagShape) {
                         double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
@@ -463,6 +497,13 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec2D, weight * weightUp, weight * weightDown);
+                            if (useNpNmDistributions) {
+                                if (selection->getLepton(0)->charge() > 0) {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                                } else {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                                }
+                            }
                         }
 
                         weightUp = 1.;
@@ -496,6 +537,13 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                            if (useNpNmDistributions) {
+                                if (selection->getLepton(0)->charge() > 0) {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                                } else {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                                }
+                            }
                         }
                         weightUp = 1.;
                         weightDown = 1.;
@@ -504,6 +552,13 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec, weight, weight);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntries, weight, weight);
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight, weight);
+                            if (useNpNmDistributions) {
+                                if (selection->getLepton(0)->charge() > 0) {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, weight, weight);
+                                } else {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, -1. * weight, -1. * weight);
+                                }
+                            }
                         }
                     }
                 //else if (uncID == shapeUncId::ZZSF) {
@@ -542,17 +597,30 @@ void FourTop::analyze(std::string method) {
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
+                    if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
 
                     downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000);
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
+                    if (useNpNmDistributions) singleEntriesNpNmDown = FillNpNmDistributions(downClass, offsets);
 
                     subChannelsUp = GetSubClasses(upClass);
                     subChannelsDown = GetSubClasses(downClass);
 
                     if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                     if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    
+                    if (useNpNmDistributions) {
+                        double mod = 1.;
+                        std::vector<double> fillVecEmpty = {};
+                        std::vector<std::pair<double, double>> fillVec2DEmpty = {};
+
+
+                        if (selection->getLepton(0)->charge() > 0) mod = -1.;
+                        if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
+                        if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                    }
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
                     for (auto jecSource : JECSourcesGrouped) {
                         if (stringTools::stringContains(jecSource.first, "Total")) continue;
@@ -571,17 +639,28 @@ void FourTop::analyze(std::string method) {
                         fillVecUp = selection->fillVector();
                         singleEntriesUp = selection->singleFillEntries();
                         fillVec2DUp = selection->fillVector2D();
+                        if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
 
                         downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource.second);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();
+                        if (useNpNmDistributions) singleEntriesNpNmDown = FillNpNmDistributions(downClass, offsets);
 
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
                         if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                         if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (useNpNmDistributions) {
+                            double mod = 1.;
+                            std::vector<double> fillVecEmpty = {};
+                            std::vector<std::pair<double, double>> fillVec2DEmpty = {};
+
+                            if (selection->getLepton(0)->charge() > 0) mod = -1.;
+                            if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
+                            if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                        }
                     }
                 } else if (uncID == shapeUncId::JECFlavorQCD && useSplitJEC) {
                     for (int i = 0; i < 3; i++) {
@@ -602,17 +681,28 @@ void FourTop::analyze(std::string method) {
                         fillVecUp = selection->fillVector();
                         singleEntriesUp = selection->singleFillEntries();
                         fillVec2DUp = selection->fillVector2D();
+                        if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
 
                         downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000, flavor);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();
+                        if (useNpNmDistributions) singleEntriesNpNmDown = FillNpNmDistributions(downClass, offsets);
 
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
                         if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(source, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                         if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(source, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (useNpNmDistributions) {
+                            double mod = 1.;
+                            std::vector<double> fillVecEmpty = {};
+                            std::vector<std::pair<double, double>> fillVec2DEmpty = {};
+
+                            if (selection->getLepton(0)->charge() > 0) mod = -1.;
+                            if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(source, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
+                            if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(source, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                        }
                     }
                 }
 
@@ -620,6 +710,14 @@ void FourTop::analyze(std::string method) {
                     uncWrapper->fillAllUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
+                    
+                    if (useNpNmDistributions) {
+                        if (selection->getLepton(0)->charge() > 0) {
+                            uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                        } else {
+                            uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                        }
+                    }
                 }
 
                 uncID = uncID + 1;
@@ -855,6 +953,10 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-23J1B", true));
             mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
         }
+        if (useNpNmDistributions) {
+            mgrAll->at(eventClass::cro)->updateHistInfo(HistogramConfig::createNpNmHistograms(eventClass::cro));
+            mgrAll->at(eventClass::crw)->updateHistInfo(HistogramConfig::createNpNmHistograms(eventClass::crw));
+        }
         
         mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
@@ -873,6 +975,10 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
                 mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
                 mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
                 mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
+            }
+
+            if (useNpNmDistributions) {
+                mgrAll->at(eventClass::ssdl)->updateHistInfo(HistogramConfig::createNpNmHistograms(eventClass::ssdl));
             }
 
             mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
@@ -925,4 +1031,18 @@ bool FourTop::FillRegion(eventClass nominalClass, selectionType st) {
     if (considerRegion != eventClass::fail && nominalClass != considerRegion) return false;
 
     return true;
+}
+
+std::vector<std::pair<int, double>> FourTop::FillNpNmDistributions(eventClass currentClass, std::map<eventClass,int>& offsets) {
+    std::vector<std::pair<int, double>> singleEntriesNpNm;
+
+    if (currentClass != eventClass::ssdl && currentClass != eventClass::crw && currentClass != eventClass::cro) return singleEntriesNpNm;
+    
+    std::vector<double> singleEntriesVector = HistogramConfig::fillNpNmHistograms(currentClass, selection);
+    int minOffset = offsets[currentClass] + 6;
+
+    for (int i=0; i<singleEntriesVector.size(); i++) {
+        singleEntriesNpNm.push_back({minOffset+i, singleEntriesVector[i]});
+    }
+    return singleEntriesNpNm;
 }
