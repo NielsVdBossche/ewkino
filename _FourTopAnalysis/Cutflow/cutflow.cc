@@ -207,6 +207,7 @@ void FourTop::cutFlow(std::string& sortingMode) {
             //if (! selection->leptonsArePrompt()) continue;
             //if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
             currentEvent->removeTaus();
+            currentEvent->selectLooseLeptons();
             currentEvent->sortLeptonsByPt();
 
             for (auto lep : currentEvent->lightLeptonCollection()) {

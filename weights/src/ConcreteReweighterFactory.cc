@@ -477,13 +477,13 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
 
     TFile* trigSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/triggerSF/scalefactors_" + year + ".root" ).c_str() );
 
-    std::shared_ptr< TH2 > sf_mm( dynamic_cast< TH2* >( eleSFFile->Get( ("scalefactors_"+year+"_mm").c_str() ) ) );
+    std::shared_ptr< TH2 > sf_mm( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_mm").c_str() ) ) );
     sf_mm->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > sf_me( dynamic_cast< TH2* >( eleSFFile->Get( ("scalefactors_"+year+"_me").c_str() ) ) );
+    std::shared_ptr< TH2 > sf_me( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_me").c_str() ) ) );
     sf_me->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > sf_em( dynamic_cast< TH2* >( eleSFFile->Get( ("scalefactors_"+year+"_em").c_str() ) ) );
+    std::shared_ptr< TH2 > sf_em( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_em").c_str() ) ) );
     sf_em->SetDirectory( gROOT );
-    std::shared_ptr< TH2 > sf_ee( dynamic_cast< TH2* >( eleSFFile->Get( ("scalefactors_"+year+"_ee").c_str() ) ) );
+    std::shared_ptr< TH2 > sf_ee( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_ee").c_str() ) ) );
     sf_ee->SetDirectory( gROOT );
 
 
