@@ -9,7 +9,7 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
-    useNpNmDistributions = true;
+    useNpNmDistributions = false;
     bool isNPControl = false;
     double chMisCorr = 0.;
 
@@ -138,6 +138,7 @@ void FourTop::analyze(std::string method) {
     std::vector<unsigned> JECQCDComponents_flavor;
     std::vector<std::string> wzSFRegions;
     std::vector<std::string> zzSFRegions;
+    std::vector<std::string> ttVJetsRegions;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -224,6 +225,8 @@ void FourTop::analyze(std::string method) {
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
                 //zzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4PlusJet"};
                 //mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
+                ttVJetsRegions = {"6Jet", "7Jet", "8PlusJet"};
+                mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
         }
         
@@ -239,7 +242,7 @@ void FourTop::analyze(std::string method) {
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             if (testRun && entry > 1000) break;
             //if (entry > 10000) break;
-            std::cout << entry << std::endl;
+            // std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
@@ -583,6 +586,31 @@ void FourTop::analyze(std::string method) {
                 //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
                 //      }
                 //  }
+                } else if (uncID == ttvNJetsUnc) {
+                    for (int i=0; i < 3; i++) {
+                        weightUp = 1.;
+                        weightDown = 1.;
+                        if (selection->numberOfJets() == i+6 || (i == 3 && selection->numberOfJets() >= i+6)) {
+                            if (selection->numberOfJets() == 6) weightUp = 1.5;
+                            else if (selection->numberOfJets() == 7) weightUp = 2.25;
+                            else if (selection->numberOfJets() >= 8) weightUp = 4.;
+
+                            weightDown = 0.75;
+                        }
+                        std::string ttVJetsRegion = ttVJetsRegions[i];
+                        uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, fillVec, weight * weightUp, weight * weightDown);
+                        uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, singleEntries, weight * weightUp, weight * weightDown);
+                        uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                        if (useNpNmDistributions) {
+                            if (selection->getLepton(0)->charge() > 0) {
+                                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                            } else {
+                                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                            }
+                        }
+                    }
+                    weightUp = 1.;
+                    weightDown = 1.;
                 } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {

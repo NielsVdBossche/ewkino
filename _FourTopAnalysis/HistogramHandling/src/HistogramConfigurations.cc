@@ -890,7 +890,7 @@ std::vector<HistInfo> HistogramConfig::createNpNmHistograms(const eventClass evC
         HistInfo( "NpNm_N_mediumB_jets_" + flag, "N_{b}^{medium}", 6, -0.5, 5.5),
         HistInfo( "NpNm_N_looseB_jets_" + flag, "N_{b}^{loose}", 6, 0.5, 6.5),
         HistInfo( "NpNm_N_tightB_jets_" + flag, "N_{b}^{tight}", 4, -0.5, 3.5),
-        HistInfo( "NpNm_N_jets_" + flag, "N_{jets}", 9, 1.5, 10.5),
+        HistInfo( "NpNm_N_jets_" + flag, "N_{jets}", 7, 1.5, 8.5),
 
     };
 

@@ -21,6 +21,7 @@ enum shapeUncId {
     fsrShape,
     fsrNorm,
     WZSF,
+    ttvNJetsUnc,
     JER_1p93,
     JER_2p5,
     JEC,
