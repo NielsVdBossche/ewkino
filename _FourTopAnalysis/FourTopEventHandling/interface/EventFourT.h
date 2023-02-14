@@ -16,6 +16,10 @@
 
 class TopReconstructionNew;
 class MVAHandler_4T;
+#if JECWRAPPER
+class JECWrapper;
+#endif
+
 ///enum shapeUncId;
 
 class EventFourT {
@@ -64,9 +68,13 @@ class EventFourT {
         std::map<eventClass, int> offsets;
         
         std::function<std::vector<double>(const eventClass, EventFourT*)> histFiller = HistogramConfig::fillNominalHists;
+          
+        #if JECWRAPPER
+        JECWrapper* jecWrapper;
+        #endif
     public:
 
-        EventFourT();
+        EventFourT(std::string uncertaintyFile);
         virtual ~EventFourT();
 
         void setFillerFunction(std::function<std::vector<double>(const eventClass, EventFourT*)> newHistFiller) {histFiller = newHistFiller;};
@@ -154,6 +162,10 @@ class EventFourT {
         void SetRelRegion(eventClass region) {relevantRegion = region;}
 
         int NumberOfBFlavorJets();
+
+        #if JECWRAPPER
+        JECWrapper* GetJECWrapper() {return jecWrapper;};
+        #endif
 };
 
 bool selectLeptonsLooseMVA(const Lepton& lepton);

@@ -43,7 +43,6 @@ class Met : public PhysicsObject {
         virtual std::ostream& print( std::ostream& ) const override;
         void setLorentzVectorExplicit(double pt, double eta, double phi, double e) {setLorentzVector(pt, eta, phi, e);}
 
-
     private:
 
         //JEC uncertainties

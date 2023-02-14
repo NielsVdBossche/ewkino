@@ -277,7 +277,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     }
 
     if (evClass < eventClass::ssdl) {
-        histInfoVec->push_back(HistInfo("TriClass_Fit_" + flag, "", 3, -0.5, 2.5));
+        histInfoVec->push_back(HistInfo("TriClass_Fit_" + flag, "Sum of charges", 2, -0.5, 1.5));
     }
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
@@ -450,12 +450,8 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
     }
 
     if (evClass < eventClass::ssdl) {
-        if (event->getMVAScores()[2] > event->getMVAScores()[0]) {
-            if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(1.);
-            else fillVal.push_back(2.);
-        } else {
-            fillVal.push_back(0.);
-        }
+        if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(0.);
+        else fillVal.push_back(1.);
     } 
 
 

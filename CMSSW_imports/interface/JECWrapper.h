@@ -20,14 +20,14 @@ class JECWrapper {
     public:
         JECWrapper(std::string& uncertaintyFile, std::vector<std::string>& jecSources);
 
-        std::map<std::string, unsigned>& GetUncertaintyMapping() {return uncertaintyMapping;}
+        std::map<std::string, size_t>& GetUncertaintyMapping() {return uncertaintyMapping;}
         std::shared_ptr< JetCorrectorParameters> GetJetCorrectionUncertainty(unsigned id) {return jetCorrUncertainty[id];};
 
         std::pair<JetCollection, Met> VaryJetsAndMet(Event& event, unsigned id, bool isUp);
         
     private:
-        std::map<std::string, unsigned> uncertaintyMapping;
-        std::map<unsigned, std::shared_ptr< JetCorrectorParameters>> jetCorrUncertainty;
+        std::map<std::string, size_t> uncertaintyMapping;
+        std::map<size_t, std::shared_ptr< JetCorrectorParameters>> jetCorrUncertainty;
 };
 
 #endif

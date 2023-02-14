@@ -1,5 +1,9 @@
 #include "../interface/FourTop.h"
 
+#if JECWRAPPER
+#include "../../../CMSSW_imports/interface/JECWrapper.h"
+#endif
+
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
 #endif
@@ -201,6 +205,21 @@ void FourTop::analyze(std::string method) {
             }
             if (sampleIndex == 0 && useSplitJEC) {
                 std::cout << "split JEC" << std::endl;
+
+                #if JECWRAPPER
+                JECWrapper* wrapper = selection->GetJECWrapper();
+                std::map< std::string, size_t > a = wrapper->GetUncertaintyMapping();
+                std::vector<std::string> inter;
+
+                for (auto& var : a) {
+                    inter.push_back(var.first);
+                }
+                JECSourcesGrouped = a;
+                mgrAll->addSubUncertainties(shapeUncId::JEC, inter);
+                std::cout << "added variations" << std::endl;
+
+                #else
+
                 JetInfo info = currentEvent->jetInfo();
                 std::map< std::string, size_t >* a = info.groupedJECVariationsMap();
                 std::vector<std::string> inter;
@@ -218,6 +237,8 @@ void FourTop::analyze(std::string method) {
                 JECQCDComponents = {"light", "charm", "bottom"};
                 JECQCDComponents_flavor = {0, 4, 5};
                 mgrAll->addSubUncertainties(shapeUncId::JECFlavorQCD, JECQCDComponents);
+
+                #endif
 
             }
             if (sampleIndex == 0) {
@@ -658,6 +679,10 @@ void FourTop::analyze(std::string method) {
                         if (stringTools::stringContains(jecSource.first, "Total")) continue;
                         std::string jecSourceStr = jecSource.first;
                         if (considerBTagShape) {
+                            #if JECWRAPPER
+                            weightUp = 1.;
+                            weightDown = 1.;
+                            #else
                             std::string sourceUp = jecSourceStr + "Up";
                             std::string sourceDown = jecSourceStr + "Down";
 
@@ -665,6 +690,7 @@ void FourTop::analyze(std::string method) {
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                             weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown, true, jecSource.second) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
+                            #endif
                         }
                         //std::cout << "classify? " << std::endl;
 
