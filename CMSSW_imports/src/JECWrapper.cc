@@ -37,7 +37,7 @@ std::pair<JetCollection, Met> JECWrapper::VaryJetsAndMet(Event& event, unsigned 
     }
 
     Met variedMet( met );
-    variedMet.setLorentzVector(retMet.pt(), met.eta(), retMet.phi(), retMet.pt() );
+    variedMet.setLorentzVectorExplicit(retMet.pt(), met.eta(), retMet.phi(), retMet.pt() );
 
 
     return {JetCollection( jetVector ), variedMet};

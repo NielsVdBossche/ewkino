@@ -119,7 +119,7 @@ void FourTop::createMVATrainingSamples() {
     //addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
 
     delete selection;
-    selection = new EventFourTLoose();
+    selection = new EventFourTLoose("");
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();

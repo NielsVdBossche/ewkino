@@ -75,4 +75,5 @@
 
 #if JECONRUNTIME
 #include "CMSSW_imports/src/JECWrapper.cc"
+#include "CMSSW_imports/CondFormats/JetMETObjects/JMELibrary.cc"
 #endif

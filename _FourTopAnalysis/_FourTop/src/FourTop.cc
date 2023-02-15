@@ -18,7 +18,19 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    selection = new EventFourTLoose();
+
+    Sample samp = treeReader->sampleVector()[0];
+    std::string jecUncertaintyFile;
+    if (samp.is2018()) {
+        jecUncertaintyFile = "";
+    } else if (samp.is2017()) {
+        jecUncertaintyFile = "";
+    } else if (samp.is2016PostVFP()) {
+        jecUncertaintyFile = "";
+    } else {
+        jecUncertaintyFile = "";
+    }
+    selection = new EventFourTLoose(jecUncertaintyFile);
 
     if (mode < 2) {
         std::string outputFileName = "Output/" + outputName + "_";
@@ -42,7 +54,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 outputFileName += "OriginalAn_";
 
                 delete selection;
-                selection = new EventFourT();
+                selection = new EventFourT(jecUncertaintyFile);
             } else if (stringTools::stringContains(it, "region=")) {
                 searchRegion = stringTools::split(it, "=")[1];
             } else if (stringTools::stringContains(it, "EventInfo")) {

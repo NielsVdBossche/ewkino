@@ -1,12 +1,13 @@
 CC=g++ -Wall -Wextra -O3 -g -c
 CFLAGS= -Wl,--no-as-needed
 LDFLAGS=`root-config --glibs --cflags`
+MACROS= -D JECONRUNTIME
 SOURCES= codeLibrary.cc
 OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=codeLibrary.o
 
 all: 
-	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
+	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) $(MACROS) -o $(EXECUTABLE)
 	
 clean:
 	rm -rf *o $(EXECUTABLE)
