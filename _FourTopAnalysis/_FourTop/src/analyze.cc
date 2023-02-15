@@ -9,7 +9,7 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
-    useNpNmDistributions = false;
+    useNpNmDistributions = true;
     bool isNPControl = false;
     double chMisCorr = 0.;
 

@@ -199,18 +199,25 @@ bool EventFourT::passLowMassVeto() {
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
     double masscut = 12.;
     if (foLeps->size() == 2) masscut = 20.;
+
+    //std::cout << "Nleps == "<< foLeps->size() << "\t";
     for( const auto& leptonPtrPair : looseLeps->pairCollection() ){
 
         //veto SF pairs of low mass
         Lepton& lepton1 = *( leptonPtrPair.first );
         Lepton& lepton2 = *( leptonPtrPair.second );
+        //std::cout << "l1 isEl == "<< lepton1.isElectron() << " isFO "<< lepton1.isFO() << "\t" << "l2 isEl == "<< lepton2.isElectron() << " isFO "<< lepton2.isFO()<< "\t";
+
         //if(! sameFlavor( lepton1, lepton2 ) ){
         //    continue;
         //}
+        //std::cout << "mass == " << ( lepton1 + lepton2 ).mass() << "\t";
+
         if (( lepton1 + lepton2 ).mass() < masscut){
             return false;
         }
     }
+    //std::cout << std::endl;
     return true;
 }
 
@@ -333,11 +340,19 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned vari
             met = event->met().MetJECDown().pt();
         }
     } else if (id == shapeUncId::JEC && variation != 1000) {
+        //std::cout << "in if" << std::endl; 
         if (up) {
+            //std::cout << "in up" << std::endl; 
+
             jets = new JetCollection(event->getJetCollectionPtr()->JECGroupedUpCollection(variation));
+            //std::cout << "got jet col " << std::endl;
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            //std::cout << "loose bs " << std::endl;
+
             met = event->met().MetJECGroupedUp(variation).pt();
+            //std::cout << "met " << std::endl;
+
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECGroupedDownCollection(variation));
             jets->selectGoodJets();
@@ -381,6 +396,8 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned vari
             met = event->met().pt(); // event->met().MetJECDown(variation).pt();
         }
     }
+    //std::cout << "vars " << std::endl;
+
 
     nJets = jets->size();
     nMediumB = jets->numberOfMediumBTaggedJets();
