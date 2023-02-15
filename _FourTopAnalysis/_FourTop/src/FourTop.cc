@@ -20,15 +20,16 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
 
     Sample samp = treeReader->sampleVector()[0];
+
     std::string jecUncertaintyFile;
     if (samp.is2018()) {
-        jecUncertaintyFile = "";
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL18_V5_MC/Summer19UL18_V5_MC_UncertaintySources_AK4PFchs.txt";
     } else if (samp.is2017()) {
-        jecUncertaintyFile = "";
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL17_V5_MC/Summer19UL17_V5_MC_UncertaintySources_AK4PFchs.txt";
     } else if (samp.is2016PostVFP()) {
-        jecUncertaintyFile = "";
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL16_V7_MC/Summer19UL16_V7_MC_UncertaintySources_AK4PFchs.txt";
     } else {
-        jecUncertaintyFile = "";
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL16APV_V7_MC/Summer19UL16APV_V7_MC_UncertaintySources_AK4PFchs.txt";
     }
     selection = new EventFourTLoose(jecUncertaintyFile);
 
