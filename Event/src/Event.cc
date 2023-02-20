@@ -28,7 +28,8 @@ Event::Event( const TreeReader& treeReader,
     //WARNING : use treeReader::_scaledWeight instead of treeReader::_weight since the former already includes cross-section and lumiosity scaling
     _weight( treeReader._scaledWeight ),
     _samplePtr( treeReader.currentSamplePtr() ),
-    _particleLevelInfoPtr( treeReader.hasPL() ? new ParticleLevelInfo(treeReader) : nullptr) {
+    _particleLevelInfoPtr( treeReader.hasPL() ? new ParticleLevelInfo(treeReader) : nullptr),
+    _genLevelPtr( treeReader.hasGenLvl() ? new GenParticlesTop(treeReader) : nullptr) {
     //makeSubLeptonCollections();
 }
 
@@ -61,6 +62,9 @@ Event::~Event(){
     }
     if (hasPLInfo()){
         delete _particleLevelInfoPtr;
+    }
+    if (hasGenLevelInfo()) {
+        delete _genLevelPtr;
     }
 }
 

@@ -7,7 +7,7 @@ OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=codeLibrary.o
 
 all: 
-	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) $(MACROS) -o $(EXECUTABLE)
+	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
 	
 clean:
 	rm -rf *o $(EXECUTABLE)

@@ -307,6 +307,27 @@ int EventFourT::NumberOfBFlavorJets() {
     return count;
 }
 
+bool EventFourT::HasAdditionalBJets() {
+    std::vector<std::shared_ptr<LorentzVector>> plBs, genLvlBs;
+    if (! event->GetPLInfoPtr() || ! event->GetGenLevelPtr()) return false;
+
+    plBs = event->GetPLInfoPtr()->GetParticleLevelBeeVectors();
+    genLvlBs = event->GetGenLevelPtr()->GetBottomquarkCollection();
+
+    for (auto& plB : plBs) {
+        bool hasMatch = false;
+        for (auto& genB : genLvlBs) {
+            if (deltaR(*plB, *genB) < 0.4) {
+                hasMatch = true;
+                break;
+            }
+        }
+        if (! hasMatch) return false;
+    }
+
+    return true;
+}
+
 eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned variation, unsigned flavor) {
     //if JER
 
@@ -318,24 +339,25 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned vari
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_UpCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_Up).pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_DownCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_Down).pt();
         }
-        met = event->met().pt();
-
     } else if (id == shapeUncId::JER_2p5) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_UpCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_To_2p5_Up).pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_DownCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            met = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_To_2p5_Down).pt();
         }
-        met = event->met().pt();
     } else if (id == shapeUncId::JEC && variation == 1000) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());

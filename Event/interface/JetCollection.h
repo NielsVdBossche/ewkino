@@ -89,8 +89,8 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         void cleanJetsFromTightLeptons( const LeptonCollection&, const double coneSize = 0.4 );
 
     
-        JetCollection( const std::vector< std::shared_ptr< Jet > >& jetVector ) : PhysicsObjectCollection< Jet >( jetVector ) {}
     private:
+        JetCollection( const std::vector< std::shared_ptr< Jet > >& jetVector ) : PhysicsObjectCollection< Jet >( jetVector ) {}
         
         //clean jets 
         void cleanJetsFromLeptons(const LeptonCollection&, bool (Lepton::*passSelection)() const, const double coneSize );

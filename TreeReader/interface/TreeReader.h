@@ -433,7 +433,8 @@ class TreeReader {
         bool isSMSignal() const;
         bool isNewPhysicsSignal() const;
         bool isSusy() const{ return _isSusy; }
-        bool hasPL() const { return hasPLInfo;}
+        bool hasPL() const { return _hasPLInfo;}
+        bool hasGenLvl() const { return _hasGenLevelInfo;}
 
         //access number of samples and current sample
         const Sample& currentSample() const{ return *_currentSamplePtr; }
@@ -478,7 +479,8 @@ class TreeReader {
         bool _isSusy = false;
         
         // same for PL info
-        bool hasPLInfo = false;
+        bool _hasPLInfo = false;
+        bool _hasGenLevelInfo = false;
 
         //check whether current sample is initialized, throw an error if it is not 
         void checkCurrentSample() const;

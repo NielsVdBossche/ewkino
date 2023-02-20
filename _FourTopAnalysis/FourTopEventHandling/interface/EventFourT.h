@@ -162,6 +162,7 @@ class EventFourT {
         void SetRelRegion(eventClass region) {relevantRegion = region;}
 
         int NumberOfBFlavorJets();
+        bool HasAdditionalBJets();
 
         #if JECWRAPPER
         JECWrapper* GetJECWrapper() {return jecWrapper;};

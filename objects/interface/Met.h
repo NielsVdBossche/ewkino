@@ -31,6 +31,7 @@ class Met : public PhysicsObject {
 	Met MetJECGroupedUp( const unsigned) const;
         Met MetJECSourcesDown( const unsigned ) const;
         Met MetJECSourcesUp( const unsigned) const;
+        Met MetVariation(JetCollection& nominalJets, Jet (Jet::*jetVariation)() const) const;
 
 	Met getVariedMet( const std::string& variation ) const;
         Met getVariedMet(JetCollection& nomJets, unsigned variationSource, unsigned flavor, bool up) const;

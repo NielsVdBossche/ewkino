@@ -124,6 +124,22 @@ Met Met::MetJECSourcesUp( const unsigned source) const {
     return variedMetPxPy( newpxy.first, newpxy.second );
 }
 
+Met Met::MetVariation(JetCollection& nominalJets, Jet (Jet::*jetVariation)() const) const {
+    LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
+
+    for (const auto& jetPtr : nominalJets) {
+        double ptNom = jetPtr->pt();
+        Jet varJet = ((*jetPtr).*jetVariation)();
+        double ptdiff = ptNom - varJet.pt();
+        ret += LorentzVector(ptdiff, 0., jetPtr->phi(), ptdiff);
+    }
+
+    Met variedMet( *this );
+    variedMet.setLorentzVector(ret.pt(), eta(), ret.phi(), ret.pt() );
+    return variedMet;
+}
+
+
 Met Met::HEMIssue(JetCollection& nominalJets) const {
     LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
     for (const auto& jetPtr : nominalJets) {

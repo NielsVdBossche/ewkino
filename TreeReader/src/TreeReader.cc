@@ -624,7 +624,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
 
     // Set branch addresses and branch pointers
     checkCurrentTree();
-    hasPLInfo = false;
+    _hasPLInfo = false;
+    _hasGenLevelInfo = false;
 
     _currentTreePtr->SetMakeClass(1);
 
@@ -821,6 +822,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
         _currentTreePtr->SetBranchAddress("_zgEventType", &_zgEventType, &b__zgEventType);
 
         if ( containsFullGeneratorInfo() ) {
+            _hasGenLevelInfo = true;
+            
             _currentTreePtr->SetBranchAddress("_gen_n",                                        &_gen_n,                                        &b__gen_n);
             _currentTreePtr->SetBranchAddress("_gen_pt",                                       _gen_pt,                                       &b__gen_pt);
             _currentTreePtr->SetBranchAddress("_gen_eta",                                      _gen_eta,                                      &b__gen_eta);
@@ -840,7 +843,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     }
 
     if (containsParticleLevelInfo()) {
-        hasPLInfo = true;
+        _hasPLInfo = true;
 
         _currentTreePtr->SetBranchAddress("_pl_met",                   &_pl_met,                   &b__pl_met);
         _currentTreePtr->SetBranchAddress("_pl_metPhi",                &_pl_metPhi,                &b__pl_metPhi);

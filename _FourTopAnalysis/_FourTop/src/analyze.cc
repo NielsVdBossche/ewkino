@@ -172,7 +172,7 @@ void FourTop::analyze(std::string method) {
             if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
                 mgrAll->changePrimaryProcess(currProcName);
-                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL()) {
+                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL() && treeReader->hasGenLvl()) {
                     std::string bbName = currProcName + "bb";
                     mgrAll->changeProcess(1, bbName);
                     nominalBees = 2;
@@ -351,7 +351,8 @@ void FourTop::analyze(std::string method) {
             }
 
             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
-                if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
+                //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
+                if (selection->HasAdditionalBJets()) processNb = 1;
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
@@ -554,6 +555,8 @@ void FourTop::analyze(std::string method) {
                 } else if (uncID == shapeUncId::WZSF) {
                     if (sampleReweighter) {
                         for (int i=0; i < 7; i++) {
+                            weightUp = 1.;
+                            weightDown = 1.;
                             if (selection->numberOfJets() == i || (i == 6 && selection->numberOfJets() >= 6)) {
                                 weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
                                 weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
@@ -570,8 +573,6 @@ void FourTop::analyze(std::string method) {
                                 }
                             }
                         }
-                        weightUp = 1.;
-                        weightDown = 1.;
                     } else {
                         for (std::string wzSFRegion : wzSFRegions) {
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec, weight, weight);
