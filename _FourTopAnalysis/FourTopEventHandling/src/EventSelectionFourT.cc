@@ -317,15 +317,14 @@ bool EventFourT::HasAdditionalBJets() {
     for (auto& plB : plBs) {
         bool hasMatch = false;
         for (auto& genB : genLvlBs) {
-            if (deltaR(*plB, *genB) < 0.4) {
-                hasMatch = true;
-                break;
-            }
+            if (deltaR(*plB, *genB) > 0.4) continue;
+            hasMatch = true;
+            break;
         }
-        if (! hasMatch) return false;
+        if (! hasMatch) return true;
     }
 
-    return true;
+    return false;
 }
 
 eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned variation, unsigned flavor) {
