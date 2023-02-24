@@ -246,7 +246,7 @@ void FourTop::analyze(std::string method) {
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
                 //zzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4PlusJet"};
                 //mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
-                ttVJetsRegions = {"6Jet", "7Jet", "8PlusJet"};
+                ttVJetsRegions = {"AddJets", "AddBJets"};
                 mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
         }
@@ -609,15 +609,34 @@ void FourTop::analyze(std::string method) {
                 //      }
                 //  }
                 } else if (uncID == ttvNJetsUnc) {
-                    for (int i=0; i < 3; i++) {
+                    for (int i=0; i < 2; i++) {
                         weightUp = 1.;
                         weightDown = 1.;
-                        if (selection->numberOfJets() == i+6 || (i == 3 && selection->numberOfJets() >= i+6)) {
-                            if (selection->numberOfJets() == 6) weightUp = 1.5;
-                            else if (selection->numberOfJets() == 7) weightUp = 2.25;
-                            else if (selection->numberOfJets() >= 8) weightUp = 4.;
+                        if (i == 0) {
+                            if (selection->numberOfLeps() == 2) {
+                                if (selection->numberOfJets() <= 2) weightUp = 0.92;
+                                else if (selection->numberOfJets() == 3) weightUp = 0.95;
+                                else if (selection->numberOfJets() == 4) weightUp = 1.03;
+                                else if (selection->numberOfJets() == 5) weightUp = 1.20;
+                                else if (selection->numberOfJets() == 6) weightUp = 1.42;
+                                else if (selection->numberOfJets() >= 7) weightUp = 1.55;
 
-                            weightDown = 0.75;
+                                weightDown = 0.99;
+                            }
+                            if (selection->numberOfLeps() >= 3) {
+                                if (selection->numberOfJets() <= 2) weightUp = 0.96;
+                                else if (selection->numberOfJets() == 3) weightUp = 1.16;
+                                else if (selection->numberOfJets() == 4) weightUp = 1.28;
+                                else if (selection->numberOfJets() == 5) weightUp = 1.46;
+                                else if (selection->numberOfJets() == 6) weightUp = 1.44;
+                                else if (selection->numberOfJets() >= 7) weightUp = 1.44;
+
+                                weightDown = 0.99;
+                            }
+                        } else if (i==1) {
+                            if (splitAdditionalBees && st == selectionType::MCPrompt ) {
+                                if (selection->HasAdditionalBJets()) weightUp = 1.7;
+                            }
                         }
                         std::string ttVJetsRegion = ttVJetsRegions[i];
                         uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, fillVec, weight * weightUp, weight * weightDown);
