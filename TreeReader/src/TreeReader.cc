@@ -405,21 +405,47 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Electron_pt", _Electron_pt, &b__Electron_pt);
     _currentTreePtr->SetBranchAddress("Electron_eta", _Electron_eta, &b__Electron_eta);
     _currentTreePtr->SetBranchAddress("Electron_phi", _Electron_phi, &b__Electron_phi);
+    _currentTreePtr->SetBranchAddress("Electron_charge", _Electron_charge, &b__Electron_charge);
+    _currentTreePtr->SetBranchAddress("Electron_dxy", _Electron_dxy, &b__Electron_dxy);
+    _currentTreePtr->SetBranchAddress("Electron_dz", _Electron_dz, &b__Electron_dz);
+    _currentTreePtr->SetBranchAddress("Electron_sip3d", _Electron_sip3d, &b__Electron_sip3d);
+    _currentTreePtr->SetBranchAddress("Electron_pfRelIso03_all", _Electron_pfRelIso03_all, &b__Electron_pfRelIso03_all);
+    _currentTreePtr->SetBranchAddress("Electron_miniPFRelIso_all", _Electron_miniPFRelIso_all, &b__Electron_miniPFRelIso_all);
+    _currentTreePtr->SetBranchAddress("Electron_miniPFRelIso_chg", _Electron_miniPFRelIso_chg, &b__Electron_miniPFRelIso_chg);
+    _currentTreePtr->SetBranchAddress("Electron_jetIdx", _Electron_jetIdx, &b__Electron_jetIdx);
+    _currentTreePtr->SetBranchAddress("Electron_jetPtRelv2", _Electron_jetPtRelv2, &b__Electron_jetPtRelv2);
+    _currentTreePtr->SetBranchAddress("Electron_jetRelIso", _Electron_jetRelIso, &b__Electron_jetRelIso);
     // variables related to muons
     _currentTreePtr->SetBranchAddress("nMuon", &_nMuon, &b__nMuon);
     _currentTreePtr->SetBranchAddress("Muon_pt", _Muon_pt, &b__Muon_pt);
     _currentTreePtr->SetBranchAddress("Muon_eta", _Muon_eta, &b__Muon_eta);
     _currentTreePtr->SetBranchAddress("Muon_phi", _Muon_phi, &b__Muon_phi);
+    _currentTreePtr->SetBranchAddress("Muon_charge", _Muon_charge, &b__Muon_charge);
+    _currentTreePtr->SetBranchAddress("Muon_dxy", _Muon_dxy, &b__Muon_dxy);
+    _currentTreePtr->SetBranchAddress("Muon_dz", _Muon_dz, &b__Muon_dz);
+    _currentTreePtr->SetBranchAddress("Muon_sip3d", _Muon_sip3d, &b__Muon_sip3d);
+    _currentTreePtr->SetBranchAddress("Muon_pfRelIso03_all", _Muon_pfRelIso03_all, &b__Muon_pfRelIso03_all);
+    _currentTreePtr->SetBranchAddress("Muon_miniPFRelIso_all", _Muon_miniPFRelIso_all, &b__Muon_miniPFRelIso_all);
+    _currentTreePtr->SetBranchAddress("Muon_miniPFRelIso_chg", _Muon_miniPFRelIso_chg, &b__Muon_miniPFRelIso_chg);
+    _currentTreePtr->SetBranchAddress("Muon_jetIdx", _Muon_jetIdx, &b__Muon_jetIdx);
+    _currentTreePtr->SetBranchAddress("Muon_jetPtRelv2", _Muon_jetPtRelv2, &b__Muon_jetPtRelv2);
+    _currentTreePtr->SetBranchAddress("Muon_jetRelIso", _Muon_jetRelIso, &b__Muon_jetRelIso);
     // variables related to taus
     _currentTreePtr->SetBranchAddress("nTau", &_nTau, &b__nTau);
     _currentTreePtr->SetBranchAddress("Tau_pt", _Tau_pt, &b__Tau_pt);
     _currentTreePtr->SetBranchAddress("Tau_eta", _Tau_eta, &b__Tau_eta);
     _currentTreePtr->SetBranchAddress("Tau_phi", _Tau_phi, &b__Tau_phi);
+    _currentTreePtr->SetBranchAddress("Tau_charge", _Tau_charge, &b__Tau_charge);
+    _currentTreePtr->SetBranchAddress("Tau_dxy", _Tau_dxy, &b__Tau_dxy);
+    _currentTreePtr->SetBranchAddress("Tau_dz", _Tau_dz, &b__Tau_dz);
     // variables related to jets
     _currentTreePtr->SetBranchAddress("nJet", &_nJet, &b__nJet);
     _currentTreePtr->SetBranchAddress("Jet_pt", _Jet_pt, &b__Jet_pt);
     _currentTreePtr->SetBranchAddress("Jet_eta", _Jet_eta, &b__Jet_eta);
     _currentTreePtr->SetBranchAddress("Jet_phi", _Jet_phi, &b__Jet_phi);
+    _currentTreePtr->SetBranchAddress("Jet_btagDeepB", _Jet_bTagDeepB, &b__Jet_bTagDeepB);
+    _currentTreePtr->SetBranchAddress("Jet_btagDeepFlavB", _Jet_bTagDeepFlavB, &b__Jet_bTagDeepFlavB);
+    _currentTreePtr->SetBranchAddress("Jet_nConstituents", _Jet_nConstituents, &b__Jet_nConstituents);
     // variables related to missing transverse energy
     _currentTreePtr->SetBranchAddress("MET_pt", &_MET_pt, &b__MET_pt);
     _currentTreePtr->SetBranchAddress("MET_phi", &_MET_phi, &b__MET_phi);

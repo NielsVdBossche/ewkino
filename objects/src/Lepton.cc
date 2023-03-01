@@ -24,35 +24,34 @@ Lepton::Lepton( const TreeReader& treeReader,
 	    treeReader._Electron_eta[leptonIndex],
 	    treeReader._Electron_phi[leptonIndex],
 	    0. );
-	/*_charge = 
-	_dxy = 
-	_dz = 
-	_sip3d = */
+	_charge = treeReader._Electron_charge[leptonIndex];
+	_dxy = treeReader._Electron_dxy[leptonIndex];
+	_dz = treeReader._Electron_dz[leptonIndex];
     } else if(leptonType=="muon"){
 	vector = LorentzVector(
             treeReader._Muon_pt[leptonIndex],
             treeReader._Muon_eta[leptonIndex],
             treeReader._Muon_phi[leptonIndex],
             0. );
-	/*_charge = 
-        _dxy = 
-        _dz = 
-        _sip3d = */
+	_charge = treeReader._Muon_charge[leptonIndex];
+        _dxy = treeReader._Muon_dxy[leptonIndex];
+        _dz = treeReader._Muon_dz[leptonIndex];
     } else if(leptonType=="tau"){
 	vector = LorentzVector(
 	    treeReader._Tau_pt[leptonIndex],
 	    treeReader._Tau_eta[leptonIndex],
 	    treeReader._Tau_phi[leptonIndex],
             0. );
-	/*_charge = 
-        _dxy = 
-        _dz = 
-        _sip3d = */
+	_charge = treeReader._Tau_charge[leptonIndex];
+        _dxy = treeReader._Tau_dxy[leptonIndex];
+        _dz = treeReader._Tau_dz[leptonIndex];
     } else{
 	std::string msg = "ERROR in Lepton::Lepton:";
 	msg += " unrecognized lepton type " + leptonType;
 	throw std::invalid_argument(msg);
     }
+    // to do: move variable sip3d from Lepton to LightLepton
+    // (since it is not defined in nanoAOD for Taus...)
     _uncorrectedPt = pt();
     _uncorrectedE = energy();
 }

@@ -41,34 +41,33 @@ LightLepton::LightLepton(
     LeptonSelector* leptonSelector ):
     Lepton( treeReader, leptonType, leptonIndex, leptonSelector)
 {
+    int jetIdx = -1;
     if(leptonType=="electron"){
-	/*_relIso0p3 = 
-	_relIso0p4 = 
-	_miniIso = 
-	_miniIsoCharged = 
-	_ptRatio = 
-	_ptRel = 
-	_closestJetDeepCSV = 
-	_closestJetDeepFlavor = 
-	_closestJetTrackMultiplicity = 
-	_leptonMVATOPUL = 
-	_leptonMVATOPv2UL = */
+	_relIso0p3 = treeReader._Electron_pfRelIso03_all[leptonIndex];
+	_relIso0p4 = 0; // seems to be not stored in nanoAOD
+	_miniIso = treeReader._Electron_miniPFRelIso_all[leptonIndex];
+	_miniIsoCharged = treeReader._Electron_miniPFRelIso_chg[leptonIndex];
+	_ptRatio = 1./(treeReader._Electron_jetRelIso[leptonIndex] + 1);
+	_ptRel = treeReader._Electron_jetPtRelv2[leptonIndex];
+	jetIdx = treeReader._Electron_jetIdx[leptonIndex];
     } else if(leptonType=="muon"){
-	/*_relIso0p3 = 
-        _relIso0p4 = 
-        _miniIso = 
-        _miniIsoCharged = 
-        _ptRatio = 
-        _ptRel = 
-        _closestJetDeepCSV = 
-        _closestJetDeepFlavor = 
-        _closestJetTrackMultiplicity = 
-        _leptonMVATOPUL = 
-        _leptonMVATOPv2UL = */
+	_relIso0p3 = treeReader._Muon_pfRelIso03_all[leptonIndex];
+        _relIso0p4 = 0; // seems to be not stored in nanoAOD
+        _miniIso = treeReader._Muon_miniPFRelIso_all[leptonIndex];
+        _miniIsoCharged = treeReader._Muon_miniPFRelIso_chg[leptonIndex];
+	_ptRatio = 1./(treeReader._Muon_jetRelIso[leptonIndex] + 1);
+        _ptRel = treeReader._Muon_jetPtRelv2[leptonIndex];
+        jetIdx = treeReader._Muon_jetIdx[leptonIndex];
     } else{
         std::string msg = "ERROR in Lepton::Lepton:";
         msg += " unrecognized lepton type " + leptonType;
         throw std::invalid_argument(msg);
+    }
+
+    if( jetIdx>=0 ){
+	_closestJetDeepCSV = treeReader._Jet_bTagDeepB[jetIdx];
+        _closestJetDeepFlavor = treeReader._Jet_bTagDeepFlavB[jetIdx];
+        _closestJetTrackMultiplicity = treeReader._Jet_nConstituents[jetIdx];
     }
 
     //catch nan deep CSV values 
