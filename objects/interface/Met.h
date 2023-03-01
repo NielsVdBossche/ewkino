@@ -12,7 +12,7 @@ class Met : public PhysicsObject {
 
     public:
         Met() = default;
-        Met( const TreeReader&, bool, bool );
+        Met( const TreeReader& );
 
         virtual bool isGood() const override{ return true; }
 

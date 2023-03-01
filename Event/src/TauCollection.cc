@@ -2,7 +2,7 @@
 
 
 TauCollection::TauCollection( const TreeReader& treeReader ){
-    for( unsigned t = treeReader._nLight; t < treeReader._nL; ++t){
+    for( unsigned t = 0; t < treeReader._nTau; ++t){
         push_back( Tau( treeReader, t ) );
     }
 }

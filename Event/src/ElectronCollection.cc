@@ -2,7 +2,7 @@
 
 
 ElectronCollection::ElectronCollection( const TreeReader& treeReader ){
-    for( unsigned e = treeReader._nMu; e < treeReader._nLight; ++ e){
+    for( unsigned e = 0; e < treeReader._nElectron; ++ e){
         push_back( Electron( treeReader, e ) );
     }
 }

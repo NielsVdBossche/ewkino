@@ -1,9 +1,10 @@
 #ifndef Electron_H
 #define Electron_H
 
-//include other parts of code 
+// include other parts of code 
 #include "PhysicsObject.h"
 #include "LightLepton.h"
+
 
 template< typename ObjectType > class PhysicsObjectCollection;
 
@@ -61,16 +62,16 @@ class Electron : public LightLepton{
         bool _passConversionVeto = false;
         unsigned _numberOfMissingHits = 0;
     
-        //several versions of electron MVA
+        // several versions of electron MVA
         float _electronMVASummer16GP = 0;
         float _electronMVASummer16HZZ = 0;
         float _electronMVAFall17Iso = 0;
         float _electronMVAFall17NoIso = 0;
 
-        //precomputed electron MVA decisions
-        bool _passElectronMVAFall17NoIsoLoose;
-        bool _passElectronMVAFall17NoIsoWP90;
-        bool _passElectronMVAFall17NoIsoWP80;
+        // precomputed electron MVA decisions
+        bool _passElectronMVAFall17NoIsoLoose = false;
+        bool _passElectronMVAFall17NoIsoWP90 = false;
+        bool _passElectronMVAFall17NoIsoWP80 = false;
 
         //pseudorapidity of the supercluster
         double _etaSuperCluster = 0;

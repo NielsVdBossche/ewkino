@@ -2,10 +2,13 @@
 
 
 JetParticleLevelCollection::JetParticleLevelCollection( const TreeReader& treeReader ){
-    for( unsigned j = 0; j < treeReader._pl_nJets; ++j ){
+    // dummy condtions to avoid compilation warnings
+    if( treeReader.isMC() ){}
+}
+/*    for( unsigned j = 0; j < treeReader._pl_nJets; ++j ){
         push_back( JetParticleLevel( treeReader, j ) ); 
     }
-}
+}*/
 
 JetParticleLevelCollection::size_type JetParticleLevelCollection::numberOfJets() const{
     // return number of jets in this collection (i.e. size)

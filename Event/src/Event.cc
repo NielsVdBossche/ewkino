@@ -7,38 +7,34 @@
 
 
 Event::Event( const TreeReader& treeReader, 
-		const bool readIndividualTriggers , const bool readIndividualMetFilters,
-		const bool readAllJECVariations, const bool readGroupedJECVariations,
-                const bool readParticleLevel ) :
+	      const bool readIndividualTriggers,
+              const bool readIndividualMetFilters ) :
     // make collections of physics objects
     _leptonCollectionPtr( new LeptonCollection( treeReader ) ),
-    _jetCollectionPtr( new JetCollection( treeReader,
-			readAllJECVariations, readGroupedJECVariations ) ),
-    _metPtr( new Met( treeReader,
-			readAllJECVariations, readGroupedJECVariations ) ),
+    _jetCollectionPtr( new JetCollection( treeReader ) ),
+    _metPtr( new Met( treeReader ) ),
     // make additional information structures
     _triggerInfoPtr( new TriggerInfo( treeReader, 
 			readIndividualTriggers, readIndividualMetFilters ) ),
-    _jetInfoPtr( new JetInfo( treeReader, 
-			readAllJECVariations, readGroupedJECVariations ) ),
+    //_jetInfoPtr( new JetInfo( treeReader, 
+    //			readAllJECVariations, readGroupedJECVariations ) ),
     _eventTagsPtr( new EventTags( treeReader ) ),
     _generatorInfoPtr( treeReader.isMC() ? new GeneratorInfo( treeReader ) : nullptr ),
-    _susyMassInfoPtr( treeReader.isSusy() ? new SusyMassInfo( treeReader ) : nullptr ),
     // make collections of particle level physics objects
-    _leptonParticleLevelCollectionPtr( (readParticleLevel && treeReader.containsParticleLevel()) ?
+    /*_leptonParticleLevelCollectionPtr( (readParticleLevel && treeReader.containsParticleLevel()) ?
                                     new LeptonParticleLevelCollection( treeReader ) :
                                     nullptr ),
     _jetParticleLevelCollectionPtr( (readParticleLevel && treeReader.containsParticleLevel()) ?
                                     new JetParticleLevelCollection( treeReader ) :
                                     nullptr ),
     _metParticleLevelPtr( (readParticleLevel && treeReader.containsParticleLevel()) ?
-                                    new MetParticleLevel( treeReader ) : nullptr ),
+                                    new MetParticleLevel( treeReader ) : nullptr ),*/
     // make additional information structures
-    _numberOfVertices( treeReader._nVertex ),
+    //_numberOfVertices( treeReader._nVertex ),
     // WARNING : use treeReader::_scaledWeight instead of treeReader::_weight 
     // since the former already includes cross-section and lumiosity scaling
     _weight( treeReader._scaledWeight ),
-    _genWeight( treeReader._weight ),
+    _genWeight( treeReader._genWeight ),
     _samplePtr( treeReader.currentSamplePtr() )
     {}
 
@@ -52,9 +48,6 @@ Event::~Event(){
     delete _eventTagsPtr;
     if( hasGeneratorInfo() ){
         delete _generatorInfoPtr;
-    }
-    if( hasSusyMassInfo() ){
-        delete _susyMassInfoPtr;
     }
     if( hasParticleLevel() ){
 	delete _leptonParticleLevelCollectionPtr;
@@ -72,7 +65,6 @@ Event::Event( const Event& rhs ) :
     _jetInfoPtr( new JetInfo( *rhs._jetInfoPtr ) ),
     _eventTagsPtr( new EventTags( *rhs._eventTagsPtr ) ),
     _generatorInfoPtr( rhs.hasGeneratorInfo() ? new GeneratorInfo( *rhs._generatorInfoPtr ) : nullptr ),
-    _susyMassInfoPtr( rhs.hasSusyMassInfo() ? new SusyMassInfo( *rhs._susyMassInfoPtr ) : nullptr ),
     _leptonParticleLevelCollectionPtr( rhs.hasParticleLevel() ?
         new LeptonParticleLevelCollection( *rhs._leptonParticleLevelCollectionPtr ) : nullptr ),
     _jetParticleLevelCollectionPtr( rhs.hasParticleLevel() ?
@@ -94,7 +86,6 @@ Event::Event( Event&& rhs ) noexcept :
     _jetInfoPtr( rhs._jetInfoPtr ),
     _eventTagsPtr( rhs._eventTagsPtr ),
     _generatorInfoPtr( rhs._generatorInfoPtr ),
-    _susyMassInfoPtr( rhs._susyMassInfoPtr ),
     _leptonParticleLevelCollectionPtr( rhs._leptonParticleLevelCollectionPtr ),
     _jetParticleLevelCollectionPtr( rhs._jetParticleLevelCollectionPtr ),
     _metParticleLevelPtr( rhs._metParticleLevelPtr ),
@@ -110,7 +101,6 @@ Event::Event( Event&& rhs ) noexcept :
     rhs._jetInfoPtr = nullptr;
     rhs._eventTagsPtr = nullptr;
     rhs._generatorInfoPtr = nullptr;
-    rhs._susyMassInfoPtr = nullptr;
     rhs._leptonParticleLevelCollectionPtr = nullptr;
     rhs._jetParticleLevelCollectionPtr = nullptr;
     rhs._metParticleLevelPtr = nullptr;
@@ -129,9 +119,6 @@ Event& Event::operator=( const Event& rhs ){
         if( hasGeneratorInfo() ){
             delete _generatorInfoPtr;
         }
-        if( hasSusyMassInfo() ){
-            delete _susyMassInfoPtr;
-        }
 	if( hasParticleLevel() ){
 	    delete _leptonParticleLevelCollectionPtr;
 	    delete _jetParticleLevelCollectionPtr;
@@ -145,7 +132,6 @@ Event& Event::operator=( const Event& rhs ){
 	_jetInfoPtr = new JetInfo( *rhs._jetInfoPtr );
         _eventTagsPtr = new EventTags( *rhs._eventTagsPtr );
         _generatorInfoPtr = rhs.hasGeneratorInfo() ? new GeneratorInfo( *rhs._generatorInfoPtr ) : nullptr;
-        _susyMassInfoPtr = rhs.hasSusyMassInfo() ? new SusyMassInfo( *rhs._susyMassInfoPtr ) : nullptr;
 	_leptonParticleLevelCollectionPtr = rhs.hasParticleLevel() ? 
 	    new LeptonParticleLevelCollection( *rhs._leptonParticleLevelCollectionPtr ) : nullptr;
 	_jetParticleLevelCollectionPtr = rhs.hasParticleLevel() ?
@@ -172,9 +158,6 @@ Event& Event::operator=( Event&& rhs ) noexcept{
         if( hasGeneratorInfo() ){
             delete _generatorInfoPtr;
         }
-        if( hasSusyMassInfo() ){
-            delete _susyMassInfoPtr;
-        }
 	if( hasParticleLevel() ){
             delete _leptonParticleLevelCollectionPtr;
             delete _jetParticleLevelCollectionPtr;
@@ -195,8 +178,6 @@ Event& Event::operator=( Event&& rhs ) noexcept{
         rhs._eventTagsPtr = nullptr;
         _generatorInfoPtr = rhs._generatorInfoPtr;
         rhs._generatorInfoPtr = nullptr;
-        _susyMassInfoPtr = rhs._susyMassInfoPtr;
-        rhs._susyMassInfoPtr = nullptr;
 	_leptonParticleLevelCollectionPtr = rhs._leptonParticleLevelCollectionPtr;
 	rhs._leptonParticleLevelCollectionPtr = nullptr;
 	_jetParticleLevelCollectionPtr = rhs._jetParticleLevelCollectionPtr;
@@ -222,19 +203,6 @@ void Event::checkGeneratorInfo() const{
 GeneratorInfo& Event::generatorInfo() const{
     checkGeneratorInfo();
     return *_generatorInfoPtr;
-}
-
-
-void Event::checkSusyMassInfo() const{
-    if( !hasSusyMassInfo() ){
-        throw std::domain_error( "Trying to access SUSY mass info for a non-SUSY event!" );
-    }
-}
-
-
-SusyMassInfo& Event::susyMassInfo() const{
-    checkSusyMassInfo();
-    return *_susyMassInfoPtr;
 }
 
 void Event::checkParticleLevel() const{

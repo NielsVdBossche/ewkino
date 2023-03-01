@@ -19,9 +19,7 @@ class LeptonCollection;
 class JetCollection : public PhysicsObjectCollection< Jet > {
 
     public:
-        JetCollection( const TreeReader&, 
-			const bool readAllJECVariations = false,
-			const bool readGroupedJECVariations = false );
+        JetCollection( const TreeReader& );
 
         //make jet collection with b-tagged jets 
         JetCollection looseBTagCollection() const;

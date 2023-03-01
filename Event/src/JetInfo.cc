@@ -18,10 +18,10 @@ std::string cleanJECVariationName( std::string branchName ){
     return jecName;
 }
 
-JetInfo::JetInfo( const TreeReader& treeReader, 
-		  const bool readAllJECVariations,
-		  const bool readGroupedJECVariations ){
-    _JECSources = std::vector< std::string >();
+JetInfo::JetInfo( const TreeReader& treeReader ){
+    // dummy conditions to avoid compilation warnings
+    if( treeReader.isMC() ){}
+    /*_JECSources = std::vector< std::string >();
     _JECGrouped = std::vector< std::string >();
     if( readAllJECVariations ){
 	for( auto mapEl: treeReader._jetSmearedPt_JECSourcesUp ){
@@ -36,7 +36,7 @@ JetInfo::JetInfo( const TreeReader& treeReader,
             // as up/down and pt/smearedPt are supposed to contain the same variations
             _JECGrouped.push_back( cleanJECVariationName(mapEl.first) );
 	}
-    }
+    }*/
 }
 
 bool JetInfo::hasJECVariation( const std::string& jecName ) const{

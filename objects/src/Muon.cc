@@ -1,28 +1,17 @@
 #include "../interface/Muon.h"
-
-//include other parts of framework
 #include "../interface/MuonSelector.h"
 
 
-Muon::Muon( const TreeReader& treeReader, const unsigned leptonIndex ):
-    LightLepton( treeReader, leptonIndex, new MuonSelector( this ) ),
-    _segmentCompatibility( treeReader._lMuonSegComp[leptonIndex] ),
-    _trackPt( treeReader._lMuonTrackPt[leptonIndex] ),
-    _trackPtError( treeReader._lMuonTrackPtErr[leptonIndex] ),
-    _relIso0p4DeltaBeta( treeReader._relIso0p4MuDeltaBeta[leptonIndex] ),
-    _isLoosePOGMuon( treeReader._lPOGLoose[leptonIndex] ),
-    _isMediumPOGMuon( treeReader._lPOGMedium[leptonIndex] ),
-    _isTightPOGMuon( treeReader._lPOGTight[leptonIndex] )
-{
-    // apply muon rochester energy correction -> use lPtCorr instead of lPt
-    setLorentzVector( treeReader._lPtCorr[ leptonIndex ], eta(), phi(),
-                      treeReader._lECorr[ leptonIndex ] );
-   
-    // make sure also non-cone-corrected pt is set to the corrected value
-    _uncorrectedPt = pt();
-    _uncorrectedE = energy();
- 
-}
+Muon::Muon( const TreeReader& treeReader, const unsigned muonIndex ):
+    LightLepton( treeReader, "muon", muonIndex, new MuonSelector(this) )
+    /*_segmentCompatibility( treeReader._lMuonSegComp[muonIndex] ),
+    _trackPt( treeReader._lMuonTrackPt[muonIndex] ),
+    _trackPtError( treeReader._lMuonTrackPtErr[muonIndex] ),
+    _relIso0p4DeltaBeta( treeReader._relIso0p4MuDeltaBeta[muonIndex] ),
+    _isLoosePOGMuon( treeReader._lPOGLoose[muonIndex] ),
+    _isMediumPOGMuon( treeReader._lPOGMedium[muonIndex] ),
+    _isTightPOGMuon( treeReader._lPOGTight[muonIndex] )*/
+{}
 
 
 Muon::Muon( const Muon& rhs ):
@@ -52,7 +41,9 @@ Muon::Muon( Muon&& rhs ) noexcept:
 std::ostream& Muon::print( std::ostream& os ) const{
     os << "Muon : ";
     LightLepton::print( os );
-    os << " / segmentCompatibility = " << _segmentCompatibility << " / trackPt = " << _trackPt << " / trackPtError = " << _trackPtError;
+    os << " / segmentCompatibility = " << _segmentCompatibility;
+    os << " / trackPt = " << _trackPt;
+    os << " / trackPtError = " << _trackPtError;
     if( _isTightPOGMuon ){
         os << " / tight POG muon";
     } else if( _isMediumPOGMuon ){

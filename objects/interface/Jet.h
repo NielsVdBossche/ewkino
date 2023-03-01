@@ -1,11 +1,15 @@
 #ifndef Jet_H
 #define Jet_H
 
-//include other parts of code 
+// include c++ library classes 
+#include <cmath>
+#include <stdexcept>
+#include <string>
+
+// include other parts of framework
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
 #include "../../Tools/interface/stringTools.h"
-//#include "JetSelector.h"
 
 
 template< typename objectType > class PhysicsObjectCollection;
@@ -16,8 +20,7 @@ class Jet : public PhysicsObject{
     friend class PhysicsObjectCollection< Jet >;
 
     public:
-        Jet( const TreeReader&, const unsigned,
-		const bool readAllJECVariations, const bool readGroupedJECVariations);
+        Jet( const TreeReader&, const unsigned );
 
         Jet( const Jet& );
         Jet( Jet&& ) noexcept;

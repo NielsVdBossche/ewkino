@@ -18,32 +18,16 @@ std::string cleanName( const std::string& name ){
 }
 
 
-TriggerInfo::TriggerInfo( const TreeReader& treeReader, const bool readIndividualTriggers, const bool readIndividualMetFilters ) :
-    _passTriggers_e( treeReader._passTrigger_e ),
-    _passTriggers_m( treeReader._passTrigger_m ),
-    _passTriggers_ee( treeReader._passTrigger_ee ),
-    _passTriggers_em( treeReader._passTrigger_em ),
-    _passTriggers_et( treeReader._passTrigger_et ),
-    _passTriggers_mm( treeReader._passTrigger_mm ),
-    _passTriggers_mt( treeReader._passTrigger_mt ),
-    _passTriggers_eee( treeReader._passTrigger_eee ),
-    _passTriggers_eem( treeReader._passTrigger_eem ),
-    _passTriggers_emm( treeReader._passTrigger_emm ),
-    _passTriggers_mmm( treeReader._passTrigger_mmm ),
-    _passTriggers_FR( treeReader._passTrigger_FR ),
-    _passTriggers_FR_iso( treeReader._passTrigger_FR_iso ),
-    _passMetFilters( treeReader._passMETFilters )
-{
-    if( treeReader.containsRefTriggerInfo() ){
-	_passTriggers_ref = treeReader._passTrigger_ref;
-    }
+TriggerInfo::TriggerInfo( const TreeReader& treeReader,
+			  const bool readIndividualTriggers, 
+			  const bool readIndividualMetFilters ){
     if( readIndividualTriggers ){
         for( const auto& trigger : treeReader._triggerMap ){
             individualTriggerMap.insert( { cleanName( trigger.first ), trigger.second } );
         }
     }
     if( readIndividualMetFilters ){
-        for( const auto& filter : treeReader._MetFilterMap ){
+        for( const auto& filter : treeReader._METFilterMap ){
             individualMetFilterMap.insert( { cleanName( filter.first ), filter.second } );
         }   
     }

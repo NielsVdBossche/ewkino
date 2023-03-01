@@ -543,7 +543,7 @@ std::map<std::string, std::map<int,double>> ReweighterBTagShape::calcAverageOfWe
     else numberOfEntries = std::min(numberOfEntries, availableEntries);
     std::cout << "starting event loop for " << numberOfEntries << " events..." << std::endl;
     for( long unsigned entry = 0; entry < numberOfEntries; ++entry ){
-        Event event = treeReader.buildEvent( entry, false, false, true, true );
+        Event event = treeReader.buildEvent( entry, false, false );
 
 	// printouts for testing
 	/*std::cout << "--- event ---" << std::endl;

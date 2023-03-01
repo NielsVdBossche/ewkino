@@ -6,7 +6,12 @@
 #include <string>
 
 
-JetParticleLevel::JetParticleLevel( const TreeReader& treeReader, const unsigned index ):
+JetParticleLevel::JetParticleLevel( const TreeReader& treeReader, const unsigned index ){
+    // dummy condtions to avoid compilation warnings
+    if( index ){}
+    if( treeReader.isMC() ){}
+}
+/*
     PhysicsObject( 
         treeReader._pl_jetPt[index], 
         treeReader._pl_jetEta[index], 
@@ -26,7 +31,7 @@ JetParticleLevel::JetParticleLevel( const TreeReader& treeReader, const unsigned
         msg += " jet hadronFlavor is '" + std::to_string( _hadronFlavor ) + "' while it should be 0, 4 or 5.";
         throw std::invalid_argument( msg );
     }
-}
+}*/
 
 
 JetParticleLevel::JetParticleLevel( const JetParticleLevel& rhs ) : 

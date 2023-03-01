@@ -6,7 +6,12 @@
 
 
 LeptonParticleLevel::LeptonParticleLevel( 
-    const TreeReader& treeReader, const unsigned index ) :
+    const TreeReader& treeReader, const unsigned index ){
+    // dummy condtions to avoid compilation warnings
+    if( index ){}
+    if( treeReader.isMC() ){}
+} 
+/*
     PhysicsObject( treeReader._pl_lPt[index], treeReader._pl_lEta[index], 
 		    treeReader._pl_lPhi[index], treeReader._pl_lE[index], 
 		    treeReader.is2016(), 
@@ -17,6 +22,7 @@ LeptonParticleLevel::LeptonParticleLevel(
     _charge( treeReader._pl_lCharge[index] ),
     _flavor( treeReader._pl_lFlavor[index] )
     {}
+*/
 
 
 LeptonParticleLevel::LeptonParticleLevel( const LeptonParticleLevel& rhs ) :

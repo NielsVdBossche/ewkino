@@ -5,10 +5,10 @@
 
 
 LightLeptonCollection::LightLeptonCollection( const TreeReader& treeReader ){
-    for( unsigned m = 0; m < treeReader._nMu; ++m ){
+    for( unsigned m = 0; m < treeReader._nMuon; ++m ){
         push_back( Muon( treeReader, m ) );
     }
-    for( unsigned e = treeReader._nMu; e < treeReader._nLight; ++e ){
+    for( unsigned e = 0; e < treeReader._nElectron; ++e ){
         push_back( Electron( treeReader, e ) );
     }
 }

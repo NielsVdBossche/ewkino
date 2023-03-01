@@ -11,9 +11,7 @@ class JetInfo{
 
     public: 
 
-	JetInfo( const TreeReader&, 
-		 const bool readAllJECVariations = false, 
-		 const bool readGroupedJECVariations = false );
+	JetInfo( const TreeReader& );
 	std::vector< std::string > allJECVariations(){ return _JECSources; }
 	std::vector< std::string > groupedJECVariations(){ return _JECGrouped; }
 

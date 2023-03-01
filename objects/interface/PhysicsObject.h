@@ -64,7 +64,6 @@ class PhysicsObject{
         //set the lorentzvector to new values 
         void setLorentzVector( double, double, double, double );
 
-    private:
         LorentzVector vector; 
 
         bool is2016Object = false;

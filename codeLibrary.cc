@@ -9,11 +9,11 @@
 #include "objects/src/Jet.cc" 
 #include "objects/src/Met.cc"
 #include "objects/src/LeptonGeneratorInfo.cc"
-#include "objects/src/LeptonSelector.cc"
 #include "objects/src/GenMet.cc"
 #include "objects/src/LeptonParticleLevel.cc"
 #include "objects/src/JetParticleLevel.cc"
 #include "objects/src/MetParticleLevel.cc"
+#include "objects/src/LeptonSelector.cc"
 #include "objectSelection/MuonSelector.cc"
 #include "objectSelection/ElectronSelector.cc"
 #include "objectSelection/TauSelector.cc"
@@ -29,7 +29,6 @@
 #include "Event/src/JetInfo.cc"
 #include "Event/src/TriggerInfo.cc"
 #include "Event/src/GeneratorInfo.cc"
-#include "Event/src/SusyMassInfo.cc"
 #include "Event/src/LeptonParticleLevelCollection.cc"
 #include "Event/src/JetParticleLevelCollection.cc"
 #include "Event/src/EventTags.cc"
@@ -57,7 +56,6 @@
 
 //include TreeReader code 
 #include "TreeReader/src/TreeReader.cc"
-#include "TreeReader/src/TreeReaderErrors.cc"
 
 //include plotting code 
 #include "plotting/src/drawLumi.cc"

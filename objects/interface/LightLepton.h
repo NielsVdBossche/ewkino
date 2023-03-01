@@ -1,18 +1,32 @@
 #ifndef LightLepton_H
 #define LightLepton_H
 
-//include c++ library classes 
-
-//include ROOT classes 
-
-//include other parts of code 
+// include other parts of code 
 #include "Lepton.h"
 #include "../../TreeReader/interface/TreeReader.h"
 
 class LightLepton : public Lepton {
     
-    public: 
-        LightLepton( const TreeReader&, const unsigned, LeptonSelector* ); 
+    public:
+	// constructor from explicitly passed values 
+        /*LightLepton( const double pt, const double eta, const double phi, const double e,
+                const bool is2016, const bool is2016PreVFP, const bool is2016PostVFP,
+                const bool is2017, const bool is2018,
+                LeptonSelector* leptonSelector,
+                const int charge, const double dxy, const double dz, const double sip3d,
+                LeptonGeneratorInfo* leptonGeneratorInfo,
+                const double relIso0p3, const double relIso0p4,
+                const double miniIso, const double miniIsoCharged,
+                const double ptRatio, const double ptRel,
+                const double closestJetDeepCSV, const double closestJetDeepFlavor,
+                const double closestJetTrackMultiplicity,
+                const double leptonMVATOPUL, const double leptonMVATOPv2UL );*/
+	// constructor from TreeReader
+	LightLepton( const TreeReader& treeReader,
+		     const std::string& leptonType,
+		     const unsigned leptonIndex,
+		     LeptonSelector* leptonSelector );
+
         LightLepton( const LightLepton& ) = delete;
         LightLepton( LightLepton&& ) = delete;
 

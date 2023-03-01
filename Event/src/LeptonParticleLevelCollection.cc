@@ -3,13 +3,15 @@
 
 LeptonParticleLevelCollection::LeptonParticleLevelCollection( const TreeReader& treeReader ){
     // constructor of a collection of LeptonParticleLevel objects from a TreeReader entry
-
-    // loop over indices up to _pl_nL (number of particle level leptons)
+    // dummy condtions to avoid compilation warnings
+    if( treeReader.isMC() ){}
+}
+/*    // loop over indices up to _pl_nL (number of particle level leptons)
     for( unsigned l = 0; l < treeReader._pl_nL; ++l){
 	// create a LeptonParticleLevel object and add to the collection
         push_back( LeptonParticleLevel( treeReader, l ) );
     }
-}
+}*/
 
 LeptonParticleLevelCollection::size_type LeptonParticleLevelCollection::numberOfLeptons() const{
     // return number of leptons (i.e. size of the collection)

@@ -5,11 +5,9 @@
 #include "../interface/LeptonCollection.h"
 
 
-JetCollection::JetCollection( const TreeReader& treeReader,
-				const bool readAllJECVariations,
-				const bool readGroupedJECVariations ){
-    for( unsigned j = 0; j < treeReader._nJets; ++j ){
-        this->push_back( Jet( treeReader, j, readAllJECVariations, readGroupedJECVariations ) ); 
+JetCollection::JetCollection( const TreeReader& treeReader ){
+    for( unsigned j = 0; j < treeReader._nJet; ++j ){
+        this->push_back( Jet( treeReader, j ) ); 
     }
 }
 

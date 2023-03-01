@@ -8,9 +8,9 @@
 
 
 EventTags::EventTags( const TreeReader& treeReader ) :
-    _runNumber( treeReader._runNb ),
-    _luminosityBlock( treeReader._lumiBlock ),
-    _eventNumber( treeReader._eventNb )
+    _runNumber( treeReader._run ),
+    _luminosityBlock( treeReader._luminosityBlock ),
+    _eventNumber( treeReader._event )
     {}
 
 

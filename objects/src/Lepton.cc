@@ -1,30 +1,63 @@
 #include "../interface/Lepton.h"
+#include "../interface/LeptonSelector.h"
 
-//include c++ library classes
+// include c++ library classes
 #include <utility>
 #include <stdexcept>
 
 
-Lepton::Lepton( const TreeReader& treeReader, const unsigned leptonIndex, LeptonSelector* leptonSelector ) :
-    PhysicsObject( treeReader._lPt[leptonIndex], treeReader._lEta[leptonIndex], 
-		    treeReader._lPhi[leptonIndex], treeReader._lE[leptonIndex], 
-		    treeReader.is2016(), 
-		    treeReader.is2016PreVFP(),
-		    treeReader.is2016PostVFP(),
-		    treeReader.is2017(),
-		    treeReader.is2018() ),
-    _charge( treeReader._lCharge[leptonIndex] ),
-    _dxy( treeReader._dxy[leptonIndex] ),
-    _dz( treeReader._dz[leptonIndex] ), 
-    _sip3d( treeReader._3dIPSig[leptonIndex] ),
-    generatorInfo( treeReader.isMC() ? new LeptonGeneratorInfo( treeReader, leptonIndex ) : nullptr ),
-    selector( leptonSelector ),
-    _uncorrectedPt( pt() ),
-    _uncorrectedE( energy() )
-    {}
+// constructor from TreeReader
+Lepton::Lepton( const TreeReader& treeReader, 
+		const std::string& leptonType,
+		const unsigned leptonIndex,
+		LeptonSelector* leptonSelector ){
+    is2016Object = treeReader.is2016();
+    is2016PreVFPObject = treeReader.is2016PreVFP();
+    is2016PostVFPObject = treeReader.is2016PostVFP();
+    is2017Object = treeReader.is2017();
+    is2018Object = treeReader.is2018();
+    selector = leptonSelector;
+    generatorInfo = nullptr;
+    if(leptonType=="electron"){
+	vector = LorentzVector(
+	    treeReader._Electron_pt[leptonIndex],
+	    treeReader._Electron_eta[leptonIndex],
+	    treeReader._Electron_phi[leptonIndex],
+	    0. );
+	/*_charge = 
+	_dxy = 
+	_dz = 
+	_sip3d = */
+    } else if(leptonType=="muon"){
+	vector = LorentzVector(
+            treeReader._Muon_pt[leptonIndex],
+            treeReader._Muon_eta[leptonIndex],
+            treeReader._Muon_phi[leptonIndex],
+            0. );
+	/*_charge = 
+        _dxy = 
+        _dz = 
+        _sip3d = */
+    } else if(leptonType=="tau"){
+	vector = LorentzVector(
+	    treeReader._Tau_pt[leptonIndex],
+	    treeReader._Tau_eta[leptonIndex],
+	    treeReader._Tau_phi[leptonIndex],
+            0. );
+	/*_charge = 
+        _dxy = 
+        _dz = 
+        _sip3d = */
+    } else{
+	std::string msg = "ERROR in Lepton::Lepton:";
+	msg += " unrecognized lepton type " + leptonType;
+	throw std::invalid_argument(msg);
+    }
+    _uncorrectedPt = pt();
+    _uncorrectedE = energy();
+}
 
 
-//Lepton has value-like behavior 
 Lepton::Lepton( const Lepton& rhs, LeptonSelector* leptonSelector ) : 
     PhysicsObject( rhs ),
     _charge( rhs._charge ),
@@ -32,11 +65,7 @@ Lepton::Lepton( const Lepton& rhs, LeptonSelector* leptonSelector ) :
     _dz( rhs._dz ),
     _sip3d( rhs._sip3d ),
     generatorInfo( new LeptonGeneratorInfo( *(rhs.generatorInfo) ) ),
-
-    //WARNING: selector remains uninitialized, and has to be dynamically allocated in derived classes. Final derived copy constructur MUST CREATE A NEW SELECTOR
     selector( leptonSelector ),
-
-    //make sure to copy "isConeCorrected" so a cone-correction can not be re-applied even after copying a lepton
     isConeCorrected( rhs.isConeCorrected ),
     _uncorrectedPt( rhs._uncorrectedPt ),
     _uncorrectedE( rhs._uncorrectedE )
@@ -50,11 +79,7 @@ Lepton::Lepton( Lepton&& rhs, LeptonSelector* leptonSelector ) noexcept :
     _dz( rhs._dz ),
     _sip3d( rhs._sip3d ),
     generatorInfo( rhs.generatorInfo ),
-
-    //WARNING: selector remains uninitialized, and has to be dynamically allocated in derived classes. Final derived copy constructur MUST CREATE A NEW SELECTOR
     selector( leptonSelector ),
-
-    //make sure to copy "isConeCorrected" so a cone-correction can not be re-applied even after copying a lepton
     isConeCorrected( rhs.isConeCorrected ),
     _uncorrectedPt( rhs._uncorrectedPt ),
     _uncorrectedE( rhs._uncorrectedE )
@@ -76,8 +101,6 @@ void Lepton::copyNonPointerAttributes( const Lepton& rhs ){
     _dxy = rhs._dxy;
     _dz = rhs._dz;
     _sip3d = rhs._sip3d;
-
-    //make sure to copy "isConeCorrected" so a cone-correction can not be re-applied even after copying a lepton
     isConeCorrected = rhs.isConeCorrected;
     _uncorrectedPt = rhs._uncorrectedPt;
     _uncorrectedE = rhs._uncorrectedE;
@@ -129,7 +152,9 @@ Lepton& Lepton::operator=( Lepton&& rhs ) noexcept{
 
 bool Lepton::checkGeneratorInfo() const{
     if( !hasGeneratorInfo() ){
-        throw std::domain_error( "Trying to access generator information for a lepton that has no generator info!" );
+	std::string msg = "ERROR in Lepton::checkGeneratorInfo:";
+        msg += " trying to access generator information for a lepton that has no generator info!";
+	throw std::runtime_error(msg);
     }
     return true;
 }

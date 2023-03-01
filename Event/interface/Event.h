@@ -11,7 +11,6 @@
 #include "TriggerInfo.h"
 #include "JetInfo.h"
 #include "EventTags.h"
-#include "SusyMassInfo.h"
 #include "LeptonParticleLevelCollection.h"
 #include "JetParticleLevelCollection.h"
 #include "../../objects/interface/Met.h"
@@ -35,10 +34,7 @@ class Event{
     public:
         Event( const TreeReader&, 
 		const bool readIndividualTriggers = false, 
-		const bool readIndividualMetFilters = false,
-		const bool readAllJECVariations = false,
-		const bool readGroupedJECVariations = false,
-                const bool readParticleLevel = false );
+		const bool readIndividualMetFilters = false );
         Event( const Event& );
         Event( Event&& ) noexcept;
 
@@ -55,7 +51,6 @@ class Event{
 	JetInfo& jetInfo() const{ return *_jetInfoPtr; }
         EventTags& eventTags() const{ return *_eventTagsPtr; }
         GeneratorInfo& generatorInfo() const;
-        SusyMassInfo& susyMassInfo() const;
 	LeptonParticleLevelCollection& leptonParticleLevelCollection() const;
 	JetParticleLevelCollection& jetParticleLevelCollection() const;
 	MetParticleLevel& metParticleLevel() const;
@@ -248,7 +243,6 @@ class Event{
 	JetInfo* _jetInfoPtr = nullptr;
         EventTags* _eventTagsPtr = nullptr;
         GeneratorInfo* _generatorInfoPtr = nullptr;
-        SusyMassInfo* _susyMassInfoPtr = nullptr;
 	LeptonParticleLevelCollection* _leptonParticleLevelCollectionPtr = nullptr;
 	JetParticleLevelCollection* _jetParticleLevelCollectionPtr = nullptr;
 	MetParticleLevel* _metParticleLevelPtr = nullptr;
@@ -271,10 +265,6 @@ class Event{
         //check the presence of generator information
         bool hasGeneratorInfo() const{ return ( _generatorInfoPtr != nullptr ); }
         void checkGeneratorInfo() const;
-
-        //check the presence of susy information
-        bool hasSusyMassInfo() const{ return ( _susyMassInfoPtr != nullptr ); }
-        void checkSusyMassInfo() const;
 
 	// check the presence of particle level information
 	bool hasParticleLevel() const{ 

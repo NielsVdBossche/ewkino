@@ -5,7 +5,6 @@
 #include "PhysicsObject.h"
 #include "LightLepton.h"
 
-
 template< typename objectType > class PhysicsObjectCollection;
 
 class Muon : public LightLepton {

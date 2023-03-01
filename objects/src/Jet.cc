@@ -1,90 +1,44 @@
 #include "../interface/Jet.h"
-
-//include c++ library classes 
-#include <cmath>
-#include <stdexcept>
-#include <string>
-
-//include other parts of framework
 #include "../interface/JetSelector.h"
 
-
-Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
-	    const bool readAllJECVariations, const bool readGroupedJECVariations ):
+Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex ):
     PhysicsObject( 
-        treeReader._jetSmearedPt[jetIndex], 
-        treeReader._jetEta[jetIndex], 
-        treeReader._jetPhi[jetIndex], 
-        treeReader._jetE[jetIndex] * ( treeReader._jetSmearedPt[jetIndex] / treeReader._jetPt[jetIndex] ),
+        treeReader._Jet_pt[jetIndex], 
+        treeReader._Jet_eta[jetIndex], 
+        treeReader._Jet_phi[jetIndex], 
+        0.,
         treeReader.is2016(),
 	treeReader.is2016PreVFP(),
 	treeReader.is2016PostVFP(), 
         treeReader.is2017(),
 	treeReader.is2018()
     ),
-    _deepCSV( treeReader._jetDeepCsv_b[jetIndex] 
+    /*_deepCSV( treeReader._jetDeepCsv_b[jetIndex] 
 		+ treeReader._jetDeepCsv_bb[jetIndex] ),
     _deepFlavor( treeReader._jetDeepFlavor_b[jetIndex] 
 		+ treeReader._jetDeepFlavor_bb[jetIndex] 
 		+ treeReader._jetDeepFlavor_lepb[jetIndex] ),
     _isTight( treeReader._jetIsTight[jetIndex] ),
     _isTightLeptonVeto( treeReader._jetIsTightLepVeto[jetIndex] ),
-
-    //WARNING : is hadron flavor defined for jets in data?
     _hadronFlavor( treeReader._jetHadronFlavor[jetIndex] ),
     _pt_JECDown( treeReader._jetSmearedPt_JECDown[jetIndex] ),
     _pt_JECUp( treeReader._jetSmearedPt_JECUp[jetIndex] ),
     _pt_JERDown( treeReader._jetSmearedPt_JERDown[jetIndex] ),
-    _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),
+    _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),*/
     selector( new JetSelector( this ) )
 {
-    if( readAllJECVariations ){
-	for( const auto mapEl: treeReader._jetSmearedPt_JECSourcesUp ){
-	    std::string key = mapEl.first;
-	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
-	    key = stringTools::removeOccurencesOf(key,"_JECSourcesUp");
-	    _pt_JECSourcesUp.insert( {key,mapEl.second[jetIndex]} );
-	}
-	for( const auto mapEl: treeReader._jetSmearedPt_JECSourcesDown ){
-	    std::string key = mapEl.first;
-	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
-	    key = stringTools::removeOccurencesOf(key,"_JECSourcesDown");
-	    _pt_JECSourcesDown.insert( {key,mapEl.second[jetIndex]} );
-	}
-    }
-    if( readGroupedJECVariations ){
-	for( const auto mapEl: treeReader._jetSmearedPt_JECGroupedUp ){
-	    std::string key = mapEl.first;
-	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
-	    key = stringTools::removeOccurencesOf(key,"_JECGroupedUp");
-	    _pt_JECGroupedUp.insert( {key,mapEl.second[jetIndex]} );
-	}
-	for( const auto mapEl: treeReader._jetSmearedPt_JECGroupedDown ){
-	    std::string key = mapEl.first;
-	    key = stringTools::removeOccurencesOf(key,"_jetSmearedPt_");
-	    key = stringTools::removeOccurencesOf(key,"_JECGroupedDown");
-	    _pt_JECGroupedDown.insert( {key,mapEl.second[jetIndex]} );
-	}
-    }
+    // catch potential invalid values of deepCSV and deepFlavor
+    if( std::isnan( _deepCSV ) ){ _deepCSV = 0.; }
+    else if( _deepCSV < 0 ){ _deepCSV = 0.; }
+    if( std::isnan( _deepFlavor ) ){ _deepFlavor = 0.; }
+    else if( _deepFlavor < 0 ){ _deepFlavor = 0.; }
 
-    //catch potential invalid values of deepCSV and deepFlavor
-    if( std::isnan( _deepCSV ) ){
-        _deepCSV = 0.;
-
-    //set minimum value to 0 to avoid default values
-    } else if( _deepCSV < 0 ){
-        _deepCSV = 0.;
-    }
-
-    if( std::isnan( _deepFlavor ) ){
-        _deepFlavor = 0.;
-    } else if( _deepFlavor < 0 ){
-        _deepFlavor = 0.;
-    }
-
-    //check that _hadronFlavor has a known value
+    // check that _hadronFlavor has a known value
     if( ! ( ( _hadronFlavor == 0 ) || ( _hadronFlavor == 4 ) || ( _hadronFlavor == 5 ) ) ){
-        throw std::invalid_argument( "jet hadronFlavor is '" + std::to_string( _hadronFlavor ) + "' while it should be 0, 4 or 5." );
+	std::string msg = "ERROR in Jet constructor:";
+        msg += " jet hadronFlavor is " + std::to_string( _hadronFlavor );
+	msg += " while it should be 0, 4 or 5.";
+	throw std::runtime_error(msg);
     }
 }
 
@@ -110,7 +64,7 @@ Jet::Jet( const Jet& rhs ) :
 
 Jet::Jet( Jet&& rhs ) noexcept :
     PhysicsObject( std::move( rhs ) ),
-	_deepCSV( rhs._deepCSV ),
+    _deepCSV( rhs._deepCSV ),
     _deepFlavor( rhs._deepFlavor ),
     _isTight( rhs._isTight ),
     _isTightLeptonVeto( rhs._isTightLeptonVeto ),
@@ -152,11 +106,8 @@ void Jet::copyNonPointerAttributes( const Jet& rhs ){
 Jet& Jet::operator=( const Jet& rhs ){
 
     PhysicsObject::operator=(rhs);
-
-    //note that the jet selector does not have to be changed, it will just keep pointing to this object 
-    if( this != &rhs ){
-        copyNonPointerAttributes( rhs );
-    }
+    // note that the jet selector does not have to be changed, it will just keep pointing to this object 
+    if( this != &rhs ){ copyNonPointerAttributes( rhs ); }
     return *this;
 }
 
@@ -164,12 +115,7 @@ Jet& Jet::operator=( const Jet& rhs ){
 Jet& Jet::operator=( Jet&& rhs ) noexcept {
 
     PhysicsObject::operator=( std::move(rhs) );
-
-    if( this != &rhs ){
-        copyNonPointerAttributes( rhs );
-
-        //current selector can still keep pointing to this object
-    }
+    if( this != &rhs ){ copyNonPointerAttributes( rhs ); }
     return *this;
 }
 
