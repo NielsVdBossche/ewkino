@@ -50,8 +50,6 @@ Lepton::Lepton( const TreeReader& treeReader,
 	msg += " unrecognized lepton type " + leptonType;
 	throw std::invalid_argument(msg);
     }
-    // to do: move variable sip3d from Lepton to LightLepton
-    // (since it is not defined in nanoAOD for Taus...)
     _uncorrectedPt = pt();
     _uncorrectedE = energy();
 }
@@ -62,7 +60,6 @@ Lepton::Lepton( const Lepton& rhs, LeptonSelector* leptonSelector ) :
     _charge( rhs._charge ),
     _dxy( rhs._dxy ),
     _dz( rhs._dz ),
-    _sip3d( rhs._sip3d ),
     generatorInfo( new LeptonGeneratorInfo( *(rhs.generatorInfo) ) ),
     selector( leptonSelector ),
     isConeCorrected( rhs.isConeCorrected ),
@@ -76,7 +73,6 @@ Lepton::Lepton( Lepton&& rhs, LeptonSelector* leptonSelector ) noexcept :
     _charge( rhs._charge ),
     _dxy( rhs._dxy ),
     _dz( rhs._dz ),
-    _sip3d( rhs._sip3d ),
     generatorInfo( rhs.generatorInfo ),
     selector( leptonSelector ),
     isConeCorrected( rhs.isConeCorrected ),
@@ -99,7 +95,6 @@ void Lepton::copyNonPointerAttributes( const Lepton& rhs ){
     _charge = rhs._charge;
     _dxy = rhs._dxy;
     _dz = rhs._dz;
-    _sip3d = rhs._sip3d;
     isConeCorrected = rhs.isConeCorrected;
     _uncorrectedPt = rhs._uncorrectedPt;
     _uncorrectedE = rhs._uncorrectedE;
@@ -272,6 +267,9 @@ bool oppositeSignSameFlavor( const Lepton& lhs, const Lepton& rhs ){
 
 std::ostream& Lepton::print( std::ostream& os) const{
     PhysicsObject::print( os );
-    os << " / charge = " << ( _charge > 0 ? "+" : "-" ) << " / dxy = " << _dxy << " / dz = " << _dz << " / sip3d = " << _sip3d << " / uncorrectedPt = " << _uncorrectedPt;
+    os << " / charge = " << ( _charge > 0 ? "+" : "-" );
+    os << " / dxy = " << _dxy;
+    os << " / dz = " << _dz;
+    os << " / uncorrectedPt = " << _uncorrectedPt;
     return os;
 }

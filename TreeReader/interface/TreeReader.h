@@ -85,9 +85,23 @@ class TreeReader {
 	Int_t		_Electron_jetIdx[nElectron_max];
 	Float_t		_Electron_jetPtRelv2[nElectron_max];
 	Float_t		_Electron_jetRelIso[nElectron_max];
-	//Float_t	_Electron_deltaEtaSC[nElectron_max];
-	//Float_t	_Electron_eInvMinusPInv[nElectron_max];
-	//Float_t	_Electron_hoe[nElectron_max];
+	Int_t		_Electron_tightCharge[nElectron_max];
+	Bool_t		_Electron_convVeto[nElectron_max];
+	UChar_t		_Electron_lostHits[nElectron_max];
+	Float_t		_Electron_mvaFall17V2Iso[nElectron_max];
+	Float_t		_Electron_mvaFall17V2noIso[nElectron_max];
+	Bool_t		_Electron_mvaFall17V2noIso_WPL[nElectron_max];
+	Bool_t          _Electron_mvaFall17V2noIso_WP80[nElectron_max];
+	Bool_t          _Electron_mvaFall17V2noIso_WP90[nElectron_max];
+	Float_t		_Electron_deltaEtaSC[nElectron_max];
+	Float_t		_Electron_eInvMinusPInv[nElectron_max];
+	Float_t		_Electron_hoe[nElectron_max];
+	Float_t		_Electron_sieie[nElectron_max];
+	Int_t		_Electron_cutBased[nElectron_max];
+	Float_t		_Electron_dEscaleDown[nElectron_max];
+	Float_t		_Electron_dEscaleUp[nElectron_max];
+	Float_t		_Electron_dEsigmaDown[nElectron_max];
+	Float_t		_Electron_dEsigmaUp[nElectron_max];
 	// variables related to muons
 	UInt_t          _nMuon;
         Float_t		_Muon_pt[nMuon_max];
@@ -103,6 +117,12 @@ class TreeReader {
         Int_t           _Muon_jetIdx[nMuon_max];
         Float_t         _Muon_jetPtRelv2[nMuon_max];
         Float_t         _Muon_jetRelIso[nMuon_max];
+	Float_t		_Muon_segmentComp[nMuon_max];
+	Float_t		_Muon_ptErr[nMuon_max];
+	Float_t		_Muon_pfRelIso04_all[nMuon_max];
+	Bool_t		_Muon_looseId[nMuon_max];
+	Bool_t		_Muon_mediumId[nMuon_max];
+	Bool_t		_Muon_tightId[nMuon_max];
 	// variables related to taus
 	UInt_t          _nTau;
         Float_t		_Tau_pt[nTau_max];
@@ -118,7 +138,9 @@ class TreeReader {
 	Float_t		_Jet_phi[nJet_max];
 	Float_t		_Jet_bTagDeepB[nJet_max];
 	Float_t		_Jet_bTagDeepFlavB[nJet_max];
-	UChar_t		_Jet_nConstituents[nJet_max];		 
+	UChar_t		_Jet_nConstituents[nJet_max];
+	Int_t		_Jet_hadronFlavor[nJet_max];
+	Int_t		_Jet_jetId[nJet_max];
         // variables related to missing transverse energy
 	Float_t        _MET_pt;
         Float_t        _MET_phi;
@@ -276,6 +298,23 @@ class TreeReader {
         TBranch*        b__Electron_jetIdx;
         TBranch*        b__Electron_jetPtRelv2;
         TBranch*        b__Electron_jetRelIso;
+	TBranch*	b__Electron_tightCharge;
+        TBranch*        b__Electron_convVeto;
+        TBranch*        b__Electron_lostHits;
+        TBranch*        b__Electron_mvaFall17V2Iso;
+        TBranch*        b__Electron_mvaFall17V2noIso;
+        TBranch*        b__Electron_mvaFall17V2noIso_WPL;
+        TBranch*        b__Electron_mvaFall17V2noIso_WP80;
+        TBranch*        b__Electron_mvaFall17V2noIso_WP90;
+        TBranch*        b__Electron_deltaEtaSC;
+        TBranch*        b__Electron_eInvMinusPInv;
+        TBranch*        b__Electron_hoe;
+        TBranch*        b__Electron_sieie;
+	TBranch*	b__Electron_cutBased;
+	TBranch*	b__Electron_dEscaleDown;
+	TBranch*        b__Electron_dEscaleUp;
+	TBranch*        b__Electron_dEsigmaDown;
+        TBranch*        b__Electron_dEsigmaUp;
         TBranch*        b__nMuon;
         TBranch*        b__Muon_pt;
         TBranch*        b__Muon_eta;
@@ -290,6 +329,12 @@ class TreeReader {
         TBranch*        b__Muon_jetIdx;
         TBranch*        b__Muon_jetPtRelv2;
         TBranch*        b__Muon_jetRelIso;
+	TBranch*        b__Muon_segmentComp;
+        TBranch*        b__Muon_ptErr;
+        TBranch*        b__Muon_pfRelIso04_all;
+        TBranch*        b__Muon_looseId;
+        TBranch*        b__Muon_mediumId;
+        TBranch*        b__Muon_tightId;
 	TBranch*	b__nTau;
 	TBranch*	b__Tau_pt;
 	TBranch*        b__Tau_eta;
@@ -304,6 +349,8 @@ class TreeReader {
 	TBranch*	b__Jet_bTagDeepB;
 	TBranch*	b__Jet_bTagDeepFlavB;
 	TBranch*	b__Jet_nConstituents;
+	TBranch*	b__Jet_hadronFlavor;
+        TBranch*        b__Jet_jetId;
         TBranch*        b__MET_pt;
         TBranch*        b__MET_phi;
         std::map< std::string, TBranch* > b__triggerMap;

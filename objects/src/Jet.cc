@@ -13,20 +13,18 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex ):
         treeReader.is2017(),
 	treeReader.is2018()
     ),
-    /*_deepCSV( treeReader._jetDeepCsv_b[jetIndex] 
-		+ treeReader._jetDeepCsv_bb[jetIndex] ),
-    _deepFlavor( treeReader._jetDeepFlavor_b[jetIndex] 
-		+ treeReader._jetDeepFlavor_bb[jetIndex] 
-		+ treeReader._jetDeepFlavor_lepb[jetIndex] ),
-    _isTight( treeReader._jetIsTight[jetIndex] ),
-    _isTightLeptonVeto( treeReader._jetIsTightLepVeto[jetIndex] ),
-    _hadronFlavor( treeReader._jetHadronFlavor[jetIndex] ),
-    _pt_JECDown( treeReader._jetSmearedPt_JECDown[jetIndex] ),
+    _deepCSV( treeReader._Jet_bTagDeepB[jetIndex] ),
+    _deepFlavor( treeReader._Jet_bTagDeepFlavB[jetIndex] ),
+    _hadronFlavor( treeReader._Jet_hadronFlavor[jetIndex] ),
+    /*_pt_JECDown( treeReader._jetSmearedPt_JECDown[jetIndex] ),
     _pt_JECUp( treeReader._jetSmearedPt_JECUp[jetIndex] ),
     _pt_JERDown( treeReader._jetSmearedPt_JERDown[jetIndex] ),
     _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),*/
     selector( new JetSelector( this ) )
 {
+    _isTight = ( treeReader._Jet_jetId[jetIndex]>=2 );
+    _isTightLeptonVeto = ( treeReader._Jet_jetId[jetIndex]==3 );
+
     // catch potential invalid values of deepCSV and deepFlavor
     if( std::isnan( _deepCSV ) ){ _deepCSV = 0.; }
     else if( _deepCSV < 0 ){ _deepCSV = 0.; }

@@ -24,12 +24,9 @@ class Electron : public LightLepton{
         virtual bool isElectron() const override { return true; }
 
         bool passChargeConsistency() const{ return _passChargeConsistency; }
-        bool passDoubleEGEmulation() const{ return _passDoubleEGEmulation; }
         bool passConversionVeto() const{ return _passConversionVeto; }
         unsigned numberOfMissingHits() const{ return _numberOfMissingHits; }
 
-        float electronMVASummer16GP() const{ return _electronMVASummer16GP; }
-        float electronMVASummer16HZZ() const{ return _electronMVASummer16HZZ; }
         float electronMVAFall17Iso() const{ return _electronMVAFall17Iso; }
         float electronMVAFall17NoIso() const{ return _electronMVAFall17NoIso; }
 
@@ -58,13 +55,10 @@ class Electron : public LightLepton{
 
     private:
         bool _passChargeConsistency = false;
-        bool _passDoubleEGEmulation = false;
         bool _passConversionVeto = false;
         unsigned _numberOfMissingHits = 0;
     
         // several versions of electron MVA
-        float _electronMVASummer16GP = 0;
-        float _electronMVASummer16HZZ = 0;
         float _electronMVAFall17Iso = 0;
         float _electronMVAFall17NoIso = 0;
 

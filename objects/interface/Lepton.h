@@ -21,13 +21,6 @@ class Lepton : public PhysicsObject {
     friend class PhysicsObjectCollection<Lepton>;
     
     public:
-	// constructor from explicitly passed values
-        /*Lepton( const double pt, const double eta, const double phi, const double e,
-                const bool is2016, const bool is2016PreVFP, const bool is2016PostVFP,
-                const bool is2017, const bool is2018,
-                LeptonSelector* leptonSelector,
-                const int charge, const double dxy, const double dz, const double sip3d,
-                LeptonGeneratorInfo* leptonGeneratorInfo );*/
 	// constructor from TreeReader
 	Lepton( const TreeReader&, const std::string&, const unsigned, LeptonSelector* ); 
 
@@ -43,7 +36,6 @@ class Lepton : public PhysicsObject {
         //get reconstructed lepton attributes 
         double dxy() const{ return _dxy; }
         double dz() const{ return _dz; }
-        double sip3d() const{ return _sip3d; }
         int charge() const{ return _charge; }
 
         //access generator-level attributes
@@ -84,7 +76,6 @@ class Lepton : public PhysicsObject {
         //lepton impact parameter variables 
         double _dxy = 0;
         double _dz = 0;
-        double _sip3d = 0;
 
         //lepton generator information
         LeptonGeneratorInfo* generatorInfo = nullptr;

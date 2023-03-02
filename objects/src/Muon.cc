@@ -3,14 +3,14 @@
 
 
 Muon::Muon( const TreeReader& treeReader, const unsigned muonIndex ):
-    LightLepton( treeReader, "muon", muonIndex, new MuonSelector(this) )
-    /*_segmentCompatibility( treeReader._lMuonSegComp[muonIndex] ),
-    _trackPt( treeReader._lMuonTrackPt[muonIndex] ),
-    _trackPtError( treeReader._lMuonTrackPtErr[muonIndex] ),
-    _relIso0p4DeltaBeta( treeReader._relIso0p4MuDeltaBeta[muonIndex] ),
-    _isLoosePOGMuon( treeReader._lPOGLoose[muonIndex] ),
-    _isMediumPOGMuon( treeReader._lPOGMedium[muonIndex] ),
-    _isTightPOGMuon( treeReader._lPOGTight[muonIndex] )*/
+    LightLepton( treeReader, "muon", muonIndex, new MuonSelector(this) ),
+    _segmentCompatibility( treeReader._Muon_segmentComp[muonIndex] ),
+    //_trackPt( treeReader._lMuonTrackPt[muonIndex] ), // does not seem to exist in nanoAOD
+    _trackPtError( treeReader._Muon_ptErr[muonIndex] ),
+    _relIso0p4DeltaBeta( treeReader._Muon_pfRelIso04_all[muonIndex] ),
+    _isLoosePOGMuon( treeReader._Muon_looseId[muonIndex] ),
+    _isMediumPOGMuon( treeReader._Muon_mediumId[muonIndex] ),
+    _isTightPOGMuon( treeReader._Muon_tightId[muonIndex] )
 {}
 
 

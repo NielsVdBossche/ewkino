@@ -4,35 +4,6 @@
 #include <cmath>
 
 
-// constructor from explicitly passed values
-/*LightLepton::LightLepton( const double pt, const double eta, const double phi, const double e,
-                const bool is2016, const bool is2016PreVFP, const bool is2016PostVFP,
-                const bool is2017, const bool is2018,
-                LeptonSelector* leptonSelector,
-                const int charge, const double dxy, const double dz, const double sip3d,
-                LeptonGeneratorInfo* leptonGeneratorInfo,
-		const double relIso0p3, const double relIso0p4,
-		const double miniIso, const double miniIsoCharged,
-		const double ptRatio, const double ptRel,
-		const double closestJetDeepCSV, const double closestJetDeepFlavor,
-		const double closestJetTrackMultiplicity,
-		const double leptonMVATOPUL, const double leptonMVATOPv2UL ):
-    Lepton( pt, eta, phi, e, is2016, is2016PreVFP, is2016PostVFP, is2017, is2018,
-            leptonSelector, charge, dxy, dz, sip3d, leptonGeneratorInfo ),
-    _relIso0p3( relIso0p3 ),
-    _relIso0p4( relIso0p4 ), 
-    _miniIso( miniIso ),
-    _miniIsoCharged( miniIsoCharged ),
-    _ptRatio( ptRatio ),
-    _ptRel( ptRel ), 
-    _closestJetDeepCSV( closestJetDeepCSV ), 
-    _closestJetDeepFlavor( closestJetDeepFlavor ),
-    _closestJetTrackMultiplicity( closestJetTrackMultiplicity ),
-    _leptonMVATOPUL( leptonMvaTOPUL ),
-    _leptonMVATOPv2UL( leptonMvaTOPv2UL )
-    {}*/
-
-
 // constructor from TreeReader
 LightLepton::LightLepton(
     const TreeReader& treeReader,
@@ -50,6 +21,7 @@ LightLepton::LightLepton(
 	_ptRatio = 1./(treeReader._Electron_jetRelIso[leptonIndex] + 1);
 	_ptRel = treeReader._Electron_jetPtRelv2[leptonIndex];
 	jetIdx = treeReader._Electron_jetIdx[leptonIndex];
+	_sip3d = treeReader._Electron_sip3d[leptonIndex];
     } else if(leptonType=="muon"){
 	_relIso0p3 = treeReader._Muon_pfRelIso03_all[leptonIndex];
         _relIso0p4 = 0; // seems to be not stored in nanoAOD
@@ -58,6 +30,7 @@ LightLepton::LightLepton(
 	_ptRatio = 1./(treeReader._Muon_jetRelIso[leptonIndex] + 1);
         _ptRel = treeReader._Muon_jetPtRelv2[leptonIndex];
         jetIdx = treeReader._Muon_jetIdx[leptonIndex];
+	_sip3d = treeReader._Muon_sip3d[leptonIndex];
     } else{
         std::string msg = "ERROR in Lepton::Lepton:";
         msg += " unrecognized lepton type " + leptonType;
@@ -101,6 +74,7 @@ LightLepton::LightLepton( const LightLepton& rhs, LeptonSelector* leptonSelector
     _closestJetDeepCSV( rhs._closestJetDeepCSV ),
     _closestJetDeepFlavor( rhs._closestJetDeepFlavor ),
     _closestJetTrackMultiplicity( rhs._closestJetTrackMultiplicity ),
+    _sip3d( rhs._sip3d ),
     _leptonMVAtZq( rhs._leptonMVAtZq ),
     _leptonMVAttH( rhs._leptonMVAttH ),
     _leptonMVATOP( rhs._leptonMVATOP ),
@@ -120,6 +94,7 @@ LightLepton::LightLepton( LightLepton&& rhs, LeptonSelector* leptonSelector ):
     _closestJetDeepCSV( rhs._closestJetDeepCSV ),
     _closestJetDeepFlavor( rhs._closestJetDeepFlavor ),
     _closestJetTrackMultiplicity( rhs._closestJetTrackMultiplicity ),
+    _sip3d( rhs._sip3d ),
     _leptonMVAtZq( rhs._leptonMVAtZq ),
     _leptonMVAttH( rhs._leptonMVAttH ),
     _leptonMVATOP( rhs._leptonMVATOP ),
@@ -139,6 +114,7 @@ std::ostream& LightLepton::print( std::ostream& os ) const{
     os << " / closestJetDeepCSV = " << _closestJetDeepCSV;
     os << " / closestJetDeepFlavor = " << _closestJetDeepFlavor;
     os << " / closestJetTrackMultiplicity = " << _closestJetTrackMultiplicity;
+    os << " / sip3d = " << _sip3d;
     os << " / leptonMVAtZq = " << _leptonMVAtZq;
     os << " / leptonMVAttH = " << _leptonMVAttH;
     os << " / leptonMVATOP = " << _leptonMVATOP;

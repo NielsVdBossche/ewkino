@@ -3,45 +3,40 @@
 
 
 Electron::Electron( const TreeReader& treeReader, const unsigned electronIndex ):
-    LightLepton( treeReader, "electron", electronIndex, new ElectronSelector(this) )
-    /*_passChargeConsistency( treeReader._lElectronChargeConst[electronIndex] ),
-    _passDoubleEGEmulation( treeReader._lElectronPassEmu[electronIndex] ),
-    _passConversionVeto( treeReader._lElectronPassConvVeto[electronIndex] ),
-    _numberOfMissingHits( treeReader._lElectronMissingHits[electronIndex] ),
-    _electronMVASummer16GP( treeReader._lElectronSummer16MvaGP[electronIndex] ),
-    _electronMVASummer16HZZ( treeReader._lElectronSummer16MvaHZZ[electronIndex] ),
-    _electronMVAFall17Iso( treeReader._lElectronMvaFall17Iso[electronIndex] ),
-    _electronMVAFall17NoIso( treeReader._lElectronMvaFall17NoIso[electronIndex] ),
-    _passElectronMVAFall17NoIsoLoose( treeReader._lElectronPassMVAFall17NoIsoWPLoose[electronIndex] ), 
-    _passElectronMVAFall17NoIsoWP90( treeReader._lElectronPassMVAFall17NoIsoWP90[electronIndex] ),
-    _passElectronMVAFall17NoIsoWP80( treeReader._lElectronPassMVAFall17NoIsoWP80[electronIndex] ),
-    _etaSuperCluster( treeReader._lEtaSC[electronIndex] ),
-    _hOverE( treeReader._lElectronHOverE[electronIndex] ),
-    _inverseEMinusInverseP( treeReader._lElectronEInvMinusPInv[electronIndex] ),
-    _sigmaIEtaEta( treeReader._lElectronSigmaIetaIeta[electronIndex] ),
-    _isVetoPOGElectron( treeReader._lPOGVeto[electronIndex] ),
-    _isLoosePOGElectron( treeReader._lPOGLoose[electronIndex] ),
-    _isMediumPOGElectron( treeReader._lPOGMedium[electronIndex] ),
-    _isTightPOGElectron( treeReader._lPOGTight[electronIndex] ),
-    _pt_ScaleUp( treeReader._lPtScaleUp[electronIndex] ),
-    _pt_ScaleDown( treeReader._lPtScaleDown[electronIndex] ),
-    _pt_ResUp( treeReader._lPtResUp[electronIndex] ),
-    _pt_ResDown( treeReader._lPtResDown[electronIndex] ),
-    _e_ScaleUp( treeReader._lEScaleUp[electronIndex] ),
-    _e_ScaleDown( treeReader._lEScaleDown[electronIndex] ),
-    _e_ResUp( treeReader._lEResUp[electronIndex] ),
-    _e_ResDown( treeReader._lEResDown[electronIndex] )*/
-{}
+    LightLepton( treeReader, "electron", electronIndex, new ElectronSelector(this) ),
+    _passConversionVeto( treeReader._Electron_convVeto[electronIndex] ),
+    _numberOfMissingHits( treeReader._Electron_lostHits[electronIndex] ),
+    _electronMVAFall17Iso( treeReader._Electron_mvaFall17V2Iso[electronIndex] ),
+    _electronMVAFall17NoIso( treeReader._Electron_mvaFall17V2noIso[electronIndex] ),
+    _passElectronMVAFall17NoIsoLoose( treeReader._Electron_mvaFall17V2noIso_WPL[electronIndex] ), 
+    _passElectronMVAFall17NoIsoWP90( treeReader._Electron_mvaFall17V2noIso_WP90[electronIndex] ),
+    _passElectronMVAFall17NoIsoWP80( treeReader._Electron_mvaFall17V2noIso_WP80[electronIndex] ),
+    _hOverE( treeReader._Electron_hoe[electronIndex] ),
+    _inverseEMinusInverseP( treeReader._Electron_eInvMinusPInv[electronIndex] ),
+    _sigmaIEtaEta( treeReader._Electron_sieie[electronIndex] )
+{
+    _passChargeConsistency = ( treeReader._Electron_tightCharge[electronIndex]==2 );
+    _etaSuperCluster = eta() + treeReader._Electron_deltaEtaSC[electronIndex];
+    _isVetoPOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=1 );
+    _isLoosePOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=2 );
+    _isMediumPOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=3 );
+    _isTightPOGElectron = ( treeReader._Electron_cutBased[electronIndex]==4 );
+    _pt_ScaleUp = pt() * treeReader._Electron_dEscaleUp[electronIndex]; // to check
+    _pt_ScaleDown = pt() * treeReader._Electron_dEscaleDown[electronIndex]; // to check
+    _pt_ResUp = pt() * treeReader._Electron_dEsigmaUp[electronIndex]; // to check
+    _pt_ResDown = pt() * treeReader._Electron_dEsigmaDown[electronIndex]; // to check
+    _e_ScaleUp = energy() * treeReader._Electron_dEscaleUp[electronIndex]; // to check
+    _e_ScaleDown = energy() * treeReader._Electron_dEscaleDown[electronIndex]; // to check
+    _e_ResUp = energy() * treeReader._Electron_dEsigmaUp[electronIndex]; // to check
+    _e_ResDown = energy() * treeReader._Electron_dEsigmaDown[electronIndex]; // to check
+}
 
 
 Electron::Electron( const Electron& rhs ) :
     LightLepton( rhs, new ElectronSelector( this ) ),
     _passChargeConsistency( rhs._passChargeConsistency ),
-    _passDoubleEGEmulation( rhs._passDoubleEGEmulation ),
     _passConversionVeto( rhs._passConversionVeto ),
     _numberOfMissingHits( rhs._numberOfMissingHits ),
-    _electronMVASummer16GP( rhs._electronMVASummer16GP ),
-    _electronMVASummer16HZZ( rhs._electronMVASummer16HZZ ),
     _electronMVAFall17Iso( rhs._electronMVAFall17Iso ),
     _electronMVAFall17NoIso( rhs._electronMVAFall17NoIso ),
     _passElectronMVAFall17NoIsoLoose( rhs._passElectronMVAFall17NoIsoLoose ),
@@ -69,11 +64,8 @@ Electron::Electron( const Electron& rhs ) :
 Electron::Electron( Electron&& rhs ) noexcept : 
     LightLepton( std::move( rhs ), new ElectronSelector( this ) ),
     _passChargeConsistency( rhs._passChargeConsistency ),
-    _passDoubleEGEmulation( rhs._passDoubleEGEmulation ),
     _passConversionVeto( rhs._passConversionVeto ),
     _numberOfMissingHits( rhs._numberOfMissingHits ),
-    _electronMVASummer16GP( rhs._electronMVASummer16GP ),
-    _electronMVASummer16HZZ( rhs._electronMVASummer16HZZ ),
     _electronMVAFall17Iso( rhs._electronMVAFall17Iso ),
     _electronMVAFall17NoIso( rhs._electronMVAFall17NoIso ),
     _passElectronMVAFall17NoIsoLoose( rhs._passElectronMVAFall17NoIsoLoose ),
@@ -102,11 +94,8 @@ std::ostream& Electron::print( std::ostream& os ) const{
     os << "Electron : ";
     LightLepton::print( os );
     os << " / passChargeConsistency = " << _passChargeConsistency;
-    os << " / passDoubleEGEmulation = " << _passDoubleEGEmulation;
     os << " / passConversionVeto = " << _passConversionVeto;
     os << " / numberOfMissingHits = " << _numberOfMissingHits;
-    os << " / electronMVASummer16GP = " << _electronMVASummer16GP;
-    os << " / electronMVASummer16HZZ = " << _electronMVASummer16HZZ;
     os << " / electronMVAFall17Iso = " << _electronMVAFall17Iso;
     os << " / electronMVAFall17NoIso = " << _electronMVAFall17NoIso;
     os << " / passElectronMVAFall17NoIsoLoose = " << _passElectronMVAFall17NoIsoLoose;
