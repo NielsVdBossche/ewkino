@@ -615,28 +615,52 @@ void FourTop::analyze(std::string method) {
                         weightDown = 1.;
                         if (i == 0) {
                             if (selection->numberOfLeps() == 2) {
-                                if (selection->numberOfJets() <= 2) weightUp = 0.92;
-                                else if (selection->numberOfJets() == 3) weightUp = 0.95;
-                                else if (selection->numberOfJets() == 4) weightUp = 1.03;
-                                else if (selection->numberOfJets() == 5) weightUp = 1.20;
-                                else if (selection->numberOfJets() == 6) weightUp = 1.42;
-                                else if (selection->numberOfJets() >= 7) weightUp = 1.55;
-
-                                weightDown = 0.99;
+                                if (selection->numberOfJets() <= 2) {
+                                    weightUp = 0.92;
+                                    weightDown = 1.08;
+                                } else if (selection->numberOfJets() == 3) {
+                                    weightUp = 0.95;
+                                    weightDown = 1.05;
+                                } else if (selection->numberOfJets() == 4) {
+                                    weightUp = 1.03;
+                                    weightDown = 0.97;
+                                } else if (selection->numberOfJets() == 5) {
+                                    weightUp = 1.20;
+                                    weightDown = 0.8;
+                                } else if (selection->numberOfJets() == 6) {
+                                    weightUp = 1.42;
+                                    weightDown = 0.58;
+                                } else if (selection->numberOfJets() >= 7) {
+                                    weightUp = 1.55;
+                                    weightDown = 0.45;
+                                } 
                             }
                             if (selection->numberOfLeps() >= 3) {
-                                if (selection->numberOfJets() <= 2) weightUp = 0.96;
-                                else if (selection->numberOfJets() == 3) weightUp = 1.16;
-                                else if (selection->numberOfJets() == 4) weightUp = 1.28;
-                                else if (selection->numberOfJets() == 5) weightUp = 1.46;
-                                else if (selection->numberOfJets() == 6) weightUp = 1.44;
-                                else if (selection->numberOfJets() >= 7) weightUp = 1.44;
-
-                                weightDown = 0.99;
+                                if (selection->numberOfJets() <= 2) {
+                                    weightUp = 0.96;
+                                    weightDown = 1.04;
+                                } else if (selection->numberOfJets() == 3) {
+                                    weightUp = 1.16;
+                                    weightDown = 0.84;
+                                } else if (selection->numberOfJets() == 4) {
+                                    weightUp = 1.28;
+                                    weightDown = 0.72;
+                                } else if (selection->numberOfJets() == 5) {
+                                    weightUp = 1.46;
+                                    weightDown = 0.54;
+                                } else if (selection->numberOfJets() == 6) {
+                                    weightUp = 1.44;
+                                    weightDown = 0.56;
+                                } else if (selection->numberOfJets() >= 7) {
+                                    weightUp = 1.44;
+                                    weightDown = 0.56;
+                                } 
                             }
                         } else if (i==1) {
                             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
-                                if (selection->HasAdditionalBJets()) weightUp = 1.7;
+                                if (selection->HasAdditionalBJets()) {
+                                    weightUp = 1.7;
+                                    weightDown = 0.3;
                             }
                         }
                         std::string ttVJetsRegion = ttVJetsRegions[i];
