@@ -102,6 +102,8 @@ class TreeReader {
 	Float_t		_Electron_dEscaleUp[nElectron_max];
 	Float_t		_Electron_dEsigmaDown[nElectron_max];
 	Float_t		_Electron_dEsigmaUp[nElectron_max];
+	UChar_t		_Electron_genPartFlav[nElectron_max];
+	Int_t		_Electron_genPartIdx[nElectron_max];
 	// variables related to muons
 	UInt_t          _nMuon;
         Float_t		_Muon_pt[nMuon_max];
@@ -123,6 +125,8 @@ class TreeReader {
 	Bool_t		_Muon_looseId[nMuon_max];
 	Bool_t		_Muon_mediumId[nMuon_max];
 	Bool_t		_Muon_tightId[nMuon_max];
+	UChar_t		_Muon_genPartFlav[nMuon_max];
+	Int_t		_Muon_genPartIdx[nMuon_max];
 	// variables related to taus
 	UInt_t          _nTau;
         Float_t		_Tau_pt[nTau_max];
@@ -131,6 +135,8 @@ class TreeReader {
 	Float_t         _Tau_charge[nTau_max];
         Float_t         _Tau_dxy[nTau_max];
         Float_t         _Tau_dz[nTau_max];
+	UChar_t		_Tau_genPartFlav[nTau_max];
+	Int_t		_Tau_genPartIdx[nTau_max];
 	// variables related to jets
         UInt_t          _nJet;
         Float_t		_Jet_pt[nJet_max];
@@ -315,6 +321,8 @@ class TreeReader {
 	TBranch*        b__Electron_dEscaleUp;
 	TBranch*        b__Electron_dEsigmaDown;
         TBranch*        b__Electron_dEsigmaUp;
+	TBranch*	b__Electron_genPartFlav;
+	TBranch*	b__Electron_genPartIdx;
         TBranch*        b__nMuon;
         TBranch*        b__Muon_pt;
         TBranch*        b__Muon_eta;
@@ -335,6 +343,8 @@ class TreeReader {
         TBranch*        b__Muon_looseId;
         TBranch*        b__Muon_mediumId;
         TBranch*        b__Muon_tightId;
+	TBranch*        b__Muon_genPartFlav;
+        TBranch*        b__Muon_genPartIdx;
 	TBranch*	b__nTau;
 	TBranch*	b__Tau_pt;
 	TBranch*        b__Tau_eta;
@@ -342,6 +352,8 @@ class TreeReader {
 	TBranch*        b__Tau_charge;
         TBranch*        b__Tau_dxy;
         TBranch*        b__Tau_dz;
+	TBranch*        b__Tau_genPartFlav;
+        TBranch*        b__Tau_genPartIdx;
         TBranch*        b__nJet;
         TBranch*        b__Jet_pt;
         TBranch*        b__Jet_eta;

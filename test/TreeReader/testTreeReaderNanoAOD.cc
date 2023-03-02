@@ -34,6 +34,10 @@ int main(){
 	    std::cout << "event number: " << event.eventNumber() << std::endl;
 	    std::cout << "gen weight: " << event.genWeight() << std::endl;
 	    std::cout << "scaled weight: " << event.weight() << std::endl;
+
+	    for( const auto& leptonPtr : event.leptonCollection() ){
+		std::cout << *leptonPtr << std::endl;
+	    }
 	}
     }
     return 0;

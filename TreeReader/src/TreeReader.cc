@@ -318,6 +318,48 @@ void TreeReader::initSampleFromFile( const std::string& pathToFile,
 void TreeReader::GetEntry( const Sample& samp, long unsigned entry ){
     checkCurrentTree();
     _currentTreePtr->GetEntry( entry );
+    // do some checks on array lengths
+    if( _nElectron > nElectron_max ){
+	std::string msg = "WARNING in TreeReader::GetEntry:";
+	msg += " nElectron is " + std::to_string(_nElectron);
+	msg += " while nElectron_max is; " + std::to_string(nElectron_max);
+	msg += " will ignore objects with index >= " +std::to_string(nElectron_max);
+	std::cerr << msg << std::endl;
+	_nElectron = nElectron_max;
+    }
+    if( _nMuon > nMuon_max ){
+        std::string msg = "WARNING in TreeReader::GetEntry:";
+        msg += " nMuon is " + std::to_string(_nMuon);
+        msg += " while nMuon_max is; " + std::to_string(nMuon_max);
+        msg += " will ignore objects with index >= " +std::to_string(nMuon_max);
+	std::cerr << msg << std::endl;
+        _nMuon = nMuon_max;
+    }
+    if( _nTau > nTau_max ){
+        std::string msg = "WARNING in TreeReader::GetEntry:";
+        msg += " nTau is " + std::to_string(_nTau);
+        msg += " while nTau_max is; " + std::to_string(nTau_max);
+        msg += " will ignore objects with index >= " +std::to_string(nTau_max);
+	std::cerr << msg << std::endl;
+        _nTau = nTau_max;
+    }
+    if( _nJet > nJet_max ){
+        std::string msg = "WARNING in TreeReader::GetEntry:";
+        msg += " nJet is " + std::to_string(_nJet);
+        msg += " while nJet_max is; " + std::to_string(nJet_max);
+        msg += " will ignore objects with index >= " +std::to_string(nJet_max);
+	std::cerr << msg << std::endl;
+        _nJet = nJet_max;
+    }
+    if( _nGenPart > nGenPart_max ){
+        std::string msg = "WARNING in TreeReader::GetEntry:";
+        msg += " nGenPart is " + std::to_string(_nGenPart);
+        msg += " while nGenPart_max is; " + std::to_string(nGenPart_max);
+        msg += " will ignore objects with index >= " +std::to_string(nGenPart_max);
+	std::cerr << msg << std::endl;
+        _nGenPart = nGenPart_max;
+    }
+    // set correctly scaled weight
     if( !samp.isData() ) _scaledWeight = _genWeight*lumiScale;
     else _scaledWeight = 1;
 }
@@ -432,6 +474,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Electron_dEscaleUp", _Electron_dEscaleUp, &b__Electron_dEscaleUp);
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaDown", _Electron_dEsigmaDown, &b__Electron_dEsigmaDown);
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaUp", _Electron_dEsigmaUp, &b__Electron_dEsigmaUp);
+    _currentTreePtr->SetBranchAddress("Electron_genPartFlav", _Electron_genPartFlav, &b__Electron_genPartFlav);
+    _currentTreePtr->SetBranchAddress("Electron_genPartIdx", _Electron_genPartIdx, &b__Electron_genPartIdx);
     // variables related to muons
     _currentTreePtr->SetBranchAddress("nMuon", &_nMuon, &b__nMuon);
     _currentTreePtr->SetBranchAddress("Muon_pt", _Muon_pt, &b__Muon_pt);
@@ -453,6 +497,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Muon_looseId", _Muon_looseId, &b__Muon_looseId);
     _currentTreePtr->SetBranchAddress("Muon_mediumId", _Muon_mediumId, &b__Muon_mediumId);
     _currentTreePtr->SetBranchAddress("Muon_tightId", _Muon_tightId, &b__Muon_tightId);
+    _currentTreePtr->SetBranchAddress("Muon_genPartFlav", _Muon_genPartFlav, &b__Muon_genPartFlav);
+    _currentTreePtr->SetBranchAddress("Muon_genPartIdx", _Muon_genPartIdx, &b__Muon_genPartIdx);
     // variables related to taus
     _currentTreePtr->SetBranchAddress("nTau", &_nTau, &b__nTau);
     _currentTreePtr->SetBranchAddress("Tau_pt", _Tau_pt, &b__Tau_pt);
@@ -461,6 +507,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Tau_charge", _Tau_charge, &b__Tau_charge);
     _currentTreePtr->SetBranchAddress("Tau_dxy", _Tau_dxy, &b__Tau_dxy);
     _currentTreePtr->SetBranchAddress("Tau_dz", _Tau_dz, &b__Tau_dz);
+    _currentTreePtr->SetBranchAddress("Tau_genPartFlav", _Tau_genPartFlav, &b__Tau_genPartFlav);
+    _currentTreePtr->SetBranchAddress("Tau_genPartIdx", _Tau_genPartIdx, &b__Tau_genPartIdx);
     // variables related to jets
     _currentTreePtr->SetBranchAddress("nJet", &_nJet, &b__nJet);
     _currentTreePtr->SetBranchAddress("Jet_pt", _Jet_pt, &b__Jet_pt);
@@ -469,7 +517,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Jet_btagDeepB", _Jet_bTagDeepB, &b__Jet_bTagDeepB);
     _currentTreePtr->SetBranchAddress("Jet_btagDeepFlavB", _Jet_bTagDeepFlavB, &b__Jet_bTagDeepFlavB);
     _currentTreePtr->SetBranchAddress("Jet_nConstituents", _Jet_nConstituents, &b__Jet_nConstituents);
-    _currentTreePtr->SetBranchAddress("Jet_hadronFlavor", _Jet_hadronFlavor, &b__Jet_hadronFlavor);
+    _currentTreePtr->SetBranchAddress("Jet_hadronFlavour", _Jet_hadronFlavor, &b__Jet_hadronFlavor);
     _currentTreePtr->SetBranchAddress("Jet_jetId", _Jet_jetId, &b__Jet_jetId);
     // variables related to missing transverse energy
     _currentTreePtr->SetBranchAddress("MET_pt", &_MET_pt, &b__MET_pt);

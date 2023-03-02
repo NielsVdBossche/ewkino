@@ -37,7 +37,13 @@ LightLepton::LightLepton(
         throw std::invalid_argument(msg);
     }
 
-    if( jetIdx>=0 ){
+    if( jetIdx >= (int)treeReader._nJet ){
+	std::string msg = "WARNING in LightLepton constructor:";
+	msg += " index of closest jet is " + std::to_string(jetIdx);
+	msg += " while only " + std::to_string(treeReader._nJet);
+	msg += " jets are present; ignoring closest jet info.";
+	std::cerr << msg << std::endl;
+    } else if( jetIdx>=0 ){
 	_closestJetDeepCSV = treeReader._Jet_bTagDeepB[jetIdx];
         _closestJetDeepFlavor = treeReader._Jet_bTagDeepFlavB[jetIdx];
         _closestJetTrackMultiplicity = treeReader._Jet_nConstituents[jetIdx];
@@ -105,7 +111,7 @@ LightLepton::LightLepton( LightLepton&& rhs, LeptonSelector* leptonSelector ):
 
 std::ostream& LightLepton::print( std::ostream& os ) const{
     Lepton::print( os );
-    os << " relIso 0.3 = " << _relIso0p3; 
+    os << " / relIso 0.3 = " << _relIso0p3; 
     os << " / relIso 0.4 = " << _relIso0p4;
     os << " / miniIso = " << _miniIso;
     os << " / miniIsoCharged = " << _miniIsoCharged;

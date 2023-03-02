@@ -17,7 +17,7 @@ Lepton::Lepton( const TreeReader& treeReader,
     is2017Object = treeReader.is2017();
     is2018Object = treeReader.is2018();
     selector = leptonSelector;
-    generatorInfo = nullptr;
+    generatorInfo = treeReader.isMC() ? new LeptonGeneratorInfo(treeReader, leptonType, leptonIndex) : nullptr;
     if(leptonType=="electron"){
 	vector = LorentzVector(
 	    treeReader._Electron_pt[leptonIndex],
