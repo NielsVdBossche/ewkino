@@ -29,6 +29,7 @@ class LorentzVector{
         double phi() const { return azimuthalAngle; }
         double energy() const { return energyValue; }
         double mass() const;
+	double momentum() const;
         
         double px() const { return xMomentum; }
         double py() const { return yMomentum; }

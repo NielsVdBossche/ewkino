@@ -5,26 +5,25 @@
 #include <algorithm>
 #include <limits>
 
-void LorentzVector::setZeroValues(){
 
-    //if there is no transverse momentum, the azimuthal angle is set to 0
+void LorentzVector::setZeroValues(){
+    // internal helper function for constructor
+    // if there is no transverse momentum, the azimuthal angle is set to 0
     if( transverseMomentum == 0 ){
         azimuthalAngle = 0;
-
-        //if there is no longitudinal, nor transverse momentum, the pseudorapidity is set to 0
+        // if there is no longitudinal, nor transverse momentum, the pseudorapidity is set to 0
         if( zMomentum == 0 ){
             pseudoRapidity = 0;
-        } 
+        }
     }
 }
 
 
 void LorentzVector::normalizePhi(){
-
-    //azimuthal angle is already in the range ]-pi, pi]
+    // internal helper function for constructor
+    // azimuthal angle is already in the range ]-pi, pi]
     if( fabs( azimuthalAngle ) <= M_PI ) return;
-
-    //project azimuthal angle to correct range 
+    // project azimuthal angle to correct range 
     azimuthalAngle = std::fmod( azimuthalAngle, 2*M_PI );
     if( azimuthalAngle > M_PI ){
         azimuthalAngle -= 2*M_PI;
@@ -35,6 +34,7 @@ void LorentzVector::normalizePhi(){
 
 
 LorentzVector::LorentzVector(const double pt, const double eta, const double phi, const double energy):
+    // constructor
     transverseMomentum(pt), pseudoRapidity(eta), azimuthalAngle(phi), energyValue( energy ),
     xMomentum( transverseMomentum*std::cos( azimuthalAngle ) ),
     yMomentum( transverseMomentum*std::sin( azimuthalAngle ) ),
@@ -46,6 +46,7 @@ LorentzVector::LorentzVector(const double pt, const double eta, const double phi
 
 
 double LorentzVector::mass() const{
+    // calculate mass
     double m2 = energyValue*energyValue - transverseMomentum*transverseMomentum - zMomentum*zMomentum;
     if( m2 >= 0 ){
         return std::sqrt( m2 );
@@ -55,13 +56,19 @@ double LorentzVector::mass() const{
 }
 
 
+double LorentzVector::momentum() const{
+    // calculate total momentum
+    return std::sqrt( transverseMomentum*transverseMomentum + zMomentum*zMomentum );
+}
+
+
 double LorentzVector::computeTransverseMomentum() const{
     return std::sqrt( xMomentum*xMomentum + yMomentum*yMomentum );
 }
 
 
 double LorentzVector::computePseudoRapidity() const{
-	double momentumMagnitude = std::sqrt( transverseMomentum*transverseMomentum + zMomentum*zMomentum );
+	double momentumMagnitude = momentum();
 	double longitudinalMomentumFraction = zMomentum/ momentumMagnitude;
 
 	//avoid infinite atanh when argument becomes 1

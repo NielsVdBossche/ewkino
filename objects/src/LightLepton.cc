@@ -47,6 +47,8 @@ LightLepton::LightLepton(
 	_closestJetDeepCSV = treeReader._Jet_bTagDeepB[jetIdx];
         _closestJetDeepFlavor = treeReader._Jet_bTagDeepFlavB[jetIdx];
         _closestJetTrackMultiplicity = treeReader._Jet_nConstituents[jetIdx];
+	// (note: nConstituents is seen to be very different from trackMultiplicity;
+	// keep this variable as a proxy for now, but numerical thresholds will have to be adjusted!)
     }
 
     //catch nan deep CSV values 

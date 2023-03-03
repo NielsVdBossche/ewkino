@@ -30,8 +30,8 @@ LeptonGeneratorInfo::LeptonGeneratorInfo(
     if( genIdx<0 ) return;
 
     std::bitset<20> statusBits = std::bitset<20>( treeReader._GenPart_statusFlags[genIdx] );
-    _isPrompt = statusBits[0],
-    _matchPdgId = treeReader._GenPart_pdgId[genIdx],
+    _isPrompt = statusBits[0];
+    _matchPdgId = treeReader._GenPart_pdgId[genIdx];
     _matchCharge = (_matchPdgId==11 || _matchPdgId==13 || _matchPdgId==15) ? -1 :
 		   (_matchPdgId==-11 || _matchPdgId==-13 || _matchPdgId==-15) ? 1 : 0;
     int momIdx = treeReader._GenPart_genPartIdxMother[genIdx];

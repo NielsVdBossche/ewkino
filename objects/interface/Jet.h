@@ -5,6 +5,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#include <bitset>
 
 // include other parts of framework
 #include "PhysicsObject.h"

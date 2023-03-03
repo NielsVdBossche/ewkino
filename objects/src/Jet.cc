@@ -22,8 +22,9 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex ):
     _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),*/
     selector( new JetSelector( this ) )
 {
-    _isTight = ( treeReader._Jet_jetId[jetIndex]>=2 );
-    _isTightLeptonVeto = ( treeReader._Jet_jetId[jetIndex]==3 );
+    std::bitset<3> jetIdBits = std::bitset<3>( treeReader._Jet_jetId[jetIndex] );
+    _isTight = jetIdBits[1];
+    _isTightLeptonVeto = jetIdBits[2];
 
     // catch potential invalid values of deepCSV and deepFlavor
     if( std::isnan( _deepCSV ) ){ _deepCSV = 0.; }

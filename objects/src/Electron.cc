@@ -21,14 +21,22 @@ Electron::Electron( const TreeReader& treeReader, const unsigned electronIndex )
     _isLoosePOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=2 );
     _isMediumPOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=3 );
     _isTightPOGElectron = ( treeReader._Electron_cutBased[electronIndex]==4 );
-    _pt_ScaleUp = pt() * treeReader._Electron_dEscaleUp[electronIndex]; // to check
-    _pt_ScaleDown = pt() * treeReader._Electron_dEscaleDown[electronIndex]; // to check
-    _pt_ResUp = pt() * treeReader._Electron_dEsigmaUp[electronIndex]; // to check
-    _pt_ResDown = pt() * treeReader._Electron_dEsigmaDown[electronIndex]; // to check
-    _e_ScaleUp = energy() * treeReader._Electron_dEscaleUp[electronIndex]; // to check
-    _e_ScaleDown = energy() * treeReader._Electron_dEscaleDown[electronIndex]; // to check
-    _e_ResUp = energy() * treeReader._Electron_dEsigmaUp[electronIndex]; // to check
-    _e_ResDown = energy() * treeReader._Electron_dEsigmaDown[electronIndex]; // to check
+    // documentation on scale and resolution variations is not clear;
+    // current implementation is based on what was done in miniAOD ntuplizer
+    // (https://github.com/GhentAnalysis/heavyNeutrino/blob/
+    //  36671d7943a77b4fa8bc2d42d78fd6be07487409/multilep/src/LeptonAnalyzer.cc#L343)
+    // using the input variables as defined here:
+    // https://github.com/cms-sw/cmssw/blob/bdc7d19ab5a25b724b78716513ef41070b717616/
+    // PhysicsTools/NanoAOD/python/electrons_cff.py#L374
+    double energy = momentum(); // energy does not seem to be stored in nanoAOD, use proxy.
+    _pt_ScaleUp = pt() * (energy-treeReader._Electron_dEscaleUp[electronIndex])/energy;
+    _pt_ScaleDown = pt() * (energy-treeReader._Electron_dEscaleDown[electronIndex])/energy;
+    _pt_ResUp = pt() * (energy-treeReader._Electron_dEsigmaUp[electronIndex])/energy;
+    _pt_ResDown = pt() * (energy-treeReader._Electron_dEsigmaDown[electronIndex])/energy;
+    _e_ScaleUp = (energy-treeReader._Electron_dEscaleUp[electronIndex]);
+    _e_ScaleDown = (energy-treeReader._Electron_dEscaleDown[electronIndex]);
+    _e_ResUp = (energy-treeReader._Electron_dEsigmaUp[electronIndex]);
+    _e_ResDown = (energy-treeReader._Electron_dEsigmaDown[electronIndex]);
 }
 
 

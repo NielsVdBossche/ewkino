@@ -39,6 +39,7 @@ class PhysicsObject{
         double phi() const{ return vector.phi(); }
         double energy() const{ return vector.energy(); }
         double mass() const{ return vector.mass(); }
+	double momentum() const{ return vector.momentum(); }
         double px() const{ return vector.px(); }
         double py() const{ return vector.py(); }
         double pz() const{ return vector.pz(); }
