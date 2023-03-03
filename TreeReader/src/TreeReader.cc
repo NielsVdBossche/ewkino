@@ -457,6 +457,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Electron_jetIdx", _Electron_jetIdx, &b__Electron_jetIdx);
     _currentTreePtr->SetBranchAddress("Electron_jetPtRelv2", _Electron_jetPtRelv2, &b__Electron_jetPtRelv2);
     _currentTreePtr->SetBranchAddress("Electron_jetRelIso", _Electron_jetRelIso, &b__Electron_jetRelIso);
+    _currentTreePtr->SetBranchAddress("Electron_mvaTTH", _Electron_mvaTTH, &b__Electron_mvaTTH);
     _currentTreePtr->SetBranchAddress("Electron_tightCharge", _Electron_tightCharge, &b__Electron_tightCharge);
     _currentTreePtr->SetBranchAddress("Electron_convVeto", _Electron_convVeto, &b__Electron_convVeto);
     _currentTreePtr->SetBranchAddress("Electron_lostHits", _Electron_lostHits, &b__Electron_lostHits);
@@ -491,6 +492,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Muon_jetIdx", _Muon_jetIdx, &b__Muon_jetIdx);
     _currentTreePtr->SetBranchAddress("Muon_jetPtRelv2", _Muon_jetPtRelv2, &b__Muon_jetPtRelv2);
     _currentTreePtr->SetBranchAddress("Muon_jetRelIso", _Muon_jetRelIso, &b__Muon_jetRelIso);
+    _currentTreePtr->SetBranchAddress("Muon_mvaTTH", _Muon_mvaTTH, &b__Muon_mvaTTH);
     _currentTreePtr->SetBranchAddress("Muon_segmentComp", _Muon_segmentComp, &b__Muon_segmentComp);
     _currentTreePtr->SetBranchAddress("Muon_ptErr", _Muon_ptErr, &b__Muon_ptErr);
     _currentTreePtr->SetBranchAddress("Muon_pfRelIso04_all", _Muon_pfRelIso04_all, &b__Muon_pfRelIso04_all);

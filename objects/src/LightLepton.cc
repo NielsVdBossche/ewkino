@@ -22,6 +22,7 @@ LightLepton::LightLepton(
 	_ptRel = treeReader._Electron_jetPtRelv2[leptonIndex];
 	jetIdx = treeReader._Electron_jetIdx[leptonIndex];
 	_sip3d = treeReader._Electron_sip3d[leptonIndex];
+	_leptonMVAttH = treeReader._Electron_mvaTTH[leptonIndex];
     } else if(leptonType=="muon"){
 	_relIso0p3 = treeReader._Muon_pfRelIso03_all[leptonIndex];
         _relIso0p4 = 0; // seems to be not stored in nanoAOD
@@ -31,6 +32,7 @@ LightLepton::LightLepton(
         _ptRel = treeReader._Muon_jetPtRelv2[leptonIndex];
         jetIdx = treeReader._Muon_jetIdx[leptonIndex];
 	_sip3d = treeReader._Muon_sip3d[leptonIndex];
+	_leptonMVAttH = treeReader._Muon_mvaTTH[leptonIndex];
     } else{
         std::string msg = "ERROR in Lepton::Lepton:";
         msg += " unrecognized lepton type " + leptonType;

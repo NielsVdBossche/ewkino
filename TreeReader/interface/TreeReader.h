@@ -85,6 +85,7 @@ class TreeReader {
 	Int_t		_Electron_jetIdx[nElectron_max];
 	Float_t		_Electron_jetPtRelv2[nElectron_max];
 	Float_t		_Electron_jetRelIso[nElectron_max];
+	Float_t		_Electron_mvaTTH[nElectron_max];
 	Int_t		_Electron_tightCharge[nElectron_max];
 	Bool_t		_Electron_convVeto[nElectron_max];
 	UChar_t		_Electron_lostHits[nElectron_max];
@@ -119,6 +120,7 @@ class TreeReader {
         Int_t           _Muon_jetIdx[nMuon_max];
         Float_t         _Muon_jetPtRelv2[nMuon_max];
         Float_t         _Muon_jetRelIso[nMuon_max];
+	Float_t		_Muon_mvaTTH[nMuon_max];
 	Float_t		_Muon_segmentComp[nMuon_max];
 	Float_t		_Muon_ptErr[nMuon_max];
 	Float_t		_Muon_pfRelIso04_all[nMuon_max];
@@ -308,6 +310,7 @@ class TreeReader {
         TBranch*        b__Electron_jetIdx;
         TBranch*        b__Electron_jetPtRelv2;
         TBranch*        b__Electron_jetRelIso;
+	TBranch*	b__Electron_mvaTTH;
 	TBranch*	b__Electron_tightCharge;
         TBranch*        b__Electron_convVeto;
         TBranch*        b__Electron_lostHits;
@@ -341,6 +344,7 @@ class TreeReader {
         TBranch*        b__Muon_jetIdx;
         TBranch*        b__Muon_jetPtRelv2;
         TBranch*        b__Muon_jetRelIso;
+	TBranch*	b__Muon_mvaTTH;
 	TBranch*        b__Muon_segmentComp;
         TBranch*        b__Muon_ptErr;
         TBranch*        b__Muon_pfRelIso04_all;

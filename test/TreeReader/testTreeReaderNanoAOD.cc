@@ -35,13 +35,13 @@ int main(){
 	    std::cout << "gen weight: " << event.genWeight() << std::endl;
 	    std::cout << "scaled weight: " << event.weight() << std::endl;
 
-	    /*for( const auto& leptonPtr : event.leptonCollection() ){
+	    for( const auto& leptonPtr : event.leptonCollection() ){
 		std::cout << *leptonPtr << std::endl;
-	    }*/
+	    }
 
-	    for( const auto& jetPtr : event.jetCollection() ){
+	    /*for( const auto& jetPtr : event.jetCollection() ){
                 std::cout << *jetPtr << std::endl;
-            }
+            }*/
 
 	}
     }
