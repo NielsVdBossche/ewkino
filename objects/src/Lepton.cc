@@ -23,7 +23,7 @@ Lepton::Lepton( const TreeReader& treeReader,
 	    treeReader._Electron_pt[leptonIndex],
 	    treeReader._Electron_eta[leptonIndex],
 	    treeReader._Electron_phi[leptonIndex],
-	    0. );
+	    -1. );
 	_charge = treeReader._Electron_charge[leptonIndex];
 	_dxy = treeReader._Electron_dxy[leptonIndex];
 	_dz = treeReader._Electron_dz[leptonIndex];
@@ -32,7 +32,7 @@ Lepton::Lepton( const TreeReader& treeReader,
             treeReader._Muon_pt[leptonIndex],
             treeReader._Muon_eta[leptonIndex],
             treeReader._Muon_phi[leptonIndex],
-            0. );
+            -1. );
 	_charge = treeReader._Muon_charge[leptonIndex];
         _dxy = treeReader._Muon_dxy[leptonIndex];
         _dz = treeReader._Muon_dz[leptonIndex];
@@ -41,7 +41,7 @@ Lepton::Lepton( const TreeReader& treeReader,
 	    treeReader._Tau_pt[leptonIndex],
 	    treeReader._Tau_eta[leptonIndex],
 	    treeReader._Tau_phi[leptonIndex],
-            0. );
+            -1. );
 	_charge = treeReader._Tau_charge[leptonIndex];
         _dxy = treeReader._Tau_dxy[leptonIndex];
         _dz = treeReader._Tau_dz[leptonIndex];

@@ -6,7 +6,7 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex ):
         treeReader._Jet_pt[jetIndex], 
         treeReader._Jet_eta[jetIndex], 
         treeReader._Jet_phi[jetIndex], 
-        0.,
+        -1.,
         treeReader.is2016(),
 	treeReader.is2016PreVFP(),
 	treeReader.is2016PostVFP(), 
