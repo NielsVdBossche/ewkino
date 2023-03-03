@@ -499,6 +499,10 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Muon_tightId", _Muon_tightId, &b__Muon_tightId);
     _currentTreePtr->SetBranchAddress("Muon_genPartFlav", _Muon_genPartFlav, &b__Muon_genPartFlav);
     _currentTreePtr->SetBranchAddress("Muon_genPartIdx", _Muon_genPartIdx, &b__Muon_genPartIdx);
+    _currentTreePtr->SetBranchAddress("Muon_isPFCand", _Muon_isPFCand, &b__Muon_isPFCand);
+    _currentTreePtr->SetBranchAddress("Muon_isGlobal", _Muon_isGlobal, &b__Muon_isGlobal);
+    _currentTreePtr->SetBranchAddress("Muon_isTracker", _Muon_isTracker, &b__Muon_isTracker);
+    _currentTreePtr->SetBranchAddress("Muon_isStandalone", _Muon_isStandalone, &b__Muon_isStandalone);
     // variables related to taus
     _currentTreePtr->SetBranchAddress("nTau", &_nTau, &b__nTau);
     _currentTreePtr->SetBranchAddress("Tau_pt", _Tau_pt, &b__Tau_pt);

@@ -10,7 +10,11 @@ Muon::Muon( const TreeReader& treeReader, const unsigned muonIndex ):
     _relIso0p4DeltaBeta( treeReader._Muon_pfRelIso04_all[muonIndex] ),
     _isLoosePOGMuon( treeReader._Muon_looseId[muonIndex] ),
     _isMediumPOGMuon( treeReader._Muon_mediumId[muonIndex] ),
-    _isTightPOGMuon( treeReader._Muon_tightId[muonIndex] )
+    _isTightPOGMuon( treeReader._Muon_tightId[muonIndex] ),
+    _isPFCandidate( treeReader._Muon_isPFCand[muonIndex] ),
+    _isGlobal( treeReader._Muon_isGlobal[muonIndex] ),
+    _isTracker( treeReader._Muon_isTracker[muonIndex] ),
+    _isStandalone( treeReader._Muon_isStandalone[muonIndex] )
 {}
 
 
@@ -22,7 +26,11 @@ Muon::Muon( const Muon& rhs ):
     _relIso0p4DeltaBeta( rhs._relIso0p4DeltaBeta ),
     _isLoosePOGMuon( rhs._isLoosePOGMuon ),
     _isMediumPOGMuon( rhs._isMediumPOGMuon ),
-    _isTightPOGMuon( rhs._isTightPOGMuon )
+    _isTightPOGMuon( rhs._isTightPOGMuon ),
+    _isPFCandidate( rhs._isPFCandidate ),
+    _isGlobal( rhs._isGlobal ),
+    _isTracker( rhs._isTracker ),
+    _isStandalone( rhs._isStandalone )
     {}    
 
 
@@ -34,7 +42,11 @@ Muon::Muon( Muon&& rhs ) noexcept:
     _relIso0p4DeltaBeta( rhs._relIso0p4DeltaBeta ),
     _isLoosePOGMuon( rhs._isLoosePOGMuon ),
     _isMediumPOGMuon( rhs._isMediumPOGMuon ),
-    _isTightPOGMuon( rhs._isTightPOGMuon )
+    _isTightPOGMuon( rhs._isTightPOGMuon ),
+    _isPFCandidate( rhs._isPFCandidate ),
+    _isGlobal( rhs._isGlobal ),
+    _isTracker( rhs._isTracker ),
+    _isStandalone( rhs._isStandalone )
     {}    
 
 
@@ -53,5 +65,9 @@ std::ostream& Muon::print( std::ostream& os ) const{
     } else {
         os << " / fails POG muon selection";
     }
+    os << " / isPFCandidate = " << _isPFCandidate;
+    os << " / isGlobal = " << _isGlobal;
+    os << " / isTracker = " << _isTracker;
+    os << " / isStandalone = " << _isStandalone;
     return os;
 }

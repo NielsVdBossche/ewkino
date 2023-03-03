@@ -9,8 +9,8 @@ int main(){
 
     // settings
     std::string sampleList = "samplelists/samplelist_2018_TTW_nano.txt";
-    std::string sampleDirectory = "samplelists";
-    unsigned long nEntries = 100;
+    std::string sampleDirectory = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/";
+    unsigned long nEntries = 10;
 
     // make the TreeReader for nanoAOD
     std::cout << "initializing TreeReader..." << std::endl;

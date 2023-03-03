@@ -75,7 +75,7 @@ class TreeReader {
 	Float_t		_Electron_pt[nElectron_max];
 	Float_t		_Electron_eta[nElectron_max];
 	Float_t		_Electron_phi[nElectron_max];
-	Float_t		_Electron_charge[nElectron_max];
+	Int_t		_Electron_charge[nElectron_max];
 	Float_t		_Electron_dxy[nElectron_max];
 	Float_t		_Electron_dz[nElectron_max];
 	Float_t		_Electron_sip3d[nElectron_max];
@@ -109,7 +109,7 @@ class TreeReader {
         Float_t		_Muon_pt[nMuon_max];
         Float_t		_Muon_eta[nMuon_max];
         Float_t		_Muon_phi[nMuon_max];
-	Float_t         _Muon_charge[nMuon_max];
+	Int_t		_Muon_charge[nMuon_max];
         Float_t         _Muon_dxy[nMuon_max];
         Float_t         _Muon_dz[nMuon_max];
         Float_t         _Muon_sip3d[nMuon_max];
@@ -127,12 +127,16 @@ class TreeReader {
 	Bool_t		_Muon_tightId[nMuon_max];
 	UChar_t		_Muon_genPartFlav[nMuon_max];
 	Int_t		_Muon_genPartIdx[nMuon_max];
+	Bool_t		_Muon_isPFCand[nMuon_max];
+	Bool_t		_Muon_isGlobal[nMuon_max];
+	Bool_t		_Muon_isTracker[nMuon_max];
+	Bool_t		_Muon_isStandalone[nMuon_max];
 	// variables related to taus
 	UInt_t          _nTau;
         Float_t		_Tau_pt[nTau_max];
         Float_t		_Tau_eta[nTau_max];
         Float_t		_Tau_phi[nTau_max];
-	Float_t         _Tau_charge[nTau_max];
+	Int_t		_Tau_charge[nTau_max];
         Float_t         _Tau_dxy[nTau_max];
         Float_t         _Tau_dz[nTau_max];
 	UChar_t		_Tau_genPartFlav[nTau_max];
@@ -345,6 +349,10 @@ class TreeReader {
         TBranch*        b__Muon_tightId;
 	TBranch*        b__Muon_genPartFlav;
         TBranch*        b__Muon_genPartIdx;
+	TBranch*	b__Muon_isPFCand;
+	TBranch*	b__Muon_isGlobal;
+	TBranch*	b__Muon_isTracker;
+	TBranch*	b__Muon_isStandalone;
 	TBranch*	b__nTau;
 	TBranch*	b__Tau_pt;
 	TBranch*        b__Tau_eta;

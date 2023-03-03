@@ -1,3 +1,3 @@
-# sample located here
+# sample located in /pnfs/iihe/cms/store/user/llambrec/nanoaod
 
-TTW TTWJetsToLNu_nanoAOD_example_Autumn18.root 0.284
+TTW TTWJetsToLNu-RunIISummer20UL18-nanoAOD.root 0.284

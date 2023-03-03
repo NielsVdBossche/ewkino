@@ -14,6 +14,11 @@ loose muon selection
 */
 
 bool MuonSelector::isLooseBase() const{
+    // cuts to replicate selection at ntuplizing stage
+    // (presumably not done at nanoAOD creation)
+    if( !muonPtr->isPFCandidate() ) return false;
+    if( !(muonPtr->isTracker() || muonPtr->isGlobal()) ) return false;
+    // other loose selection criteria
     if( muonPtr->uncorrectedPt() <= 5 ) return false;
     if( muonPtr->absEta() >= 2.4 ) return false; 
     if( fabs( muonPtr->dxy() ) >= 0.05 ) return false;
