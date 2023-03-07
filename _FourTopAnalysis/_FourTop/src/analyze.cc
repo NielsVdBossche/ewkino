@@ -661,6 +661,7 @@ void FourTop::analyze(std::string method) {
                                 if (selection->HasAdditionalBJets()) {
                                     weightUp = 1.7;
                                     weightDown = 0.3;
+                                }
                             }
                         }
                         std::string ttVJetsRegion = ttVJetsRegions[i];
