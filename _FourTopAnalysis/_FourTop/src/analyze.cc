@@ -781,6 +781,7 @@ void FourTop::analyze(std::string method) {
                         }
                     }
                 } else if (uncID == shapeUncId::JECFlavorQCD && useSplitJEC) {
+                    #if ! JECWRAPPER
                     for (int i = 0; i < 3; i++) {
                         std::string source = JECQCDComponents[i];
                         std::string jecVar = "FlavorQCD";
@@ -822,6 +823,7 @@ void FourTop::analyze(std::string method) {
                             if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(source, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
                         }
                     }
+                    #endif
                 }
 
                 if (uncID < shapeUncId::JER_1p93) {
