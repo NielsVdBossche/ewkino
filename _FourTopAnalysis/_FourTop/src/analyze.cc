@@ -617,50 +617,39 @@ void FourTop::analyze(std::string method) {
                             if (selection->numberOfLeps() == 2) {
                                 if (selection->numberOfJets() <= 2) {
                                     weightUp = 0.92;
-                                    weightDown = 1.08;
                                 } else if (selection->numberOfJets() == 3) {
                                     weightUp = 0.95;
-                                    weightDown = 1.05;
                                 } else if (selection->numberOfJets() == 4) {
                                     weightUp = 1.03;
-                                    weightDown = 0.97;
                                 } else if (selection->numberOfJets() == 5) {
                                     weightUp = 1.20;
-                                    weightDown = 0.8;
                                 } else if (selection->numberOfJets() == 6) {
                                     weightUp = 1.42;
-                                    weightDown = 0.58;
                                 } else if (selection->numberOfJets() >= 7) {
                                     weightUp = 1.55;
-                                    weightDown = 0.45;
                                 } 
                             }
                             if (selection->numberOfLeps() >= 3) {
                                 if (selection->numberOfJets() <= 2) {
                                     weightUp = 0.96;
-                                    weightDown = 1.04;
                                 } else if (selection->numberOfJets() == 3) {
                                     weightUp = 1.16;
-                                    weightDown = 0.84;
                                 } else if (selection->numberOfJets() == 4) {
                                     weightUp = 1.28;
-                                    weightDown = 0.72;
                                 } else if (selection->numberOfJets() == 5) {
                                     weightUp = 1.46;
-                                    weightDown = 0.54;
                                 } else if (selection->numberOfJets() == 6) {
                                     weightUp = 1.44;
-                                    weightDown = 0.56;
                                 } else if (selection->numberOfJets() >= 7) {
                                     weightUp = 1.44;
-                                    weightDown = 0.56;
                                 } 
                             }
+                            weightDown = 1.;
                         } else if (i==1) {
                             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                                 if (selection->HasAdditionalBJets()) {
                                     weightUp = 1.7;
-                                    weightDown = 0.3;
+                                    weightDown = 1.;
                                 }
                             }
                         }
@@ -678,6 +667,7 @@ void FourTop::analyze(std::string method) {
                     }
                     weightUp = 1.;
                     weightDown = 1.;
+                    
                 } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
@@ -916,16 +906,20 @@ bool FourTop::eventPassesTriggers() {
 std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
     std::vector<std::string> subClasses;
 
-    if (currClass == eventClass::ssdl || (currClass == eventClass::cro && onlyCR) || (currClass == eventClass::crw && onlyCR)) {
-        if (selection->getLepton(0)->charge() > 0) subClasses.push_back("++");
-        else subClasses.push_back("--");
+    if (currClass == eventClass::ssdl || (currClass == eventClass::cro && onlyCR) || (currClass == eventClass::crw)) {
+        if (currClass == eventClass::ssdl && selection->getLepton(0)->charge() > 0) subClasses.push_back("++");
+        else if (currClass == eventClass::ssdl) subClasses.push_back("--");
 
         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("ee");
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
 
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
-        else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
+        else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
+            subClasses.push_back("pureTTV");
+            if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("TTVmm");
+            else subClasses.push_back("TTVemee");
+        }
 
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
             double score;
@@ -934,8 +928,8 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
                 score = it.second;
                 break;
             }
-            if (score > 0.81) subClasses.push_back("score15");
-            if (score > 0.928) subClasses.push_back("score2");
+            //if (score > 0.81) subClasses.push_back("score15");
+            //if (score > 0.928) subClasses.push_back("score2");
         }
     } else if (currClass == eventClass::trilep) {
         if (selection->getMediumLepCol()->hasOSSFPair()) {
@@ -1065,9 +1059,10 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             {trilep, ""},
             {fourlep, ""}};
 
-    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig", "pureTTV", "score15", "score2"};
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig", "pureTTV", "TTVmm", "TTVemee"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
-    std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
+    std::vector<std::string> crwSubChannels = {"ee", "em", "mm"};
+    //std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF", "pureSig", "pureTTV"};
     std::vector<std::string> crzSubChannels = {"SigZVeto", "OneMedB", "TwoMedB"};
 
@@ -1103,8 +1098,9 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
         }
         
         mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
+        mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
-        if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
+        //if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
 
         if (! onlyCR) {
             std::cout << "SRs are considered" << std::endl;
