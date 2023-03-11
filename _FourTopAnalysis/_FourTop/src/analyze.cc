@@ -13,7 +13,7 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
-    useNpNmDistributions = true;
+    useNpNmDistributions = false;
     bool isNPControl = false;
     double chMisCorr = 0.;
 
@@ -352,7 +352,10 @@ void FourTop::analyze(std::string method) {
 
             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                 //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
-                if (selection->HasAdditionalBJets()) processNb = 1;
+                if (selection->HasAdditionalBJets()) {
+                    processNb = 1;
+                    weight *= 1.7;
+                }
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
@@ -648,8 +651,8 @@ void FourTop::analyze(std::string method) {
                         } else if (i==1) {
                             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                                 if (selection->HasAdditionalBJets()) {
-                                    weightUp = 1.7;
-                                    weightDown = 1.;
+                                    weightUp = 1.6;
+                                    weightDown = 0.4;
                                 }
                             }
                         }
@@ -678,7 +681,8 @@ void FourTop::analyze(std::string method) {
                     }
                     std::string empty = "";
 
-                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000);
+                    upClass = selection->classifyUncertainty
+                    (shapeUncId(uncID), true, 1000);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
