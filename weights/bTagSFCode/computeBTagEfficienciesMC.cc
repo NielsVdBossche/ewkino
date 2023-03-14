@@ -13,7 +13,7 @@
 #include "../../Tools/interface/stringTools.h"
 
 
-void computeBTagEff( const std::string& year, const std::string& sampleDirectory, const bool cleanJetsFromLooseLeptons, const bool cleanJetsFromFOLeptons ){ //, const bool deepCSV ){
+void computeBTagEff( const std::string& year, const std::string& sampleList, const bool cleanJetsFromLooseLeptons, const bool cleanJetsFromFOLeptons ){ //, const bool deepCSV ){
 
     analysisTools::checkYearString( year ); 
 
@@ -46,7 +46,7 @@ void computeBTagEff( const std::string& year, const std::string& sampleDirectory
     }
 
     //initialize the TreeReader
-    TreeReader treeReader( "sampleLists/samples_bTagEff_" + year + ".txt", sampleDirectory );
+    TreeReader treeReader( sampleList, "/pnfs/iihe/cms/store/user/nivanden/skims/" );
 
     //loop over all samples 
     for( unsigned i = 0; i < treeReader.numberOfSamples(); ++i ){
@@ -69,7 +69,7 @@ void computeBTagEff( const std::string& year, const std::string& sampleDirectory
             //apply selection to jets 
             event.selectLooseLeptons();
             event.cleanElectronsFromLooseMuons();
-            event.cleanTausFromLooseLightLeptons();
+            event.removeTaus();
             event.selectGoodJets();
             if( cleanJetsFromLooseLeptons && !cleanJetsFromFOLeptons ){
                 event.cleanJetsFromLooseLeptons();
