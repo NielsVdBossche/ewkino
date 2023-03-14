@@ -55,6 +55,7 @@ class EventFourT {
 
         int nJets, nMediumB, nTightB, nLooseB, nLooseLep, nLep;
         double ht, met;
+        Met eventMet;
 
         bool isNormalSelected;
         bool bdtOutput = true;
@@ -163,6 +164,8 @@ class EventFourT {
 
         int NumberOfBFlavorJets();
         bool HasAdditionalBJets();
+
+        Met& GetFullMET() {return eventMet;};
 
         #if JECWRAPPER
         JECWrapper* GetJECWrapper() {return jecWrapper;};
