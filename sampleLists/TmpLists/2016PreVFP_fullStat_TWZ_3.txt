@@ -1,0 +1,1 @@
+TWZ             ../skims_v6/2016PreVFP/TWZToLL_tlept_Whad_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root              0.003004
