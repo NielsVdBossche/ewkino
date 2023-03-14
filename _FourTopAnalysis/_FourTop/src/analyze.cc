@@ -354,7 +354,7 @@ void FourTop::analyze(std::string method) {
                 //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
                 if (selection->HasAdditionalBJets()) {
                     processNb = 1;
-                    weight *= 1.7;
+                    //weight *= 1.4;
                 }
             }
 
@@ -651,8 +651,8 @@ void FourTop::analyze(std::string method) {
                         } else if (i==1) {
                             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                                 if (selection->HasAdditionalBJets()) {
-                                    weightUp = 1.6;
-                                    weightDown = 0.4;
+                                    weightUp = 1.4;
+                                    weightDown = 0.6;
                                 }
                             }
                         }
