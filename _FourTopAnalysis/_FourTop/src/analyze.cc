@@ -244,8 +244,8 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
-                //zzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4PlusJet"};
-                //mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
+                zzSFRegions = {"0Jet", "1Jet", "2Jet", "3PlusJet"};
+                mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
                 ttVJetsRegions = {"AddJets", "AddBJets"};
                 mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
@@ -369,8 +369,8 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
-            if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
-            //if (sampleReweighter && selection->leptonsArePrompt() && nominalClass > eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+            //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+            if (sampleReweighter && selection->leptonsArePrompt() && (nominalClass == eventClass::crwz || nominalClass == eventClass::crzz)) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
 
             // make a bool for filling checks. 
             // 
@@ -591,27 +591,27 @@ void FourTop::analyze(std::string method) {
                             }
                         }
                     }
-                //else if (uncID == shapeUncId::ZZSF) {
-                //  if (sampleReweighter) {
-                //      for (int i=0; i < 5; i++) {
-                //          if (selection->numberOfJets() == i || (i == 4 && selection->numberOfJets() >= 4)) {
-                //              weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
-                //              weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
-                //          }
-                //          std::string zzSFRegion = zzSFRegions[i];
-                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight * weightUp, weight * weightDown);
-                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
-                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
-                //      }
-                //      weightUp = 1.;
-                //      weightDown = 1.;
-                //  } else {
-                //      for (std::string zzSFRegion : zzSFRegions) {
-                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight, weight);
-                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight, weight);
-                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
-                //      }
-                //  }
+                } else if (uncID == shapeUncId::ZZSF) {
+                    if (sampleReweighter) {
+                        for (int i = 0; i < 4; i++) {
+                            if (selection->numberOfJets() == i || (i == 3 && selection->numberOfJets() >= 3)) {
+                                weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                                weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                            }
+                            std::string zzSFRegion = zzSFRegions[i];
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                        }
+                        weightUp = 1.;
+                        weightDown = 1.;
+                    } else {
+                        for (std::string zzSFRegion : zzSFRegions) {
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight, weight);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight, weight);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
+                        }
+                    }
                 } else if (uncID == ttvNJetsUnc) {
                     for (int i=0; i < 2; i++) {
                         weightUp = 1.;
@@ -651,8 +651,8 @@ void FourTop::analyze(std::string method) {
                         } else if (i==1) {
                             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                                 if (selection->HasAdditionalBJets()) {
-                                    weightUp = 1.6;
-                                    weightDown = 0.4;
+                                    weightUp = 1.4;
+                                    weightDown = 0.6;
                                 }
                             }
                         }
@@ -961,9 +961,9 @@ CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
         std::string sampleName = samp.fileName();
         if (stringTools::stringStartsWith(sampleName, "WZTo") || stringTools::stringStartsWith(sampleName, "WZ_")) {
             sampleReweighter->addReweighter("WZ", std::make_shared< ReweighterSample >("WZ", dir));
-        } //else if (stringTools::stringStartsWith(sampleName, "ZZTo") || stringTools::stringStartsWith(sampleName, "ZZ_")) {
-          //  sampleReweighter->addReweighter("ZZ", std::make_shared< ReweighterSample >("ZZ", dir));
-        //}
+        } else if (stringTools::stringStartsWith(sampleName, "ZZTo4L")) {
+            sampleReweighter->addReweighter("ZZ", std::make_shared< ReweighterSample >("ZZTo4L", dir));
+        }
         
         //else if (stringTools::stringStartsWith(sampleName, "ZG")) {
           //  sampleReweighter->addReweighter("ZG", std::make_shared< ReweighterSample >("ZG", dir));
