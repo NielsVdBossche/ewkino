@@ -354,7 +354,6 @@ void FourTop::analyze(std::string method) {
                 //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
                 if (selection->HasAdditionalBJets()) {
                     processNb = 1;
-                    //weight *= 1.4;
                 }
             }
 
