@@ -766,7 +766,7 @@ std::vector<double> HistogramConfig::fillNominalHists(const eventClass evClass, 
                     otherIndex++;
                 }
                 Lepton* otherLepton = event->getLepton(otherIndex);
-                double mtValue = mt(*otherLepton, event->getEvent()->met());
+                double mtValue = mt(*otherLepton, event->GetFullMET());
                 fillVal.push_back(mtValue);
             }
         }

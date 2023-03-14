@@ -8,10 +8,23 @@ GenParticle::GenParticle(const TreeReader& treeReader, const unsigned genIndex) 
     _genIsPromptFinalState(treeReader._gen_isPromptFinalState[genIndex]),
     _genIsDirectPromptTauDecayProductFinalState(treeReader._gen_isDirectPromptTauDecayProductFinalState[genIndex]),
     _genIsLastCopy(treeReader._gen_isLastCopy[genIndex]),
-    _genIndex(treeReader._gen_index[genIndex]),
-    _genMotherIndex(treeReader._gen_motherIndex[genIndex]),
-    _genDaughter_n(treeReader._gen_daughter_n[genIndex])
+    _genIndex(treeReader._gen_index[genIndex])
 { 
     //// initialize array of daughter indices -> Can we exchange these for pointers?
     
+}
+
+
+void GenParticle::ClearCopies() {
+    // recursive 
+    // if the daughter has the same flavor it gets deleted? Maybe take into account _genStatus
+    // Before deletion: change daughters of current object
+
+    for (unsigned daughterIndex = 0; daughterIndex < _genDaughters.size(); daughterIndex++) {
+        if (_genDaughters[daughterIndex]->GetPdgID() == _genPdgID) {
+            // delete daughters?
+            
+        }
+    }
+
 }

@@ -283,7 +283,7 @@ std::vector<double> fourTopHists::fillAllLean(eventClass evClass, EventFourT* se
                 otherIndex++;
             }
             Lepton* otherLepton = selec->getLepton(otherIndex);
-            double mtValue = mt(*otherLepton, selec->getEvent()->met());
+            double mtValue = mt(*otherLepton, selec->GetFullMET());
             fillVal.push_back(mtValue);
         }
     }

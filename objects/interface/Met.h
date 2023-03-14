@@ -9,6 +9,49 @@
 #include "../../Event/interface/JetCollection.h"
 #include "../../TreeReader/interface/TreeReader.h"
 
+enum TheRunEra {
+        y2016B,
+        y2016C,
+        y2016D,
+        y2016E,
+        y2016F,
+        y2016G,
+        y2016H,
+        y2017B,
+        y2017C,
+        y2017D,
+        y2017E,
+        y2017F,
+        y2018A,
+        y2018B,
+        y2018C,
+        y2018D,
+        y2016MC,
+        y2017MC,
+        y2018MC,
+        yUL2016B,
+        yUL2016C,
+        yUL2016D,
+        yUL2016E,
+        yUL2016F,
+        yUL2016Flate,
+        yUL2016G,
+        yUL2016H,
+        yUL2017B,
+        yUL2017C,
+        yUL2017D,
+        yUL2017E,
+        yUL2017F,
+        yUL2018A,
+        yUL2018B,
+        yUL2018C,
+        yUL2018D,
+        yUL2016MCAPV,
+        yUL2016MCnonAPV,
+        yUL2017MC,
+        yUL2018MC
+};
+
 class Met : public PhysicsObject {
 
     public:
@@ -44,6 +87,7 @@ class Met : public PhysicsObject {
         virtual std::ostream& print( std::ostream& ) const override;
         void setLorentzVectorExplicit(double pt, double eta, double phi, double e) {setLorentzVector(pt, eta, phi, e);}
 
+        Met ApplyPhiModulation(int runnb, std::string year, bool isMC, int npv, bool isUL = true);
     private:
 
         //JEC uncertainties

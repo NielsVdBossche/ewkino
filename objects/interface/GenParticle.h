@@ -20,20 +20,29 @@ class GenParticle : public PhysicsObject {
         ~GenParticle();
 
         GenParticle* GetMother() {return mother;}
-        void SetMother(GenParticle* newMother) {mother = newMother;}
+        void SetMother(GenParticle* newMother) {
+            mother = newMother;
+            mother->AddDaughter(this);
+        }
 
-        int getPdgID() {return _genPdgID;};
-        int getCharge() {return _genCharge;};
-        int getStatus() {return _genStatus;};
-        int getIndex() {return _genIndex;};
-        int getMotherIndex() {return _genMotherIndex;};
+        int GetPdgID() {return _genPdgID;};
+        int GetCharge() {return _genCharge;};
+        int GetStatus() {return _genStatus;};
+        int GetIndex() {return _genIndex;};
         
         bool isPromptFinalState() {return _genIsPromptFinalState;};
         bool isDirectPromptTauDecayProductFinalState() {return _genIsDirectPromptTauDecayProductFinalState;};
         bool isLastCopy() {return _genIsLastCopy;};
         
         std::vector<GenParticle*>& GetDaughters() {return _genDaughters;};
-        int NumberOfDaughters() {return _genDaughter_n;};
+        void AddDaughter(GenParticle* daughter) {
+            // ideally we do a find based on getIndex() ti see if we're safe
+            _genDaughters.push_back(daughter);
+            daughter->SetMother(this);
+        }
+        int NumberOfDaughters() {return _genDaughters.size();};
+
+        void ClearCopies();
         
         
     private:
@@ -44,10 +53,8 @@ class GenParticle : public PhysicsObject {
         bool _genIsDirectPromptTauDecayProductFinalState;
         bool _genIsLastCopy;
         int _genIndex;
-        int _genMotherIndex;
+
         GenParticle* mother;
-        int _genDaughter_n;
-        int _genDaughterIndex[10];
         std::vector<GenParticle*> _genDaughters;
 
         virtual GenParticle* clone() const &{ return new GenParticle( *this ); }
