@@ -65,8 +65,8 @@ class TreeReader {
         Float_t		_GenPart_mass[nGenPart_max];
 	UInt_t		_GenPart_genPartIdxMother[nGenPart_max];
         Int_t		_GenPart_pdgId[nGenPart_max];
-	UInt_t		_GenPart_status[nGenPart_max];
-        UInt_t		_GenPart_statusFlags[nGenPart_max];
+	Int_t		_GenPart_status[nGenPart_max];
+        Int_t		_GenPart_statusFlags[nGenPart_max];
 	// gen MET
 	Float_t		_GenMET_pt;
 	Float_t		_GenMET_phi;

@@ -16,6 +16,7 @@ class LeptonGeneratorInfo{
     public:
         LeptonGeneratorInfo( const TreeReader&, const std::string&, const unsigned ); 
 
+	bool hasGenMatch() const{ return _hasGenMatch; }
         bool isPrompt() const{ return _isPrompt; }
         int matchPdgId() const{ return _matchPdgId; }
         int matchCharge() const{ return _matchCharge; }
@@ -25,8 +26,11 @@ class LeptonGeneratorInfo{
         unsigned provenanceConversion() const{ return _provenanceConversion; }
 
     private:
-        bool _isPrompt;
-        int _matchPdgId, _matchCharge, _momPdgId;
+	bool _hasGenMatch = false;
+        bool _isPrompt = false;
+        int _matchPdgId = 0;
+	int _matchCharge = 0;
+	int _momPdgId = 0;
         unsigned _provenance, _provenanceCompressed, _provenanceConversion;
 
 }; 

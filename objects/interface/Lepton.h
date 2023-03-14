@@ -39,6 +39,7 @@ class Lepton : public PhysicsObject {
         int charge() const{ return _charge; }
 
         //access generator-level attributes
+        bool hasGenMatch() const;
         bool isPrompt() const;
         int matchPdgId() const;
         int matchCharge() const;

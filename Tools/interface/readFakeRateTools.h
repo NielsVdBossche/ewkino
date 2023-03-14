@@ -12,6 +12,7 @@ Tools related to fake rate map reading
 
 // include ROOT classes 
 #include "TFile.h"
+#include "TH2D.h"
 
 // include other parts of the framework
 #include "../../Event/interface/Event.h"

@@ -154,12 +154,15 @@ bool Lepton::checkGeneratorInfo() const{
 }
 
 
+bool Lepton::hasGenMatch() const{
+    if( checkGeneratorInfo() ){ return generatorInfo->hasGenMatch(); }
+    else{ return false; }
+}
+
+
 bool Lepton::isPrompt() const{
-    if( checkGeneratorInfo() ){
-        return generatorInfo->isPrompt();
-    } else {
-        return true;
-    }
+    if( checkGeneratorInfo() ){ return generatorInfo->isPrompt(); }
+    else { return false; }
 }
 
 
@@ -271,5 +274,10 @@ std::ostream& Lepton::print( std::ostream& os) const{
     os << " / dxy = " << _dxy;
     os << " / dz = " << _dz;
     os << " / uncorrectedPt = " << _uncorrectedPt;
+    if( generatorInfo ){
+	os << " / isPrompt = " << generatorInfo->isPrompt();
+	os << " / matchPdgId = " << generatorInfo->matchPdgId();
+	os << " / matchCharge = " << generatorInfo->matchCharge();
+    }
     return os;
 }
