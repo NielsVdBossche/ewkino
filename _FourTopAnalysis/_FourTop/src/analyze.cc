@@ -245,7 +245,7 @@ void FourTop::analyze(std::string method) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
                 zzSFRegions = {"0Jet", "1Jet", "2Jet", "3PlusJet"};
-                mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
+                mgrAll->addSubUncertainties(shapeUncId::ZZSF, zzSFRegions);
                 ttVJetsRegions = {"AddJets", "AddBJets"};
                 mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
@@ -591,8 +591,13 @@ void FourTop::analyze(std::string method) {
                         }
                     }
                 } else if (uncID == shapeUncId::ZZSF) {
+                    //if (testRun) std::cout << "ZZSF unc" << std::endl;
                     if (sampleReweighter) {
+                       // if (testRun) std::cout << "has rew" << std::endl;
                         for (int i = 0; i < 4; i++) {
+
+                            weightUp = 1.;
+                            weightDown = 1.;
                             if (selection->numberOfJets() == i || (i == 3 && selection->numberOfJets() >= 3)) {
                                 weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
                                 weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
@@ -602,14 +607,24 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
                         }
-                        weightUp = 1.;
-                        weightDown = 1.;
                     } else {
+                        //if (testRun) std::cout << "has no rew" << std::endl;
+
                         for (std::string zzSFRegion : zzSFRegions) {
+                            //if (testRun) std::cout << "fill " << zzSFRegion << std::endl;
+
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight, weight);
+                            //if (testRun) std::cout << "fill all" << zzSFRegion << std::endl;
+
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight, weight);
+                            //if (testRun) std::cout << "fill single" << zzSFRegion << std::endl;
+
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
+                            //if (testRun) std::cout << "fill 2d" << zzSFRegion << std::endl;
+
                         }
+                        //if (testRun) std::cout << "done fill" << std::endl;
+
                     }
                 } else if (uncID == ttvNJetsUnc) {
                     for (int i=0; i < 2; i++) {
