@@ -45,13 +45,13 @@ void FourTop::analyze(std::string method) {
         std::cout << "building reweighter" << std::endl;
         btagReweighter = new ReweighterBTagShape*();
         reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, testRun );
-        if (leanEventSelection && !testRun && (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy)) {
-            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
-        } else if (leanEventSelection && !testRun) {
-            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
-        } else if (!testRun) {
-            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
-        }
+        //if (leanEventSelection && !testRun && (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy)) {
+        //    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
+        //} else if (leanEventSelection && !testRun) {
+        //    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
+        //} else if (!testRun) {
+        //    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
+        //}
         sampleReweighter = createSampleReweighter("ANWeights/SampleNJetSF/");
     }
 
@@ -194,10 +194,13 @@ void FourTop::analyze(std::string method) {
 
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
 
-            considerBTagShape = ! testRun;
+            considerBTagShape = false;//! testRun;
             
             if (sampleIndex == 0 && considerBTagShape) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+                mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
+            } else if (sampleIndex == 0) {
+                bTagShapeSystematics = {"light", "heavy"};
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
             if (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy) {
@@ -522,6 +525,27 @@ void FourTop::analyze(std::string method) {
                         for(std::string btagsys : bTagShapeSystematics){
                             weightUp = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight;
                             weightDown = 1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight;
+
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec2D, weight * weightUp, weight * weightDown);
+                            if (useNpNmDistributions) {
+                                if (selection->getLepton(0)->charge() > 0) {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                                } else {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                                }
+                            }
+                        }
+
+                        weightUp = 1.;
+                        weightDown = 1.;
+                    } else {
+                        for(std::string btagsys : bTagShapeSystematics){
+                            std::string btagString = "bTag_loose_WP_" + btagsys;
+                            double nombweight = reweighter[btagString]->weight( *currentEvent );
+                            weightUp = 1. * reweighter[btagString]->weightUp( *currentEvent) / nombweight;
+                            weightDown = 1. * reweighter[btagString]->weightDown( *currentEvent) / nombweight;
 
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
