@@ -45,13 +45,13 @@ void FourTop::analyze(std::string method) {
         std::cout << "building reweighter" << std::endl;
         btagReweighter = new ReweighterBTagShape*();
         reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, testRun );
-        //if (leanEventSelection && !testRun && (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy)) {
-        //    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
-        //} else if (leanEventSelection && !testRun) {
-        //    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
-        //} else if (!testRun) {
-        //    addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
-        //}
+        if (leanEventSelection && !testRun && (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy)) {
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
+        } else if (leanEventSelection && !testRun) {
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
+        } else if (!testRun) {
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
+        }
         sampleReweighter = createSampleReweighter("ANWeights/SampleNJetSF/");
     }
 
@@ -194,7 +194,7 @@ void FourTop::analyze(std::string method) {
 
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
 
-            considerBTagShape = false;//! testRun;
+            considerBTagShape = ! testRun;
             
             if (sampleIndex == 0 && considerBTagShape) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
@@ -540,28 +540,28 @@ void FourTop::analyze(std::string method) {
 
                         weightUp = 1.;
                         weightDown = 1.;
-                    } else {
-                        for(std::string btagsys : bTagShapeSystematics){
-                            std::string btagString = "bTag_loose_WP_" + btagsys;
-                            double nombweight = reweighter[btagString]->weight( *currentEvent );
-                            weightUp = 1. * reweighter[btagString]->weightUp( *currentEvent) / nombweight;
-                            weightDown = 1. * reweighter[btagString]->weightDown( *currentEvent) / nombweight;
-
-                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
-                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
-                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec2D, weight * weightUp, weight * weightDown);
-                            if (useNpNmDistributions) {
-                                if (selection->getLepton(0)->charge() > 0) {
-                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, weight * weightUp, weight * weightDown);
-                                } else {
-                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
-                                }
-                            }
-                        }
-
-                        weightUp = 1.;
-                        weightDown = 1.;
-                    }
+                    } //else {
+                    //    for(std::string btagsys : bTagShapeSystematics){
+                    //        std::string btagString = "bTag_tight_WP_" + btagsys;
+                    //        double nombweight = reweighter[btagString]->weight( *currentEvent );
+                    //        weightUp = 1. * reweighter[btagString]->weightUp( *currentEvent) / nombweight;
+                    //        weightDown = 1. * reweighter[btagString]->weightDown( *currentEvent) / nombweight;
+                    //
+                    //        uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
+                    //        uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
+                    //        uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec2D, weight * weightUp, weight * weightDown);
+                    //        if (useNpNmDistributions) {
+                    //            if (selection->getLepton(0)->charge() > 0) {
+                    //                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                    //            } else {
+                    //                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                    //            }
+                    //        }
+                    //    }
+                    //
+                    //    weightUp = 1.;
+                    //    weightDown = 1.;
+                    //}
                 } else if (uncID == shapeUncId::isrShape && hasValidPSs) {                  
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
@@ -956,8 +956,9 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
 
-        if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
-        else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
+        if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
+            subClasses.push_back("pureSig");
+        } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
             subClasses.push_back("pureTTV");
             if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("TTVmm");
             else subClasses.push_back("TTVemee");
@@ -970,6 +971,17 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
                 score = it.second;
                 break;
             }
+            //if (score > 0.81) {
+            //    std::cout << selection->getEvent()->eventTags() << std::endl;
+            //    std::cout << "leptons:" << std::endl;
+            //    for (auto& lep : *(selection->getMediumLepCol())) {
+            //        std::cout << lep->isMuon() << " " << lep->pt() << " " << lep->eta() << std::endl;
+            //    }
+            //    std::cout << "jets:" << std::endl;
+            //    for (auto& jet : *(selection->getJetCol())) {
+            //        std::cout << jet->isBTaggedLoose() << " " << jet->isBTaggedMedium() << " " << jet->isBTaggedTight() << " " << jet->pt() << " " << jet->eta() << std::endl;
+            //    }
+            //}
             //if (score > 0.81) subClasses.push_back("score15");
             //if (score > 0.928) subClasses.push_back("score2");
         }
@@ -981,6 +993,26 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         }
         if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
         else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
+
+        if (bdtOutput && currClass == eventClass::trilep && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
+            double score;
+            for (auto it : selection->GetDLMVA()->getClassAndScore()) {
+                if (it.first > 3) continue;
+                score = it.second;
+                break;
+            }
+            //if (score > 0.81) {
+            //    std::cout << selection->getEvent()->eventTags() << std::endl;
+            //    std::cout << "leptons:" << std::endl;
+            //    for (auto& lep : *(selection->getMediumLepCol())) {
+            //        std::cout << lep->isMuon() << " " << lep->pt() << " " << lep->eta() << std::endl;
+            //    }
+            //    std::cout << "jets:" << std::endl;
+            //    for (auto& jet : *(selection->getJetCol())) {
+            //        std::cout << jet->isBTaggedLoose() << " " << jet->isBTaggedMedium() << " " << jet->isBTaggedTight() << " " << jet->pt() << " " << jet->eta() << std::endl;
+            //    }
+            //}
+        }
     } else if (currClass == eventClass::crz3L) {
         if (selection->numberOfLooseBJets() >= 2 && selection->numberOfJets() >= 3) {
             subClasses.push_back("SigZVeto");
