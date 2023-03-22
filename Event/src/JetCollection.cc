@@ -111,6 +111,32 @@ JetCollection JetCollection::buildVariedCollection( Jet (Jet::*variedJet)(std::s
     return JetCollection( jetVector );
 }
 
+JetCollection JetCollection::buildVariedCollection( Jet (Jet::*variedJet)(const unsigned) const, 
+    unsigned variationArg ) const{
+    // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    for( const auto& jetPtr : *this ){
+
+        //jets are NOT shared between collections!
+        jetVector.push_back( std::make_shared< Jet >( (*jetPtr.*variedJet)( variationArg ) ) );
+    }
+    return JetCollection( jetVector );
+}
+
+JetCollection JetCollection::buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(const unsigned) const, unsigned variationArg, unsigned flavor ) const{
+    // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    for( const auto& jetPtr : *this ){
+        //jets are NOT shared between collections!
+        if (jetPtr->hadronFlavor() == flavor) {
+            jetVector.push_back( std::make_shared< Jet >( (*jetPtr.*variedJet)( variationArg ) ) );
+        } else {
+            jetVector.push_back( std::make_shared< Jet >( *jetPtr ) );
+        }
+    }
+    return JetCollection( jetVector );
+}
+
 JetCollection JetCollection::buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(std::string) const, std::string variationArg, unsigned flavor ) const{
     // similar to above but with argument passed to Jet::*variedJet
     std::vector< std::shared_ptr< Jet > > jetVector;
@@ -125,20 +151,37 @@ JetCollection JetCollection::buildVariedCollection_FlavorSet( Jet (Jet::*variedJ
     return JetCollection( jetVector );
 }
 
+JetCollection JetCollection::JECUpGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const {
+    return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedUp, sourceID, flavor).goodJetCollection();
+}
+
+JetCollection JetCollection::JECDownGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const {
+    return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedDown, sourceID, flavor).goodJetCollection();
+}
+
+JetCollection JetCollection::JECGroupedFlavorQCD(unsigned sourceID, unsigned flavor, bool isup) const {
+    if (isup) {
+        return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedUp, sourceID, flavor).goodJetCollection();
+    } else {    
+        return buildVariedCollection_FlavorSet(&Jet::JetJECGroupedDown, sourceID, flavor).goodJetCollection();
+    }
+}
+
+
+JetCollection JetCollection::JECGroupedFlavorQCD(unsigned flavor, bool up) const {
+    if (up) {
+        return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
+    } else {    
+        return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
+    }
+}
+
 JetCollection JetCollection::JECUpGroupedFlavorQCD(unsigned flavor) const {
     return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
 }
 
 JetCollection JetCollection::JECDownGroupedFlavorQCD(unsigned flavor) const {
     return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
-}
-
-JetCollection JetCollection::JECGroupedFlavorQCD(unsigned flavor, bool isup) const {
-    if (isup) {
-        return buildVariedCollection_FlavorSet(&Jet::JetJECUp, "FlavorQCD", flavor).goodJetCollection();
-    } else {    
-        return buildVariedCollection_FlavorSet(&Jet::JetJECDown, "FlavorQCD", flavor).goodJetCollection();
-    }
 }
 
 JetCollection JetCollection::JECDownCollection() const{
@@ -181,6 +224,15 @@ JetCollection JetCollection::JECDownCollection( std::string source ) const{
     return buildVariedCollection( &Jet::JetJECDown, source );
 }
 
+JetCollection JetCollection::JECGroupedUpCollection( unsigned source ) const{
+    return buildVariedCollection( &Jet::JetJECGroupedUp, source ).goodJetCollection();
+}
+
+JetCollection JetCollection::JECGroupedDownCollection( unsigned source ) const{
+    return buildVariedCollection( &Jet::JetJECGroupedDown, source ).goodJetCollection();
+}
+
+
 JetCollection JetCollection::HEMIssue() const {
     return buildVariedCollection( &Jet::HEMIssue );
 }
@@ -211,6 +263,44 @@ JetCollection JetCollection::getVariedJetCollection( const std::string& variatio
 	+ "jet variation " + variation + " is unknown." );
     }
 }
+
+JetCollection JetCollection::getVariedJetCollection( unsigned source, bool isUp, bool isGrouped) const{
+    if( isUp && isGrouped ){
+        return buildVariedCollection( &Jet::JetJECGroupedUp, source ).goodJetCollection();
+    } else if( isUp && !isGrouped ){
+        return buildVariedCollection( &Jet::JetJECSourcesUp, source ).goodJetCollection();
+    } else if (isGrouped) {
+        return buildVariedCollection( &Jet::JetJECGroupedDown, source ).goodJetCollection();
+    } else if (!isGrouped) {
+        return buildVariedCollection( &Jet::JetJECSourcesDown, source ).goodJetCollection();
+    } else {
+        throw std::invalid_argument( std::string("ERROR in getVariedJetCollection: ")
+	+ "jet variation " + std::to_string(source) + " is unknown." );
+    }
+}
+
+#if JECONRUNTIME
+JetCollection JetCollection::JECCustomCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const {
+    
+    // similar to above but with argument passed to Jet::*variedJet
+    std::vector< std::shared_ptr< Jet > > jetVector;
+    std::shared_ptr< JetCorrectorParameters> jetCorrUncParams = jecwrapper->GetJetCorrectionUncertainty(id);
+    for( const auto& jetPtr : *this ){
+        JetCorrectionUncertainty* jetCorrUnc = new JetCorrectionUncertainty( *( jetCorrUncParams ) );
+        //jets are NOT shared between collections!
+        if (isUp) jetVector.push_back( std::make_shared< Jet >( jetPtr->JetJECUp(jetCorrUnc) ) );
+        else jetVector.push_back( std::make_shared< Jet >( jetPtr->JetJECDown(jetCorrUnc) ) );
+
+        delete jetCorrUnc;
+    }
+    return JetCollection( jetVector );
+}
+
+JetCollection JetCollection::JECCustomGoodCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const {
+    return JECCustomCollection(jecwrapper, id, isUp).goodJetCollection();
+}
+
+#endif
 
 
 JetCollection::size_type JetCollection::numberOfLooseBTaggedJets() const{

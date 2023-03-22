@@ -21,6 +21,8 @@ enum shapeUncId {
     fsrShape,
     fsrNorm,
     WZSF,
+    ZZSF,
+    ttvNJetsUnc,
     JER_1p93,
     JER_2p5,
     JEC,
@@ -29,6 +31,8 @@ enum shapeUncId {
     HEMIssue,
     end  /// always at the end for easier loops
 };
+
+
 
 class Uncertainty {
     private:
@@ -47,6 +51,7 @@ class Uncertainty {
         bool printAllVariations = false;
     public:
         Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeUncId id, HistogramSet* histograms);
+        Uncertainty(std::string& uncName, shapeUncId uncID, HistogramSet* histograms);
         virtual ~Uncertainty();
 
         virtual void newSample(std::string& uniqueName);

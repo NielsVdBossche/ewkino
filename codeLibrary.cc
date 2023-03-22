@@ -31,6 +31,7 @@
 #include "Event/src/SusyMassInfo.cc"
 #include "Event/src/EventTags.cc"
 #include "Event/src/ParticleLevelInfo.cc"
+#include "Event/src/GenParticlesTop.cc"
 #include "Event/src/Event.cc"
 
 //include Tools code 
@@ -69,5 +70,11 @@
 #include "weights/src/ReweighterPileup.cc"
 #include "weights/src/ReweighterPrefire.cc"
 #include "weights/src/ReweighterEmpty.cc"
+#include "weights/src/ReweighterTriggerSF.cc"
 #include "weights/src/CombinedReweighter.cc"
 #include "weights/src/ConcreteReweighterFactory.cc"
+
+#if JECONRUNTIME
+#include "CMSSW_imports/src/JECWrapper.cc"
+#include "CMSSW_imports/CondFormats/JetMETObjects/JMELibrary.cc"
+#endif

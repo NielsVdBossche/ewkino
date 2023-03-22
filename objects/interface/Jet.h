@@ -5,6 +5,9 @@
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
 #include "../../Tools/interface/stringTools.h"
+#if JECONRUNTIME
+#include "../../CMSSW_imports/interface/JECWrapper.h"
+#endif
 //#include "JetSelector.h"
 
 
@@ -55,11 +58,18 @@ class Jet : public PhysicsObject{
         Jet JetJER_1p93_To_2p5_Down() const;
         Jet JetJER_1p93_To_2p5_Up() const;
 
+        // create new Jet with JEC varied within uncertainties, split per source
+        Jet JetJECUp( const std::string source ) const;
+        Jet JetJECDown( const std::string source ) const;
+        Jet JetJECGroupedDown( const unsigned source_id ) const;
+        Jet JetJECGroupedUp( const unsigned source_id ) const;
+        Jet JetJECSourcesDown( const unsigned source_id ) const;
+        Jet JetJECSourcesUp( const unsigned source_id ) const;
+        #if JECONRUNTIME
+        Jet JetJECUp(JetCorrectionUncertainty* jetCorrUnc);
+        Jet JetJECDown(JetCorrectionUncertainty* jetCorrUnc);
+        #endif
         Jet HEMIssue() const;
-
-	// create new Jet with JEC varied within uncertainties, split per source
-	Jet JetJECDown( const std::string source ) const;
-	Jet JetJECUp( const std::string source ) const;
 
         //check if any of the jet variations passes the selection
         bool isGoodAnyVariation() const;
@@ -83,10 +93,13 @@ class Jet : public PhysicsObject{
         double _pt_JERDown = 0;
         double _pt_JERUp = 0;
 
-	std::map< std::string, double > _pt_JECSourcesUp;
-	std::map< std::string, double > _pt_JECSourcesDown;
-	std::map< std::string, double > _pt_JECGroupedUp;
-	std::map< std::string, double > _pt_JECGroupedDown;
+        std::vector< double > _pt_JECSourcesUp;
+        std::vector< double > _pt_JECSourcesDown;
+        std::vector< double > _pt_JECGroupedUp;
+        std::vector< double > _pt_JECGroupedDown;
+
+        std::map<std::string, size_t >* _JECSources_Ids = nullptr;
+        std::map<std::string, size_t >* _JECGrouped_Ids = nullptr;
 
         //jet selector 
         JetSelector* selector;

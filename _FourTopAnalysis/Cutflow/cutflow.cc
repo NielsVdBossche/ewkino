@@ -114,11 +114,43 @@ void FourTop::cutFlow(std::string& sortingMode) {
     std::cout << "event loop" << std::endl;
     currentEvent = new Event();
 
-    std::vector<unsigned long> evNbs = {282124, 282864, 283586, 283905, 283936, 548982, 615684, 682301, 712028, 712057, 
-            712199, 712800, 712849, 770093, 891544, 896198, 896314, 896382, 927158, 927395, 
-            958217, 958304, 958608, 959203, 961251, 961485, 1018199, 1018319, 1019000, 1019519, 
-            1050902, 1093192, 1093833, 1598281, 1598570, 1906027, 1906159, 1906316, 1906652, 
-            12372968, 13845208, 13845310, 13994079};
+    //std::vector<unsigned long> evNbs = {282124, 282864, 283586, 283905, 283936, 548982, 615684, 682301, 712028, 712057, 
+    //        712199, 712800, 712849, 770093, 891544, 896198, 896314, 896382, 927158, 927395, 
+    //        958217, 958304, 958608, 959203, 961251, 961485, 1018199, 1018319, 1019000, 1019519, 
+    //        1050902, 1093192, 1093833, 1598281, 1598570, 1906027, 1906159, 1906316, 1906652, 
+    //        12372968, 13845208, 13845310, 13994079};
+
+    std::vector<unsigned long> evNbs = {
+        1598281,
+        1598570,
+        1906159,
+        1906316,
+        13845310,
+        13994079,
+        891544,
+        958217,
+        958608,
+        1018199,
+        1018319,
+        1019000,
+        961251,
+        1093192,
+        896198,
+        896314,
+        896382,
+        927395,
+        282124,
+        283586,
+        283905,
+        283936,
+        548982,
+        682301,
+        712199,
+        712800,
+        712849,
+        770093,
+        771280
+    };
 
     std::vector<unsigned long> evaluatedEvNbs;
 
@@ -168,18 +200,29 @@ void FourTop::cutFlow(std::string& sortingMode) {
             eventTagsOutput << std::endl << std::endl;
             eventTagsOutput << evNb << std::endl;
 
-            selection->addNewEvent(currentEvent); 
+            //selection->addNewEvent(currentEvent); 
             if (! currentEvent->passMetFilters()) continue;
 
             //if (! eventPassesTriggers()) continue;
             //if (! selection->leptonsArePrompt()) continue;
             //if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
+            currentEvent->removeTaus();
+            currentEvent->selectLooseLeptons();
+            currentEvent->sortLeptonsByPt();
 
             for (auto lep : currentEvent->lightLeptonCollection()) {
-                if (! lep->isLoose()) continue;
-                if (lep->isElectron() && lep->leptonMVATOPUL() < 0.81) eventTagsOutput << "score too low: " << lep->leptonMVATOPUL() << std::endl;
-                if (lep->isMuon() && lep->leptonMVATOPUL() < 0.64) eventTagsOutput << "score too low: " << lep->leptonMVATOPUL() << std::endl;             
+                int nMissingHits = 0;
+                if (lep->isElectron()) {
+                    eventTagsOutput << "electron, ";
+                    Electron* el = (Electron*) lep.get();
+                    nMissingHits = el->numberOfMissingHits();
+                } else {
+                    eventTagsOutput << "muon, ";   
+                }
+                eventTagsOutput << lep->pt() << "," << lep->eta() << "," << lep->phi()<< "," << lep->dxy()<< "," << lep->dz()<< "," << lep->sip3d()<< "," << nMissingHits << "," << lep->miniIso() << "," << lep->closestJetDeepFlavor() << "," << lep->leptonMVATOPUL();
+                eventTagsOutput << std::endl;
             }
+            continue;
             eventTagsOutput << "pass lepton selection: " << std::endl;
             if (!selection->passLeptonSelection()) continue;
 

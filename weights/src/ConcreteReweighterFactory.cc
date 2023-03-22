@@ -18,9 +18,8 @@
 #include "../interface/ReweighterPrefire.h"
 #include "../interface/ReweighterEmpty.h"
 #include "../interface/ReweighterBTagShape.h"
-
-
-
+#include "../interface/ReweighterTriggerSF.h"
+#include "../interface/ConcreteEventSelection.h"
 
 // --------------------------------------
 // empty reweighter for testing purposes 
@@ -422,8 +421,27 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     
     // make the b-tag shape reweighter
     // step 1: set correct csv file
-    std::string bTagSFFileName;
+    /*
+    std::string bTagSFFileName = "weightFiles/bTagSF/wp_deepJet_106XUL18.csv";
 
+    TFile* btagEffFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/bTagEff/bTagEff_FOLeptonCleaned_2018.root" ).c_str() );
+    //std::vector<std::string> wps = {"loose", "medium", "tight"};
+
+    std::string wp = "tight";
+    std::shared_ptr< TH2 > bTagEff_usdg( dynamic_cast< TH2* >( btagEffFile->Get( ("bTagEff_"+wp+"_udsg").c_str() ) ) );
+    std::shared_ptr< TH2 > bTagEff_c( dynamic_cast< TH2* >( btagEffFile->Get( ("bTagEff_"+wp+"_charm").c_str() ) ) );
+    std::shared_ptr< TH2 > bTagEff_b( dynamic_cast< TH2* >( btagEffFile->Get( ("bTagEff_"+wp+"_beauty").c_str() ) ) );
+
+    bTagEff_usdg->SetDirectory( gROOT );
+    bTagEff_c->SetDirectory( gROOT );
+    bTagEff_b->SetDirectory( gROOT );
+
+    combinedReweighter.addReweighter( "bTag_"+wp+"_WP_heavy", std::make_shared<ReweighterBTagHeavyFlavorDeepFlavor>(weightDirectory, bTagSFFileName, wp, bTagEff_c, bTagEff_b) );
+    combinedReweighter.addReweighter( "bTag_"+wp+"_WP_light", std::make_shared<ReweighterBTagLightFlavorDeepFlavor>(weightDirectory, bTagSFFileName, wp, bTagEff_usdg) );
+    
+*/ 
+    std::string bTagSFFileName;
+    
     std::vector<std::string> variations = {"jes","hf","lf","hfstats1","hfstats2",
                                         "lfstats1","lfstats2","cferr1","cferr2",
                                         "jesAbsolute", "jesBBEC1", 
@@ -474,7 +492,33 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
         combinedReweighter.addReweighter("bTag_shape", reweighterBTagShape);
     }
 
+
+
     combinedReweighter.addReweighter( "prefire", std::make_shared< ReweighterPrefire >() );
+
+    TFile* trigSFFile = TFile::Open( ( stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/triggerSF/scalefactors_" + year + ".root" ).c_str() );
+
+    std::shared_ptr< TH2 > sf_mm( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_mm").c_str() ) ) );
+    sf_mm->SetDirectory( gROOT );
+    std::shared_ptr< TH2 > sf_me( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_me").c_str() ) ) );
+    sf_me->SetDirectory( gROOT );
+    std::shared_ptr< TH2 > sf_em( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_em").c_str() ) ) );
+    sf_em->SetDirectory( gROOT );
+    std::shared_ptr< TH2 > sf_ee( dynamic_cast< TH2* >( trigSFFile->Get( ("scalefactors_"+year+"_ee").c_str() ) ) );
+    sf_ee->SetDirectory( gROOT );
+
+
+    trigSFFile->Close();
+
+    ReweighterTrigger rewTrig_mm( sf_mm, new TightMuMuSelector );
+    combinedReweighter.addReweighter( "TriggerSF_mm", std::make_shared<ReweighterTrigger>(rewTrig_mm) );
+    ReweighterTrigger rewTrig_me( sf_me, new TightMuESelector );
+    combinedReweighter.addReweighter( "TriggerSF_me", std::make_shared<ReweighterTrigger>(rewTrig_me) );
+    ReweighterTrigger rewTrig_em( sf_em, new TightEMuSelector );
+    combinedReweighter.addReweighter( "TriggerSF_em", std::make_shared<ReweighterTrigger>(rewTrig_em) );
+    ReweighterTrigger rewTrig_ee( sf_ee, new TightEESelector );
+    combinedReweighter.addReweighter( "TriggerSF_ee", std::make_shared<ReweighterTrigger>(rewTrig_ee) );
+
 
     return combinedReweighter;
 

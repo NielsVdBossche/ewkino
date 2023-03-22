@@ -47,6 +47,9 @@ class FourTop {
         bool printEventTags = false;
         bool testRun = false;
         bool useUncertainties = true;
+        bool useNpNmDistributions = false;
+        bool overarchClasses = false;
+
         std::string plotString = "Minimal";
         eventClass considerRegion = eventClass::fail;
         selectionType st = selectionType::MCAll;
@@ -99,7 +102,7 @@ class FourTop {
         // Prepare
         void createMVAHandlers();
         void addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir);
-        void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::string& var, bool jec, bool up);
+        //void generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::string& var, bool jec, bool up);
         void generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::vector<std::string>& variations, bool jec);
 
         // Event selection components
@@ -127,10 +130,13 @@ class FourTop {
         void initFakerate();
         double ChmisIDWeight();
         double FakeRateWeight();
+        double FakeRateWeightVariation(bool isUp, bool electrons);
 
         std::vector<std::string> GetSubClasses(eventClass currClass);
 
         CombinedSampleReweighter* createSampleReweighter(std::string dir);
+
+        std::vector<std::pair<int, double>> FillNpNmDistributions(eventClass currentClass, std::map<eventClass,int>& offsets);
 };
 
 

@@ -15,6 +15,17 @@ Uncertainty::Uncertainty(std::map<shapeUncId, std::string>& translateUnc, shapeU
     downHists = new HistogramSet(histograms, downFlag);
 }
 
+Uncertainty::Uncertainty(std::string& uncName, shapeUncId uncID, HistogramSet* histograms) : id(uncID) {
+    name = uncName;
+    std::string upFlag = uncName + "_Up";
+    std::string downFlag = uncName + "_Down";
+
+    bareHists = histograms;
+
+    upHists = new HistogramSet(histograms, upFlag);
+    downHists = new HistogramSet(histograms, downFlag);
+}
+
 Uncertainty::~Uncertainty() {
     delete upHists;
     delete downHists;
@@ -74,8 +85,8 @@ void Uncertainty::fillHistograms(std::vector<double>& fillVec, double weightUp, 
 }
 
 void Uncertainty::fillSingleHistograms(std::vector<std::pair<int, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {
-        upHists->fillSingleHistograms(subProc, fillVec, weightUp);
-        downHists->fillSingleHistograms(subProc, fillVec, weightDown);
+    upHists->fillSingleHistograms(subProc, fillVec, weightUp);
+    downHists->fillSingleHistograms(subProc, fillVec, weightDown);
 }
 
 void Uncertainty::fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double weightUp, double weightDown, unsigned subProc) {

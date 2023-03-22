@@ -6,13 +6,17 @@
 #include "../../../memleak/debug_new.h" 
 #endif
 
+#if JECWRAPPER
+#include "../../../CMSSW_imports/interface/JECWrapper.h"
+#endif
+
 bool selectLeptonsLooseMVA(const Lepton& lepton) {
     if (! lepton.isLightLepton()) return true;
     const LightLepton& el = (LightLepton&) lepton;
     return (el.leptonMVATOP() > 0.);
 }
 
-EventFourT::EventFourT() {
+EventFourT::EventFourT(std::string uncertaintyFile) {
     looseLeps = new LeptonCollection();
     tightLeps = new LeptonCollection();
     foLeps = new LeptonCollection();
@@ -21,6 +25,12 @@ EventFourT::EventFourT() {
     bTagJets = new JetCollection();
 
     topReco = new TopReconstructionNew(this);
+
+    #if JECWRAPPER
+    std::cout << "reading file" << std::endl;
+    std::vector<std::string> jecSourcesFullSplit = {"AbsoluteStat", "AbsoluteScale", "AbsoluteMPFBias", "Fragmentation", "SinglePionECAL", "SinglePionHCAL", "FlavorQCD", "FlavorZJet", "FlavorPhotonJet", "FlavorPureGluon", "FlavorPureQuark", "FlavorPureCharm", "FlavorPureBottom", "TimePtEta", "RelativeJEREC1", "RelativeJEREC2", "RelativeJERHF", "RelativePtBB", "RelativePtEC1", "RelativePtEC2", "RelativePtHF", "RelativeBal", "RelativeSample", "RelativeFSR", "RelativeStatFSR", "RelativeStatEC", "RelativeStatHF", "PileUpDataMC", "PileUpPtRef", "PileUpPtBB", "PileUpPtEC1", "PileUpPtEC2", "PileUpPtHF", "PileUpMuZero", "PileUpEnvelope", "SubTotalPileUp", "SubTotalRelative", "SubTotalPt", "SubTotalScale", "SubTotalAbsolute", "SubTotalMC", "TotalNoFlavor", "TotalNoTime" ,"TotalNoFlavorNoTime", "Total" };
+    jecWrapper = new JECWrapper(uncertaintyFile, jecSourcesFullSplit);
+    #endif
 }
 
 EventFourT::~EventFourT() {
@@ -68,15 +78,6 @@ void EventFourT::objectSelection() {
 
     event->selectFOLeptons();
 
-    if (tightLeps->size() == 3) {
-    //    LeptonCollection looseWPLeptons(*looseLeps);
-    //    looseWPLeptons.selectObjects(selectLeptonsLooseMVA);
-    //    if (looseWPLeptons.size() - 3 == 1) {
-    //        delete tightLeps;
-    //        tightLeps = new LeptonCollection(looseWPLeptons); 
-    //    }
-    }
-
     *mediumLeps = tightLeps;
 
     nJets = jets->size();
@@ -86,7 +87,10 @@ void EventFourT::objectSelection() {
     nLooseLep = looseLeps->size();
     nLep = (*mediumLeps)->size();
     ht = jets->scalarPtSum();
-    met = event->met().pt();
+    eventMet = event->met();
+    //eventMet = event->met().ApplyPhiModulation(event->runNumber(), "2018", true, event->numberOfVertices(), true);
+
+    met = eventMet.pt();
 }
 
 bool EventFourT::passBaselineEventSelection() {
@@ -206,19 +210,27 @@ bool EventFourT::passFullEventSelection() {
 
 bool EventFourT::passLowMassVeto() {  
     // Reject same flavor lepton pairs (indep of charge) w inv mass below 12 gev
+    double masscut = 12.;
+    if (foLeps->size() == 2) masscut = 20.;
 
+    //std::cout << "Nleps == "<< foLeps->size() << "\t";
     for( const auto& leptonPtrPair : looseLeps->pairCollection() ){
 
         //veto SF pairs of low mass
         Lepton& lepton1 = *( leptonPtrPair.first );
         Lepton& lepton2 = *( leptonPtrPair.second );
-        if(! sameFlavor( lepton1, lepton2 ) ){
-            continue;
-        }
-        if(( lepton1 + lepton2 ).mass() < 12){
+        //std::cout << "l1 isEl == "<< lepton1.isElectron() << " isFO "<< lepton1.isFO() << "\t" << "l2 isEl == "<< lepton2.isElectron() << " isFO "<< lepton2.isFO()<< "\t";
+
+        //if(! sameFlavor( lepton1, lepton2 ) ){
+        //    continue;
+        //}
+        //std::cout << "mass == " << ( lepton1 + lepton2 ).mass() << "\t";
+
+        if (( lepton1 + lepton2 ).mass() < masscut){
             return false;
         }
     }
+    //std::cout << std::endl;
     return true;
 }
 
@@ -299,7 +311,27 @@ int EventFourT::NumberOfBFlavorJets() {
     return count;
 }
 
-eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& variation, unsigned flavor) {
+bool EventFourT::HasAdditionalBJets() {
+    std::vector<std::shared_ptr<LorentzVector>> plBs, genLvlBs;
+    if (! event->GetPLInfoPtr() || ! event->GetGenLevelPtr()) return false;
+
+    plBs = event->GetPLInfoPtr()->GetParticleLevelBeeVectors();
+    genLvlBs = event->GetGenLevelPtr()->GetBottomquarkCollection();
+
+    for (auto& plB : plBs) {
+        bool hasMatch = false;
+        for (auto& genB : genLvlBs) {
+            if (deltaR(*plB, *genB) > 0.4) continue;
+            hasMatch = true;
+            break;
+        }
+        if (! hasMatch) return true;
+    }
+
+    return false;
+}
+
+eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned variation, unsigned flavor) {
     //if JER
 
     delete jets;
@@ -310,85 +342,131 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, std::string& 
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_UpCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            eventMet = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_Up);
+            met = eventMet.pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_DownCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            eventMet = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_Down);
+            met = eventMet.pt();
         }
-        met = event->met().pt();
-
     } else if (id == shapeUncId::JER_2p5) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_UpCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            eventMet = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_To_2p5_Up);
+            met = eventMet.pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JER_1p93_To_2p5_DownCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
+            eventMet = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_To_2p5_Down);
+            met = eventMet.pt();
         }
-        met = event->met().pt();
-    } else if (id == shapeUncId::JEC && variation == "") {
+    } else if (id == shapeUncId::JEC && variation == 1000) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetJECUp().pt();
+            eventMet = event->met().MetJECUp();
+            met = eventMet.pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetJECDown().pt();
+            eventMet = event->met().MetJECDown();
+            met = eventMet.pt();
         }
-    } else if (id == shapeUncId::JEC && variation != "") {
+    } else if (id == shapeUncId::JEC && variation != 1000) {
+        //std::cout << "in if" << std::endl; 
         if (up) {
-            jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection(variation));
+            #if JECWRAPPER
+
+            std::pair<JetCollection, Met> variedStuff = jecWrapper->VaryJetsAndMet(*event, variation, true);
+            jets = new JetCollection(variedStuff.first);
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetJECUp(variation).pt();
+            eventMet = variedStuff.second;
+            met = eventMet.pt();
+
+            #else
+
+            jets = new JetCollection(event->getJetCollectionPtr()->JECGroupedUpCollection(variation));
+            //std::cout << "got jet col " << std::endl;
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            //std::cout << "loose bs " << std::endl;
+
+            eventMet = event->met().MetJECGroupedUp(variation);
+            met = eventMet.pt();
+            #endif
         } else {
-            jets = new JetCollection(event->getJetCollectionPtr()->JECDownCollection(variation));
+            #if JECWRAPPER
+
+            std::pair<JetCollection, Met> variedStuff = jecWrapper->VaryJetsAndMet(*event, variation, false);
+            jets = new JetCollection(variedStuff.first);
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetJECDown(variation).pt();
+            eventMet = variedStuff.second;
+            met = eventMet.pt();
+
+            #else
+
+            jets = new JetCollection(event->getJetCollectionPtr()->JECGroupedDownCollection(variation));
+            jets->selectGoodJets();
+            bTagJets = new JetCollection(jets->looseBTagCollection());
+            eventMet = event->met().MetJECGroupedDown(variation);
+            met = eventMet.pt();
+            
+            #endif
         }
     } else if (id == shapeUncId::MET) {
         if (up) {
             jets = new JetCollection(*(event->getJetCollectionPtr()));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetUnclusteredUp().pt();
+            eventMet = event->met().MetUnclusteredUp();
+            met = eventMet.pt();
         } else {
             jets = new JetCollection(*(event->getJetCollectionPtr()));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().MetUnclusteredDown().pt();
+            eventMet = event->met().MetUnclusteredDown();
+            met = eventMet.pt();
         }
     } else if (id == shapeUncId::JECFlavorQCD) {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpGroupedFlavorQCD(flavor));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().pt(); // event->met().MetJECUp(variation).pt();
+            eventMet = event->met(); // event->met().MetJECUp(variation);
+            met = eventMet.pt();
         } else {
             jets = new JetCollection(event->getJetCollectionPtr()->JECDownGroupedFlavorQCD(flavor));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().pt(); // event->met().MetJECDown(variation).pt();
+            eventMet = event->met(); // event->met().MetJECDown(variation);
+            met = eventMet.pt();
         }
     } else if (id == shapeUncId::HEMIssue) { 
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->HEMIssue());
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().HEMIssue(*jets).pt();
+            eventMet = event->met().HEMIssue(*jets);
+            met = eventMet.pt();
         } else {
             jets = new JetCollection(*(event->getJetCollectionPtr()));
             jets->selectGoodJets();
             bTagJets = new JetCollection(jets->looseBTagCollection());
-            met = event->met().pt(); // event->met().MetJECDown(variation).pt();
+            eventMet = event->met(); // event->met().MetJECDown(variation);
+            met = eventMet.pt();
         }
     }
+    //std::cout << "vars " << std::endl;
+
 
     nJets = jets->size();
     nMediumB = jets->numberOfMediumBTaggedJets();

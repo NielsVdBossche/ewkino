@@ -109,7 +109,7 @@ std::vector<HistInfo>* HistogramConfig::getNominalHists(const eventClass evClass
             histInfoVec->push_back( HistInfo( "leptonPhiThird_" + flag, "#phi (l3)", 12, - M_PI, M_PI) );
             histInfoVec->push_back( HistInfo( "leptonEThird_" + flag, "E(l3) [GeV]", 18, 25, 205) );
             histInfoVec->push_back( HistInfo( "leptonMvaTOPThird_" + flag, "score (l3)", 40, -1, 1) );
-            histInfoVec->push_back(HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 18, 76, 150));
+            histInfoVec->push_back( HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 18, 76, 150));
 
             //histInfoVec->push_back( HistInfo( "LepJetPtRatio_ThirdLep_" + flag, "p_{T} ratio (l3,j)", 20, 0, 2) );
 
@@ -232,7 +232,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         minMaxHT = {200, 1000};
         minMaxNMu = {-0.5, 3.5};
     } else if (evClass == eventClass::crz4L) {
-        minMaxNjets = {1.5, 6.5};
+        minMaxNjets = {1.5, 8.5};
         minMaxNBjets = {0.5, 4.5};
         minMaxHT = {0, 1000};
         minMaxNMu = {-0.5, 4.5};
@@ -247,6 +247,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     } else if (evClass == eventClass::ssdl || evClass == eventClass::trilep) {
         minMaxNjets = {2.5, 10.5};
         minMaxNBjets = {1.5, 6.5};
+        minMaxHT = {0, 1400};
     } else if (evClass == eventClass::fourlep) {
         minMaxNjets = {1.5, 6.5};
         minMaxNBjets = {0.5, 4.5};    
@@ -258,9 +259,10 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         HistInfo( "leptonPtSecond_" + flag, "p_{T}(l2) [GeV]", 18, 20, 200),
         HistInfo( "N_jets_" + flag, "N_{jets}", int(minMaxNjets.second -  minMaxNjets.first), minMaxNjets.first, minMaxNjets.second),
         HistInfo( "N_Bjets_" + flag, "N_{b}", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
-        HistInfo( "N_MediumBjets_" + flag, "N_{b} (medium WP)", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
-        HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, minMaxHT.first, minMaxHT.second),
-        HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 15, 0, 300),
+        HistInfo( "N_MediumBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
+        HistInfo( "N_TightBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
+        HistInfo( "HT_" + flag, "H_{T} [GeV]", int(minMaxHT.first - minMaxHT.second) / 50, minMaxHT.first, minMaxHT.second),
+        HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 16, 0, 400),
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
         HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),        
         HistInfo( "N_mu_" + flag, "N_{#mu}", int(minMaxNMu.second -  minMaxNMu.first), minMaxNMu.first, minMaxNMu.second),
@@ -277,7 +279,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     }
 
     if (evClass < eventClass::ssdl) {
-        histInfoVec->push_back(HistInfo("TriClass_Fit_" + flag, "", 3, -0.5, 2.5));
+        histInfoVec->push_back(HistInfo("TriClass_Fit_" + flag, "Sum of charges", 2, -0.5, 1.5));
     }
 
     if (evClass == eventClass::dy || evClass == eventClass::ttbar) {
@@ -317,7 +319,7 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
 
     // only bdt variables here
 
-    if (unsigned(evClass) >= eventClass::ssdl || unsigned(evClass) == eventClass::crz3L) {
+    if (unsigned(evClass) >= eventClass::ssdl || unsigned(evClass) >= eventClass::crwz) {
         std::pair<double, double> minMaxNjets = {-0.5, 6.5};
         std::pair<double, double> minMaxNBjets = {-0.5, 4.5};
         std::pair<double, double> minMaxHT = {0, 800};
@@ -346,8 +348,9 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
             HistInfo("NB_Tight_"+flag, "N_{b}^{tight}", 7, -0.5, 6.5),
 
             HistInfo("minDR_bb_"+flag, "min #Delta R(b,b)", 12, 0, 4.8),
-            HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 12, 0, 4.8),
-            HistInfo("DPhi_l1l2_"+flag, "#Delta#phi (l1,l2)", 12, 0., M_PI),
+            HistInfo("DR_l1l2_"+flag, "#Delta R(l1,l2)", 48, 0, 4.8),
+            HistInfo("DPhi_l1l2_"+flag, "#Delta#phi (l1,l2)", 48, 0., M_PI),
+            HistInfo("DEta_l1l2_"+flag, "#Delta#eta (l1,l2)", 48, 0., 4.8),
             HistInfo("HT_"+flag, "H_{T} [GeV]", 21, minMaxHT.first, minMaxHT.second),
             HistInfo("PT_miss_"+flag, "p_{T}^{miss} [GeV]", 30, 0., 300.),
             HistInfo("max_M_over_PT_jet_"+flag, "#frac{M}{p_{T}}", 30, 0.1, 0.4),
@@ -382,9 +385,22 @@ std::vector<HistInfo>* HistogramConfig::getAllBDTVarsHists(const eventClass evCl
             HistInfo("MT2_ll_"+flag, "m_{T2}(l) [GeV]", 15, 0, 150),
             HistInfo("MT2_bb_"+flag, "m_{T2}(b) [GeV]", 12, 80, 200),
             HistInfo("MT2_lblb_"+flag, "m_{T2}(l+b) [GeV]", 15, 0, 150),
+
+            HistInfo( "InvMassSpectruml1l2_" + flag, "M_{ll} [GeV]", 50, 0., 150.),
+
+            HistInfo("LooseLeps_"+flag, "nL", 7, -0.5, 6.5)
         };
-        if (evClass == eventClass::trilep || evClass == eventClass::fourlep) {
+        if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
             histInfoVec->push_back( HistInfo("pt_l3_"+flag, "p_{T}(l3) [GeV]", 11, 10, 120) );
+            histInfoVec->push_back( HistInfo( "InvMassSpectruml2l3_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120));
+            histInfoVec->push_back( HistInfo( "InvMassSpectruml1l3_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120));
+            histInfoVec->push_back( HistInfo( "InvMassSpectrumZ_" + flag, "M_{ll}(OS) [GeV]", 30, 60, 120));
+            histInfoVec->push_back( HistInfo( "InvMass3L_" + flag, "M_{3l} [GeV]", 18, 76, 150));
+
+            histInfoVec->push_back( HistInfo("min_DR_ll_"+flag, "Min. #Delta R(l,l)", 48, 0, 4.8) );
+            histInfoVec->push_back( HistInfo("min_DPhi_l1l2_"+flag, "Min. #Delta#phi (l,l)", 48, 0., M_PI) );
+            histInfoVec->push_back( HistInfo("min_DEta_l1l2_"+flag, "Min. #Delta#eta (l,l)", 48, 0., 4.8) );
+
         }
     } else {
         *histInfoVec = {
@@ -404,6 +420,7 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
         double(event->numberOfJets()),
         double(event->numberOfLooseBJets()),
         double(event->numberOfMediumBJets()),
+        double(event->numberOfTightBJets()),
         event->getHT(),
         event->getMET(),
         event->getMediumLepCol()->scalarPtSum(),
@@ -436,12 +453,8 @@ std::vector<double> HistogramConfig::fillMinimalHists(const eventClass evClass, 
     }
 
     if (evClass < eventClass::ssdl) {
-        if (event->getMVAScores()[2] > event->getMVAScores()[0]) {
-            if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(1.);
-            else fillVal.push_back(2.);
-        } else {
-            fillVal.push_back(0.);
-        }
+        if (event->getMediumLepCol()->sumCharges() >=0) fillVal.push_back(0.);
+        else fillVal.push_back(1.);
     } 
 
 
@@ -756,7 +769,7 @@ std::vector<double> HistogramConfig::fillNominalHists(const eventClass evClass, 
                     otherIndex++;
                 }
                 Lepton* otherLepton = event->getLepton(otherIndex);
-                double mtValue = mt(*otherLepton, event->getEvent()->met());
+                double mtValue = mt(*otherLepton, event->GetFullMET());
                 fillVal.push_back(mtValue);
             }
         }
@@ -767,13 +780,11 @@ std::vector<double> HistogramConfig::fillNominalHists(const eventClass evClass, 
 
 std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClass, EventFourT* event) {
     std::vector<double> fillVal;
-    if (unsigned(evClass) >= eventClass::ssdl || unsigned(evClass) == eventClass::crz3L) {
+    if (unsigned(evClass) >= eventClass::ssdl || unsigned(evClass) >= eventClass::crwz) {
         MVAHandler_4T* mva;
-        if (evClass == eventClass::ssdl) {
-            mva = event->GetDLMVA();
-        } else {
-            mva = event->GetMLMVA();
-        }
+        mva = event->GetDLMVA();
+        if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass > eventClass::ssdl) mva = event->GetMLMVA();;
+
         fillVal = {
             0.5,
             double(event->numberOfJets()),
@@ -784,6 +795,7 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
             mva->deltaRBjets,
             mva->dRleps,
             mva->aziAngle,
+            deltaEta(*event->getLepton(0), *event->getLepton(1)),
             event->getHT(),
             event->getMET(),
             mva->massToPt,
@@ -818,11 +830,26 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
             mva->mtSubLeadLepMET,
             mva->m2ll,
             mva->m2bb,
-            mva->m2lblb
+            mva->m2lblb,
+
+            (*event->getLepton(0)+*event->getLepton(1)).mass(),
+
+            double(event->getLooseLepCol()->size() - event->getMediumLepCol()->size())
         };
-        if (evClass == eventClass::trilep || evClass == eventClass::fourlep) {
+        if (evClass == eventClass::trilep || evClass == eventClass::fourlep || evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass == eventClass::crwz || evClass == eventClass::cr_conv || evClass == eventClass::crzz) {
             fillVal.push_back(event->getLepton(2)->pt());
-        }
+            fillVal.push_back((*event->getLepton(1)+*event->getLepton(2)).mass());
+            fillVal.push_back((*event->getLepton(0)+*event->getLepton(2)).mass());
+            if (event->getEvent()->hasOSSFLightLeptonPair()) fillVal.push_back(event->getMediumLepCol()->bestZBosonCandidateMass());
+            fillVal.push_back((*event->getLepton(0)+*event->getLepton(1)+*event->getLepton(2)).mass());
+
+            std::vector<double> minDRLeps = calculators::mindRLeptons(*event->getMediumLepCol());
+            std::vector<double> minDEtaLeps = calculators::mindEtaLeptons(*event->getMediumLepCol());
+            std::vector<double> minDPhiLeps = calculators::mindPhiLeptons(*event->getMediumLepCol());
+            fillVal.push_back(minDRLeps[0]);
+            fillVal.push_back(minDEtaLeps[0]);
+            fillVal.push_back(minDPhiLeps[0]);
+        }   
 
     } else {
         fillVal = {
@@ -834,3 +861,53 @@ std::vector<double> HistogramConfig::fillAllBDTVarsHists(const eventClass evClas
     return fillVal;
 }
 
+std::vector<HistInfo> HistogramConfig::createNpNmHistograms(const eventClass evClass) {
+    std::vector< HistInfo > histInfoVec;
+
+    if (evClass != eventClass::ssdl && evClass != eventClass::crw && evClass != eventClass::cro) return histInfoVec;
+    std::map<eventClass, std::string> flagMapping = {
+            {fail, "fail"},
+            {dy, "DY"},
+            {ttbar, "TTBar"},
+            {crwz, "CRWZ"},
+            {crzz, "CRZZ"},
+            {cr_conv, "CR-Conversion"},
+            {crz3L, "CR-3L-Z"},
+            {crz4L, "CR-4L-Z"},
+            {cro, "CR-2L-23J1B"},
+            {cro3L, "CR-3L-2J1B"},
+            {crw, "CR-2L-45J2B"},
+            {ssdl, "SR-2L"},
+            {trilep, "SR-3L"},
+            {fourlep, "SR-4L"}
+    };
+
+    std::string flag = flagMapping[evClass];
+
+    histInfoVec = {
+        HistInfo( "NpNm_Yield_"+flag, "Yield", 1, 0., 1.),
+        HistInfo( "NpNm_N_mediumB_jets_" + flag, "N_{b}^{medium}", 6, -0.5, 5.5),
+        HistInfo( "NpNm_N_looseB_jets_" + flag, "N_{b}^{loose}", 6, 0.5, 6.5),
+        HistInfo( "NpNm_N_tightB_jets_" + flag, "N_{b}^{tight}", 4, -0.5, 3.5),
+        HistInfo( "NpNm_N_jets_" + flag, "N_{jets}", 7, 1.5, 8.5),
+
+    };
+
+    return histInfoVec;
+}
+
+std::vector<double> HistogramConfig::fillNpNmHistograms(const eventClass evClass, EventFourT* event) {
+    std::vector<double> fillVal;
+
+    if (evClass != eventClass::ssdl && evClass != eventClass::crw && evClass != eventClass::cro) return fillVal;
+
+    fillVal = {
+        0.5,
+        double(event->numberOfMediumBJets()),
+        double(event->numberOfLooseBJets()),
+        double(event->numberOfTightBJets()),
+        double(event->numberOfJets()),
+    };
+
+    return fillVal;
+}

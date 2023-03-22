@@ -17,6 +17,9 @@
 
 TreeReader::TreeReader( const std::string& sampleListFile, const std::string& sampleDirectory ){
     readSamples( sampleListFile, sampleDirectory );
+
+    _sourcesJEC_Ids = new std::map<std::string, size_t>();
+    _groupedJEC_Ids = new std::map<std::string, size_t>();
 }
 
 
@@ -121,37 +124,35 @@ void TreeReader::readSamples2018( const std::string& list, const std::string& di
 
 // functions for initializing maps of branches rather than hard-coded names //
 
-std::pair< std::map< std::string, bool >, std::map< std::string, TBranch* > > buildBranchMap( 
-	TTree* treePtr, 
-	const std::vector< std::string> nameIdentifiers, 
-	const std::string& antiIdentifier = "" ){
+std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
+    TTree* treePtr,
+    const std::vector<std::string> nameIdentifiers,
+    const std::string& antiIdentifier = "") {
     // build a map of branches from a given tree
     // all branches whose name contains nameIdentifier and not antiIdentifier will be added
     // the return type is a pair of two objects:
-    // - map of branch name to boolean 
+    // - map of branch name to boolean
     //   (e.g. usable for triggers)
     //   (values are set to false everywhere)
     // - map of branch name to branch pointer
     //   (e.g. usable for many branches with similar names)
     //   (branch pointers are set to nullptr everywhere)
-    std::map< std::string, bool > decisionMap;
-    std::map< std::string, TBranch* > branchMap;
+    std::map<std::string, bool> decisionMap;
+    std::map<std::string, TBranch*> branchMap;
     TObjArray* branch_list = treePtr->GetListOfBranches();
-    for( const auto& branchPtr : *branch_list ){
+    for (const auto& branchPtr : *branch_list) {
         std::string branchName = branchPtr->GetName();
-	bool select = true;
-	for( std::string nameIdentifier: nameIdentifiers ){
-	    if( !stringTools::stringContains( branchName, nameIdentifier ) ) select = false;
-	}
-	if( !select ) continue;
-        if( antiIdentifier != "" 
-	    && stringTools::stringContains( branchName, antiIdentifier ) ) continue;
-	decisionMap[ branchName ] = false;
-        branchMap[ branchName ] = nullptr;
+        bool select = true;
+        for (std::string nameIdentifier : nameIdentifiers) {
+            if (!stringTools::stringContains(branchName, nameIdentifier)) select = false;
+        }
+        if (!select) continue;
+        if (antiIdentifier != "" && stringTools::stringContains(branchName, antiIdentifier)) continue;
+        decisionMap[branchName] = false;
+        branchMap[branchName] = nullptr;
     }
-    return { decisionMap, branchMap };
+    return {decisionMap, branchMap};
 }
-
 
 void TreeReader::initializeTriggerMap( TTree* treePtr ){
     auto triggerMaps = buildBranchMap( treePtr, {"HLT"}, "prescale" );
@@ -172,66 +173,125 @@ void TreeReader::initializeMetFilterMap( TTree* treePtr ){
     b__MetFilterMap = filterMaps.second;
 }
 
+void TreeReader::initializeJecSourcesMaps(TTree* treePtr) {
+    b__jetPt_JECSourcesUp = buildBranchMap(treePtr, {"_jetPt_", "_JECSourcesUp"}).second;
+    unsigned ctr=0;
+    for (auto mapEl : b__jetPt_JECSourcesUp) {
+        std::string jecNameCleaned = stringTools::removeOccurencesOf(mapEl.first,"_jetPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_jetSmearedPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECSourcesUp");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECSourcesDown");
+        (*_sourcesJEC_Ids)[jecNameCleaned] = ctr;
 
-void TreeReader::initializeJecSourcesMaps( TTree* treePtr ){
-    // initialize jetPt branches
-    b__jetPt_JECSourcesUp = buildBranchMap( treePtr, {"_jetPt_","_JECSourcesUp"}).second;
-    for( auto mapEl: b__jetPt_JECSourcesUp ){ _jetPt_JECSourcesUp[mapEl.first]; }
-    b__jetPt_JECSourcesDown = buildBranchMap( treePtr, {"_jetPt","_JECSourcesDown"}).second;
-    for( auto mapEl: b__jetPt_JECSourcesDown ){ _jetPt_JECSourcesDown[mapEl.first]; }
-    // initialize jetSmearedPt branches
-    b__jetSmearedPt_JECSourcesUp = buildBranchMap( treePtr, 
-	{"_jetSmearedPt","JECSourcesUp"}).second;
-    for( auto mapEl: b__jetSmearedPt_JECSourcesUp ){ 
-	_jetSmearedPt_JECSourcesUp[mapEl.first]; 
+        _jetPt_JECSourcesUp_Ids[mapEl.first] = ctr;
+
+        std::string down = stringTools::replace(mapEl.first, "Up", "Down");
+        if (stringTools::stringContains(mapEl.first, "PileUp")) {
+            down = stringTools::replace(down, "PileDown", "PileUp");
+        }
+        b__jetPt_JECSourcesDown[down] = nullptr;
+        _jetPt_JECSourcesDown_Ids[down] = ctr;
+
+        std::string smeared  = stringTools::replace(mapEl.first, "_jetPt", "_jetSmearedPt");
+        b__jetSmearedPt_JECSourcesUp[smeared] = nullptr;
+        _jetSmearedPt_JECSourcesUp_Ids[smeared] = ctr;
+
+        std::string smeareddown = stringTools::replace(smeared, "Up", "Down");
+        if (stringTools::stringContains(smeared, "PileUp")) {
+            smeareddown = stringTools::replace(smeareddown, "PileDown", "PileUp");
+        }
+        b__jetSmearedPt_JECSourcesDown[smeareddown] = nullptr;
+        _jetSmearedPt_JECSourcesDown_Ids[smeareddown] = ctr;
+
+        std::string corrmetX = stringTools::replace(mapEl.first, "_jetPt", "_corrMETx");
+        b__corrMETx_JECSourcesUp[corrmetX] = nullptr;
+        _corrMETx_JECSourcesUp_Ids[corrmetX] = ctr;
+
+        std::string corrmetY = stringTools::replace(mapEl.first, "_jetPt", "_corrMETy");
+        b__corrMETy_JECSourcesUp[corrmetY] = nullptr;
+        _corrMETy_JECSourcesUp_Ids[corrmetY] = ctr;
+
+        std::string corrmetXDown = stringTools::replace(corrmetX, "Up", "Down");
+        if (stringTools::stringContains(corrmetX, "PileUp")) {
+            corrmetXDown = stringTools::replace(corrmetXDown, "PileDown", "PileUp");
+        }
+        b__corrMETx_JECSourcesDown[corrmetXDown] = nullptr;
+        _corrMETx_JECSourcesDown_Ids[corrmetXDown] = ctr;
+
+        std::string corrmetYDown = stringTools::replace(corrmetY, "Up", "Down");
+        if (stringTools::stringContains(corrmetY, "PileUp")) {
+            corrmetYDown = stringTools::replace(corrmetYDown, "PileDown", "PileUp");
+        }
+        b__corrMETy_JECSourcesDown[corrmetYDown] = nullptr;
+        _corrMETy_JECSourcesDown_Ids[corrmetYDown] = ctr;
+        
+        ctr++;
     }
-    b__jetSmearedPt_JECSourcesDown = buildBranchMap( treePtr, 
-	{"_jetSmearedPt","JECSourcesDown"}).second;
-    for( auto mapEl: b__jetSmearedPt_JECSourcesDown ){ 
-	_jetSmearedPt_JECSourcesDown[mapEl.first]; 
-    }
-    // initialize met x branches
-    b__corrMETx_JECSourcesUp = buildBranchMap( treePtr, {"_corrMETx","_JECSourcesUp"}).second;
-    for( auto mapEl: b__corrMETx_JECSourcesUp ){ _corrMETx_JECSourcesUp[mapEl.first]; }
-    b__corrMETx_JECSourcesDown = buildBranchMap( treePtr, {"_corrMETx","_JECSourcesDown"}).second;
-    for( auto mapEl: b__corrMETx_JECSourcesDown ){ _corrMETx_JECSourcesDown[mapEl.first]; }
-    // initialize met y branches
-    b__corrMETy_JECSourcesUp = buildBranchMap( treePtr, {"_corrMETy","_JECSourcesUp"}).second;
-    for( auto mapEl: b__corrMETy_JECSourcesUp ){ _corrMETy_JECSourcesUp[mapEl.first]; }
-    b__corrMETy_JECSourcesDown = buildBranchMap( treePtr, {"_corrMETy","_JECSourcesDown"}).second;
-    for( auto mapEl: b__corrMETy_JECSourcesDown ){ _corrMETy_JECSourcesDown[mapEl.first]; }
+    _jetPt_JECSourcesUp = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesUp_Ids.size());
+    _jetPt_JECSourcesDown = std::vector<Double_t[nJets_max]>(_jetPt_JECSourcesDown_Ids.size());
+    _jetSmearedPt_JECSourcesUp = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECSourcesUp_Ids.size());
+    _jetSmearedPt_JECSourcesDown = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECSourcesDown_Ids.size());
+
+    _corrMETx_JECSourcesUp = std::vector<double>(_corrMETx_JECSourcesUp_Ids.size());
+    _corrMETx_JECSourcesDown = std::vector<double>(_corrMETx_JECSourcesDown_Ids.size());
+    _corrMETy_JECSourcesUp = std::vector<double>(_corrMETy_JECSourcesUp_Ids.size());
+    _corrMETy_JECSourcesDown = std::vector<double>(_corrMETy_JECSourcesDown_Ids.size());
 }
 
-
-void TreeReader::initializeJecSourcesGroupedMaps( TTree* treePtr ){
+void TreeReader::initializeJecSourcesGroupedMaps(TTree* treePtr) {
     // initialize jetPt branches
-    b__jetPt_JECGroupedUp = buildBranchMap( treePtr, {"_jetPt_","_JECGroupedUp"}).second;
-    for( auto mapEl: b__jetPt_JECGroupedUp ){ _jetPt_JECGroupedUp[mapEl.first]; }
-    b__jetPt_JECGroupedDown = buildBranchMap( treePtr, {"_jetPt","_JECGroupedDown"}).second;
-    for( auto mapEl: b__jetPt_JECGroupedDown ){ _jetPt_JECGroupedDown[mapEl.first]; }
-    // initialize jetSmearedPt branches
-    b__jetSmearedPt_JECGroupedUp = buildBranchMap( treePtr, 
-	{"_jetSmearedPt","JECGroupedUp"}).second;
-    for( auto mapEl: b__jetSmearedPt_JECGroupedUp ){ 
-	_jetSmearedPt_JECGroupedUp[mapEl.first]; 
-    }
-    b__jetSmearedPt_JECGroupedDown = buildBranchMap( treePtr, 
-	{"_jetSmearedPt","JECGroupedDown"}).second;
-    for( auto mapEl: b__jetSmearedPt_JECGroupedDown ){ 
-	_jetSmearedPt_JECGroupedDown[mapEl.first]; 
-    }
-    // initialize met x branches
-    b__corrMETx_JECGroupedUp = buildBranchMap( treePtr, {"_corrMETx","_JECGroupedUp"}).second;
-    for( auto mapEl: b__corrMETx_JECGroupedUp ){ _corrMETx_JECGroupedUp[mapEl.first]; }
-    b__corrMETx_JECGroupedDown = buildBranchMap( treePtr, {"_corrMETx","_JECGroupedDown"}).second;
-    for( auto mapEl: b__corrMETx_JECGroupedDown ){ _corrMETx_JECGroupedDown[mapEl.first]; }
-    // initialize met y branches
-    b__corrMETy_JECGroupedUp = buildBranchMap( treePtr, {"_corrMETy","_JECGroupedUp"}).second;
-    for( auto mapEl: b__corrMETy_JECGroupedUp ){ _corrMETy_JECGroupedUp[mapEl.first]; }
-    b__corrMETy_JECGroupedDown = buildBranchMap( treePtr, {"_corrMETy","_JECGroupedDown"}).second;
-    for( auto mapEl: b__corrMETy_JECGroupedDown ){ _corrMETy_JECGroupedDown[mapEl.first]; }
-}
+    b__jetPt_JECGroupedUp = buildBranchMap(treePtr, {"_jetPt_", "_JECGroupedUp"}).second;
+    unsigned ctr = 0;
+    for (auto mapEl : b__jetPt_JECGroupedUp) {
+        std::string jecNameCleaned = stringTools::removeOccurencesOf(mapEl.first,"_jetPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_jetSmearedPt_");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECGroupedUp");
+        jecNameCleaned = stringTools::removeOccurencesOf(jecNameCleaned,"_JECGroupedDown");
 
+        (*_groupedJEC_Ids)[jecNameCleaned] = ctr;
+        _jetPt_JECGroupedUp_Ids[mapEl.first] = ctr;
+        
+
+        std::string down = stringTools::replace(mapEl.first, "Up", "Down");
+        b__jetPt_JECGroupedDown[down] = nullptr;
+        _jetPt_JECGroupedDown_Ids[down] = ctr;        
+
+        std::string smeared  = stringTools::replace(mapEl.first, "_jetPt", "_jetSmearedPt");
+        b__jetSmearedPt_JECGroupedUp[smeared] = nullptr;
+        _jetSmearedPt_JECGroupedUp_Ids[smeared] = ctr;        
+
+        std::string smeareddown = stringTools::replace(smeared, "Up", "Down");
+        b__jetSmearedPt_JECGroupedDown[smeareddown] = nullptr;
+        _jetSmearedPt_JECGroupedDown_Ids[smeareddown] = ctr;        
+
+        std::string corrmetX = stringTools::replace(mapEl.first, "_jetPt", "_corrMETx");
+        b__corrMETx_JECGroupedUp[corrmetX] = nullptr;
+        _corrMETx_JECGroupedUp_Ids[corrmetX] = ctr;        
+
+        std::string corrmetY = stringTools::replace(mapEl.first, "_jetPt", "_corrMETy");
+        b__corrMETy_JECGroupedUp[corrmetY] = nullptr;
+        _corrMETy_JECGroupedUp_Ids[corrmetY] = ctr;        
+
+        std::string corrmetXDown = stringTools::replace(corrmetX, "Up", "Down");
+        b__corrMETx_JECGroupedDown[corrmetXDown] = nullptr;
+        _corrMETx_JECGroupedDown_Ids[corrmetXDown] = ctr;        
+
+        std::string corrmetYDown = stringTools::replace(corrmetY, "Up", "Down");
+        b__corrMETy_JECGroupedDown[corrmetYDown] = nullptr;
+        _corrMETy_JECGroupedDown_Ids[corrmetYDown] = ctr;        
+        
+        ctr++;
+    }
+    _jetPt_JECGroupedUp = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedUp_Ids.size());
+    _jetPt_JECGroupedDown = std::vector<Double_t[nJets_max]>(_jetPt_JECGroupedDown_Ids.size());
+    _jetSmearedPt_JECGroupedUp = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECGroupedUp_Ids.size());
+    _jetSmearedPt_JECGroupedDown = std::vector<Double_t[nJets_max]>(_jetSmearedPt_JECGroupedDown_Ids.size());
+
+    _corrMETx_JECGroupedUp = std::vector<double>(_corrMETx_JECGroupedUp_Ids.size());
+    _corrMETx_JECGroupedDown = std::vector<double>(_corrMETx_JECGroupedDown_Ids.size());
+    _corrMETy_JECGroupedUp = std::vector<double>(_corrMETy_JECGroupedUp_Ids.size());
+    _corrMETy_JECGroupedDown = std::vector<double>(_corrMETy_JECGroupedDown_Ids.size());
+}
 
 // functions to find if a tree has branches with certain types of info //
 
@@ -442,6 +502,10 @@ void TreeReader::initSampleFromFile( const std::string& pathToFile,
 			    is2016PostVFP, is2017, is2018, isData() );
 
     //initialize tree
+    if (_groupedJEC_Ids == nullptr) {
+        _sourcesJEC_Ids = new std::map<std::string, size_t>();
+        _groupedJEC_Ids = new std::map<std::string, size_t>();
+    }
     initTree( resetTriggersAndFilters );
 
     //check whether current sample is a SUSY sample
@@ -521,12 +585,15 @@ template< typename T > void setMapBranchAddresses( TTree* treePtr,
 	std::map< std::string, T >& variableMap, 
 	std::map< std::string, TBranch* > branchMap ){
     for( const auto& variable : variableMap ){
-        treePtr->SetBranchAddress( variable.first.c_str(), 
-	    &variableMap[ variable.first ], 
-	    &branchMap[ variable.first ] );
+        treePtr->SetBranchAddress( variable.first.c_str(), &variableMap[ variable.first ], &branchMap[ variable.first ] );
     }
 }
 
+template< typename T > void setMapBranchAddressesAndVectors( TTree* treePtr, std::map< std::string, size_t >& variableIds, std::vector< T >& variableValues, std::map< std::string, TBranch* > branchMap ){
+    for (const auto& variable : variableIds) {
+        treePtr->SetBranchAddress( variable.first.c_str(), &variableValues[variable.second], &branchMap[ variable.first ] );
+    }
+}
 
 template< typename T> void setMapOutputBranches( TTree* treePtr, 
 			    std::map< std::string, T >& variableMap,
@@ -540,12 +607,25 @@ template< typename T> void setMapOutputBranches( TTree* treePtr,
     }    
 }
 
+template< typename T> void setMapOutputBranchesWithVectors( TTree* treePtr, 
+			    std::map< std::string, size_t >& variableIds,
+                std::vector< T >& variableValues,
+			    std::string branchDataType ){
+    // note: branchDataType should be e.g. "/O" for boolean, "[nJets]/D" for an array of doubles.
+    // mind the slash!
+    for (const auto& variable : variableIds) {
+        treePtr->Branch(variable.first.c_str(), &variableValues[variable.second], (variable.first + branchDataType).c_str());
+    }
+}
+
+
 
 void TreeReader::initTree( const bool resetTriggersAndFilters ){
 
     // Set branch addresses and branch pointers
     checkCurrentTree();
-    hasPLInfo = false;
+    _hasPLInfo = false;
+    _hasGenLevelInfo = false;
 
     _currentTreePtr->SetMakeClass(1);
 
@@ -742,6 +822,8 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
         _currentTreePtr->SetBranchAddress("_zgEventType", &_zgEventType, &b__zgEventType);
 
         if ( containsFullGeneratorInfo() ) {
+            _hasGenLevelInfo = true;
+            
             _currentTreePtr->SetBranchAddress("_gen_n",                                        &_gen_n,                                        &b__gen_n);
             _currentTreePtr->SetBranchAddress("_gen_pt",                                       _gen_pt,                                       &b__gen_pt);
             _currentTreePtr->SetBranchAddress("_gen_eta",                                      _gen_eta,                                      &b__gen_eta);
@@ -761,7 +843,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     }
 
     if (containsParticleLevelInfo()) {
-        hasPLInfo = true;
+        _hasPLInfo = true;
 
         _currentTreePtr->SetBranchAddress("_pl_met",                   &_pl_met,                   &b__pl_met);
         _currentTreePtr->SetBranchAddress("_pl_metPhi",                &_pl_metPhi,                &b__pl_metPhi);
@@ -827,24 +909,33 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     setMapBranchAddresses( _currentTreePtr, _MetFilterMap, b__MetFilterMap );
 
     // add split JEC uncertainties
+    std::cout << "pre source" << std::endl;
     initializeJecSourcesMaps( _currentTreePtr );
-    setMapBranchAddresses( _currentTreePtr, _jetPt_JECSourcesUp, b__jetPt_JECSourcesUp );
-    setMapBranchAddresses( _currentTreePtr, _jetPt_JECSourcesDown, b__jetPt_JECSourcesDown );
-    setMapBranchAddresses( _currentTreePtr, _jetSmearedPt_JECSourcesUp, b__jetSmearedPt_JECSourcesUp );
-    setMapBranchAddresses( _currentTreePtr, _jetSmearedPt_JECSourcesDown, b__jetSmearedPt_JECSourcesDown );
-    setMapBranchAddresses( _currentTreePtr, _corrMETx_JECSourcesUp, b__corrMETx_JECSourcesUp );
-    setMapBranchAddresses( _currentTreePtr, _corrMETx_JECSourcesDown, b__corrMETx_JECSourcesDown );
-    setMapBranchAddresses( _currentTreePtr, _corrMETy_JECSourcesUp, b__corrMETy_JECSourcesUp );
-    setMapBranchAddresses( _currentTreePtr, _corrMETy_JECSourcesDown, b__corrMETy_JECSourcesDown );
+    std::cout << "source init" << std::endl;
+
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECSourcesUp_Ids, _jetPt_JECSourcesUp, b__jetPt_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECSourcesDown_Ids, _jetPt_JECSourcesDown, b__jetPt_JECSourcesDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECSourcesUp_Ids, _jetSmearedPt_JECSourcesUp, b__jetSmearedPt_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECSourcesDown_Ids, _jetSmearedPt_JECSourcesDown, b__jetSmearedPt_JECSourcesDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECSourcesUp_Ids, _corrMETx_JECSourcesUp, b__corrMETx_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECSourcesDown_Ids, _corrMETx_JECSourcesDown, b__corrMETx_JECSourcesDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECSourcesUp_Ids, _corrMETy_JECSourcesUp, b__corrMETy_JECSourcesUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECSourcesDown_Ids, _corrMETy_JECSourcesDown, b__corrMETy_JECSourcesDown );
+
+    std::cout << "pre group" << std::endl;
+
     initializeJecSourcesGroupedMaps( _currentTreePtr );
-    setMapBranchAddresses( _currentTreePtr, _jetPt_JECGroupedUp, b__jetPt_JECGroupedUp );
-    setMapBranchAddresses( _currentTreePtr, _jetPt_JECGroupedDown, b__jetPt_JECGroupedDown );
-    setMapBranchAddresses( _currentTreePtr, _jetSmearedPt_JECGroupedUp, b__jetSmearedPt_JECGroupedUp );
-    setMapBranchAddresses( _currentTreePtr, _jetSmearedPt_JECGroupedDown, b__jetSmearedPt_JECGroupedDown );
-    setMapBranchAddresses( _currentTreePtr, _corrMETx_JECGroupedUp, b__corrMETx_JECGroupedUp );
-    setMapBranchAddresses( _currentTreePtr, _corrMETx_JECGroupedDown, b__corrMETx_JECGroupedDown );
-    setMapBranchAddresses( _currentTreePtr, _corrMETy_JECGroupedUp, b__corrMETy_JECGroupedUp );
-    setMapBranchAddresses( _currentTreePtr, _corrMETy_JECGroupedDown, b__corrMETy_JECGroupedDown );
+
+    std::cout << "group init" << std::endl;
+
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECGroupedUp_Ids, _jetPt_JECGroupedUp, b__jetPt_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetPt_JECGroupedDown_Ids, _jetPt_JECGroupedDown, b__jetPt_JECGroupedDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECGroupedUp_Ids, _jetSmearedPt_JECGroupedUp, b__jetSmearedPt_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _jetSmearedPt_JECGroupedDown_Ids, _jetSmearedPt_JECGroupedDown, b__jetSmearedPt_JECGroupedDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECGroupedUp_Ids, _corrMETx_JECGroupedUp, b__corrMETx_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETx_JECGroupedDown_Ids, _corrMETx_JECGroupedDown, b__corrMETx_JECGroupedDown );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECGroupedUp_Ids, _corrMETy_JECGroupedUp, b__corrMETy_JECGroupedUp );
+    setMapBranchAddressesAndVectors( _currentTreePtr, _corrMETy_JECGroupedDown_Ids, _corrMETy_JECGroupedDown, b__corrMETy_JECGroupedDown );
 }
 
 
@@ -1115,22 +1206,22 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     setMapOutputBranches( outputTree, _MetFilterMap, "/O" );
 
     // write split JEC uncertainties to output tree
-    setMapOutputBranches( outputTree, _jetPt_JECSourcesUp, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _jetPt_JECSourcesDown, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _jetSmearedPt_JECSourcesUp, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _jetSmearedPt_JECSourcesDown, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _jetPt_JECGroupedUp, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _jetPt_JECGroupedDown, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _jetSmearedPt_JECGroupedUp, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _jetSmearedPt_JECGroupedDown, "[_nJets]/D" );
-    setMapOutputBranches( outputTree, _corrMETx_JECSourcesUp, "/D");
-    setMapOutputBranches( outputTree, _corrMETx_JECSourcesDown, "/D");
-    setMapOutputBranches( outputTree, _corrMETy_JECSourcesUp, "/D");
-    setMapOutputBranches( outputTree, _corrMETy_JECSourcesDown, "/D");
-    setMapOutputBranches( outputTree, _corrMETx_JECGroupedUp, "/D");
-    setMapOutputBranches( outputTree, _corrMETx_JECGroupedDown, "/D");
-    setMapOutputBranches( outputTree, _corrMETy_JECGroupedUp, "/D");
-    setMapOutputBranches( outputTree, _corrMETy_JECGroupedDown, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetPt_JECSourcesUp, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetPt_JECSourcesDown, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesUp, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesDown, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetPt_JECGroupedUp, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetPt_JECGroupedDown, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedUp, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedDown, "[_nJets]/D" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETx_JECSourcesUp, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETx_JECSourcesDown, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesUp, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesDown, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedUp, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedDown, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedUp, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedDown, "/D");
 }
 
 void TreeReader::setLeanOutputTree( TTree* outputTree ){

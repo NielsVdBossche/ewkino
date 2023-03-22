@@ -18,7 +18,20 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    selection = new EventFourTLoose();
+
+    Sample samp = treeReader->sampleVector()[0];
+
+    std::string jecUncertaintyFile;
+    if (samp.is2018()) {
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL18_V5_MC/Summer19UL18_V5_MC_UncertaintySources_AK4PFchs.txt";
+    } else if (samp.is2017()) {
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL17_V5_MC/Summer19UL17_V5_MC_UncertaintySources_AK4PFchs.txt";
+    } else if (samp.is2016PostVFP()) {
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL16_V7_MC/Summer19UL16_V7_MC_UncertaintySources_AK4PFchs.txt";
+    } else {
+        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL16APV_V7_MC/Summer19UL16APV_V7_MC_UncertaintySources_AK4PFchs.txt";
+    }
+    selection = new EventFourTLoose(jecUncertaintyFile);
 
     if (mode < 2) {
         std::string outputFileName = "Output/" + outputName + "_";
@@ -42,7 +55,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 outputFileName += "OriginalAn_";
 
                 delete selection;
-                selection = new EventFourT();
+                selection = new EventFourT(jecUncertaintyFile);
             } else if (stringTools::stringContains(it, "region=")) {
                 searchRegion = stringTools::split(it, "=")[1];
             } else if (stringTools::stringContains(it, "EventInfo")) {
@@ -51,6 +64,9 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
                 testRun = true;
             } else if (stringTools::stringContains(it, "plotString=")) {
                 plotString = stringTools::split(it, "=")[1];
+            } else if (stringTools::stringContains(it, "inclusiveClasses")) {
+                overarchClasses = true;
+                selection->setOverarchClasses(overarchClasses);
             }
         }
 
@@ -306,111 +322,6 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
     }
 }
 
-void FourTop::generateBTaggingNormFactorsSample(ReweighterBTagShape* reweighter, Sample& samp, std::string& normFilePath, std::string& var, bool jec, bool up) {
-    // calculate the average of b-tag weights in a given sample
-    // the return type is a map of jet multiplicity to average of weights
-    // input arguments:
-    // - sample: a Sample object
-    // - numberOfEntries: number of entries to consider for the average of weights
-    //   note: defaults to 0, in which case all entries in the file are used
-    // note: for the averaging, each entry in the input sample is counted as 1, 
-    //       regardless of lumi, cross-section, generator weight or other reweighting factors!
-
-    // make a TreeReader
-    std::string inputFilePath = samp.filePath();
-    std::cout << "making TreeReader..." << std::endl;
-    TreeReader tempTree;
-    tempTree.initSampleFromFile( inputFilePath );
-
-    std::string jecVariation = var;
-    std::string bTagVar = var;
-    if (jec) {
-        if (up) {
-            bTagVar = "up_jes" + var;  
-            jecVariation = var + "Up";
-        } else {
-            bTagVar = "down_jes" + var;
-            jecVariation = var + "Down";
-        }
-    }
-    // initialize the output map
-    std::shared_ptr<TH1D> averageOfWeights = std::make_shared<TH1D>(("bTagNormFactors" + samp.fileName() + bTagVar).c_str(), "bTagNormFactors;Jets;Factor", 30, 0, 30);
-    std::shared_ptr<TH1D> nEntries = std::make_shared<TH1D>(("nEntries" + bTagVar).c_str(), "nEntries;Jets;Entries", 30, 0, 30);
-
-    // loop over events
-    long unsigned availableEntries = tempTree.numberOfEntries();
-
-    std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
-
-    averageOfWeights->Fill(0., 1.);
-    nEntries->Fill(0., 1.);
-
-    for (long unsigned entry = 0; entry < availableEntries; ++entry) {
-        //if (entry>1000) break;
-        Event event = tempTree.buildEvent(entry, false, false, false, true);
-
-        // do basic selection
-        event.removeTaus();
-        event.selectLooseLeptons();
-        event.cleanElectronsFromLooseMuons();
-        event.cleanJetsFromFOLeptons();
-        int njets = event.numberOfGoodJets();
-        double ht = event.HT();
-
-        if (jec) {
-            njets = event.getJetCollection(jecVariation).size();
-            ht = event.getJetCollection(jecVariation).scalarPtSum();
-        }
-
-        if (event.numberOfFOLeptons() != event.numberOfTightLeptons()) continue;
-        event.selectTightLeptons();
-
-        if (considerRegion == eventClass::dy || considerRegion == eventClass::ttbar) {
-            //std::cout << "in alt sel" << std::endl;
-            if (event.numberOfLeptons() == 2) continue;
-            if (event.lepton(0).charge() == event.lepton(1).charge()) continue;
-            if (njets < 2) continue;
-        } else {
-            //std::cout << "in nom sel" << std::endl;
-
-            if (event.numberOfLeptons() < 2) continue;
-            if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
-
-            if (njets < 2) continue;
-            if (event.numberOfLeptons() < 4 && ht < 200) continue;
-            //std::cout << "pass nom sel" << std::endl;
-
-        }
-        // determine (nominal) b-tag reweighting and number of jets
-        double btagreweight = 1.5;
-        if (jec) {
-            btagreweight = reweighter->weightJecVar(event, jecVariation);
-        } else {
-            btagreweight = reweighter->weightVariation(event, bTagVar);
-        }
-
-        // add it to the map
-        averageOfWeights->Fill(njets, btagreweight);
-        nEntries->Fill(njets, 1.);
-    }
-
-    // divide sum by number to get average
-    //for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-    //    std::cout << averageOfWeights->GetBinContent(i) << "/" << nEntries->GetBinContent(i) << std::endl;
-    //}
-    averageOfWeights->Divide(nEntries.get());
-    //for (int i = 1; i < averageOfWeights->GetNbinsX() + 1; i++) {
-    //    std::cout << " = " << averageOfWeights->GetBinContent(i) << std::endl;
-    //}
-
-    // write out to histogram
-    //std::string outputFilePath = stringTools::formatDirectoryName(normDirectory) + stringTools::fileNameFromPath(samp.fileName());
-    TFile* normFile = TFile::Open( normFilePath.c_str(), "UPDATE" );
-    normFile->cd();
-    averageOfWeights->Write(("bTagNormFactors_" + bTagVar).c_str(), TObject::kOverwrite);
-    normFile->Close();
-}
-
 
 void cleanLastBins(std::shared_ptr<TH1D> num, std::shared_ptr<TH1D> denom) {
     for (int i = num->GetNbinsX()+1; i > 1; i--) {
@@ -569,7 +480,15 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
             double btagreweight;
             if (jec && ! flavorQCD_Vars) {
-                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i]);
+                std::string varname;
+                if (stringTools::stringEndsWith(jecVarForSelection[i], "Up")) {
+                    varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 2);
+                }
+                else if (stringTools::stringEndsWith(jecVarForSelection[i], "Down")) {
+                    varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 4);
+                }
+                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i], true, event.jetInfo().groupedJECVariationsMap()->at(varname));
+
             } else if (jec && flavorQCD_Vars) {
                 bool up = i % 2 == 0;
                 if (up) {

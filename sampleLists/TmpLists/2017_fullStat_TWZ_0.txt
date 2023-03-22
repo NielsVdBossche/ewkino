@@ -1,0 +1,1 @@
+TWZ             ../skims_v6/2017/TWZToLL_thad_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL17MiniAOD-106X_mc2017_realistic_v6-v2_singlelepton_MC_2017_UL_twz.root                                     0.003004

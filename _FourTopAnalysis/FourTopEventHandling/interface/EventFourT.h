@@ -16,11 +16,23 @@
 
 class TopReconstructionNew;
 class MVAHandler_4T;
+#if JECWRAPPER
+class JECWrapper;
+#endif
+
 ///enum shapeUncId;
 
 class EventFourT {
     protected:
-        void SetEventClass(eventClass newClass) {currentClass = newClass;}
+        void SetEventClass(eventClass newClass) {
+                if (overarchClasses) {
+                    if (newClass == eventClass::cro || newClass == eventClass::crw || newClass == eventClass::ssdl) currentClass = eventClass::ssdl;
+                    else if (newClass == eventClass::crz3L || newClass == eventClass::cro3L || newClass == eventClass::trilep) currentClass = eventClass::trilep;
+                    else if (newClass == eventClass::crz4L || newClass == eventClass::fourlep) currentClass = eventClass::fourlep;
+                    else currentClass = newClass;
+                }
+                else currentClass = newClass;
+            }
     private:
         Event* event = nullptr;
 
@@ -43,9 +55,11 @@ class EventFourT {
 
         int nJets, nMediumB, nTightB, nLooseB, nLooseLep, nLep;
         double ht, met;
+        Met eventMet;
 
         bool isNormalSelected;
         bool bdtOutput = true;
+        bool overarchClasses = false;
         
         TopReconstructionNew* topReco;
         std::vector<double> scoresMVA;
@@ -55,13 +69,18 @@ class EventFourT {
         std::map<eventClass, int> offsets;
         
         std::function<std::vector<double>(const eventClass, EventFourT*)> histFiller = HistogramConfig::fillNominalHists;
+          
+        #if JECWRAPPER
+        JECWrapper* jecWrapper;
+        #endif
     public:
 
-        EventFourT();
+        EventFourT(std::string uncertaintyFile);
         virtual ~EventFourT();
 
         void setFillerFunction(std::function<std::vector<double>(const eventClass, EventFourT*)> newHistFiller) {histFiller = newHistFiller;};
         void setPrintBDTOutput(bool newSettings) {bdtOutput = newSettings;}
+        void setOverarchClasses(bool newSettings) {overarchClasses = newSettings;}
         void setSelectionType(selectionType st) {selType = st;}
         
         void setDLMVA(MVAHandler_4T* dl_new) {dl_MVA = dl_new;}
@@ -113,7 +132,7 @@ class EventFourT {
         virtual void classifyEvent();
         //void classifyEventLean();
 
-        eventClass classifyUncertainty(shapeUncId id, bool up, std::string& variation, unsigned flavor=0);
+        eventClass classifyUncertainty(shapeUncId id, bool up, unsigned variation=1000, unsigned flavor=0);
         std::vector<double> fillVector();
         std::vector<std::pair<int, double>> singleFillEntries();
         std::vector<std::pair<double, double>> fillVector2D();
@@ -144,6 +163,13 @@ class EventFourT {
         void SetRelRegion(eventClass region) {relevantRegion = region;}
 
         int NumberOfBFlavorJets();
+        bool HasAdditionalBJets();
+
+        Met& GetFullMET() {return eventMet;};
+
+        #if JECWRAPPER
+        JECWrapper* GetJECWrapper() {return jecWrapper;};
+        #endif
 };
 
 bool selectLeptonsLooseMVA(const Lepton& lepton);

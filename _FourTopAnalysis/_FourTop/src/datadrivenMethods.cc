@@ -78,3 +78,27 @@ double FourTop::FakeRateWeight() {
     
     return weight;
 }
+
+double FourTop::FakeRateWeightVariation(bool isUp, bool electrons) {
+    double weight = -1.;
+
+    for (const auto &lep : currentEvent->lightLeptonCollection()) {
+        if (!(lep->isFO() && !lep->isTight())) continue;
+        double fr;
+        double leppt = lep->pt();
+        if (leppt >= 45.) leppt = 44.9;
+        if (lep->isMuon()) {
+            if (isUp && !electrons) fr = histogram::contentUpAtValues(FakeRatesMuon, leppt, lep->absEta());
+            else if (!electrons) fr = histogram::contentDownAtValues(FakeRatesMuon, leppt, lep->absEta());
+            else fr = histogram::contentAtValues(FakeRatesMuon, leppt, lep->absEta());
+        } else {
+            if (isUp && electrons) fr = histogram::contentUpAtValues(FakeRatesElectron, leppt, lep->absEta());
+            else if (electrons) fr = histogram::contentDownAtValues(FakeRatesElectron, leppt, lep->absEta());
+            else fr = histogram::contentAtValues(FakeRatesElectron, leppt, lep->absEta());
+        }
+        // calculate weight
+        weight *= (-fr / (1. - fr));
+    }
+    
+    return weight;
+}
