@@ -247,6 +247,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
     } else if (evClass == eventClass::ssdl || evClass == eventClass::trilep) {
         minMaxNjets = {2.5, 10.5};
         minMaxNBjets = {1.5, 6.5};
+        minMaxHT = {0, 1400};
     } else if (evClass == eventClass::fourlep) {
         minMaxNjets = {1.5, 6.5};
         minMaxNBjets = {0.5, 4.5};    
@@ -260,8 +261,8 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         HistInfo( "N_Bjets_" + flag, "N_{b}", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
         HistInfo( "N_MediumBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
         HistInfo( "N_TightBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
-        HistInfo( "HT_" + flag, "H_{T} [GeV]", 16, minMaxHT.first, minMaxHT.second),
-        HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 15, 0, 300),
+        HistInfo( "HT_" + flag, "H_{T} [GeV]", int(minMaxHT.first - minMaxHT.second) / 50, minMaxHT.first, minMaxHT.second),
+        HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 16, 0, 400),
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
         HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),        
         HistInfo( "N_mu_" + flag, "N_{#mu}", int(minMaxNMu.second -  minMaxNMu.first), minMaxNMu.first, minMaxNMu.second),

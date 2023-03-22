@@ -960,9 +960,9 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
             subClasses.push_back("pureSig");
         } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
             subClasses.push_back("pureTTV");
-            if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("TTVmm");
-            else subClasses.push_back("TTVemee");
-        }
+            //if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("TTVmm");
+            //else subClasses.push_back("TTVemee");
+        } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
 
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
             double score;
@@ -993,6 +993,7 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         }
         if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
         else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
+        else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
 
         if (bdtOutput && currClass == eventClass::trilep && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
             double score;
@@ -1133,11 +1134,11 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             {trilep, ""},
             {fourlep, ""}};
 
-    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig", "pureTTV", "TTVmm", "TTVemee"};
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig", "pureTTV", "pureTTB"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"ee", "em", "mm"};
     //std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
-    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF", "pureSig", "pureTTV"};
+    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF", "pureSig", "pureTTV", "pureTTB"};
     std::vector<std::string> crzSubChannels = {"SigZVeto", "OneMedB", "TwoMedB"};
 
     if (considerRegion == eventClass::fail) {
