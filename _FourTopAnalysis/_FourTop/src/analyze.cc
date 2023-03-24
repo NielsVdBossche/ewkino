@@ -955,7 +955,7 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("ee");
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
-
+        //std::cout << "is dl " << std::endl;
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
             subClasses.push_back("pureSig");
         } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
@@ -991,13 +991,16 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         } else {
             subClasses.push_back("noOSSF");
         }
+
+        //std::cout << "is trilep " << std::endl;
+
         if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
         else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
         else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
 
         if (bdtOutput && currClass == eventClass::trilep && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
             double score;
-            for (auto it : selection->GetDLMVA()->getClassAndScore()) {
+            for (auto it : selection->GetMLMVA()->getClassAndScore()) {
                 if (it.first > 3) continue;
                 score = it.second;
                 break;
