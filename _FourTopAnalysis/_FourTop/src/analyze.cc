@@ -957,11 +957,13 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         else subClasses.push_back("em");
 
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
-            subClasses.push_back("pureSig");
+            if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("pureSig_ee");
+            else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("pureSig_mm");
+            else subClasses.push_back("pureSig_em");
         } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
-            subClasses.push_back("pureTTV");
-            //if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("TTVmm");
-            //else subClasses.push_back("TTVemee");
+            if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("pureTTV_ee");
+            else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("pureTTV_mm");
+            else subClasses.push_back("pureTTV_em");
         } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
 
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
@@ -1134,7 +1136,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             {trilep, ""},
             {fourlep, ""}};
 
-    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig", "pureTTV", "pureTTB"};
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig_mm", "pureSig_ee", "pureSig_em", "pureTTV_mm", "pureTTV_ee", "pureTTV_em", "pureTTB"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"ee", "em", "mm"};
     //std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
