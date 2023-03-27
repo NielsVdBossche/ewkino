@@ -12,6 +12,8 @@
 #include "../../Tools/interface/systemTools.h"
 #include "../../Tools/interface/stringTools.h"
 
+#include "../interface/ReweighterBTagShape.h"
+
 
 void computeBTagEff( const std::string& year, const std::string& sampleList, const bool cleanJetsFromLooseLeptons, const bool cleanJetsFromFOLeptons ){ //, const bool deepCSV ){
 
@@ -47,6 +49,60 @@ void computeBTagEff( const std::string& year, const std::string& sampleList, con
 
     //initialize the TreeReader
     TreeReader treeReader( sampleList, "/pnfs/iihe/cms/store/user/nivanden/skims/" );
+
+    std::string bTagSFFileName;
+    
+    std::vector<std::string> variations = {};
+
+    if (year == "2016PreVFP") {
+        bTagSFFileName = "reshaping_deepJet_106XUL16preVFP_NEW.csv";
+    } else if( year == "2016PostVFP" ){
+        bTagSFFileName= "reshaping_deepJet_106XUL16postVFP_NEW.csv";
+    } else if( year == "2017" ){
+        bTagSFFileName = "reshaping_deepJet_106XUL17_NEW.csv";
+    } else {
+        bTagSFFileName = "reshaping_deepJet_106XUL18_NEW.csv";
+    }
+
+    std::string weightDirectory = "/user/nivanden/ewkino/weights/";
+    std::string sfFilePath = "weightFiles/bTagSF/"+bTagSFFileName;
+    // step 2: set other parameters
+    std::string flavor = "all";
+    std::string bTagAlgo = "deepFlavor";
+
+    // step 3: make the reweighter
+    std::shared_ptr<ReweighterBTagShape> reweighterBTagShape = std::make_shared<ReweighterBTagShape>(stringTools::formatDirectoryName( weightDirectory ), sfFilePath, flavor, bTagAlgo, variations, treeReader.sampleVector() );
+
+    for (auto& samp : treeReader.sampleVector()) {
+        std::string sampleNormfactorsPath = stringTools::formatDirectoryName("/user/nivanden/ewkino/_FourTopAnalysis/ANWeights/bTagNorms/Lean") + stringTools::fileNameFromPath(samp.fileName());
+
+        for (int nLep = 2; nLep < 5; nLep++) {
+            TFile* btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
+            std::string nLepStr = std::to_string(nLep);
+            for (auto var : variations) {
+                std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
+                int tr = 0;
+                while (! bTagNormFactorsHist && tr < 10) {
+                    btagNormFactorFile->Close();
+                    btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
+                    bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));
+                    tr++;
+                }
+                std::map<int, double> normFactors;
+
+                for (int i=1; i<bTagNormFactorsHist->GetNbinsX() + 1; i++) {
+                    double normFactor = bTagNormFactorsHist->GetBinContent(i);
+                    if (fabs(normFactor) > 1e-6) {
+                        normFactors[i-1] = normFactor;
+                    }
+                }
+
+                reweighterBTagShape->setNormFactors(samp, normFactors, var, nLep);
+            }
+
+            btagNormFactorFile->Close();
+        }
+    }
 
     //loop over all samples 
     for( unsigned i = 0; i < treeReader.numberOfSamples(); ++i ){
@@ -86,7 +142,8 @@ void computeBTagEff( const std::string& year, const std::string& sampleList, con
             if (event.numberOfTightLeptons() == 2 && event.TightLeptonCollection()[0].charge() != event.TightLeptonCollection()[1].charge()) continue;
             if (event.numberOfGoodJets() < 2) continue;
             if (event.numberOfTightLeptons() < 4 && event.HT() < 200) continue;
-            
+
+            weight *= reweighterBTagShape->weight(event);
             //loop over jets 
             for( const auto& jetPtr : event.jetCollection() ){
 
@@ -122,7 +179,7 @@ void computeBTagEff( const std::string& year, const std::string& sampleList, con
     } else {
         cleaningName = "uncleaned";
     }
-    const std::string fileName = ( "bTagEff_" + cleaningName + "_" + year + ".root" );
+    const std::string fileName = ( "bTagEffWithSFs_" + cleaningName + "_" + year + ".root" );
     std::string outputPath = stringTools::formatDirectoryName( outputDirectory ) + fileName;
     
     TFile* outputFilePtr = TFile::Open( outputPath.c_str(), "RECREATE" );
@@ -132,7 +189,7 @@ void computeBTagEff( const std::string& year, const std::string& sampleList, con
             std::cout << "global efficiency at " << wp << flavor << ": " << globalEff << std::endl;
             //divide numerator and denominator and write to file
             bTagEfficiencyMaps[ 0 ][ flavor ][ wp ]->Divide( bTagEfficiencyMaps[ 1 ][ flavor ][ wp ].get() );
-            bTagEfficiencyMaps[ 0 ][ flavor ][ wp ]->Write( ( "bTagEff_" + workingPointNames[wp] + "_" + quarkFlavors[ flavor ] ).c_str() );
+            bTagEfficiencyMaps[ 0 ][ flavor ][ wp ]->Write( ( "bTagEffWithSFs_" + workingPointNames[wp] + "_" + quarkFlavors[ flavor ] ).c_str() );
         }
     }
     outputFilePtr->Close();
