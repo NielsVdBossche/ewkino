@@ -273,18 +273,21 @@ void TreeReader::initSampleFromFile( const std::string& pathToFile,
     if( !systemTools::fileExists( pathToFile ) ){
 	std::string msg = "ERROR in TreeReader.initSampleFromFile:";
 	msg += " file '" + pathToFile + "' does not exist.";
-        throw std::invalid_argument(msg);
+        //throw std::invalid_argument(msg);
+	// (suppress this error for now as file might be read from DAS)
     }
-
-    _currentFilePtr = std::shared_ptr< TFile >( new TFile( pathToFile.c_str() ) );
 
     // check year
     if( !(is2016 || is2016PreVFP || is2016PostVFP || is2017 || is2018 ) ){
-	std::string msg = "ERROR in TreeReader::initSampleFromFile:";
-	msg += " no valid year was given for sample ";
-	msg += pathToFile;
-	throw std::runtime_error(msg);
+        std::string msg = "ERROR in TreeReader::initSampleFromFile:";
+        msg += " no valid year was given for sample ";
+        msg += pathToFile;
+        throw std::runtime_error(msg);
     }
+
+    // open file
+    std::cout << "INFO in TreeReader::initSampleFromFile: opening " << pathToFile << std::endl;
+    _currentFilePtr = std::shared_ptr< TFile >( TFile::Open( pathToFile.c_str(), "READ" ) );
 
     // set tree pointer
     _currentTreePtr = (TTree*) _currentFilePtr->Get( "Events" );
@@ -547,10 +550,124 @@ void TreeReader::setOutputTree( TTree* outputTree,
 				bool includeGeneratorInfo,
 				bool includeGenParticles ){
     // not yet implemented!
-    // dummy conditions on parameters to avoid unused parameter warnings
-    if(!outputTree) return;
-    if(!includeGeneratorInfo) return;
-    if(!includeGenParticles) return;
+    outputTree->Branch("run", &_run, "_run/i");
+    outputTree->Branch("luminosityBlock", &_luminosityBlock, "_luminosityBlock/i");
+    outputTree->Branch("event", &_event, "_event/i");
+    // generator info
+    if( includeGeneratorInfo ){
+	outputTree->Branch("genWeight", &_genWeight, "_genWeight/F");
+	outputTree->Branch("nLHEPdfWeight", &_nLHEPdfWeight, "_nLHEPdfWeight/i");
+	outputTree->Branch("LHEPdfWeight", &_LHEPdfWeight, "_LHEPdfWeight[_nLHEPdfWeight]/F");
+	outputTree->Branch("nLHEScaleWeight", &_nLHEScaleWeight, "_nLHEScaleWeight/i");
+	outputTree->Branch("LHEScaleWeight", &_LHEScaleWeight, "_LHEScaleWeight[_nLHEScaleWeight]/F");
+	outputTree->Branch("nPSWeight", &_nPSWeight, "_nPSWeight/i");
+	outputTree->Branch("PSWeight", &_PSWeight, "_PSWeight[_nPSWeight]/F");
+    }
+    // gen particles
+    if( includeGenParticles ){
+	outputTree->Branch("nGenPart", &_nGenPart, "_nGenPart/i");
+	outputTree->Branch("GenPart_pt", &_GenPart_pt, "_GenPart_pt[_nGenPart]/F");
+	outputTree->Branch("GenPart_eta", &_GenPart_eta, "_GenPart_eta[_nGenPart]/F");
+	outputTree->Branch("GenPart_phi", &_GenPart_phi, "_GenPart_phi[_nGenPart]/F");
+	outputTree->Branch("GenPart_mass", &_GenPart_mass, "_GenPart_mass[_nGenPart]/F");
+	outputTree->Branch("GenPart_genPartIdxMother", &_GenPart_genPartIdxMother, "_GenPart_genPartIdxMother[_nGenPart]/I");
+	outputTree->Branch("GenPart_pdgId", &_GenPart_pdgId, "_GenPart_pdgId[_nGenPart]/I");
+	outputTree->Branch("GenPart_status", &_GenPart_status, "_GenPart_status[_nGenPart]/i");
+	outputTree->Branch("GenPart_statusFlags", &_GenPart_statusFlags, "_GenPart_statusFlags[_nGenPart]/i");
+	// gen MET
+	outputTree->Branch("GenMET_pt", &_GenMET_pt, "_GenMET_pt/F");
+	outputTree->Branch("GenMET_phi", &_GenMET_phi, "_GenMET_phi/F");
+    }
+    // variables related to electrons
+    outputTree->Branch("nElectron", &_nElectron, "_nElectron/i");
+    outputTree->Branch("Electron_pt", &_Electron_pt, "_Electron_pt[_nElectron]/F");
+    outputTree->Branch("Electron_eta", &_Electron_eta, "_Electron_eta[_nElectron]/F");
+    outputTree->Branch("Electron_phi", &_Electron_phi, "_Electron_phi[_nElectron]/F");
+    outputTree->Branch("Electron_charge", &_Electron_charge, "_Electron_charge[_nElectron]/I");
+    outputTree->Branch("Electron_dxy", &_Electron_dxy, "_Electron_dxy[_nElectron]/F");
+    outputTree->Branch("Electron_dz", &_Electron_dz, "_Electron_dz[_nElectron]/F");
+    outputTree->Branch("Electron_sip3d", &_Electron_sip3d, "_Electron_sip3d[_nElectron]/F");
+    outputTree->Branch("Electron_pfRelIso03_all", &_Electron_pfRelIso03_all, "_Electron_pfRelIso03_all[_nElectron]/F");
+    outputTree->Branch("Electron_miniPFRelIso_all", &_Electron_miniPFRelIso_all, "_Electron_miniPFRelIso_all[_nElectron]/F");
+    outputTree->Branch("Electron_miniPFRelIso_chg", &_Electron_miniPFRelIso_chg, "_Electron_miniPFRelIso_chg[_nElectron]/F");
+    outputTree->Branch("Electron_jetIdx", &_Electron_jetIdx, "_Electron_jetIdx[_nElectron]/I");
+    outputTree->Branch("Electron_jetPtRelv2", &_Electron_jetPtRelv2, "_Electron_jetPtRelv2[_nElectron]/F");
+    outputTree->Branch("Electron_jetRelIso", &_Electron_jetRelIso, "_Electron_jetRelIso[_nElectron]/F");
+    outputTree->Branch("Electron_mvaTTH", &_Electron_mvaTTH, "_Electron_mvaTTH[_nElectron]/F");
+    outputTree->Branch("Electron_tightCharge", &_Electron_tightCharge, "_Electron_tightCharge[_nElectron]/I");
+    outputTree->Branch("Electron_convVeto", &_Electron_convVeto, "_Electron_convVeto[_nElectron]/B");
+    outputTree->Branch("Electron_lostHits", &_Electron_lostHits, "_Electron_lostHits[_nElectron]/b");
+    outputTree->Branch("Electron_mvaFall17V2Iso", &_Electron_mvaFall17V2Iso, "_Electron_mvaFall17V2Iso[_nElectron]/F");
+    outputTree->Branch("Electron_mvaFall17V2noIso", &_Electron_mvaFall17V2noIso, "_Electron_mvaFall17V2noIso[_nElectron]/F");
+    outputTree->Branch("Electron_mvaFall17V2noIso_WPL", &_Electron_mvaFall17V2noIso_WPL, "_Electron_mvaFall17V2noIso_WPL[_nElectron]/O");
+    outputTree->Branch("Electron_mvaFall17V2noIso_WP80", &_Electron_mvaFall17V2noIso_WP80, "_Electron_mvaFall17V2noIso_WP80[_nElectron]/O");
+    outputTree->Branch("Electron_mvaFall17V2noIso_WP90", &_Electron_mvaFall17V2noIso_WP90, "_Electron_mvaFall17V2noIso_WP90[_nElectron]/O");
+    outputTree->Branch("Electron_deltaEtaSC", &_Electron_deltaEtaSC, "_Electron_deltaEtaSC[_nElectron]/F");
+    outputTree->Branch("Electron_eInvMinusPInv", &_Electron_eInvMinusPInv, "_Electron_eInvMinusPInv[_nElectron]/F");
+    outputTree->Branch("Electron_hoe", &_Electron_hoe, "_Electron_hoe[_nElectron]/F");
+    outputTree->Branch("Electron_sieie", &_Electron_sieie, "_Electron_sieie[_nElectron]/F");
+    outputTree->Branch("Electron_cutBased", &_Electron_cutBased, "_Electron_cutBased[_nElectron]/I");
+    outputTree->Branch("Electron_dEscaleDown", &_Electron_dEscaleDown, "_Electron_dEscaleDown[_nElectron]/F");
+    outputTree->Branch("Electron_dEscaleUp", &_Electron_dEscaleUp, "_Electron_dEscaleUp[_nElectron]/F");
+    outputTree->Branch("Electron_dEsigmaDown", &_Electron_dEsigmaDown, "_Electron_dEsigmaDown[_nElectron]/F");
+    outputTree->Branch("Electron_dEsigmaUp", &_Electron_dEsigmaUp, "_Electron_dEsigmaUp[_nElectron]/F");
+    outputTree->Branch("Electron_genPartFlav", &_Electron_genPartFlav, "_Electron_genPartFlav[_nElectron]/b");
+    outputTree->Branch("Electron_genPartIdx", &_Electron_genPartIdx, "_Electron_genPartIdx[_nElectron]/I");
+    // variables related to muons
+    outputTree->Branch("nMuon", &_nMuon, "_nMuon/i");
+    outputTree->Branch("Muon_pt", &_Muon_pt, "_Muon_pt[_nMuon]/F");
+    outputTree->Branch("Muon_eta", &_Muon_eta, "_Muon_eta[_nMuon]/F");
+    outputTree->Branch("Muon_phi", &_Muon_phi, "_Muon_phi[_nMuon]/F");
+    outputTree->Branch("Muon_charge", &_Muon_charge, "_Muon_charge[_nMuon]/I");
+    outputTree->Branch("Muon_dxy", &_Muon_dxy, "_Muon_dxy[_nMuon]/F");
+    outputTree->Branch("Muon_dz", &_Muon_dz, "_Muon_dz[_nMuon]/F");
+    outputTree->Branch("Muon_sip3d", &_Muon_sip3d, "_Muon_sip3d[_nMuon]/F");
+    outputTree->Branch("Muon_pfRelIso03_all", &_Muon_pfRelIso03_all, "_Muon_pfRelIso03_all[_nMuon]/F");
+    outputTree->Branch("Muon_miniPFRelIso_all", &_Muon_miniPFRelIso_all, "_Muon_miniPFRelIso_all[_nMuon]/F");
+    outputTree->Branch("Muon_miniPFRelIso_chg", &_Muon_miniPFRelIso_chg, "_Muon_miniPFRelIso_chg[_nMuon]/F");
+    outputTree->Branch("Muon_jetIdx", &_Muon_jetIdx, "_Muon_jetIdx[_nMuon]/I");
+    outputTree->Branch("Muon_jetPtRelv2", &_Muon_jetPtRelv2, "_Muon_jetPtRelv2[_nMuon]/F");
+    outputTree->Branch("Muon_jetRelIso", &_Muon_jetRelIso, "_Muon_jetRelIso[_nMuon]/F");
+    outputTree->Branch("Muon_mvaTTH", &_Muon_mvaTTH, "_Muon_mvaTTH[_nMuon]/F");
+    outputTree->Branch("Muon_segmentComp", &_Muon_segmentComp, "_Muon_segmentComp[_nMuon]/F");
+    outputTree->Branch("Muon_ptErr", &_Muon_ptErr, "_Muon_ptErr[_nMuon]/F");
+    outputTree->Branch("Muon_pfRelIso04_all", &_Muon_pfRelIso04_all, "_Muon_pfRelIso04_all[_nMuon]/F");
+    outputTree->Branch("Muon_looseId", &_Muon_looseId, "_Muon_looseId[_nMuon]/O");
+    outputTree->Branch("Muon_mediumId", &_Muon_mediumId, "_Muon_mediumId[_nMuon]/O");
+    outputTree->Branch("Muon_tightId", &_Muon_tightId, "_Muon_tightId[_nMuon]/O");
+    outputTree->Branch("Muon_genPartFlav", &_Muon_genPartFlav, "_Muon_genPartFlav[_nMuon]/b");
+    outputTree->Branch("Muon_genPartIdx", &_Muon_genPartIdx, "_Muon_genPartIdx[_nMuon]/I");
+    outputTree->Branch("Muon_isPFcand", &_Muon_isPFCand, "_Muon_isPFCand[_nMuon]/O");
+    outputTree->Branch("Muon_isGlobal", &_Muon_isGlobal, "_Muon_isGlobal[_nMuon]/O");
+    outputTree->Branch("Muon_isTracker", &_Muon_isTracker, "_Muon_isTracker[_nMuon]/O");
+    outputTree->Branch("Muon_isStandalone", &_Muon_isStandalone, "_Muon_isStandalone[_nMuon]/O");
+    // variables related to taus
+    outputTree->Branch("nTau", &_nTau, "_nTau/i");
+    outputTree->Branch("Tau_pt", &_Tau_pt, "_Tau_pt[_nTau]/F");
+    outputTree->Branch("Tau_eta", &_Tau_eta, "_Tau_eta[_nTau]/F");
+    outputTree->Branch("Tau_phi", &_Tau_phi, "_Tau_phi[_nTau]/F");
+    outputTree->Branch("Tau_charge", &_Tau_charge, "_Tau_charge[_nTau]/I");
+    outputTree->Branch("Tau_dxy", &_Tau_dxy, "_Tau_dxy[_nTau]/F");
+    outputTree->Branch("Tau_dz", &_Tau_dz, "_Tau_dz[_nTau]/F");
+    outputTree->Branch("Tau_genPartFlav", &_Tau_genPartFlav, "_Tau_genPartFlav[_nTau]/b");
+    outputTree->Branch("Tau_genPartIdx", &_Tau_genPartIdx, "_Tau_genPartIdx[_nTau]/I");
+    // variables related to jets
+    outputTree->Branch("nJet", &_nJet, "_nJet/i");
+    outputTree->Branch("Jet_pt", &_Jet_pt, "_Jet_pt[_nJet]/F");
+    outputTree->Branch("Jet_eta", &_Jet_eta, "_Jet_eta[_nJet]/F");
+    outputTree->Branch("Jet_phi", &_Jet_phi, "_Jet_phi[_nJet]/F");
+    outputTree->Branch("Jet_btagDeepB", &_Jet_bTagDeepB, "_Jet_bTagDeepB[_nJet]/F");
+    outputTree->Branch("Jet_btagDeepFlavB", &_Jet_bTagDeepFlavB, "_Jet_bTagDeepFlavB[_nJet]/F");
+    outputTree->Branch("Jet_nConstituents", &_Jet_nConstituents, "_Jet_nConstituents[_nJet]/b");
+    outputTree->Branch("Jet_hadronFlavour", &_Jet_hadronFlavor, "_Jet_hadronFlavor[_nJet]/I");
+    outputTree->Branch("Jet_jetId", &_Jet_jetId, "_Jet_jetId[_nJet]/I");
+    // variables related to missing transverse energy
+    outputTree->Branch("MET_pt", &_MET_pt, "_MET_pt/F");
+    outputTree->Branch("MET_phi", &_MET_phi, "_MET_phi/F");
+    // write individual trigger decisions to output tree
+    setMapOutputBranches( outputTree, _triggerMap, "/O" );
+    // write individual MET filters to output tree
+    setMapOutputBranches( outputTree, _METFilterMap, "/O" );
 }
 
 

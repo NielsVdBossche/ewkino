@@ -13,7 +13,6 @@ import os
 import sys
 
 # import other code from framework
-from jobSubmission import submitQsubJob, initializeJobScript
 from fileListing import *
 
 # help functions

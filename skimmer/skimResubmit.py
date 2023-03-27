@@ -2,10 +2,12 @@
 # resubmit stuck skimming jobs #
 ################################
 # note: experimental, not yet sufficiently tested
+# worked at some point but might have changed after modifications in job submission
 
 import os
 import sys
-import checkLogs as cl
+sys.path.append('../jobSubmission')
+import jobCheck as jc
  
 if __name__=='__main__':
 
@@ -28,7 +30,7 @@ if __name__=='__main__':
     efiles = []
     for efile in allefiles:
         # error checking
-        if cl.check_start_done(efile): efiles.append(efile)
+        if jc.check_start_done(efile): efiles.append(efile)
     print('found {} error log files corresponding to unfinished jobs.'.format(len(efiles)))
 
     # sort the list of error log files

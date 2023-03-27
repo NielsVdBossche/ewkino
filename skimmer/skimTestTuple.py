@@ -7,14 +7,16 @@ import os
 
 if len(sys.argv)==1:
     print('Use with following command line args:')
-    print(' - input_file_path')
-    print(' - skim_condition')
+    print(' - path to input file')
+    print(' - path to output file')
+    print(' - skim condition')
     sys.exit()
 
 # parse input arguments
 input_file_path = sys.argv[1]
-skim_condition = sys.argv[2]
-output_dir = 'testing'
+output_file_path = sys.argv[2]
+skim_condition = sys.argv[3]
+output_dir = os.path.dirname(output_file_path)
 
 # check if input file exists
 if not os.path.exists(input_file_path):
@@ -36,6 +38,6 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 # run the skim job
-cmd = exe + ' ' + input_file_path + ' ' + output_dir + ' ' + skim_condition
+cmd = exe + ' ' + input_file_path + ' ' + output_file_path + ' ' + skim_condition
 print('running command: {}'.format(cmd))
 os.system(cmd)

@@ -44,9 +44,6 @@ void scanFile( const std::string& pathToFile ){
 	// do printouts directly on TreeReader
 	treeReader.GetEntry(entry);
 	std::cout << "event" << std::endl;
-	std::cout << treeReader._nLheWeights << std::endl;
-	std::cout << treeReader._nPsWeights << std::endl;
-	std::cout << treeReader._nL << std::endl;
 
         /* // build event
         Event event = treeReader.buildEvent( entry, false, false, false, false );

@@ -10,18 +10,24 @@ int main(){
     // settings
     std::string sampleList = "samplelists/samplelist_2018_TTW_nano.txt";
     std::string sampleDirectory = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/sync/";
+    // alternative: file
+    std::string sampleFile = "../../skimmer/test/ntuples_skimmed_TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_version_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/0BF1CAC0-066F-6C41-89EF-6F7B67A8E1D7.root";
     unsigned long nEntries = 100;
 
     // make the TreeReader for nanoAOD
     std::cout << "initializing TreeReader..." << std::endl;
-    TreeReader treeReader(sampleList, sampleDirectory);
-    std::cout << "start loop over samples..." << std::endl;
+    //TreeReader treeReader(sampleList, sampleDirectory);
+    TreeReader treeReader;
+    treeReader.initSampleFromFile(sampleFile);
+    /*std::cout << "start loop over samples..." << std::endl;
     for( unsigned sampleIndex = 0; sampleIndex < treeReader.numberOfSamples(); ++sampleIndex ){
 	std::cout << "current sample number: " << sampleIndex << std::endl;
 	// load next sample
-	treeReader.initSample();
+	treeReader.initSample();*/
+    if(2>1){
 	// loop over events in sample
 	if( treeReader.numberOfEntries() < nEntries ) nEntries = treeReader.numberOfEntries();
+	std::cout << "start loop over " << nEntries << " events..." << std::endl;
 	for( long unsigned entry = 0; entry < nEntries; ++entry ){
             
             // build next event
@@ -41,15 +47,15 @@ int main(){
 	    event.cleanTausFromLooseLightLeptons();
 	    event.removeTaus();
 
-	    /*for( const auto& leptonPtr : event.leptonCollection() ){
+	    for( const auto& leptonPtr : event.leptonCollection() ){
 		std::cout << *leptonPtr << std::endl;
-	    }*/
+	    }
 
-	    for( const auto& leptonPtr : event.lightLeptonCollection() ){
+	    /*for( const auto& leptonPtr : event.lightLeptonCollection() ){
 		if( leptonPtr->isPrompt() && leptonPtr->leptonMVAttH()<-0.9 ){
 		    std::cout << leptonPtr->isPrompt() << " " << leptonPtr->leptonMVAttH() << std::endl;
 		}
-	    }
+	    }*/
 
 	    /*for( const auto& jetPtr : event.jetCollection() ){
                 std::cout << *jetPtr << std::endl;

@@ -16,12 +16,14 @@ class Sample(object):
 	self.path = None
 	self.xsec = 0.
 
-    def read_from_line( self, line, sampledir=None, **kwargs ):
+    def read_from_line( self, line, dasformat=False, sampledir=None, **kwargs ):
 	### read sample properties from a sample list line.
 	# input arguments:
 	# - line: string representing a line from a sample list.
 	#         expected format: <process> <sample name>/<version name> <xsec>
 	#         where the version name and cross-section are optional.
+	# - dasformat: if true, the expected <sample name>/<version name>
+	#   is replaced by <dataset name on DAS>
 	# - sampledir: if specified, set the full sample path and check if it exists.
 	# - kwargs: passed down to Sample.set_path
 
@@ -33,7 +35,8 @@ class Sample(object):
         self.process = line[0]
 	# now extract sample name (and version name if present)
         self.name = line[1].rstrip('\n')
-        if '/' in self.name: self.name, self.version = self.name.split('/')
+        if( '/' in self.name and not dasformat ):
+	    self.name, self.version = self.name.split('/')
         # finally extract cross-section
         if len(line)>2:
 	    xsstr = line[2].rstrip('\n')
@@ -126,11 +129,12 @@ class SampleCollection(object):
 	return '\n'.join(['{}'.format(s) for s in self.samples])
 
 
-def readsamplelist( samplelistpaths, sampledir=None ):
+def readsamplelist( samplelistpaths, dasformat=False, sampledir=None ):
     ### returns a SampleCollection from a list of sample list files
     # input arguments:
     # - samplelistpaths: either string or list of strings 
     #                    representing path(s) to sample list file(s).
+    # - dasformat: toggle between DAS format or local format.
     # - sampledir: path to directory containing the samples.
     #              if not specified, the path attribute of each sample is None
     #              and no check on sample existence is done.
@@ -139,7 +143,9 @@ def readsamplelist( samplelistpaths, sampledir=None ):
     #       where the individual elements are separated by spaces 
     #       and should not contain spaces,
     #	    the version_name is optional (defaults to empty string),
-    #       and the cross_section is optional (defaults to 0)
+    #       and the cross_section is optional (defaults to 0);
+    #       if dasformat is true, <sample name>/<version name>
+    #       is replaced by <dataset name on DAS>.
     
     collection = SampleCollection()
     if isinstance(samplelistpaths, str): samplelistpaths = [samplelistpaths]
@@ -152,7 +158,9 @@ def readsamplelist( samplelistpaths, sampledir=None ):
 	raise Exception('ERROR in readsamplelist:'
 		    +' sample directory {} does not exist.'.format(sampledir))
 
-    collection.read_from_files( samplelistpaths, sampledir=sampledir,
+    collection.read_from_files( samplelistpaths, 
+		dasformat=dasformat,
+		sampledir=sampledir,
 		suppress_exception=True )
 
     if sampledir is not None:
