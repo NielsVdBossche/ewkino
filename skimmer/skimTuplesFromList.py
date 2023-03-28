@@ -20,21 +20,23 @@ import condorTools as ct
 from jobSettings import CMSSW_VERSION
 sys.path.append(os.path.abspath('../Tools/python'))
 from samplelisttools import readsamplelist
+import argparsetools as apt
 
 # define allowed skim conditions
 skims = (["noskim", "singlelepton", "dilepton",
-        "trilepton", "fourlepton", "fakerate"])
+        "trilepton", "fourlepton", "fakerate",
+	"multilightlepton"])
 
 # parse arguments
 parser = argparse.ArgumentParser('Skimming')
-parser.add_argument('--inputdir', required=True, type=os.path.abspath,
-                    help='Directory with input samples. Ignored for filemode "das".')
 parser.add_argument('--samplelist', required=True, type=os.path.abspath)
 parser.add_argument('--outputdir', required=True, type=os.path.abspath)
 parser.add_argument('--skim', required=True, choices=skims)
 parser.add_argument('--files_per_job', default=10, type=int)
 parser.add_argument('--walltime_hours', default=24, type=int)
 parser.add_argument('--filemode', default='das', choices=['das','local'])
+parser.add_argument('--inputdir', default=None, type=apt.path_or_none)
+parser.add_argument('--proxy', default=None, type=apt.path_or_none)
 parser.add_argument('--istest', default=False, action='store_true')
 parser.add_argument('--runmode', default='condor', choices=['condor','local'])
 args = parser.parse_args()
@@ -50,8 +52,9 @@ if not os.path.exists(exe):
     raise Exception('ERROR: executable {} does not exist.'.format(exe))
 
 # check if input directory exists
-if( args.filemode=='local' and not os.path.exists(args.inputdir) ):
-    raise Exception('ERROR: input directory {} does not exist.'.format(args.inputdir))
+if args.inputdir is not None:
+    if not os.path.exists(args.inputdir):
+	raise Exception('ERROR: input directory {} does not exist.'.format(args.inputdir))
 
 # check if sample list exist
 if not os.path.exists(args.samplelist):
@@ -140,4 +143,4 @@ for sample_name, sample_output_directory in itlist:
 	if( args.runmode=='condor' ): 
 	    ct.submitCommandsAsCondorJob( 
 		'cjob_skimTuplesFromList', commands,
-		cmssw_version=CMSSW_VERSION )
+		cmssw_version=CMSSW_VERSION, proxy=args.proxy )

@@ -15,6 +15,7 @@ bool passDileptonSkim( Event& );
 bool passTrileptonSkim( Event& );
 bool passFourLeptonSkim( Event& );
 bool passFakeRateSkim( Event& );
+bool passMultiLightLeptonSkim( Event& );
 bool passSkim( Event&, const std::string& skimCondition );
 
 #endif

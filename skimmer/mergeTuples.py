@@ -13,8 +13,8 @@ import sys
 import fnmatch
 import argparse
 
-# import other parts of code 
-from jobSubmission import submitQsubJob, initializeJobScript
+# import other parts of code
+sys.path.append(os.path.abspath('python'))
 from fileListing import walkLimitedDepth, listSampleDirectories
 sys.path.append(os.path.abspath('../jobSubmission'))
 import condorTools as ct

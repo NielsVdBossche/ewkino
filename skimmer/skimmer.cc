@@ -56,7 +56,7 @@ void skimFile(	const std::string& inputFilePath,
     treeReader.setOutputTree( outputTreePtr.get() );
 
     long unsigned nentries = treeReader.numberOfEntries();
-    nentries = 100; // for testing
+    //nentries = 100; // for testing
     long unsigned npass = 0;
     std::cout << "starting loop over " << nentries << " events..." << std::endl;
     for( long unsigned entry = 0; entry < nentries; ++entry ){
