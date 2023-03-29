@@ -39,6 +39,7 @@ class Electron : public LightLepton{
         double inverseEMinusInverseP() const{ return _inverseEMinusInverseP; }
         double sigmaIEtaEta() const{ return _sigmaIEtaEta; }
 
+	bool isPFCandidate() const{ return _isPFCandidate; }
         bool isVetoPOGElectron() const{ return _isVetoPOGElectron; }
         bool isLoosePOGElectron() const{ return _isLoosePOGElectron; }
         bool isMediumPOGElectron() const{ return _isMediumPOGElectron; }
@@ -75,7 +76,8 @@ class Electron : public LightLepton{
         double _inverseEMinusInverseP = 0;
         double _sigmaIEtaEta = 0;
 
-        //cut based POG ID working points (include isolation) 
+        //cut based POG ID working points (include isolation)
+	bool _isPFCandidate = false; 
         bool _isVetoPOGElectron = false;
         bool _isLoosePOGElectron = false;
         bool _isMediumPOGElectron = false;

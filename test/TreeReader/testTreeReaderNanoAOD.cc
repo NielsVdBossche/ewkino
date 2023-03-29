@@ -11,8 +11,8 @@ int main(){
     std::string sampleList = "samplelists/samplelist_2018_TTW_nano.txt";
     std::string sampleDirectory = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/sync/";
     // alternative: file
-    std::string sampleFile = "../../skimmer/test/ntuples_skimmed_TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_version_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/0BF1CAC0-066F-6C41-89EF-6F7B67A8E1D7.root";
-    unsigned long nEntries = 100;
+    std::string sampleFile = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/TTWJetsToLNu-RunIISummer20UL18-nanoAOD-fullfile.root";
+    unsigned long nEntries = 5000;
 
     // make the TreeReader for nanoAOD
     std::cout << "initializing TreeReader..." << std::endl;
@@ -33,29 +33,41 @@ int main(){
             // build next event
             Event event = treeReader.buildEvent( entry ); 
 
+	    if( !(event.eventNumber()==13386086 || event.eventNumber()==13372790 || event.eventNumber()==13375211 ) ) continue;
+            
+	    std::cout << event.numberOfElectrons() << std::endl;
+	    for( const auto& leptonPtr : event.electronCollection() ){
+                std::cout << *leptonPtr << std::endl;
+            }
+
+	    // cleaning and/or selections
+	    event.selectLooseLeptons();
+            event.cleanElectronsFromLooseMuons();
+            event.cleanTausFromLooseLightLeptons();
+            event.removeTaus();
+
+	    /*bool doprint = false;
+	    for( const auto& leptonPtr : event.electronCollection() ){
+                if( !leptonPtr->isPrompt() ) doprint = true;
+            }
+	    if( !doprint ) continue;*/
+
 	    // printouts for testing
 	    std::cout << "=== event ===" << std::endl;
-	    /*std::cout << "run number: " << event.runNumber() << std::endl;
-	    std::cout << "lumi number: " << event.luminosityBlock() << std::endl;
-	    std::cout << "event number: " << event.eventNumber() << std::endl;*/
+	    //std::cout << "run number: " << event.runNumber() << std::endl;
+	    //std::cout << "lumi number: " << event.luminosityBlock() << std::endl;
+	    std::cout << "event number: " << event.eventNumber() << std::endl;
 	    
 	    //std::cout << "gen weight: " << event.genWeight() << std::endl;
 	    //std::cout << "scaled weight: " << event.weight() << std::endl;
 
-	    event.selectLooseLeptons();
-	    event.cleanElectronsFromLooseMuons();
-	    event.cleanTausFromLooseLightLeptons();
-	    event.removeTaus();
-
-	    for( const auto& leptonPtr : event.leptonCollection() ){
+	    /*for( const auto& leptonPtr : event.leptonCollection() ){
 		std::cout << *leptonPtr << std::endl;
-	    }
-
-	    /*for( const auto& leptonPtr : event.lightLeptonCollection() ){
-		if( leptonPtr->isPrompt() && leptonPtr->leptonMVAttH()<-0.9 ){
-		    std::cout << leptonPtr->isPrompt() << " " << leptonPtr->leptonMVAttH() << std::endl;
-		}
 	    }*/
+
+	    for( const auto& leptonPtr : event.lightLeptonCollection() ){
+		std::cout << leptonPtr->isPrompt() << " " << leptonPtr->leptonMVAttH() << std::endl;
+	    }
 
 	    /*for( const auto& jetPtr : event.jetCollection() ){
                 std::cout << *jetPtr << std::endl;

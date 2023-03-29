@@ -17,6 +17,7 @@ Electron::Electron( const TreeReader& treeReader, const unsigned electronIndex )
 {
     _passChargeConsistency = ( treeReader._Electron_tightCharge[electronIndex]==2 );
     _etaSuperCluster = eta() + treeReader._Electron_deltaEtaSC[electronIndex];
+    _isPFCandidate = treeReader._Electron_isPFCand[electronIndex];
     _isVetoPOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=1 );
     _isLoosePOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=2 );
     _isMediumPOGElectron = ( treeReader._Electron_cutBased[electronIndex]>=3 );
@@ -54,6 +55,7 @@ Electron::Electron( const Electron& rhs ) :
     _hOverE( rhs._hOverE ),
     _inverseEMinusInverseP( rhs._inverseEMinusInverseP ),
     _sigmaIEtaEta( rhs._sigmaIEtaEta ),
+    _isPFCandidate( rhs._isPFCandidate ),
     _isVetoPOGElectron( rhs._isVetoPOGElectron ),
     _isLoosePOGElectron( rhs._isLoosePOGElectron ),
     _isMediumPOGElectron( rhs._isMediumPOGElectron ),
@@ -83,6 +85,7 @@ Electron::Electron( Electron&& rhs ) noexcept :
     _hOverE( rhs._hOverE ),
     _inverseEMinusInverseP( rhs._inverseEMinusInverseP ),
     _sigmaIEtaEta( rhs._sigmaIEtaEta ),
+    _isPFCandidate( rhs._isPFCandidate ),
     _isVetoPOGElectron( rhs._isVetoPOGElectron ),
     _isLoosePOGElectron( rhs._isLoosePOGElectron ),
     _isMediumPOGElectron( rhs._isMediumPOGElectron ),
@@ -113,6 +116,7 @@ std::ostream& Electron::print( std::ostream& os ) const{
     os << " / hOverE = " << _hOverE;
     os << " / inverseEMinusInverseP = " << _inverseEMinusInverseP;
     os << " / sigmaIEtaEta = " << _sigmaIEtaEta;
+    os << " / isPFCandidate = " << _isPFCandidate;
     if( _isTightPOGElectron ){
         os << " / tight POG electron";
     } else if( _isMediumPOGElectron ){

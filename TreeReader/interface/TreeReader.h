@@ -105,6 +105,7 @@ class TreeReader {
 	Float_t		_Electron_dEsigmaUp[nElectron_max];
 	UChar_t		_Electron_genPartFlav[nElectron_max];
 	Int_t		_Electron_genPartIdx[nElectron_max];
+	Bool_t          _Electron_isPFCand[nElectron_max];
 	// variables related to muons
 	UInt_t          _nMuon;
         Float_t		_Muon_pt[nMuon_max];
@@ -330,6 +331,7 @@ class TreeReader {
         TBranch*        b__Electron_dEsigmaUp;
 	TBranch*	b__Electron_genPartFlav;
 	TBranch*	b__Electron_genPartIdx;
+	TBranch*	b__Electron_isPFCand;
         TBranch*        b__nMuon;
         TBranch*        b__Muon_pt;
         TBranch*        b__Muon_eta;

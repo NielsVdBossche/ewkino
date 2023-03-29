@@ -480,6 +480,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaUp", _Electron_dEsigmaUp, &b__Electron_dEsigmaUp);
     _currentTreePtr->SetBranchAddress("Electron_genPartFlav", _Electron_genPartFlav, &b__Electron_genPartFlav);
     _currentTreePtr->SetBranchAddress("Electron_genPartIdx", _Electron_genPartIdx, &b__Electron_genPartIdx);
+    _currentTreePtr->SetBranchAddress("Electron_isPFcand", _Electron_isPFCand, &b__Electron_isPFCand);
     // variables related to muons
     _currentTreePtr->SetBranchAddress("nMuon", &_nMuon, &b__nMuon);
     _currentTreePtr->SetBranchAddress("Muon_pt", _Muon_pt, &b__Muon_pt);
@@ -613,6 +614,7 @@ void TreeReader::setOutputTree( TTree* outputTree,
     outputTree->Branch("Electron_dEsigmaUp", &_Electron_dEsigmaUp, "_Electron_dEsigmaUp[_nElectron]/F");
     outputTree->Branch("Electron_genPartFlav", &_Electron_genPartFlav, "_Electron_genPartFlav[_nElectron]/b");
     outputTree->Branch("Electron_genPartIdx", &_Electron_genPartIdx, "_Electron_genPartIdx[_nElectron]/I");
+    outputTree->Branch("Electron_isPFcand", &_Electron_isPFCand, "_Electron_isPFCand[_nElectron]/O");
     // variables related to muons
     outputTree->Branch("nMuon", &_nMuon, "_nMuon/i");
     outputTree->Branch("Muon_pt", &_Muon_pt, "_Muon_pt[_nMuon]/F");

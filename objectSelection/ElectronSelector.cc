@@ -18,6 +18,11 @@ double leptonMVACutElectron(){
 
 
 bool ElectronSelector::isLooseBase() const{
+    // cuts to replicate selection at ntuplizing stage
+    // (presumably not done at nanoAOD creation)
+    if( !electronPtr->isPFCandidate() ) return false;
+    // (experimental, attempt to recreate the gsfTrack requirement at ntuplizer)
+    // other loose selection criteria
     if( electronPtr->uncorrectedPt() < 10 ) return false;
     if( electronPtr->absEta() >= 2.5 ) return false;
     if( fabs( electronPtr->dxy() ) >= 0.05 ) return false;
