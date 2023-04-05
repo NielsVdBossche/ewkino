@@ -161,8 +161,6 @@ TriggerInfo::TriggerInfo( const TreeReader& treeReader,
 					    "HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL", "HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL"};
 	triggerNames["passTrigger_ee"] = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ", "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL", 
 					    "HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW"};
-	triggerNames["passTrigger_et"] = {"HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFtau20_SingleL1", "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20",
-					    "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau30"};
 	triggerNames["passTrigger_mmm"] = {"HLT_TripleMu_12_10_5"};
 	triggerNames["passTrigger_emm"] = {"HLT_DiMu9_Ele9_CaloIdL_TrackIdL"};
 	triggerNames["passTrigger_eem"] = {"HLT_Mu8_DiEle12_CaloIdL_TrackIdL"};
@@ -175,11 +173,10 @@ TriggerInfo::TriggerInfo( const TreeReader& treeReader,
     // check if all triggers exist
     for(auto const& el : triggerNames){
 	for(std::string triggerName : el.second){
-	   if( treeReader._triggerMap.find(triggerName)==treeReader._triggerMap.end()){
+	    if( treeReader._triggerMap.count(triggerName)==0 ){
 		std::string msg = "ERROR in TriggerInfo constructor:";
 		msg += " trigger " + triggerName + " not found in TreeReader.";
 		throw std::runtime_error(msg);
-		//std::cerr << msg << std::endl;
 	    }
 	}
     }

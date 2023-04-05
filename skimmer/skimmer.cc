@@ -29,7 +29,6 @@ void skimFile(	const std::string& inputFilePath,
     TTree* RunTreePtr = (TTree*) inputFilePtr->Get( "Runs" );
     TTree* MetaTreePtr = (TTree*) inputFilePtr->Get( "MetaData" );
     TTree* ParamTreePtr = (TTree*) inputFilePtr->Get( "ParameterSets" );
-    std::cout << LumiTreePtr << std::endl;
 
     // initialize TreeReader, input files might be corrupt in rare cases
     std::cout << "initializing TreeReader..." << std::endl;
@@ -56,13 +55,14 @@ void skimFile(	const std::string& inputFilePath,
     treeReader.setOutputTree( outputTreePtr.get() );
 
     long unsigned nentries = treeReader.numberOfEntries();
-    //nentries = 100; // for testing
+    //nentries = 10000; // for testing
     long unsigned npass = 0;
     std::cout << "starting loop over " << nentries << " events..." << std::endl;
     for( long unsigned entry = 0; entry < nentries; ++entry ){
+	if(entry%10000 == 0) std::cout<<"processed: "<<entry<<" of "<<nentries<<std::endl;
 
         // build event
-        Event event = treeReader.buildEvent( entry );
+        Event event = treeReader.buildEvent( entry, false, false );
 
         // apply event selection
         if( !passSkim( event, skimCondition ) ) continue;

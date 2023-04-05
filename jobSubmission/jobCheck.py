@@ -87,13 +87,16 @@ def check_error_content(filename, contentlist='default', verbose=True):
 
     # hard-coded default error content
     if( isinstance(contentlist,str) and contentlist=='default' ):
-	contentlist = ([    'SysError',
+	contentlist = ([   'SysError',
                            '/var/torque/mom_priv/jobs',
                            'R__unzip: error',
                            'hadd exiting due to error in',
                            'Bus error',
+			   'bus error',
                            'Exception:',
-                           'Traceback (most recent call last):' ])
+                           'Traceback (most recent call last):',
+                           '*** Break ***',
+                           'segmentation violation' ])
 	contentlist.append('###error###') # custom error tag for targeted flagging
 
     # check if the file content contains provided error tags
@@ -126,6 +129,10 @@ if __name__=='__main__':
 			help='Ignore starting and done tags, only check for errors.')
     parser.add_argument('--noerrors', action='store_true',
 			help='Ignore errors, only check starting and done tags.')
+    parser.add_argument('--minclusterid', default=-1, type=int,
+                        help='Minimum cluster ID (logs with ID below are ignored)')
+    parser.add_argument('--maxclusterid', default=-1, type=int,
+                        help='Maximum cluster ID (logs with ID above are ignored)')
     args = parser.parse_args()
 
     # print arguments
@@ -141,6 +148,19 @@ if __name__=='__main__':
     condorpattern = os.path.join(args.dir,'*_err_*')
     qsubpattern = os.path.join(args.dir,'*.sh.e*')
     files = glob.glob(condorpattern) + glob.glob(qsubpattern)
+
+    # filter files
+    if( args.minclusterid > 0 or args.maxclusterid > 0 ):
+	newfiles = []
+	for f in files:
+	    if '.sh.e' in files: continue # not implemented for qsub
+	    clusterid = int(f.split('_err_')[1].split('_')[0])
+	    if( args.minclusterid > 0 and clusterid < args.minclusterid ): continue
+	    if( args.maxclusterid > 0 and clusterid > args.maxclusterid ): continue
+	    newfiles.append(f)
+	files = newfiles
+
+    # do some printouts	    
     nfiles = len(files)
     print('found {} error log files.'.format(nfiles))
     print('start scanning...')

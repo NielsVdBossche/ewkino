@@ -44,6 +44,16 @@ bool passFakeRateSkim( Event& event ){
     return true;
 }
 
+bool passDiLightLeptonSkim( Event& event ){
+    // event passes if
+    // - number of light leptons >= 2
+    event.selectLooseLeptons();
+    event.cleanElectronsFromLooseMuons();
+    event.removeTaus();
+    if( event.numberOfLightLeptons() < 2 ) return false;
+    return true;
+}
+
 bool passMultiLightLeptonSkim( Event& event ){
     // event passes if
     // - number of light leptons >= 3
@@ -65,6 +75,7 @@ bool passSkim( Event& event, const std::string& skimCondition ){
         { "trilepton", passTrileptonSkim },
         { "fourlepton", passFourLeptonSkim },
         { "fakerate", passFakeRateSkim },
+	{ "dilightlepton", passDiLightLeptonSkim },
 	{ "multilightlepton", passMultiLightLeptonSkim }
     };
     auto it = skimFunctionMap.find( skimCondition );

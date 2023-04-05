@@ -15,13 +15,18 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex ):
     ),
     _deepCSV( treeReader._Jet_bTagDeepB[jetIndex] ),
     _deepFlavor( treeReader._Jet_bTagDeepFlavB[jetIndex] ),
-    _hadronFlavor( treeReader._Jet_hadronFlavor[jetIndex] ),
     /*_pt_JECDown( treeReader._jetSmearedPt_JECDown[jetIndex] ),
     _pt_JECUp( treeReader._jetSmearedPt_JECUp[jetIndex] ),
     _pt_JERDown( treeReader._jetSmearedPt_JERDown[jetIndex] ),
     _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),*/
     selector( new JetSelector( this ) )
 {
+    // set jet hadron flavor, but only for simulation
+    if( treeReader.containsGeneratorInfo() ){
+	_hadronFlavor = treeReader._Jet_hadronFlavor[jetIndex];
+    }
+
+    // set jet ID
     std::bitset<3> jetIdBits = std::bitset<3>( treeReader._Jet_jetId[jetIndex] );
     _isTight = jetIdBits[1];
     _isTightLeptonVeto = jetIdBits[2];

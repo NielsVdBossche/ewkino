@@ -39,8 +39,9 @@ std::pair< std::map< std::string, bool >, std::map< std::string, TBranch* > > bu
 	TTree* treePtr, 
 	const std::vector< std::string> nameIdentifiers, 
 	const std::string& antiIdentifier = "" ){
-    // build a map of branches from a given tree
-    // all branches whose name contains nameIdentifier and not antiIdentifier will be added
+    // build a map of variables and of branches from a given tree.
+    // only boolean branches supported for now, e.g. triggers and MET filters.
+    // all branches whose name contains nameIdentifier and not antiIdentifier will be added.
     // the return type is a pair of two objects:
     // - map of branch name to boolean 
     //   (e.g. usable for triggers)
@@ -48,6 +49,7 @@ std::pair< std::map< std::string, bool >, std::map< std::string, TBranch* > > bu
     // - map of branch name to branch pointer
     //   (e.g. usable for many branches with similar names)
     //   (branch pointers are set to nullptr everywhere)
+    // note: use setMapBranchAddresses afterwards to couple branches to variables.
     std::map< std::string, bool > decisionMap;
     std::map< std::string, TBranch* > branchMap;
     // loop over all branches
@@ -62,9 +64,6 @@ std::pair< std::map< std::string, bool >, std::map< std::string, TBranch* > > bu
 	if( !select ) continue;
         if( antiIdentifier != "" 
 	    && stringTools::stringContains( branchName, antiIdentifier ) ) continue;
-	// write branch to map
-	// note: not yet implemented, default value for now;
-	// branches will not be written to output tree!
 	decisionMap[ branchName ] = false;
         branchMap[ branchName ] = nullptr;
     }
@@ -80,8 +79,6 @@ void TreeReader::initializeTriggerMap( TTree* treePtr ){
 
 
 void TreeReader::initializeMETFilterMap( TTree* treePtr ){
-    //WARNING: Currently one MET filter contains 'updated' rather than 'Flag' in the name. 
-    //If this changes, make sure to modify the code here!
     auto filterMaps = buildBranchMap( treePtr, {"Flag_"} );
     _METFilterMap = filterMaps.first;
     b__METFilterMap = filterMaps.second;
@@ -110,7 +107,7 @@ bool TreeReader::containsGeneratorInfo() const{
 
 
 bool TreeReader::containsGenParticles() const{
-    return treeHasBranchWithName( _currentTreePtr, "GenPart_" );
+    return treeHasBranchWithName( _currentTreePtr, "nGenPart" );
 }
 
 
@@ -204,6 +201,11 @@ long unsigned TreeReader::numberOfEntries() const{
 void TreeReader::initSample( const Sample& samp, const bool doInitTree ){ 
     _currentSamplePtr = std::make_shared< Sample >( samp );
     _currentFilePtr = samp.filePtr();
+    // note: when initializing multiple samples in series,
+    // the currentTreePtr below gets overwritten by the new tree.
+    // normally, this implies a memory leak, but in this case it is fine,
+    // since ROOT implicitly deletes the previous tree once the file is closed
+    // (which is again implicitly done when opening the new file).
     _currentTreePtr = (TTree*) _currentFilePtr->Get( "Events" );
     checkCurrentTree();
     if( doInitTree ) initTree();
@@ -231,7 +233,6 @@ void TreeReader::initSample( const Sample& samp, const bool doInitTree ){
 	}
 	double genEventSumOfWeights = 0;
 	Double_t genEventSumw = 0;
-	std::cout << "setting branch address" << std::endl;
 	runTreePtr->SetBranchAddress("genEventSumw", &genEventSumw);
 	for( long int entry=0; entry < runTreePtr->GetEntries(); entry++ ){
 	    runTreePtr->GetEntry(entry);
@@ -290,6 +291,11 @@ void TreeReader::initSampleFromFile( const std::string& pathToFile,
     _currentFilePtr = std::shared_ptr< TFile >( TFile::Open( pathToFile.c_str(), "READ" ) );
 
     // set tree pointer
+    // note: when initializing multiple samples in series,
+    // the currentTreePtr below gets overwritten by the new tree.
+    // normally, this implies a memory leak, but in this case it is fine,
+    // since ROOT implicitly deletes the previous tree once the file is closed
+    // (which is again implicitly done when opening the new file).
     _currentTreePtr = (TTree*) _currentFilePtr->Get( "Events" );
     checkCurrentTree();
 
@@ -354,7 +360,7 @@ void TreeReader::GetEntry( const Sample& samp, long unsigned entry ){
 	std::cerr << msg << std::endl;
         _nJet = nJet_max;
     }
-    if( _nGenPart > nGenPart_max ){
+    if( containsGenParticles() && _nGenPart > nGenPart_max ){
         std::string msg = "WARNING in TreeReader::GetEntry:";
         msg += " nGenPart is " + std::to_string(_nGenPart);
         msg += " while nGenPart_max is; " + std::to_string(nGenPart_max);
@@ -425,26 +431,29 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("luminosityBlock", &_luminosityBlock, &b__luminosityBlock);
     _currentTreePtr->SetBranchAddress("event", &_event, &b__event);
     // generator info
-    _currentTreePtr->SetBranchAddress("genWeight", &_genWeight, &b__genWeight);
-    _currentTreePtr->SetBranchAddress("nLHEPdfWeight", &_nLHEPdfWeight, &b__nLHEPdfWeight);
-    _currentTreePtr->SetBranchAddress("LHEPdfWeight", _LHEPdfWeight, &b__LHEPdfWeight);
-    _currentTreePtr->SetBranchAddress("nLHEScaleWeight", &_nLHEScaleWeight, &b__nLHEScaleWeight);
-    _currentTreePtr->SetBranchAddress("LHEScaleWeight", _LHEScaleWeight, &b__LHEScaleWeight);
-    _currentTreePtr->SetBranchAddress("nPSWeight", &_nPSWeight, &b__nPSWeight);
-    _currentTreePtr->SetBranchAddress("PSWeight", _PSWeight, &b__PSWeight);
+    if( containsGeneratorInfo() ){
+	_currentTreePtr->SetBranchAddress("genWeight", &_genWeight, &b__genWeight);
+	_currentTreePtr->SetBranchAddress("nLHEPdfWeight", &_nLHEPdfWeight, &b__nLHEPdfWeight);
+	_currentTreePtr->SetBranchAddress("LHEPdfWeight", _LHEPdfWeight, &b__LHEPdfWeight);
+	_currentTreePtr->SetBranchAddress("nLHEScaleWeight", &_nLHEScaleWeight, &b__nLHEScaleWeight);
+	_currentTreePtr->SetBranchAddress("LHEScaleWeight", _LHEScaleWeight, &b__LHEScaleWeight);
+	_currentTreePtr->SetBranchAddress("nPSWeight", &_nPSWeight, &b__nPSWeight);
+	_currentTreePtr->SetBranchAddress("PSWeight", _PSWeight, &b__PSWeight);
+    }
     // gen particles
-    _currentTreePtr->SetBranchAddress("nGenPart", &_nGenPart, &b__nGenPart);
-    _currentTreePtr->SetBranchAddress("GenPart_pt", _GenPart_pt, &b__GenPart_pt);
-    _currentTreePtr->SetBranchAddress("GenPart_eta", _GenPart_eta, &b__GenPart_eta);
-    _currentTreePtr->SetBranchAddress("GenPart_phi", _GenPart_phi, &b__GenPart_phi);
-    _currentTreePtr->SetBranchAddress("GenPart_mass", _GenPart_mass, &b__GenPart_mass);
-    _currentTreePtr->SetBranchAddress("GenPart_genPartIdxMother", _GenPart_genPartIdxMother, &b__GenPart_genPartIdxMother);
-    _currentTreePtr->SetBranchAddress("GenPart_pdgId", _GenPart_pdgId, &b__GenPart_pdgId);
-    _currentTreePtr->SetBranchAddress("GenPart_status", _GenPart_status, &b__GenPart_status);
-    _currentTreePtr->SetBranchAddress("GenPart_statusFlags", _GenPart_statusFlags, &b__GenPart_statusFlags);
-    // gen MET
-    _currentTreePtr->SetBranchAddress("GenMET_pt", &_GenMET_pt, &b__GenMET_pt);
-    _currentTreePtr->SetBranchAddress("GenMET_phi", &_GenMET_phi, &b__GenMET_phi);
+    if( containsGenParticles() ){
+	_currentTreePtr->SetBranchAddress("nGenPart", &_nGenPart, &b__nGenPart);
+	_currentTreePtr->SetBranchAddress("GenPart_pt", _GenPart_pt, &b__GenPart_pt);
+	_currentTreePtr->SetBranchAddress("GenPart_eta", _GenPart_eta, &b__GenPart_eta);
+	_currentTreePtr->SetBranchAddress("GenPart_phi", _GenPart_phi, &b__GenPart_phi);
+	_currentTreePtr->SetBranchAddress("GenPart_mass", _GenPart_mass, &b__GenPart_mass);
+	_currentTreePtr->SetBranchAddress("GenPart_genPartIdxMother", _GenPart_genPartIdxMother, &b__GenPart_genPartIdxMother);
+	_currentTreePtr->SetBranchAddress("GenPart_pdgId", _GenPart_pdgId, &b__GenPart_pdgId);
+	_currentTreePtr->SetBranchAddress("GenPart_status", _GenPart_status, &b__GenPart_status);
+	_currentTreePtr->SetBranchAddress("GenPart_statusFlags", _GenPart_statusFlags, &b__GenPart_statusFlags);
+	_currentTreePtr->SetBranchAddress("GenMET_pt", &_GenMET_pt, &b__GenMET_pt);
+	_currentTreePtr->SetBranchAddress("GenMET_phi", &_GenMET_phi, &b__GenMET_phi);
+    }
     // variables related to electrons
     _currentTreePtr->SetBranchAddress("nElectron", &_nElectron, &b__nElectron);
     _currentTreePtr->SetBranchAddress("Electron_pt", _Electron_pt, &b__Electron_pt);
@@ -478,8 +487,10 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Electron_dEscaleUp", _Electron_dEscaleUp, &b__Electron_dEscaleUp);
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaDown", _Electron_dEsigmaDown, &b__Electron_dEsigmaDown);
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaUp", _Electron_dEsigmaUp, &b__Electron_dEsigmaUp);
-    _currentTreePtr->SetBranchAddress("Electron_genPartFlav", _Electron_genPartFlav, &b__Electron_genPartFlav);
-    _currentTreePtr->SetBranchAddress("Electron_genPartIdx", _Electron_genPartIdx, &b__Electron_genPartIdx);
+    if( containsGenParticles() ){
+	_currentTreePtr->SetBranchAddress("Electron_genPartFlav", _Electron_genPartFlav, &b__Electron_genPartFlav);
+	_currentTreePtr->SetBranchAddress("Electron_genPartIdx", _Electron_genPartIdx, &b__Electron_genPartIdx);
+    }
     _currentTreePtr->SetBranchAddress("Electron_isPFcand", _Electron_isPFCand, &b__Electron_isPFCand);
     // variables related to muons
     _currentTreePtr->SetBranchAddress("nMuon", &_nMuon, &b__nMuon);
@@ -503,8 +514,10 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Muon_looseId", _Muon_looseId, &b__Muon_looseId);
     _currentTreePtr->SetBranchAddress("Muon_mediumId", _Muon_mediumId, &b__Muon_mediumId);
     _currentTreePtr->SetBranchAddress("Muon_tightId", _Muon_tightId, &b__Muon_tightId);
-    _currentTreePtr->SetBranchAddress("Muon_genPartFlav", _Muon_genPartFlav, &b__Muon_genPartFlav);
-    _currentTreePtr->SetBranchAddress("Muon_genPartIdx", _Muon_genPartIdx, &b__Muon_genPartIdx);
+    if( containsGenParticles() ){
+	_currentTreePtr->SetBranchAddress("Muon_genPartFlav", _Muon_genPartFlav, &b__Muon_genPartFlav);
+	_currentTreePtr->SetBranchAddress("Muon_genPartIdx", _Muon_genPartIdx, &b__Muon_genPartIdx);
+    }
     _currentTreePtr->SetBranchAddress("Muon_isPFcand", _Muon_isPFCand, &b__Muon_isPFCand);
     _currentTreePtr->SetBranchAddress("Muon_isGlobal", _Muon_isGlobal, &b__Muon_isGlobal);
     _currentTreePtr->SetBranchAddress("Muon_isTracker", _Muon_isTracker, &b__Muon_isTracker);
@@ -517,8 +530,10 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Tau_charge", _Tau_charge, &b__Tau_charge);
     _currentTreePtr->SetBranchAddress("Tau_dxy", _Tau_dxy, &b__Tau_dxy);
     _currentTreePtr->SetBranchAddress("Tau_dz", _Tau_dz, &b__Tau_dz);
-    _currentTreePtr->SetBranchAddress("Tau_genPartFlav", _Tau_genPartFlav, &b__Tau_genPartFlav);
-    _currentTreePtr->SetBranchAddress("Tau_genPartIdx", _Tau_genPartIdx, &b__Tau_genPartIdx);
+    if( containsGenParticles() ){
+	_currentTreePtr->SetBranchAddress("Tau_genPartFlav", _Tau_genPartFlav, &b__Tau_genPartFlav);
+	_currentTreePtr->SetBranchAddress("Tau_genPartIdx", _Tau_genPartIdx, &b__Tau_genPartIdx);
+    }
     // variables related to jets
     _currentTreePtr->SetBranchAddress("nJet", &_nJet, &b__nJet);
     _currentTreePtr->SetBranchAddress("Jet_pt", _Jet_pt, &b__Jet_pt);
@@ -527,7 +542,10 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Jet_btagDeepB", _Jet_bTagDeepB, &b__Jet_bTagDeepB);
     _currentTreePtr->SetBranchAddress("Jet_btagDeepFlavB", _Jet_bTagDeepFlavB, &b__Jet_bTagDeepFlavB);
     _currentTreePtr->SetBranchAddress("Jet_nConstituents", _Jet_nConstituents, &b__Jet_nConstituents);
-    _currentTreePtr->SetBranchAddress("Jet_hadronFlavour", _Jet_hadronFlavor, &b__Jet_hadronFlavor);
+    if( containsGeneratorInfo() ){
+	_currentTreePtr->SetBranchAddress("Jet_hadronFlavour", _Jet_hadronFlavor, &b__Jet_hadronFlavor);
+	// this branch is not present in data!
+    }
     _currentTreePtr->SetBranchAddress("Jet_jetId", _Jet_jetId, &b__Jet_jetId);
     // variables related to missing transverse energy
     _currentTreePtr->SetBranchAddress("MET_pt", &_MET_pt, &b__MET_pt);
@@ -550,12 +568,19 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
 void TreeReader::setOutputTree( TTree* outputTree,
 				bool includeGeneratorInfo,
 				bool includeGenParticles ){
-    // not yet implemented!
     outputTree->Branch("run", &_run, "_run/i");
     outputTree->Branch("luminosityBlock", &_luminosityBlock, "_luminosityBlock/i");
     outputTree->Branch("event", &_event, "_event/i");
     // generator info
     if( includeGeneratorInfo ){
+	if( !containsGeneratorInfo() ){
+            std::string msg = "WARNING in TreeReader.setOutputTree:";
+            msg.append(" requested to include generator info in output tree,");
+            msg.append(" but there appear to be no generator info branches in the input tree;");
+            msg.append(" will skip writing generator info to output tree!");
+            std::cerr << msg << std::endl;
+        }
+	else{
 	outputTree->Branch("genWeight", &_genWeight, "_genWeight/F");
 	outputTree->Branch("nLHEPdfWeight", &_nLHEPdfWeight, "_nLHEPdfWeight/i");
 	outputTree->Branch("LHEPdfWeight", &_LHEPdfWeight, "_LHEPdfWeight[_nLHEPdfWeight]/F");
@@ -563,9 +588,18 @@ void TreeReader::setOutputTree( TTree* outputTree,
 	outputTree->Branch("LHEScaleWeight", &_LHEScaleWeight, "_LHEScaleWeight[_nLHEScaleWeight]/F");
 	outputTree->Branch("nPSWeight", &_nPSWeight, "_nPSWeight/i");
 	outputTree->Branch("PSWeight", &_PSWeight, "_PSWeight[_nPSWeight]/F");
+	}
     }
     // gen particles
     if( includeGenParticles ){
+	if( !containsGenParticles() ){
+            std::string msg = "WARNING in TreeReader.setOutputTree:";
+            msg.append(" requested to include gen particles in output tree,");
+            msg.append(" but there appear to be no gen particle branches in the input tree;");
+            msg.append(" will skip writing gen particles to output tree!");
+            std::cerr << msg << std::endl;
+        }
+	else{
 	outputTree->Branch("nGenPart", &_nGenPart, "_nGenPart/i");
 	outputTree->Branch("GenPart_pt", &_GenPart_pt, "_GenPart_pt[_nGenPart]/F");
 	outputTree->Branch("GenPart_eta", &_GenPart_eta, "_GenPart_eta[_nGenPart]/F");
@@ -578,6 +612,7 @@ void TreeReader::setOutputTree( TTree* outputTree,
 	// gen MET
 	outputTree->Branch("GenMET_pt", &_GenMET_pt, "_GenMET_pt/F");
 	outputTree->Branch("GenMET_phi", &_GenMET_phi, "_GenMET_phi/F");
+	}
     }
     // variables related to electrons
     outputTree->Branch("nElectron", &_nElectron, "_nElectron/i");
@@ -612,8 +647,10 @@ void TreeReader::setOutputTree( TTree* outputTree,
     outputTree->Branch("Electron_dEscaleUp", &_Electron_dEscaleUp, "_Electron_dEscaleUp[_nElectron]/F");
     outputTree->Branch("Electron_dEsigmaDown", &_Electron_dEsigmaDown, "_Electron_dEsigmaDown[_nElectron]/F");
     outputTree->Branch("Electron_dEsigmaUp", &_Electron_dEsigmaUp, "_Electron_dEsigmaUp[_nElectron]/F");
-    outputTree->Branch("Electron_genPartFlav", &_Electron_genPartFlav, "_Electron_genPartFlav[_nElectron]/b");
-    outputTree->Branch("Electron_genPartIdx", &_Electron_genPartIdx, "_Electron_genPartIdx[_nElectron]/I");
+    if( includeGenParticles && containsGenParticles() ){
+	outputTree->Branch("Electron_genPartFlav", &_Electron_genPartFlav, "_Electron_genPartFlav[_nElectron]/b");
+	outputTree->Branch("Electron_genPartIdx", &_Electron_genPartIdx, "_Electron_genPartIdx[_nElectron]/I");
+    }
     outputTree->Branch("Electron_isPFcand", &_Electron_isPFCand, "_Electron_isPFCand[_nElectron]/O");
     // variables related to muons
     outputTree->Branch("nMuon", &_nMuon, "_nMuon/i");
@@ -637,8 +674,10 @@ void TreeReader::setOutputTree( TTree* outputTree,
     outputTree->Branch("Muon_looseId", &_Muon_looseId, "_Muon_looseId[_nMuon]/O");
     outputTree->Branch("Muon_mediumId", &_Muon_mediumId, "_Muon_mediumId[_nMuon]/O");
     outputTree->Branch("Muon_tightId", &_Muon_tightId, "_Muon_tightId[_nMuon]/O");
-    outputTree->Branch("Muon_genPartFlav", &_Muon_genPartFlav, "_Muon_genPartFlav[_nMuon]/b");
-    outputTree->Branch("Muon_genPartIdx", &_Muon_genPartIdx, "_Muon_genPartIdx[_nMuon]/I");
+    if( includeGenParticles && containsGenParticles() ){
+	outputTree->Branch("Muon_genPartFlav", &_Muon_genPartFlav, "_Muon_genPartFlav[_nMuon]/b");
+	outputTree->Branch("Muon_genPartIdx", &_Muon_genPartIdx, "_Muon_genPartIdx[_nMuon]/I");
+    }
     outputTree->Branch("Muon_isPFcand", &_Muon_isPFCand, "_Muon_isPFCand[_nMuon]/O");
     outputTree->Branch("Muon_isGlobal", &_Muon_isGlobal, "_Muon_isGlobal[_nMuon]/O");
     outputTree->Branch("Muon_isTracker", &_Muon_isTracker, "_Muon_isTracker[_nMuon]/O");
@@ -651,8 +690,10 @@ void TreeReader::setOutputTree( TTree* outputTree,
     outputTree->Branch("Tau_charge", &_Tau_charge, "_Tau_charge[_nTau]/I");
     outputTree->Branch("Tau_dxy", &_Tau_dxy, "_Tau_dxy[_nTau]/F");
     outputTree->Branch("Tau_dz", &_Tau_dz, "_Tau_dz[_nTau]/F");
-    outputTree->Branch("Tau_genPartFlav", &_Tau_genPartFlav, "_Tau_genPartFlav[_nTau]/b");
-    outputTree->Branch("Tau_genPartIdx", &_Tau_genPartIdx, "_Tau_genPartIdx[_nTau]/I");
+    if( includeGenParticles && containsGenParticles() ){
+	outputTree->Branch("Tau_genPartFlav", &_Tau_genPartFlav, "_Tau_genPartFlav[_nTau]/b");
+	outputTree->Branch("Tau_genPartIdx", &_Tau_genPartIdx, "_Tau_genPartIdx[_nTau]/I");
+    }
     // variables related to jets
     outputTree->Branch("nJet", &_nJet, "_nJet/i");
     outputTree->Branch("Jet_pt", &_Jet_pt, "_Jet_pt[_nJet]/F");
@@ -661,7 +702,9 @@ void TreeReader::setOutputTree( TTree* outputTree,
     outputTree->Branch("Jet_btagDeepB", &_Jet_bTagDeepB, "_Jet_bTagDeepB[_nJet]/F");
     outputTree->Branch("Jet_btagDeepFlavB", &_Jet_bTagDeepFlavB, "_Jet_bTagDeepFlavB[_nJet]/F");
     outputTree->Branch("Jet_nConstituents", &_Jet_nConstituents, "_Jet_nConstituents[_nJet]/b");
-    outputTree->Branch("Jet_hadronFlavour", &_Jet_hadronFlavor, "_Jet_hadronFlavor[_nJet]/I");
+    if( includeGeneratorInfo && containsGeneratorInfo() ){
+	outputTree->Branch("Jet_hadronFlavour", &_Jet_hadronFlavor, "_Jet_hadronFlavor[_nJet]/I");
+    }
     outputTree->Branch("Jet_jetId", &_Jet_jetId, "_Jet_jetId[_nJet]/I");
     // variables related to missing transverse energy
     outputTree->Branch("MET_pt", &_MET_pt, "_MET_pt/F");

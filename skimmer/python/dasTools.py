@@ -11,7 +11,8 @@ def get_sample_files( datasetname,
                       privateprod=False,
                       redirector='root://cms-xrd-global.cern.ch/',
                       istest=False,
-                      maxfiles=None ):
+                      maxfiles=None,
+		      verbose=False ):
   ### get a list of input files from a sample name
   # input arguments:
   # - datasetname: name of the data set on DAS (for filemode 'das')
@@ -41,14 +42,15 @@ def get_sample_files( datasetname,
     # details depend on the chosen filemode
     if filemode=='das':
       # make and execute the DAS client command
-      print('running DAS client to find files in dataset {}...'.format(datasetname))
+      if verbose: print('running DAS client to find files in dataset {}...'.format(datasetname))
       instance = ''
       if privateprod: instance = ' instance=prod/phys03'
       dascmd = "dasgoclient -query 'file dataset={}{}' --limit 0".format(datasetname,instance)
       dasstdout = os.popen(dascmd).read()
       dasfiles = sorted([el.strip(' \t') for el in dasstdout.strip('\n').split('\n')])
-      print('DAS client ready; found following files ({}):'.format(len(dasfiles)))
-      for f in dasfiles: print('  - {}'.format(f))
+      if verbose:
+        print('DAS client ready; found following files ({}):'.format(len(dasfiles)))
+        for f in dasfiles: print('  - {}'.format(f))
       inputfiles = [redirector+f for f in dasfiles]
     elif filemode=='local':
       # read all root files in the given directory

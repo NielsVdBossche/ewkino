@@ -25,7 +25,7 @@ import argparsetools as apt
 # define allowed skim conditions
 skims = (["noskim", "singlelepton", "dilepton",
         "trilepton", "fourlepton", "fakerate",
-	"multilightlepton"])
+	"dilightlepton", "multilightlepton"])
 
 # parse arguments
 parser = argparse.ArgumentParser('Skimming')
@@ -38,6 +38,7 @@ parser.add_argument('--filemode', default='das', choices=['das','local'])
 parser.add_argument('--inputdir', default=None, type=apt.path_or_none)
 parser.add_argument('--proxy', default=None, type=apt.path_or_none)
 parser.add_argument('--istest', default=False, action='store_true')
+parser.add_argument('--max_files_per_sample', default=-1, type=int)
 parser.add_argument('--runmode', default='condor', choices=['condor','local'])
 args = parser.parse_args()
 
@@ -88,10 +89,26 @@ print('Finding number of files to process...')
 sample_files = {}
 nfiles = []
 for s in sample_names:
-    sample_files[s] = get_sample_files(s,
+    maxfiles = None
+    if args.max_files_per_sample > 0:
+	maxfiles = args.max_files_per_sample
+    this_sample_files = get_sample_files(s,
                       filemode=args.filemode,
-                      istest=args.istest)
-    nfiles.append(len(sample_files[s]))
+                      istest=args.istest,
+                      maxfiles=maxfiles)
+    # check if sample was found correctly
+    allgood = True
+    if len(this_sample_files)==0: allgood = False
+    for this_sample_file in this_sample_files:
+	if not this_sample_file.endswith('.root'): allgood = False
+    if not allgood:
+	msg = 'ERROR: something seems wrong with sample {}'.format(s)
+	msg += ' query to retrieve files for this sample'
+	msg += ' returned the following: {}'.format(this_sample_files)
+	raise Exception(msg)
+    print('sample: {} -> {} files found'.format(s,len(this_sample_files)))
+    sample_files[s] = this_sample_files
+    nfiles.append(len(this_sample_files))
 nfiles = sum(nfiles)
 njobs = max(1,int(nfiles/args.files_per_job))
 print('Found a total of {} files, which will result in approximately {} jobs.'.format(
@@ -104,7 +121,6 @@ if not go=='y': sys.exit()
 print('Making output directories...')
 sample_output_directories = []
 for sample_name in sample_names:
-    print(sample_name.split('/'))
     _, shortname, version, _ = sample_name.split('/')
     yearid = yearIdentifierFromPath( version )
     shortname += '_' + yearid

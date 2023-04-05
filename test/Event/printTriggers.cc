@@ -12,7 +12,7 @@ int main( int argc, char* argv[] ){
 
     int nargs = 1;
     if( argc != nargs+1 ){
-        std::cerr << "ERROR: printJEC.cc requires " << nargs;
+        std::cerr << "ERROR: printTriggers.cc requires " << nargs;
 	std::cerr << " arguments to run:" << std::endl;
         std::cerr << "- path to input file (.root)" << std::endl;
         return -1;
@@ -27,7 +27,7 @@ int main( int argc, char* argv[] ){
     treeReader.initSampleFromFile( inputFilePath );
 
     // initialize the first event
-    Event event = treeReader.buildEvent(0, true, true, false, false);
+    Event event = treeReader.buildEvent(0, true, true);
     
     // print grouped triggers
     std::cout << "e: " << event.passTriggers_e() << std::endl;;

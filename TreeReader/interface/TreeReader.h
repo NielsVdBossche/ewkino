@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <typeinfo>
+#include <map>
+#include <string>
 
 // include ROOT classes
 #include "TROOT.h"
@@ -17,7 +19,6 @@
 #include "../../Tools/interface/analysisTools.h"
 #include "../../Tools/interface/stringTools.h"
 #include "../../Tools/interface/systemTools.h"
-#include "../../Tools/interface/analysisTools.h"
 #include "../../constants/luminosities.h"
 
 class Event;
@@ -33,12 +34,17 @@ class TreeReader {
 
         // declare leaf types
 	// constants
-	// note: unsure what values to pick for nanoAOD files
-        static const unsigned nElectron_max = 10;
-	static const unsigned nMuon_max = 10;
-	static const unsigned nTau_max = 10;
-        static const unsigned nJet_max = 30;
-	static const unsigned nGenPart_max = 150;
+	// note: unsure what values to pick for nanoAOD files...
+	// warning: if these maximum array sizes are too small 
+	// (compared to the actual array length in the input tree),
+	// some memory corruption seems to happen under the radar,
+	// which mostly goes unnoticed but causes occasional segmentation violations,
+	// or potentially nonsensical values.
+        static const unsigned nElectron_max = 20;
+	static const unsigned nMuon_max = 20;
+	static const unsigned nTau_max = 20;
+        static const unsigned nJet_max = 50;
+	static const unsigned nGenPart_max = 250;
         static const unsigned nGenJet_max = 30;
 	static const unsigned nLHEPdfWeight_max = 103;
 	static const unsigned nLHEScaleWeight_max = 9;
@@ -158,14 +164,14 @@ class TreeReader {
 	Float_t        _MET_pt;
         Float_t        _MET_phi;
 	// maps for passing triggers and metfilters
-        std::map< std::string, bool > _triggerMap;
-        std::map< std::string, bool > _METFilterMap;
+        std::map< std::string, Bool_t > _triggerMap;
+        std::map< std::string, Bool_t > _METFilterMap;
 
         // weight including cross section and lumi scaling 
         double          _scaledWeight;
 
         // set up tree for reading and writing
-        void initTree( const bool resetTriggersAndFilters = true);
+        void initTree( const bool resetTriggersAndFilters = true );
         void setOutputTree( TTree*, 
 			    bool includeGeneratorInfo = true,
 			    bool includeGenParticles = true );
