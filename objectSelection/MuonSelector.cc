@@ -5,7 +5,7 @@
 
 
 double leptonMVACutMuon(){
-    return 0.85;
+    return 0.64;
 }
 
 
@@ -80,7 +80,7 @@ bool MuonSelector::isFOBase() const{
 
 
 bool MuonSelector::isFO2016() const{
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+    if( muonPtr->leptonMVATOPUL() <= leptonMVACutMuon() ){
     if( muonPtr->closestJetDeepFlavor() > 0.025 ) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
@@ -89,7 +89,7 @@ bool MuonSelector::isFO2016() const{
 
 
 bool MuonSelector::isFO2016PreVFP() const{
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+    if( muonPtr->leptonMVATOPUL() <= leptonMVACutMuon() ){
         if( muonPtr->closestJetDeepFlavor() > 0.025 ) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
@@ -98,7 +98,7 @@ bool MuonSelector::isFO2016PreVFP() const{
 
 
 bool MuonSelector::isFO2016PostVFP() const{
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+    if( muonPtr->leptonMVATOPUL() <= leptonMVACutMuon() ){
         if( muonPtr->closestJetDeepFlavor() > 0.025 ) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
@@ -107,7 +107,7 @@ bool MuonSelector::isFO2016PostVFP() const{
 
 
 bool MuonSelector::isFO2017() const{
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+    if( muonPtr->leptonMVATOPUL() <= leptonMVACutMuon() ){
         if( muonPtr->closestJetDeepFlavor() > 0.025 ) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
@@ -116,7 +116,7 @@ bool MuonSelector::isFO2017() const{
 
 
 bool MuonSelector::isFO2018() const{
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ){
+    if( muonPtr->leptonMVATOPUL() <= leptonMVACutMuon() ){
         if( muonPtr->closestJetDeepFlavor() > 0.025 ) return false;
         if( muonPtr->ptRatio() <= 0.45 ) return false;
     }
@@ -130,7 +130,7 @@ tight muon selection
 
 bool MuonSelector::isTightBase() const{
     if( !isFO() ) return false;
-    if( muonPtr->leptonMVAttH() <= leptonMVACutMuon() ) return false;
+    if( muonPtr->leptonMVATOPUL() <= leptonMVACutMuon() ) return false;
     return true;
 }
 
@@ -166,5 +166,5 @@ cone correction
 
 
 double MuonSelector::coneCorrection() const{
-    return ( 0.9 / muonPtr->ptRatio() );
+    return ( 0.66 / muonPtr->ptRatio() );
 }

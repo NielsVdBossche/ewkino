@@ -13,7 +13,7 @@ loose electron selection
 
 
 double leptonMVACutElectron(){
-    return 0.9;
+    return 0.81;
 }
 
 
@@ -75,7 +75,7 @@ bool ElectronSelector::isFOBase() const{
 
 
 bool ElectronSelector::isFO2016() const{
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
+    if( electronPtr->leptonMVATOPUL() <= leptonMVACutElectron() ){
         if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
@@ -85,7 +85,7 @@ bool ElectronSelector::isFO2016() const{
 
 
 bool ElectronSelector::isFO2016PreVFP() const{
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
+    if( electronPtr->leptonMVATOPUL() <= leptonMVACutElectron() ){
         if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
@@ -95,7 +95,7 @@ bool ElectronSelector::isFO2016PreVFP() const{
 
 
 bool ElectronSelector::isFO2016PostVFP() const{
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
+    if( electronPtr->leptonMVATOPUL() <= leptonMVACutElectron() ){
         if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.5 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
@@ -105,7 +105,7 @@ bool ElectronSelector::isFO2016PostVFP() const{
 
 
 bool ElectronSelector::isFO2017() const{
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
+    if( electronPtr->leptonMVATOPUL() <= leptonMVACutElectron() ){
         if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.4 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
@@ -115,7 +115,7 @@ bool ElectronSelector::isFO2017() const{
 
 
 bool ElectronSelector::isFO2018() const{
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ){
+    if( electronPtr->leptonMVATOPUL() <= leptonMVACutElectron() ){
         if( electronPtr->closestJetDeepFlavor() > 0.1 ) return false;
         if( electronPtr->ptRatio() < 0.4 ) return false;
         if( !electronPtr->passElectronMVAFall17NoIsoLoose() ) return false;
@@ -130,7 +130,7 @@ tight electron selection
 
 bool ElectronSelector::isTightBase() const{
     if( !isFO() ) return false;
-    if( electronPtr->leptonMVAttH() <= leptonMVACutElectron() ) return false;
+    if( electronPtr->leptonMVATOPUL() <= leptonMVACutElectron() ) return false;
     return true;
 }
 
@@ -165,5 +165,5 @@ cone correction
 */
 
 double ElectronSelector::coneCorrection() const{
-    return ( 0.9 / electronPtr->ptRatio() );
+    return ( 0.72 / electronPtr->ptRatio() );
 }

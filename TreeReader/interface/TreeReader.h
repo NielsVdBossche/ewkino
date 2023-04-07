@@ -44,7 +44,7 @@ class TreeReader {
         static const unsigned nElectron_max = 20;
 	static const unsigned nMuon_max = 20;
 	static const unsigned nTau_max = 20;
-        static const unsigned nJet_max = 50;
+        static const unsigned nJet_max = 60;
 	static const unsigned nGenPart_max = 250;
         static const unsigned nGenJet_max = 30;
 	static const unsigned nLHEPdfWeight_max = 103;
