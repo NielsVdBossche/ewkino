@@ -33,6 +33,7 @@ class LightLepton : public Lepton {
         double closestJetDeepCSV() const{ return _closestJetDeepCSV; }
         double closestJetDeepFlavor() const{ return _closestJetDeepFlavor; }
         unsigned closestJetTrackMultiplicity() const{ return _closestJetTrackMultiplicity; }
+	unsigned closestJetNumberOfChargedDaughters() const{ return _closestJetNumberOfChargedDaughters; }
 
 	// other properties
 	double sip3d() const{ return _sip3d; }
@@ -68,6 +69,7 @@ class LightLepton : public Lepton {
         double _closestJetDeepCSV = 0;
         double _closestJetDeepFlavor = 0;
         unsigned _closestJetTrackMultiplicity = 0;
+	unsigned _closestJetNumberOfChargedDaughters = 0;
 
         // other properties
 	double _sip3d = 0;
@@ -76,13 +78,18 @@ class LightLepton : public Lepton {
         double _leptonMVAtZq = 0;
         double _leptonMVAttH = 0;
 	double _leptonMVATOP = 0;
-	double _leptonMVATOPUL = 0;
-	double _leptonMVATOPv2UL = 0;
 
     protected: 
 
         LightLepton( const LightLepton&, LeptonSelector* );
         LightLepton( LightLepton&&, LeptonSelector* );
+
+	// lepton MVA scores
+	// note: must be protected instead of private,
+	// as this is needed for setting them on the fly
+	// in derived Electron and Muon classes.
+	double _leptonMVATOPUL = 0;
+        double _leptonMVATOPv2UL = 0;
 };
 
 #endif

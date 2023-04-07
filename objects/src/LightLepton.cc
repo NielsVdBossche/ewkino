@@ -20,6 +20,7 @@ LightLepton::LightLepton(
 	_miniIsoCharged = treeReader._Electron_miniPFRelIso_chg[leptonIndex];
 	_ptRatio = 1./(treeReader._Electron_jetRelIso[leptonIndex] + 1);
 	_ptRel = treeReader._Electron_jetPtRelv2[leptonIndex];
+	_closestJetNumberOfChargedDaughters = treeReader._Electron_jetNDauCharged[leptonIndex];
 	jetIdx = treeReader._Electron_jetIdx[leptonIndex];
 	_sip3d = treeReader._Electron_sip3d[leptonIndex];
 	_leptonMVAttH = treeReader._Electron_mvaTTH[leptonIndex];
@@ -30,6 +31,7 @@ LightLepton::LightLepton(
         _miniIsoCharged = treeReader._Muon_miniPFRelIso_chg[leptonIndex];
 	_ptRatio = 1./(treeReader._Muon_jetRelIso[leptonIndex] + 1);
         _ptRel = treeReader._Muon_jetPtRelv2[leptonIndex];
+	_closestJetNumberOfChargedDaughters = treeReader._Muon_jetNDauCharged[leptonIndex];
         jetIdx = treeReader._Muon_jetIdx[leptonIndex];
 	_sip3d = treeReader._Muon_sip3d[leptonIndex];
 	_leptonMVAttH = treeReader._Muon_mvaTTH[leptonIndex];
@@ -69,7 +71,7 @@ LightLepton::LightLepton(
     //catch default values in deep Flavor
     } else if( _closestJetDeepFlavor < 0. ){
         _closestJetDeepFlavor = 0.;
-    } 
+    }
 }
 
 

@@ -16,6 +16,7 @@
 
 // include other parts of the framework
 #include "../../Tools/interface/Sample.h"
+#include "../../Tools/interface/LeptonMVAReader.h"
 #include "../../Tools/interface/analysisTools.h"
 #include "../../Tools/interface/stringTools.h"
 #include "../../Tools/interface/systemTools.h"
@@ -112,6 +113,7 @@ class TreeReader {
 	UChar_t		_Electron_genPartFlav[nElectron_max];
 	Int_t		_Electron_genPartIdx[nElectron_max];
 	Bool_t          _Electron_isPFCand[nElectron_max];
+	UChar_t		_Electron_jetNDauCharged[nElectron_max];
 	// variables related to muons
 	UInt_t          _nMuon;
         Float_t		_Muon_pt[nMuon_max];
@@ -140,6 +142,7 @@ class TreeReader {
 	Bool_t		_Muon_isGlobal[nMuon_max];
 	Bool_t		_Muon_isTracker[nMuon_max];
 	Bool_t		_Muon_isStandalone[nMuon_max];
+	UChar_t		_Muon_jetNDauCharged[nMuon_max];
 	// variables related to taus
 	UInt_t          _nTau;
         Float_t		_Tau_pt[nTau_max];
@@ -243,7 +246,14 @@ class TreeReader {
         // get list of histograms stored in current file
         std::vector< std::shared_ptr< TH1 > > getHistogramsFromCurrentFile() const;
 
+	// get number of entries
         unsigned long numberOfEntries() const;
+
+	// get and set lepton MVA reader
+	LeptonMVAReader* leptonMVAReader(const std::string& mvaID) const;
+	std::vector<std::string> leptonMVAReaderIDs() const;
+	bool hasLeptonMVAReader(const std::string& mvaID) const;
+	void initializeLeptonMVAReader(const std::string& mvaID);
 
     private:
 
@@ -276,6 +286,10 @@ class TreeReader {
 
         // general function to read a list of samples
         void readSamples(const std::string&, const std::string&, std::vector<Sample>&);
+
+	// lepton MVA reader instances
+	std::map< std::string, std::shared_ptr< LeptonMVAReader > > _leptonMVAReaderMap;
+	void checkLeptonMVAReader(const std::string& mvaID) const;
 
         // initialize triggerMap
         void initializeTriggerMap( TTree* );
@@ -338,6 +352,7 @@ class TreeReader {
 	TBranch*	b__Electron_genPartFlav;
 	TBranch*	b__Electron_genPartIdx;
 	TBranch*	b__Electron_isPFCand;
+	TBranch*	b__Electron_jetNDauCharged;
         TBranch*        b__nMuon;
         TBranch*        b__Muon_pt;
         TBranch*        b__Muon_eta;
@@ -365,6 +380,7 @@ class TreeReader {
 	TBranch*	b__Muon_isGlobal;
 	TBranch*	b__Muon_isTracker;
 	TBranch*	b__Muon_isStandalone;
+	TBranch*	b__Muon_jetNDauCharged;
 	TBranch*	b__nTau;
 	TBranch*	b__Tau_pt;
 	TBranch*        b__Tau_eta;

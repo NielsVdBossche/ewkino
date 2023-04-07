@@ -492,6 +492,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
 	_currentTreePtr->SetBranchAddress("Electron_genPartIdx", _Electron_genPartIdx, &b__Electron_genPartIdx);
     }
     _currentTreePtr->SetBranchAddress("Electron_isPFcand", _Electron_isPFCand, &b__Electron_isPFCand);
+    _currentTreePtr->SetBranchAddress("Electron_jetNDauCharged", _Electron_jetNDauCharged, &b__Electron_jetNDauCharged);
     // variables related to muons
     _currentTreePtr->SetBranchAddress("nMuon", &_nMuon, &b__nMuon);
     _currentTreePtr->SetBranchAddress("Muon_pt", _Muon_pt, &b__Muon_pt);
@@ -522,6 +523,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     _currentTreePtr->SetBranchAddress("Muon_isGlobal", _Muon_isGlobal, &b__Muon_isGlobal);
     _currentTreePtr->SetBranchAddress("Muon_isTracker", _Muon_isTracker, &b__Muon_isTracker);
     _currentTreePtr->SetBranchAddress("Muon_isStandalone", _Muon_isStandalone, &b__Muon_isStandalone);
+    _currentTreePtr->SetBranchAddress("Muon_jetNDauCharged", _Muon_jetNDauCharged, &b__Muon_jetNDauCharged);
     // variables related to taus
     _currentTreePtr->SetBranchAddress("nTau", &_nTau, &b__nTau);
     _currentTreePtr->SetBranchAddress("Tau_pt", _Tau_pt, &b__Tau_pt);
@@ -740,4 +742,48 @@ std::vector< std::shared_ptr< TH1 > > TreeReader::getHistogramsFromCurrentFile()
 	}
     }
     return histogramVector;
+}
+
+// lepton MVA reader getters, checkers and setters
+
+bool TreeReader::hasLeptonMVAReader(const std::string& mvaID) const{
+    // check if a lepton MVA reader with ID mvaID is available.
+    // returns true (if available) or false (otherwise).
+    if( _leptonMVAReaderMap.count(mvaID)==0 ) return false;
+    return true;
+}
+
+void TreeReader::checkLeptonMVAReader(const std::string& mvaID) const{
+    // same as hasLeptonMVAReader but throw an error if not available.
+    if( !hasLeptonMVAReader(mvaID) ){
+	std::string msg = "ERROR in TreeReader::checkLeptonMVAReader:";
+	msg.append(" a lepton MVA reader with ID " + mvaID + " was requested but not found.");
+	throw std::runtime_error(msg);
+    }
+}
+
+LeptonMVAReader* TreeReader::leptonMVAReader(const std::string& mvaID) const{
+    // returns a lepton MVA reader instance
+    // (throws an error if not available)
+    checkLeptonMVAReader(mvaID);
+    return _leptonMVAReaderMap.at(mvaID).get();
+}
+
+std::vector<std::string> TreeReader::leptonMVAReaderIDs() const{
+    // return all keys in the lepton MVA reader map
+    std::vector<std::string> ids;
+    for( const auto& el : _leptonMVAReaderMap ){
+	ids.push_back(el.first);
+    }
+    return ids;
+}
+
+void TreeReader::initializeLeptonMVAReader(const std::string& mvaID){
+    // initialize a lepton MVA reader with given ID
+    if( hasLeptonMVAReader(mvaID) ){
+	std::string msg = "ERROR in TreeReader::initializeLeptonMVAReader:";
+        msg.append(" a lepton MVA reader with ID " + mvaID + " was requested but already present.");
+        throw std::runtime_error(msg);
+    }
+    _leptonMVAReaderMap[mvaID] = std::make_shared<LeptonMVAReader>(mvaID, getYearString());
 }

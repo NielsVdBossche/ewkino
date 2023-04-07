@@ -12,19 +12,26 @@ int main(){
     std::string sampleDirectory = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/sync/";
     // alternative: file
     std::string sampleFile = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/TTWJetsToLNu-RunIISummer20UL18-nanoAOD-fullfile.root";
-    unsigned long nEntries = 5000;
+    unsigned long nEntries = 100;
 
     // make the TreeReader for nanoAOD
     std::cout << "initializing TreeReader..." << std::endl;
     //TreeReader treeReader(sampleList, sampleDirectory);
     TreeReader treeReader;
     treeReader.initSampleFromFile(sampleFile);
+
+    // initialize lepton MVA reader
+    std::cout << "initializing leptonMVAReader..." << std::endl;
+    treeReader.initializeLeptonMVAReader("TOP-UL");
+
+    // loop over samples
     /*std::cout << "start loop over samples..." << std::endl;
     for( unsigned sampleIndex = 0; sampleIndex < treeReader.numberOfSamples(); ++sampleIndex ){
 	std::cout << "current sample number: " << sampleIndex << std::endl;
 	// load next sample
 	treeReader.initSample();*/
     if(2>1){
+
 	// loop over events in sample
 	if( treeReader.numberOfEntries() < nEntries ) nEntries = treeReader.numberOfEntries();
 	std::cout << "start loop over " << nEntries << " events..." << std::endl;
@@ -33,12 +40,10 @@ int main(){
             // build next event
             Event event = treeReader.buildEvent( entry ); 
 
-	    if( !(event.eventNumber()==13386086 || event.eventNumber()==13372790 || event.eventNumber()==13375211 ) ) continue;
-            
-	    std::cout << event.numberOfElectrons() << std::endl;
+	    /*std::cout << event.numberOfElectrons() << std::endl;
 	    for( const auto& leptonPtr : event.electronCollection() ){
                 std::cout << *leptonPtr << std::endl;
-            }
+            }*/
 
 	    // cleaning and/or selections
 	    event.selectLooseLeptons();
@@ -61,13 +66,13 @@ int main(){
 	    //std::cout << "gen weight: " << event.genWeight() << std::endl;
 	    //std::cout << "scaled weight: " << event.weight() << std::endl;
 
-	    /*for( const auto& leptonPtr : event.leptonCollection() ){
+	    for( const auto& leptonPtr : event.leptonCollection() ){
 		std::cout << *leptonPtr << std::endl;
-	    }*/
-
-	    for( const auto& leptonPtr : event.lightLeptonCollection() ){
-		std::cout << leptonPtr->isPrompt() << " " << leptonPtr->leptonMVAttH() << std::endl;
 	    }
+
+	    /*for( const auto& leptonPtr : event.lightLeptonCollection() ){
+		std::cout << leptonPtr->isPrompt() << " " << leptonPtr->leptonMVAttH() << std::endl;
+	    }*/
 
 	    /*for( const auto& jetPtr : event.jetCollection() ){
                 std::cout << *jetPtr << std::endl;

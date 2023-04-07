@@ -38,6 +38,22 @@ Electron::Electron( const TreeReader& treeReader, const unsigned electronIndex )
     _e_ScaleDown = (energy-treeReader._Electron_dEscaleDown[electronIndex]);
     _e_ResUp = (energy-treeReader._Electron_dEsigmaUp[electronIndex]);
     _e_ResDown = (energy-treeReader._Electron_dEsigmaDown[electronIndex]);
+
+    // evaluate lepton MVAs on the fly
+    // (for MVAs not stored in default nanoAOD)
+    // note: cannot be done in LightLepton constructor,
+    // because some input variables are only defined/set in Electron constructor.
+    std::vector<std::string> mvaids = treeReader.leptonMVAReaderIDs();
+    for( std::string mvaid : mvaids ){
+	double mvascore = treeReader.leptonMVAReader(mvaid)->leptonMVAElectron(this);
+	if( mvaid=="TOP-UL" ) _leptonMVATOPUL = mvascore;
+	else if( mvaid=="TOPv2-UL" ) _leptonMVATOPv2UL = mvascore;
+	else{
+	    std::string msg = "ERROR in Electron constructor:";
+	    msg.append(" lepton MVA with ID " + mvaid + " not yet implemented.");
+	    throw std::runtime_error(msg);
+	}
+    }
 }
 
 

@@ -53,6 +53,7 @@
 #include "Tools/src/rootFileTools.cc"
 #include "Tools/src/readFakeRateTools.cc"
 #include "Tools/src/readChargeFlipTools.cc"
+#include "Tools/src/LeptonMVAReader.cc"
 
 //include TreeReader code 
 #include "TreeReader/src/TreeReader.cc"
