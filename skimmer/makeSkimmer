@@ -1,12 +1,13 @@
 CC=g++ -Wall -Wextra -O3
 CFLAGS= -Wl,--no-as-needed
 LDFLAGS=`root-config --glibs --cflags`
-SOURCES= skimmer.cc src/skimSelections.cc ../codeLibrary.o 
+LDINCLUDES= -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/include -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/rabit/include -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py3-xgboost/0.90/lib/python3.8/site-packages/xgboost/include -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py3-xgboost/0.90/lib/python3.8/site-packages/xgboost/rabit/include
+SOURCES= skimmer.cc src/skimSelections.cc ../codeLibrary.o /cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py3-xgboost/0.90/lib/python3.8/site-packages/xgboost/lib/libxgboost.so
 OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=skimmer
 
 all: 
-	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
+	$(CC) $(CFLAGS) $(SOURCES) $(LDINCLUDES) $(LDFLAGS) -o $(EXECUTABLE)
 	
 clean:
 	rm -rf *o $(EXECUTABLE)

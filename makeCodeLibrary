@@ -1,8 +1,8 @@
 CC=g++ -Wall -Wextra -O3 -g -c
 CFLAGS= -Wl,--no-as-needed
 LDFLAGS=`root-config --glibs --cflags`
-LDINCLUDES= -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/include -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/rabit/include
-LDLOCS= -L/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/lib -L/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/rabit/lib
+LDINCLUDES= -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/include -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/rabit/include -I/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py3-xgboost/0.90/lib/python3.8/site-packages/xgboost/include/ -I/cvmfs/cms.cern.ch/slc7_amd64_gcc10/external/py3-xgboost/0.90/lib/python3.8/site-packages/xgboost/rabit/include
+LDLOCS= -L/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/lib -L/cvmfs/cms.cern.ch/$(SCRAM_ARCH)/external/py2-xgboost/0.80-ikaegh/lib/python2.7/site-packages/xgboost/rabit/lib -L/cvmfs/cms.cern.ch/slc7_amd64_gcc10/external/py3-xgboost/0.90/lib/python3.8/site-packages/xgboost/lib -L/cvmfs/cms.cern.ch/slc7_amd64_gcc10/external/py3-xgboost/0.90/lib/python3.8/site-packages/xgboost/rabit/lib
 LDLIBS= -lxgboost
 SOURCES= codeLibrary.cc
 OBJECTS=$(SOURCES:.cc=.o)
