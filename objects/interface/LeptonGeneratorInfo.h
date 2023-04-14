@@ -31,7 +31,9 @@ class LeptonGeneratorInfo{
         int _matchPdgId = 0;
 	int _matchCharge = 0;
 	int _momPdgId = 0;
-        unsigned _provenance, _provenanceCompressed, _provenanceConversion;
+        unsigned _provenance = 0;
+	unsigned _provenanceCompressed = 0;
+	unsigned _provenanceConversion = 99;
 
 }; 
 #endif 

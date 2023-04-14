@@ -108,6 +108,7 @@ LeptonGeneratorInfo::LeptonGeneratorInfo(
 	throw std::invalid_argument(msg);
     }
 
+    // safety check on index of gen particle
     if( genIdx >= (int)treeReader._nGenPart ){
         std::string msg = "WARNING in LeptonGeneratorConstructor constructor:";
         msg += " index of gen particle is " + std::to_string(genIdx);
@@ -117,11 +118,15 @@ LeptonGeneratorInfo::LeptonGeneratorInfo(
 	return;
     }
 
+    // if the index of gen particle is not valid,
+    // or if the pdgId of the gen particle is not equal to that of the reco particle,
+    // try geometric match instead.
     if( genIdx<0 || treeReader._GenPart_pdgId[genIdx]!=recoPdgId ){
 	genIdx = findGeometricMatch(treeReader, leptonType, leptonIndex);
 	if( genIdx<0 ) return;
     }
 
+    // set basic gen-level variables
     _hasGenMatch = true;
     std::bitset<15> statusBits = std::bitset<15>( treeReader._GenPart_statusFlags[genIdx] );
     // see definition of status bits here:
@@ -135,6 +140,8 @@ LeptonGeneratorInfo::LeptonGeneratorInfo(
     _matchPdgId = treeReader._GenPart_pdgId[genIdx];
     _matchCharge = (_matchPdgId==11 || _matchPdgId==13 || _matchPdgId==15) ? -1 :
 		   (_matchPdgId==-11 || _matchPdgId==-13 || _matchPdgId==-15) ? 1 : 0;
+
+    // set gen-level info of mother particle
     int momIdx = treeReader._GenPart_genPartIdxMother[genIdx];
     if( momIdx >= (int)treeReader._nGenPart ){
         std::string msg = "WARNING in LeptonGeneratorConstructor constructor:";
@@ -143,10 +150,22 @@ LeptonGeneratorInfo::LeptonGeneratorInfo(
         msg += " gen particles are present; ignoring mother info.";
         std::cerr << msg << std::endl;
     } else if(momIdx>=0){ _momPdgId = treeReader._GenPart_pdgId[momIdx]; }
+
+    // set more involved gen-level flags
+    // provenanceConversion: see ntuplizer/GenTools.cc
+    // (not exactly reproducible however, it seems).
+    // - if match particle is no photon: 99
+    // - nonprompt photon: 2
+    // - fragmentation photon: 1
+    // - direct prompt photon: 0
+    if( _matchPdgId==22 ){
+	if( !statusBits[0] ) _provenanceConversion = 2;
+	if( treeReader._GenPart_pt[genIdx]<10. ) _provenanceConversion = 1;
+	_provenanceConversion = 0;
+    }
 }
 
 // following variables do not seem to be directly defined at nanoAOD level;
 // maybe implementable as functions operating on the GenPart info (to do later).
 /*    _provenance( treeReader._lProvenance[leptonIndex] ), 
-    _provenanceCompressed( treeReader._lProvenanceCompressed[leptonIndex] ),
-    _provenanceConversion( treeReader._lProvenanceConversion[leptonIndex] ) */
+    _provenanceCompressed( treeReader._lProvenanceCompressed[leptonIndex] ), */
