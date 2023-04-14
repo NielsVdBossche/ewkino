@@ -8,14 +8,17 @@
 
 Event::Event( const TreeReader& treeReader, 
 	      const bool readIndividualTriggers,
-              const bool readIndividualMetFilters ) :
+              const bool readIndividualMetFilters,
+	      const bool makeCompositeTriggers,
+	      const bool makeCompositeMetFilters ) :
     // make collections of physics objects
     _leptonCollectionPtr( new LeptonCollection( treeReader ) ),
     _jetCollectionPtr( new JetCollection( treeReader ) ),
     _metPtr( new Met( treeReader ) ),
     // make additional information structures
     _triggerInfoPtr( new TriggerInfo( treeReader, 
-			readIndividualTriggers, readIndividualMetFilters ) ),
+			readIndividualTriggers, readIndividualMetFilters,
+			makeCompositeTriggers, makeCompositeMetFilters ) ),
     //_jetInfoPtr( new JetInfo( treeReader, 
     //			readAllJECVariations, readGroupedJECVariations ) ),
     _eventTagsPtr( new EventTags( treeReader ) ),

@@ -34,7 +34,9 @@ class Event{
     public:
         Event( const TreeReader&, 
 		const bool readIndividualTriggers = false, 
-		const bool readIndividualMetFilters = false );
+		const bool readIndividualMetFilters = false,
+		const bool makeCompositeTriggers = true,
+		const bool makeCompositeMetFilters = true );
         Event( const Event& );
         Event( Event&& ) noexcept;
 

@@ -18,7 +18,9 @@ class TriggerInfo{
 	// better to disable if not really needed.
         TriggerInfo( const TreeReader&, 
 	    const bool readIndividualTriggers = false,
-	    const bool readIndividualMetFilters = false );
+	    const bool readIndividualMetFilters = false,
+	    const bool makeCompositeTriggers = true,
+	    const bool makeCompositeMetFilters = true );
 
         bool passTriggers_e() const{ return _passTriggers_e; }
         bool passTriggers_m() const{ return _passTriggers_m; }
@@ -38,8 +40,12 @@ class TriggerInfo{
         bool passTrigger( const std::string& ) const;
         bool passMetFilter( const std::string& ) const;
 
+	bool containsIndividualTriggers() const{ return _containsIndividualTriggers; }
+	bool containsIndividualMetFilters() const{ return _containsIndividualMetFilters; }
         void printAvailableIndividualTriggers() const;
         void printAvailableMetFilters() const;
+	bool containsCompositeTriggers() const{ return _containsCompositeTriggers; }
+	bool containsCompositeMetFilters() const{ return _containsCompositeMetFilters; }
 
     private:
         bool _passTriggers_e = false;
@@ -57,6 +63,10 @@ class TriggerInfo{
         bool _passTriggers_FR_iso =false ;
 	bool _passTriggers_ref = false;
         bool _passMetFilters = false;
+	bool _containsIndividualTriggers = false;
+	bool _containsIndividualMetFilters = false;
+	bool _containsCompositeTriggers = false;
+	bool _containsCompositeMetFilters = false;
         std::map< std::string, bool > individualTriggerMap; 
         std::map< std::string, bool > individualMetFilterMap; 
 };

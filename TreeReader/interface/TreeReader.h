@@ -207,10 +207,14 @@ class TreeReader {
         // build event (this will implicitly use GetEntry )
         Event buildEvent( const Sample&, long unsigned, 
 			    const bool readIndividualTriggers = false, 
-			    const bool readIndividualMetFilters = false );
+			    const bool readIndividualMetFilters = false,
+			    const bool makeCompositeTriggers = true,
+			    const bool makeCompositeMetFilters = true );
         Event buildEvent( long unsigned, 
 			    const bool readIndividualTriggers = false, 
-			    const bool readIndividualMetFilters = false );
+			    const bool readIndividualMetFilters = false,
+			    const bool makeCompositeTriggers = true,
+			    const bool makeCompositeMetFilters = true );
 
         // check whether specific info is present in current tree
 	bool containsGeneratorInfo() const;

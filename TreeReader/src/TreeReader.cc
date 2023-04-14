@@ -383,17 +383,23 @@ void TreeReader::GetEntry( long unsigned entry ){
 Event TreeReader::buildEvent( const Sample& samp, 
 	long unsigned entry, 
 	const bool readIndividualTriggers, 
-	const bool readIndividualMetFilters ){
+	const bool readIndividualMetFilters,
+	const bool makeCompositeTriggers,
+	const bool makeCompositeMetFilters ){
     GetEntry( samp, entry );
-    return Event( *this, readIndividualTriggers, readIndividualMetFilters );
+    return Event( *this, readIndividualTriggers, readIndividualMetFilters,
+		    makeCompositeTriggers, makeCompositeMetFilters );
 }
 
 
 Event TreeReader::buildEvent( long unsigned entry, 
 	const bool readIndividualTriggers, 
-	const bool readIndividualMetFilters){
+	const bool readIndividualMetFilters,
+	const bool makeCompositeTriggers, 
+        const bool makeCompositeMetFilters ){
     GetEntry( entry );
-    return Event( *this, readIndividualTriggers, readIndividualMetFilters );
+    return Event( *this, readIndividualTriggers, readIndividualMetFilters,
+		    makeCompositeTriggers, makeCompositeMetFilters );
 }
 
 
@@ -654,6 +660,7 @@ void TreeReader::setOutputTree( TTree* outputTree,
 	outputTree->Branch("Electron_genPartIdx", &_Electron_genPartIdx, "_Electron_genPartIdx[_nElectron]/I");
     }
     outputTree->Branch("Electron_isPFcand", &_Electron_isPFCand, "_Electron_isPFCand[_nElectron]/O");
+    outputTree->Branch("Electron_jetNDauCharged", &_Electron_jetNDauCharged, "_Electron_jetNDauCharged[_nElectron]/b");
     // variables related to muons
     outputTree->Branch("nMuon", &_nMuon, "_nMuon/i");
     outputTree->Branch("Muon_pt", &_Muon_pt, "_Muon_pt[_nMuon]/F");
@@ -684,6 +691,7 @@ void TreeReader::setOutputTree( TTree* outputTree,
     outputTree->Branch("Muon_isGlobal", &_Muon_isGlobal, "_Muon_isGlobal[_nMuon]/O");
     outputTree->Branch("Muon_isTracker", &_Muon_isTracker, "_Muon_isTracker[_nMuon]/O");
     outputTree->Branch("Muon_isStandalone", &_Muon_isStandalone, "_Muon_isStandalone[_nMuon]/O");
+    outputTree->Branch("Muon_jetNDauCharged", &_Muon_jetNDauCharged, "_Muon_jetNDauCharged[_nMuon]/b");
     // variables related to taus
     outputTree->Branch("nTau", &_nTau, "_nTau/i");
     outputTree->Branch("Tau_pt", &_Tau_pt, "_Tau_pt[_nTau]/F");
