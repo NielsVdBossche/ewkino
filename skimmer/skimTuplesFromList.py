@@ -18,6 +18,7 @@ from skimTuples import yearIdentifierFromPath
 sys.path.append(os.path.abspath('../jobSubmission'))
 import condorTools as ct
 from jobSettings import CMSSW_VERSION
+CMSSW_VERSION = '~/CMSSW_12_4_6'
 sys.path.append(os.path.abspath('../Tools/python'))
 from samplelisttools import readsamplelist
 import argparsetools as apt
@@ -39,6 +40,7 @@ parser.add_argument('--inputdir', default=None, type=apt.path_or_none)
 parser.add_argument('--proxy', default=None, type=apt.path_or_none)
 parser.add_argument('--istest', default=False, action='store_true')
 parser.add_argument('--max_files_per_sample', default=-1, type=int)
+parser.add_argument('--readmode', default='remote', choices=['remote','copy'])
 parser.add_argument('--runmode', default='condor', choices=['condor','local'])
 args = parser.parse_args()
 
@@ -150,8 +152,19 @@ for sample_name, sample_output_directory in itlist:
 	    # define output file
 	    output_file = f.split('/')[-1]
 	    output_file = os.path.join(sample_output_directory,output_file)
-	    command = './skimmer {} {} {}'.format(f,output_file,args.skim)
-	    commands.append(command)
+	    # define commands to skim this file
+	    thiscommands = []
+	    if args.readmode=='remote':
+		# read remote file directly
+		thiscommands.append('./skimmer {} {} {}'.format(f,output_file,args.skim))
+	    elif args.readmode=='copy':
+		# copy remote file to local before running skimmer
+		output_file_unskimmed = output_file.replace('.root','_raw.root')
+		thiscommands.append('xrdcp {} {}'.format(f,output_file_unskimmed))
+		thiscommands.append('./skimmer {} {} {}'.format(
+		    output_file_unskimmed,output_file,args.skim))
+		thiscommands.append('rm -f {}'.format(output_file_unskimmed))
+	    for c in thiscommands: commands.append(c)
         # run in local
 	if( args.runmode=='local' ):
 	    for cmd in commands: os.system(cmd)

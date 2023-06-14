@@ -12,7 +12,8 @@ int main(){
     std::string sampleDirectory = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/sync/";
     // alternative: file
     std::string sampleFile = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/TTWJetsToLNu-RunIISummer20UL18-nanoAOD-fullfile.root";
-    unsigned long nEntries = 100;
+    //std::string sampleFile = "/pnfs/iihe/cms/store/user/llambrec/nanoaod/ZGToLLG_01J_5f-RunIISummer20UL18-nanoAOD-fullfile.root";
+    unsigned long nEntries = 5;
 
     // make the TreeReader for nanoAOD
     std::cout << "initializing TreeReader..." << std::endl;
@@ -46,10 +47,10 @@ int main(){
             }*/
 
 	    // cleaning and/or selections
-	    event.selectLooseLeptons();
+	    /*event.selectLooseLeptons();
             event.cleanElectronsFromLooseMuons();
             event.cleanTausFromLooseLightLeptons();
-            event.removeTaus();
+            event.removeTaus();*/
 
 	    /*bool doprint = false;
 	    for( const auto& leptonPtr : event.electronCollection() ){
@@ -70,9 +71,15 @@ int main(){
 		std::cout << *leptonPtr << std::endl;
 	    }
 
-	    /*for( const auto& leptonPtr : event.lightLeptonCollection() ){
-		std::cout << leptonPtr->isPrompt() << " " << leptonPtr->leptonMVAttH() << std::endl;
-	    }*/
+	    for( const auto& leptonPtr : event.lightLeptonCollection() ){
+		std::cout << leptonPtr->isPrompt() << " " << leptonPtr->leptonMVATOPUL();
+		std::cout << " " << leptonPtr->isTight() << std::endl;
+	    }
+
+	    /*for( const auto& leptonPtr : event.electronCollection() ){
+                std::cout << leptonPtr->isPrompt() << " " << leptonPtr->matchPdgId();
+                std::cout << " " << leptonPtr->provenanceConversion() << std::endl;
+            }*/
 
 	    /*for( const auto& jetPtr : event.jetCollection() ){
                 std::cout << *jetPtr << std::endl;

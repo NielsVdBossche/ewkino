@@ -62,7 +62,7 @@ void skimFile(	const std::string& inputFilePath,
 	if(entry%10000 == 0) std::cout<<"processed: "<<entry<<" of "<<nentries<<std::endl;
 
         // build event
-        Event event = treeReader.buildEvent( entry, false, false );
+        Event event = treeReader.buildEvent( entry, false, false, false, false );
 
         // apply event selection
         if( !passSkim( event, skimCondition ) ) continue;

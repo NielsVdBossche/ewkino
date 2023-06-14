@@ -125,6 +125,11 @@ LeptonGeneratorInfo::LeptonGeneratorInfo(
 	genIdx = findGeometricMatch(treeReader, leptonType, leptonIndex);
 	if( genIdx<0 ) return;
     }
+    // temporary alternative for testing: no geometric matching
+    //if( genIdx<0 ) return;
+    // temporary alternative for testing: only geometric matching
+    //genIdx = findGeometricMatch(treeReader, leptonType, leptonIndex);
+    //if( genIdx<0 ) return;
 
     // set basic gen-level variables
     _hasGenMatch = true;
