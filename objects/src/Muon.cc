@@ -19,6 +19,29 @@ Muon::Muon( const TreeReader& treeReader, const unsigned leptonIndex ):
 
 }
 
+Muon::Muon( const NanoReader& nanoReader, const unsigned leptonIndex ):
+    //LightLepton( treeReader, leptonIndex, new MuonSelector( this ) ),
+    _segmentCompatibility( nanoReader._Mu_segmentComp[leptonIndex] ),
+    // _trackPt( nanoReader.[leptonIndex] ),
+    // _trackPtError( nanoReader.[leptonIndex] ),
+    // _relIso0p4DeltaBeta( nanoReader.[leptonIndex] ),
+    _isLoosePOGMuon( nanoReader._Mu_looseId[leptonIndex] ),
+    _isMediumPOGMuon( nanoReader._Mu_mediumId[leptonIndex] ),
+    _isTightPOGMuon( nanoReader._Mu_tightId[leptonIndex] )
+{   
+    //make sure also non-cone-corrected pt is set to the corrected value
+    _uncorrectedPt = pt();
+    _uncorrectedE = energy();
+    
+    setLorentzVector( nanoReader._lPtCorr[ leptonIndex ], eta(), phi(), 
+                nanoReader._lECorr[ leptonIndex ] );
+
+    //roccor?
+    // other corrections?
+
+}
+
+
 
 Muon::Muon( const Muon& rhs ):
     LightLepton( rhs, new MuonSelector( this ) ),

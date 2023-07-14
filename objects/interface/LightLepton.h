@@ -8,11 +8,13 @@
 //include other parts of code 
 #include "Lepton.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 class LightLepton : public Lepton {
     
     public: 
         LightLepton( const TreeReader&, const unsigned, LeptonSelector* ); 
+        LightLepton( const NanoReader&, const unsigned, LeptonSelector* ); 
         LightLepton( const LightLepton& ) = delete;
         LightLepton( LightLepton&& ) = delete;
 

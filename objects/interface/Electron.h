@@ -13,6 +13,7 @@ class Electron : public LightLepton{
 
     public:
         Electron( const TreeReader&, const unsigned );
+        Electron( const NanoReader&, const unsigned );
         Electron( const Electron& );
         Electron( Electron&& ) noexcept;
 

@@ -14,6 +14,7 @@ class Muon : public LightLepton {
 
     public:
         Muon( const TreeReader&, const unsigned );
+        Muon( const NanoReader&, const unsigned );
         Muon( const Muon& );
         Muon( Muon&& ) noexcept;
 

@@ -44,6 +44,50 @@ Electron::Electron( const TreeReader& treeReader, const unsigned leptonIndex ):
     _uncorrectedE = energy();
 }
 
+Electron::Electron( const NanoReader& nanoReader, const unsigned electronIndex ) :
+    _passConversionVeto( nanoReader._El_convVeto[electronIndex] ),
+    _numberOfMissingHits( nanoReader._El_lostHits[electronIndex] ),
+
+    _electronMVAFall17Iso( nanoReader._El_mvaFall17V2Iso[electronIndex] ),
+    _electronMVAFall17NoIso( nanoReader._El_mvaFall17V2noIso[electronIndex] ),
+
+    _passElectronMVAFall17NoIsoLoose( nanoReader._El_mvaFall17V2noIso_WPL[electronIndex] ),
+    _passElectronMVAFall17NoIsoWP90( nanoReader._El_mvaFall17V2noIso_WP90[electronIndex] ),
+    _passElectronMVAFall17NoIsoWP80( nanoReader._El_mvaFall17V2noIso_WP80[electronIndex] ),
+
+    _hOverE( nanoReader._El_hoe[electronIndex] ),
+    _inverseEMinusInverseP( nanoReader._El_eInvMinusPInv[electronIndex] ),
+    _sigmaIEtaEta( nanoReader._El_sieie[electronIndex] ),
+
+    _e_ScaleUp( nanoReader._El_dEscaleDown[electronIndex] ),
+    _e_ScaleDown( nanoReader._El_dEscaleUp[electronIndex] ),
+    _e_ResUp( nanoReader._El_dEsigmaDown[electronIndex] ),
+    _e_ResDown( nanoReader._El_dEsigmaUp[electronIndex] )
+{
+    // 
+    setLorentzVector(nanoReader._El_pt[electronIndex], nanoReader._El_eta[electronIndex], 
+            nanoReader._El_phi[electronIndex], nanoReader._El_eCorr[electronIndex]);
+
+    //make sure also non-cone-corrected pt is set to the corrected value
+    _uncorrectedPt = pt();
+    _uncorrectedE = energy();
+
+    // fill different variables:
+    _passChargeConsistency = (nanoReader._El_tightCharge[electronIndex] == 2);
+    _passDoubleEGEmulation = true; // dummy for now
+
+    _etaSuperCluster = nanoReader._El_deltaEtaSC[electronIndex] + eta();
+    
+    _isVetoPOGElectron = (nanoReader._El_cutBased[electronIndex] == 1);
+    _isLoosePOGElectron = (nanoReader._El_cutBased[electronIndex] >= 2);
+    _isMediumPOGElectron = (nanoReader._El_cutBased[electronIndex] >= 3);
+    _isTightPOGElectron = (nanoReader._El_cutBased[electronIndex] >= 4);
+
+    _pt_ScaleUp = pt() * _e_ScaleUp / energy();
+    _pt_ScaleDown = pt() * _e_ScaleDown / energy();
+    _pt_ResUp = pt() * _e_ResUp / energy();
+    _pt_ResDown = pt() * _e_ResDown / energy();
+};
 
 Electron::Electron( const Electron& rhs ) :
 	LightLepton( rhs, new ElectronSelector( this ) ),

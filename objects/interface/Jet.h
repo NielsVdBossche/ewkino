@@ -4,6 +4,7 @@
 //include other parts of code 
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 #include "../../Tools/interface/stringTools.h"
 #if JECONRUNTIME
 #include "../../CMSSW_imports/interface/JECWrapper.h"
@@ -21,6 +22,7 @@ class Jet : public PhysicsObject{
     public:
         Jet( const TreeReader&, const unsigned,
 		const bool readAllJECVariations, const bool readGroupedJECVariations);
+        Jet( const NanoReader&, const unsigned);
 
         Jet( const Jet& );
         Jet( Jet&& ) noexcept;

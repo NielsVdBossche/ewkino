@@ -79,6 +79,39 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     }
 }
 
+Jet::Jet( const NanoReader& nanoReader, const unsigned jetIndex) :
+    PhysicsObject( 
+        nanoReader._Jet_pt[jetIndex], 
+        nanoReader._Jet_eta[jetIndex], 
+        nanoReader._Jet_phi[jetIndex], 
+        nanoReader.[jetIndex], // only mass given... -> introduce new way to set vector. Might just add a setMass option
+        nanoReader.is2016(),
+        nanoReader.is2016PreVFP(),
+        nanoReader.is2016PostVFP(), 
+        nanoReader.is2017(),
+        nanoReader.is2018()
+    ),
+    _deepCSV( nanoReader._Jet_btagDeepB[jetIndex] ),
+    _deepFlavor( nanoReader._Jet_btagDeepFlavB[jetIndex] ),
+
+    // WARNING : is hadron flavor defined for jets in data?
+    _hadronFlavor( nanoReader._Jet_hadronFlavour[jetIndex] ),
+
+    selector( new JetSelector( this ) )
+{
+    // need to apply JER immediately here. Use Hybrid method and reset fourvector to new values!
+
+    // _pt_JECDown( nanoReader._jetSmearedPt_JECDown[jetIndex] ),
+    // _pt_JECUp( nanoReader._jetSmearedPt_JECUp[jetIndex] ),
+
+    // _pt_JERDown( nanoReader._jetSmearedPt_JERDown[jetIndex] ),
+    // _pt_JERUp( nanoReader._jetSmearedPt_JERUp[jetIndex] ),
+
+    _isTight = (nanoReader._Jet_jetId[jetIndex] >= 2);
+    _isTightLeptonVeto = (nanoReader._Jet_jetId[jetIndex] >= 4);
+}
+
+
 
 Jet::Jet( const Jet& rhs ) : 
     PhysicsObject( rhs ),

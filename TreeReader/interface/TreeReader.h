@@ -346,7 +346,7 @@ class TreeReader {
 
         //set up tree for reading and writing
         //always reset triggers instead of rare case of combining primary datasets!
-        void initTree( const bool resetTriggersAndFilters = true);
+        virtual void initTree( const bool resetTriggersAndFilters = true);
         void setOutputTree( TTree* );
         void setLeanOutputTree( TTree* );
 
@@ -456,7 +456,7 @@ class TreeReader {
         double getIntLumi() const;
         unsigned long numberOfEntries() const;
 
-    private:
+    protected:
 
         //list of samples to loop over 
         std::vector< Sample > samples;
