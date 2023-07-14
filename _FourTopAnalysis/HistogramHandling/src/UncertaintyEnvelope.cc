@@ -117,15 +117,15 @@ void UncertaintyEnvelope::finalizeEnvelope(unsigned subProc) {
 
 
     if (getID() == shapeUncId::qcdScale) {
-        std::vector<std::shared_ptr<TH1D>>* upHistograms = getUpHists()->getHistograms(subProc);
-        std::vector<std::shared_ptr<TH1D>>* downHistograms = getDownHists()->getHistograms(subProc);
+        std::vector<TH1D*>* upHistograms = getUpHists()->getHistograms(subProc);
+        std::vector<TH1D*>* downHistograms = getDownHists()->getHistograms(subProc);
         for (unsigned i = 0; i < upHistograms->size(); i++) {
             // loop all individual histograms
             for (auto hists : envelopeHists) {
 
                 // loop all possible up and down variations
-                std::vector<std::shared_ptr<TH1D>>* currentVariation = hists->getHistograms(subProc);
-                std::shared_ptr<TH1D> currentHist = currentVariation->at(i);
+                std::vector<TH1D*>* currentVariation = hists->getHistograms(subProc);
+                TH1D* currentHist = currentVariation->at(i);
 
                 for(int j=1; j < currentHist->GetNbinsX()+1; j++){
 
@@ -141,16 +141,16 @@ void UncertaintyEnvelope::finalizeEnvelope(unsigned subProc) {
             }
         }
     } else if (getID() == shapeUncId::pdfShapeVar) {
-        std::vector<std::shared_ptr<TH1D>>* upHistograms = getUpHists()->getHistograms(subProc);
-        std::vector<std::shared_ptr<TH1D>>* downHistograms = getDownHists()->getHistograms(subProc);
+        std::vector<TH1D*>* upHistograms = getUpHists()->getHistograms(subProc);
+        std::vector<TH1D*>* downHistograms = getDownHists()->getHistograms(subProc);
         for (unsigned i = 0; i < upHistograms->size(); i++) {
             // loop all individual histograms
-            TH1D* tempHistogram = new TH1D(*(upHistograms->at(i).get()));
+            TH1D* tempHistogram = new TH1D(*(upHistograms->at(i)));
             tempHistogram->Reset();
 
             for (auto hists : envelopeHists) {
                 // loop all possible up and down variations
-                std::shared_ptr<TH1D> currentHist = hists->getHistograms(subProc)->at(i);
+                TH1D* currentHist = hists->getHistograms(subProc)->at(i);
 
                 for(int j=1; j < tempHistogram->GetNbinsX()+1; j++){
                     // for each up and down variation, we fix the content
@@ -187,7 +187,7 @@ void UncertaintyEnvelope::writeHistogramsEnvelope(unsigned processNb) {
     if (GetPrintAllVariations() || getID() == shapeUncId::qcdScale) {
         for (auto hists : envelopeHists) {
             // loop all possible up and down variations
-            std::vector<std::shared_ptr<TH1D>>* currentVariation = hists->getHistograms(processNb);
+            std::vector<TH1D*>* currentVariation = hists->getHistograms(processNb);
             for (auto hist : *currentVariation) {
                 hist->Write(hist->GetName(), TObject::kOverwrite);
             }

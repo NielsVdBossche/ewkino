@@ -1,1 +1,1 @@
-TTW             ../skims_v4/2018/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root                                 0.4867                    # 0.584
+TTW               ../../llambrec/dileptonskim_ttw_signal/ttWJetsToLNu_5f_EWK_TuneCP5_13TeV_amcatnlo-pythia8_Autumn18.root                                                                                                    0.016

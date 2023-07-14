@@ -235,9 +235,9 @@ void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::strin
             generateAllBTaggingNormFactorsSample(reweighter, samp, sampleNormfactorsFlavorQCDVarPath, flavorQCDVariations, true);
         }
         // loading in
-        TFile* btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
 
         for (int nLep = 2; nLep < 5; nLep++) {
+            TFile* btagNormFactorFile = TFile::Open(sampleNormfactorsPath.c_str());
             std::string nLepStr = std::to_string(nLep);
             for (auto var : variations) {
                 std::shared_ptr<TH1> bTagNormFactorsHist = std::shared_ptr<TH1>(dynamic_cast<TH1*>(btagNormFactorFile->Get((nLepStr + "L_bTagNormFactors_" + var).c_str())));

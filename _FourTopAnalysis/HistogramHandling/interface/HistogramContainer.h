@@ -14,12 +14,12 @@
 class HistogramContainer {
     private:
         // is this used?
-        std::vector<std::vector<std::shared_ptr<TH1D>>*> oldHists;
-        std::vector<std::vector<std::shared_ptr<TH2D>>*> oldHists2D;
+        std::vector<std::vector<TH1D*>*> oldHists;
+        std::vector<std::vector<TH2D*>*> oldHists2D;
 
         // should be deleted
-        std::vector<std::shared_ptr<TH1D>>* oneDims = nullptr;
-        std::vector<std::shared_ptr<TH2D>>* twoDims = nullptr;
+        std::vector<TH1D*>* oneDims = nullptr;
+        std::vector<TH2D*>* twoDims = nullptr;
         
         // managed by channel - no hard copy
         std::vector<HistInfo>* oneDimInfo;
@@ -30,10 +30,10 @@ class HistogramContainer {
         ~HistogramContainer();
 
         std::vector<HistInfo>* getHistInfo() {return oneDimInfo;}
-        std::vector<std::shared_ptr<TH1D>>* getHistograms() {return oneDims;}
+        std::vector<TH1D*>* getHistograms() {return oneDims;}
 
         std::vector<HistInfo_2D>* get2DHistInfo() {return twoDimInfo;}
-        std::vector<std::shared_ptr<TH2D>>* get2DHistograms() {return twoDims;}
+        std::vector<TH2D*>* get2DHistograms() {return twoDims;}
 
         void fillHistograms(std::vector<double>& fillVec, double eventWeight);
         void fill2DHistograms(std::vector<std::pair<double, double>>& fillVec, double eventWeight);

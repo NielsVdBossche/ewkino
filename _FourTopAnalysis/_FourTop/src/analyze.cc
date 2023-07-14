@@ -909,6 +909,7 @@ void FourTop::analyze(std::string method) {
             outfile->cd("Uncertainties");
 
             mgrAll->writeUncertaintyHistograms(outdir);
+            std::cout << "done writing uncertainties" << std::endl;
         }
 
         if (printEventTags) {
@@ -917,13 +918,17 @@ void FourTop::analyze(std::string method) {
 
         if (splitAdditionalBees) {
             std::string anotherName = "somethingbb";
+            std::cout << "change proc 1" << std::endl;
 
             mgrAll->changeProcess(1, anotherName);
         }
 
     }
+    std::cout << "change proc " << std::endl;
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
+    std::cout << "Done " << std::endl;
+
     //delete mgrAll;
     outfile->Close();
 
