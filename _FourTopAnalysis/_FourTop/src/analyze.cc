@@ -372,7 +372,7 @@ void FourTop::analyze(std::string method) {
 
             eventClass nominalClass = selection->getCurrentClass();
             //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
-            if (sampleReweighter && selection->leptonsArePrompt() && (nominalClass == eventClass::crwz || nominalClass == eventClass::crzz)) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+            if (sampleReweighter && selection->leptonsArePrompt() && nominalClass != eventClass::crzz && nominalClass != eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
 
             // make a bool for filling checks. 
             // 

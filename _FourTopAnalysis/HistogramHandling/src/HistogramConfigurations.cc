@@ -209,32 +209,32 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
 
     std::pair<double, double> minMaxNjets = {-0.5, 6.5};
     std::pair<double, double> minMaxNBjets = {-0.5, 4.5};
-    std::pair<double, double> minMaxHT = {0, 800};
+    std::pair<double, double> minMaxHT = {0, 900};
     std::pair<double, double> minMaxNMu = {-0.5, 5.5};
     if (evClass == eventClass::crw) {
         minMaxNjets = {3.5,5.5};
         minMaxNBjets = {1.5,2.5};
-        minMaxHT = {200,1000};
+        minMaxHT = {200,1100};
         minMaxNMu = {-0.5, 2.5};
     } else if (evClass == eventClass::cro) {
         minMaxNjets = {1.5,6.5};
         minMaxNBjets = {0.5,4.5};
-        minMaxHT = {250,1050};
+        minMaxHT = {250,1150};
         minMaxNMu = {-0.5, 2.5};
     } else if (evClass == eventClass::crz3L) {
         minMaxNjets = {1.5, 8.5};
         minMaxNBjets = {0.5, 6.5};
-        minMaxHT = {200, 1000};
+        minMaxHT = {200, 1100};
         minMaxNMu = {-0.5, 3.5};
     } else if (evClass == eventClass::cro3L) {
         minMaxNjets = {1.5, 6.5};
         minMaxNBjets = {0.5, 3.5};
-        minMaxHT = {200, 1000};
+        minMaxHT = {200, 1100};
         minMaxNMu = {-0.5, 3.5};
     } else if (evClass == eventClass::crz4L) {
         minMaxNjets = {1.5, 8.5};
         minMaxNBjets = {0.5, 4.5};
-        minMaxHT = {0, 1000};
+        minMaxHT = {0, 900};
         minMaxNMu = {-0.5, 4.5};
     } else if (evClass == eventClass::ttbar) {
         minMaxNjets = {2.5, 10.5};
@@ -261,7 +261,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         HistInfo( "N_Bjets_" + flag, "N_{b}", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
         HistInfo( "N_MediumBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
         HistInfo( "N_TightBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
-        HistInfo( "HT_" + flag, "H_{T} [GeV]", int(minMaxHT.first - minMaxHT.second) / 50, minMaxHT.first, minMaxHT.second),
+        HistInfo( "HT_" + flag, "H_{T} [GeV]", int(minMaxHT.second - minMaxHT.first) / 50, minMaxHT.first, minMaxHT.second),
         HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 16, 0, 400),
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
         HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),        
