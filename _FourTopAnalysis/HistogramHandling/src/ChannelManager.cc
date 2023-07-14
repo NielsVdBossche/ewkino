@@ -31,6 +31,8 @@ ChannelManager::ChannelManager(TFile* outputFile, std::map<eventClass, std::stri
         mapping[it.first] = new Channel(it.second, histInfoVec);
         delete histInfoVec;
     }
+
+    namingScheme = names;
 }
 
 ChannelManager::ChannelManager(TFile* outputFile, std::vector<HistInfo>* (&histInfoGenerator)(const eventClass)) : outfile(outputFile) {
@@ -106,6 +108,21 @@ void ChannelManager::initHistogramStacks(std::vector<std::string>& initialProces
         if (! gDirectory->GetDirectory(it.c_str())) gDirectory->mkdir(it.c_str());
     }
 }
+
+void ChannelManager::addUncertainty(std::string& uncName, unsigned id) {
+    useUncertainties = true;
+    for (auto it : mapping) {
+        it.second->addUncertainty(uncName, id);
+    }
+    for (auto it : processHistName) {
+        if (it == "") continue;
+
+        outfile->cd();
+        outfile->cd("Uncertainties");
+        if (! gDirectory->GetDirectory(it.c_str())) gDirectory->mkdir(it.c_str());
+    }
+}
+
 
 void ChannelManager::changePrimaryProcess(std::string& newPrimProc) {
     changeProcess(0, newPrimProc);

@@ -2,6 +2,7 @@
 #define globalsettings_h
 
 #define MEMLEAK false
+#define JECWRAPPER false
 
 // WP's of MVAs,...
 enum eventClass {

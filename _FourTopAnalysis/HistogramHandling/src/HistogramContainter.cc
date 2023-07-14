@@ -9,15 +9,15 @@ HistogramContainer::HistogramContainer(std::vector<HistInfo>* oneDim, std::vecto
 }
 
 HistogramContainer::~HistogramContainer() {
-    if (oneDims) delete oneDims;
-    if (twoDims) delete twoDims;
-
-    for (auto& it : oldHists) {
-        delete it;
-    }
-    for (auto& it : oldHists2D) {
-        delete it;
-    }
+    //if (oneDims) delete oneDims;
+    //if (twoDims) delete twoDims;
+//
+    //for (auto& it : oldHists) {
+    //    delete it;
+    //}
+    //for (auto& it : oldHists2D) {
+    //    delete it;
+    //}
 }
 
 void HistogramContainer::fillHistograms(std::vector<double>& fillVec, double eventWeight) {

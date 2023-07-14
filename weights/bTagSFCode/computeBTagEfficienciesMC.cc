@@ -13,14 +13,14 @@
 #include "../../Tools/interface/stringTools.h"
 
 
-void computeBTagEff( const std::string& year, const std::string& sampleDirectory, const bool cleanJetsFromLooseLeptons, const bool cleanJetsFromFOLeptons ){ //, const bool deepCSV ){
+void computeBTagEff( const std::string& year, const std::string& sampleList, const bool cleanJetsFromLooseLeptons, const bool cleanJetsFromFOLeptons ){ //, const bool deepCSV ){
 
     analysisTools::checkYearString( year ); 
 
     //make 2D b-tagging efficiency histograms for all jet flavors, and for numerator and denominator
 
     //assume jets below 20 GeV in pT will not be used for b-tagging
-    const std::vector< double > ptBins = { 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 120, 150, 200, 300, 400, 600 };
+    const std::vector< double > ptBins = {20, 30, 50, 70, 100, 140, 200, 300, 600, 1000};
     const std::vector< double > etaBins = { 0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4 };
 
     const std::vector< std::string > numeratorOrDenominator = { "numerator", "denominator" };
@@ -46,7 +46,7 @@ void computeBTagEff( const std::string& year, const std::string& sampleDirectory
     }
 
     //initialize the TreeReader
-    TreeReader treeReader( "sampleLists/samples_bTagEff_" + year + ".txt", sampleDirectory );
+    TreeReader treeReader( sampleList, "/pnfs/iihe/cms/store/user/nivanden/skims/" );
 
     //loop over all samples 
     for( unsigned i = 0; i < treeReader.numberOfSamples(); ++i ){
@@ -69,7 +69,7 @@ void computeBTagEff( const std::string& year, const std::string& sampleDirectory
             //apply selection to jets 
             event.selectLooseLeptons();
             event.cleanElectronsFromLooseMuons();
-            event.cleanTausFromLooseLightLeptons();
+            event.removeTaus();
             event.selectGoodJets();
             if( cleanJetsFromLooseLeptons && !cleanJetsFromFOLeptons ){
                 event.cleanJetsFromLooseLeptons();
@@ -81,6 +81,11 @@ void computeBTagEff( const std::string& year, const std::string& sampleDirectory
             } else {
                 throw std::invalid_argument( "Arguments 'cleanJetsFromLooseLeptons' and 'cleanJetsFromFOLeptons' should not both be true." );
             }
+
+            if (event.numberOfTightLeptons() < 2) continue;
+            if (event.numberOfTightLeptons() == 2 && event.TightLeptonCollection()[0].charge() != event.TightLeptonCollection()[1].charge()) continue;
+            if (event.numberOfGoodJets() < 2) continue;
+            if (event.numberOfTightLeptons() < 4 && event.HT() < 200) continue;
             
             //loop over jets 
             for( const auto& jetPtr : event.jetCollection() ){
@@ -123,7 +128,8 @@ void computeBTagEff( const std::string& year, const std::string& sampleDirectory
     TFile* outputFilePtr = TFile::Open( outputPath.c_str(), "RECREATE" );
     for( std::vector< std::string >::size_type flavor = 0; flavor < quarkFlavors.size(); ++flavor ){
         for( std::vector< std::string >::size_type wp = 0; wp < workingPointNames.size(); ++wp ){
-
+            double globalEff = bTagEfficiencyMaps[ 0 ][ flavor ][ wp ]->Integral() / bTagEfficiencyMaps[ 1 ][ flavor ][ wp ]->Integral();
+            std::cout << "global efficiency at " << wp << flavor << ": " << globalEff << std::endl;
             //divide numerator and denominator and write to file
             bTagEfficiencyMaps[ 0 ][ flavor ][ wp ]->Divide( bTagEfficiencyMaps[ 1 ][ flavor ][ wp ].get() );
             bTagEfficiencyMaps[ 0 ][ flavor ][ wp ]->Write( ( "bTagEff_" + workingPointNames[wp] + "_" + quarkFlavors[ flavor ] ).c_str() );
@@ -157,7 +163,7 @@ int main(int argc, char* argv[]){
             }
         }
     } else {
-        std::string sampleDirectory = argvStr[1];
+        std::string sampleList = argvStr[1];
         std::string year = argvStr[2];
         std::string cleaningOption = argvStr[3];
         analysisTools::checkYearString( year );
@@ -166,7 +172,7 @@ int main(int argc, char* argv[]){
         }
         bool cleanJetsFromLooseLeptons = ( cleaningOption == "looseLeptons" );
         bool cleanJetsFromFOLeptons = ( cleaningOption == "FOLeptons" );
-        computeBTagEff( year, sampleDirectory, cleanJetsFromLooseLeptons, cleanJetsFromFOLeptons );
+        computeBTagEff( year, sampleList, cleanJetsFromLooseLeptons, cleanJetsFromFOLeptons );
     }
 	return 0;
 }

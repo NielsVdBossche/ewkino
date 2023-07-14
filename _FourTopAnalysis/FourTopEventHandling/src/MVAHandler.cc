@@ -340,14 +340,13 @@ std::vector<double> MVAHandler_4T::scoreEvent() {
 }
 
 void MVAHandler_4T::fillVariables() {
-
     JetCollection* bJets = selection->getBtagJetCol();
-    LeptonCollection* lightLeps;
-    if (selection->isEventNormalSelected()) {
-        lightLeps = selection->getMediumLepCol();
-    } else {
-        lightLeps = selection->getAltLeptonCol();
-    }
+    LeptonCollection* lightLeps = selection->getMediumLepCol();
+    //if (selection->isEventNormalSelected()) {
+    //    lightLeps = selection->getMediumLepCol();
+    //} else {
+    //    lightLeps = selection->getAltLeptonCol();
+    //}
 
     std::vector<double> mindR_Bjets = calculators::mindRInJetCollection(*bJets);
     std::vector<double> mindR_Bjet_lep = calculators::mindRLepAndJet(*bJets, *lightLeps);
@@ -417,12 +416,12 @@ void MVAHandler_4T::fillVariables() {
     massSecTop = topReco->getSecondBestRecoTop().first;
     massSecTopW = topReco->getSecondBestRecoTop().second;
 
-    mtLeadLepMET = mt(*lightLeps->at(0), selection->getEvent()->met());
-    mtSubLeadLepMET = mt(*lightLeps->at(1), selection->getEvent()->met());
-    m2ll = mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selection->getEvent()->met());
+    mtLeadLepMET = mt(*lightLeps->at(0), selection->GetFullMET());
+    mtSubLeadLepMET = mt(*lightLeps->at(1), selection->GetFullMET());
+    m2ll = mt2::mt2Alt(*lightLeps->at(0), *lightLeps->at(1), selection->GetFullMET());
 
-    m2bb = (n_bjets_f >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
-    m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->getEvent()->met()) : -1);
+    m2bb = (n_bjets_f >= 2 ? mt2::mt2bb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->GetFullMET()) : -1);
+    m2lblb = (n_bjets_f >= 2 ? mt2::mt2lblb((*bJets)[0], (*bJets)[1], (*lightLeps)[0], (*lightLeps)[1], selection->GetFullMET()) : -1);
 }
 
 std::map<int, double> MVAHandler_4T::getClassAndScore() {

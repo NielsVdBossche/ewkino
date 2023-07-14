@@ -1,5 +1,5 @@
 #include "../interface/JetInfo.h"
-
+#include "../../TreeReader/interface/TreeReader.h"
 // include c++ library classes
 #include <iostream>
 #include <stdexcept>
@@ -21,21 +21,20 @@ std::string cleanJECVariationName( std::string branchName ){
 JetInfo::JetInfo( const TreeReader& treeReader, 
 		  const bool readAllJECVariations,
 		  const bool readGroupedJECVariations ){
-    _JECSources = std::vector< std::string >();
-    _JECGrouped = std::vector< std::string >();
-    if( readAllJECVariations ){
-	for( auto mapEl: treeReader._jetSmearedPt_JECSourcesUp ){
-	    // note: in principle only checking one branch should be enough
-	    // as up/down and pt/smearedPt are supposed to contain the same variations
-	    _JECSources.push_back( cleanJECVariationName(mapEl.first) );
-	}
+    _JECSources = std::vector<std::string>();
+    _JECGrouped = std::vector<std::string>();
+    if (readAllJECVariations) {
+        _sourcesJEC_Ids = treeReader._sourcesJEC_Ids;
+
+        for (auto mapEl : *_sourcesJEC_Ids) {
+            _JECSources.push_back(cleanJECVariationName(mapEl.first));
+        }
     }
-    if( readGroupedJECVariations ){
-	for( auto mapEl: treeReader._jetSmearedPt_JECGroupedUp ){
-	    // note: in principle only checking one branch should be enough
-            // as up/down and pt/smearedPt are supposed to contain the same variations
-            _JECGrouped.push_back( cleanJECVariationName(mapEl.first) );
-	}
+    if (readGroupedJECVariations) {
+        _groupedJEC_Ids = treeReader._groupedJEC_Ids;
+        for (auto mapEl : *_groupedJEC_Ids) {
+            _JECGrouped.push_back(cleanJECVariationName(mapEl.first));
+        }
     }
 }
 

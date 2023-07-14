@@ -43,10 +43,21 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
 
 	    JetCollection JECUpCollection( std::string source ) const;
 	    JetCollection JECDownCollection( std::string source ) const;
+        JetCollection JECGroupedUpCollection( unsigned source ) const;
+        JetCollection JECGroupedDownCollection( unsigned source ) const;
 	    JetCollection getVariedJetCollection( const std::string& variation ) const;
+        JetCollection getVariedJetCollection( unsigned source, bool isUp, bool isGrouped) const;
+        #if JECONRUNTIME
+        JetCollection JECCustomCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const;
+        JetCollection JECCustomGoodCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const;
+        #endif
 
-        JetCollection JECUpGroupedFlavorQCD(unsigned flavor) const;
+        JetCollection JECGroupedFlavorQCD(unsigned sourceID, unsigned flavor, bool up) const;
+        JetCollection JECUpGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const;
+        JetCollection JECDownGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const;
+
         JetCollection JECGroupedFlavorQCD(unsigned flavor, bool up) const;
+        JetCollection JECUpGroupedFlavorQCD(unsigned flavor) const;
         JetCollection JECDownGroupedFlavorQCD(unsigned flavor) const;
 
         JetCollection HEMIssue() const;
@@ -79,18 +90,20 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
 
     
     private:
+        JetCollection( const std::vector< std::shared_ptr< Jet > >& jetVector ) : PhysicsObjectCollection< Jet >( jetVector ) {}
         
         //clean jets 
         void cleanJetsFromLeptons(const LeptonCollection&, bool (Lepton::*passSelection)() const, const double coneSize );
 
         //build JetCollection of jets satisfying a certain requirement
         JetCollection buildSubCollection( bool (Jet::*passSelection)() const ) const;
-        JetCollection( const std::vector< std::shared_ptr< Jet > >& jetVector ) : PhysicsObjectCollection< Jet >( jetVector ) {}
     
         //build JetCollection of varied Jets
         JetCollection buildVariedCollection( Jet (Jet::*variedJet)() const ) const;
 	    JetCollection buildVariedCollection( Jet (Jet::*variedJet)(std::string) const, std::string ) const;
-	    JetCollection buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(std::string) const, std::string, unsigned ) const;
+	    JetCollection buildVariedCollection( Jet (Jet::*variedJet)(const unsigned) const, unsigned variationArg ) const;
+        JetCollection buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(const unsigned) const, unsigned, unsigned ) const;
+        JetCollection buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(std::string) const, std::string, unsigned ) const;
 
 
         //number of b-taged jets with variation

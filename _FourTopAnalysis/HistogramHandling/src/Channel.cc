@@ -62,9 +62,7 @@ void Channel::addSubChannels(std::vector<std::string>& newSubChannels) {
 
     for (unsigned i=0; i<newSubChannels.size(); i++) {
         (*subChannels)[newSubChannels[i]] = new Channel(ChannelName, newSubChannels[i], oneDimInfo);
-        if (twoDimInfo != nullptr) {
-            (*subChannels)[newSubChannels[i]]->set2DHistInfo(*twoDimInfo);
-        }
+        if (twoDimInfo) (*subChannels)[newSubChannels[i]]->set2DHistInfo(*twoDimInfo);
     }
 }
 
@@ -89,6 +87,17 @@ void Channel::SetPrintAllUncertaintyVariations(bool setting) {
         it.second->SetPrintAllVariations(setting);
     }
 }
+
+void Channel::addUncertainty(std::string& uncName, unsigned id) {
+    if (subChannels) {
+        for (auto it : *subChannels) {
+            it.second->addUncertainty(uncName, id);
+        }
+    }
+    
+    uncHistMap[shapeUncId(id)] = new Uncertainty(uncName, shapeUncId(id), nominalHistograms);
+}
+
 
 void Channel::updateHistInfo(std::vector<HistInfo> extraInfo) {
     oneDimInfo->insert(oneDimInfo->end(), extraInfo.begin(), extraInfo.end());
@@ -115,7 +124,6 @@ void Channel::initializeHistogramStack(std::vector<std::string>& divsInitial, bo
     while (id != shapeUncId::end) {
         if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
             //std::cout << "envelope " << id << std::endl;
-            
             uncHistMap[shapeUncId(id)] = new UncertaintyEnvelope(translateUnc, shapeUncId(id), nominalHistograms);
         } else {
             //std::cout << "current uncertainty " << id << std::endl;
@@ -137,11 +145,8 @@ void Channel::initializeAdditionalHistogramStack(std::string& newProcess, bool u
     
     if (! uncertainties) return;
 
-    unsigned id = 0;
-
-    while (id != shapeUncId::end) {
-        uncHistMap[shapeUncId(id)]->addProcess(newProcess);
-        id++;
+    for (auto it : uncHistMap) {
+        it.second->addProcess(newProcess);
     }
 }
 
@@ -349,15 +354,12 @@ void Channel::newSample(std::string& uniqueSampleName, bool uncertainties) {
     }
 
     if (! uncertainties) return;
-    unsigned id = 0;
 
-    while (id != shapeUncId::end) {
-        if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
-            id++;
+    for (auto it : uncHistMap) {
+        if (it.first == shapeUncId::qcdScale || it.first == shapeUncId::pdfShapeVar) {
             continue;
         }
-        uncHistMap[shapeUncId(id)]->newSample(uniqueSampleName);
-        id++;
+        it.second->newSample(uniqueSampleName);
     }
 }
 
@@ -374,12 +376,11 @@ void Channel::writeNominalHistograms(unsigned subProc) {
 void Channel::writeUncertaintyHistograms(unsigned subProc) {
     unsigned id = 0;
 
-    while (id != shapeUncId::end) {
-        if (id == shapeUncId::qcdScale || id == shapeUncId::pdfShapeVar) {
-            id++;
+    for (auto it : uncHistMap) {
+        if (it.first == shapeUncId::qcdScale || it.first == shapeUncId::pdfShapeVar) {
             continue;
         }
-        std::string uncName = translateUnc[shapeUncId(id)];
+        std::string uncName = it.second->getName();
         if (! gDirectory->GetDirectory(uncName.c_str())) {
             gDirectory->mkdir(uncName.c_str());
             gDirectory->cd(uncName.c_str());
@@ -389,7 +390,7 @@ void Channel::writeUncertaintyHistograms(unsigned subProc) {
             gDirectory->cd(uncName.c_str());
         }
         
-        uncHistMap[shapeUncId(id)]->writeHistograms(subProc);
+        it.second->writeHistograms(subProc);
         gDirectory->cd("..");
         id++;
     }

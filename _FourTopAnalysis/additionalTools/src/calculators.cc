@@ -77,3 +77,86 @@ std::pair<std::shared_ptr<Jet>, std::shared_ptr<Lepton>> calculators::closestLep
 
     return closestPair;
 }
+
+
+std::vector<double> calculators::mindRLeptons(LeptonCollection& leptons) {
+    std::vector< std::shared_ptr< Lepton > >::iterator iterOne;
+    std::vector< std::shared_ptr< Lepton > >::iterator iterTwo;
+
+    std::vector<double> dRs;
+    if (leptons.size() < 2) return dRs;
+
+    for (iterOne =  leptons.begin(); iterOne != leptons.end() - 1; iterOne++) {
+        for (iterTwo = iterOne + 1; iterTwo != leptons.end(); iterTwo++) {
+            if (*iterOne == *iterTwo) continue;
+            double dr = deltaR(**iterOne, **iterTwo);
+
+            auto it = std::upper_bound(dRs.cbegin(), dRs.cend(), dr); //1
+            dRs.insert(it, dr); //2 
+        }
+    }
+
+    //std::sort(dRs.begin(), dRs.end());
+    if (dRs.size() > 1) {
+        if (dRs[0] > dRs[1]) {
+            std::cout << "NOT SORTED: dR betw leptons" << std::endl;
+            exit(1);
+        } 
+    }
+    return dRs;
+}
+
+std::vector<double> calculators::mindEtaLeptons(LeptonCollection& leptons) {
+    std::vector< std::shared_ptr< Lepton > >::iterator iterOne;
+    std::vector< std::shared_ptr< Lepton > >::iterator iterTwo;
+
+    std::vector<double> dRs;
+    if (leptons.size() < 2) return dRs;
+
+    for (iterOne =  leptons.begin(); iterOne != leptons.end() - 1; iterOne++) {
+        for (iterTwo = iterOne + 1; iterTwo != leptons.end(); iterTwo++) {
+            if (*iterOne == *iterTwo) continue;
+            double dr = deltaEta(**iterOne, **iterTwo);
+
+            auto it = std::upper_bound(dRs.cbegin(), dRs.cend(), dr); //1
+            dRs.insert(it, dr); //2 
+        }
+    }
+
+    //std::sort(dRs.begin(), dRs.end());
+    if (dRs.size() > 1) {
+        if (dRs[0] > dRs[1]) {
+            std::cout << "NOT SORTED: dEta betw leptons" << std::endl;
+            exit(1);
+        } 
+    }
+    return dRs;
+}
+
+std::vector<double> calculators::mindPhiLeptons(LeptonCollection& leptons) {
+    std::vector< std::shared_ptr< Lepton > >::iterator iterOne;
+    std::vector< std::shared_ptr< Lepton > >::iterator iterTwo;
+
+    std::vector<double> dRs;
+    if (leptons.size() < 2) return dRs;
+
+    for (iterOne =  leptons.begin(); iterOne != leptons.end() - 1; iterOne++) {
+        for (iterTwo = iterOne + 1; iterTwo != leptons.end(); iterTwo++) {
+            if (*iterOne == *iterTwo) continue;
+            double dr = deltaPhi(**iterOne, **iterTwo);
+
+            auto it = std::upper_bound(dRs.cbegin(), dRs.cend(), dr); //1
+            dRs.insert(it, dr); //2 
+        }
+    }
+
+    //std::sort(dRs.begin(), dRs.end());
+    if (dRs.size() > 1) {
+        if (dRs[0] > dRs[1]) {
+            std::cout << "NOT SORTED: dPhi betw leptons" << std::endl;
+            exit(1);
+        } 
+    }
+    return dRs;
+}
+

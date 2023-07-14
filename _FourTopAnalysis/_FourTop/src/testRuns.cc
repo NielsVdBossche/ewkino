@@ -63,7 +63,7 @@ void FourTop:: testRuns() {
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr( entry );
+            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true );
 
             currentEvent->removeTaus();
             currentEvent->selectLooseLeptons();

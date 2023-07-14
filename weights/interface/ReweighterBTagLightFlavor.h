@@ -1,6 +1,10 @@
 #ifndef ReweighterBTagLightFlavor_H
 #define ReweighterBTagLightFlavor_H
 
+#include "ReweighterBTag.h"
+
+//include ROOT classes
+#include "TH2.h"
 
 class ReweighterBTagLightFlavor : public ReweighterBTag {
 

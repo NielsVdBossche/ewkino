@@ -13,7 +13,7 @@ from jobSubmission.condorTools import submitCommandsAsCondorCluster
 # input: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2/220630_155601_0000_singlelep_0.root
 # output: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/year/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2.root
 
-inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v6/rawSkims"
+inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v6/rawSkims/"
 outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v6/"
 
 skimVersion = []

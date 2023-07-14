@@ -37,16 +37,15 @@ class ReweighterBTagShape: public Reweighter{
 	void printNormFactors() const;
 	
 	double weightVariation( const Event& event, const std::string& variation ) const;
-	double weightJecVariation( const Event& event, const std::string& variation ) const;
-	
+
 	double weight( const Jet& jet ) const;
 	double weightUp( const Jet& jet, const std::string& systematic ) const;
 	double weightDown( const Jet& jet, const std::string& systematic ) const;
 	
 	double weight( const Event& event ) const;
 	double weightUp( const Event& event, const std::string& systematic ) const;
-        double weightDown( const Event&, const std::string& systematic ) const;
-	double weightJecVar( const Event& event, const std::string& jecVariation ) const;
+    double weightDown( const Event&, const std::string& systematic ) const;
+	double weightJecVar( const Event& event, const std::string& jecVariation, bool grouped, const unsigned var  ) const;
 	double weightJecVar_FlavorFilter(const Event &event, const std::string &jecVariation, unsigned flavor) const;
 	double weightNoNorm( const Event& event) const;
 	std::vector<std::string> availableVariations() const{ return _variations; }
@@ -65,6 +64,8 @@ class ReweighterBTagShape: public Reweighter{
 	std::vector<std::string> _variations;
 	std::vector<std::string> _systematics;
 	std::map<std::string, std::map<std::string, std::map<int,std::map<int,double>>>> _normFactors; // [samp][variation][nLeptons][nJets]
+	std::map<std::string, std::map<unsigned, std::map<int, std::map<int, double>>>>* _groupedJECNormFactors = nullptr; // [samp][variation][nLeptons][nJets]
+	std::map<std::string, std::map<unsigned, std::map<int, std::map<int, double>>>>* _sourcesJECNormFactors = nullptr; // [samp][variation][nLeptons][nJets]
 
 	double weight( const Jet& jet, const std::string& variation ) const;
 	double weight( const Event& event, const std::string& variation ) const;

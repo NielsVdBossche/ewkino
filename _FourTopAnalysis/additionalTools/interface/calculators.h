@@ -10,6 +10,9 @@
 namespace calculators {
     std::vector<double> mindRInJetCollection(JetCollection& collection);
     std::vector<double> mindRLepAndJet(JetCollection& jets, LeptonCollection& leptons);
+    std::vector<double> mindRLeptons(LeptonCollection& leptons);
+    std::vector<double> mindEtaLeptons(LeptonCollection& leptons);
+    std::vector<double> mindPhiLeptons(LeptonCollection& leptons);
     std::pair<std::shared_ptr<Jet>, std::shared_ptr<Lepton>> closestLepAndJet(JetCollection& jets, LeptonCollection& leptons);
 }
 

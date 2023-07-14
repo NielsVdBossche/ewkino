@@ -1,5 +1,9 @@
 #include "../interface/FourTop.h"
 
+#if JECWRAPPER
+#include "../../../CMSSW_imports/interface/JECWrapper.h"
+#endif
+
 #if MEMLEAK
 #include "../../../memleak/debug_new.h" 
 #endif
@@ -9,6 +13,7 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
+    useNpNmDistributions = false;
     bool isNPControl = false;
     double chMisCorr = 0.;
 
@@ -119,18 +124,29 @@ void FourTop::analyze(std::string method) {
 
     mgrAll->initHistogramStacks(processes, useUncertainties);
 
+    if (st == selectionType::NPDD) {
+        std::string frEl = "FRElectron";
+        std::string frMu = "FRMuon";
+
+        mgrAll->addUncertainty(frEl, 0);
+        mgrAll->addUncertainty(frMu, 1);
+        useUncertainties = true;
+    }
+
     std::cout << "event loop" << std::endl;
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
     std::vector<std::string> bTagShapeSystematics;
-    std::vector<std::string> JECSourcesGrouped;
+    std::map< std::string, size_t > JECSourcesGrouped;
     std::vector<std::string> JECQCDComponents;
     std::vector<unsigned> JECQCDComponents_flavor;
     std::vector<std::string> wzSFRegions;
     std::vector<std::string> zzSFRegions;
+    std::vector<std::string> ttVJetsRegions;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
+        std::cout << "init sample" << std::endl;
         currentEvent = treeReader->buildEventPtr(0, false, false, false, true );
 
         std::cerr << treeReader->currentSample().fileName() << std::endl;
@@ -156,7 +172,7 @@ void FourTop::analyze(std::string method) {
             if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
                 mgrAll->changePrimaryProcess(currProcName);
-                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL()) {
+                if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL() && treeReader->hasGenLvl()) {
                     std::string bbName = currProcName + "bb";
                     mgrAll->changeProcess(1, bbName);
                     nominalBees = 2;
@@ -165,13 +181,13 @@ void FourTop::analyze(std::string method) {
             }
         }
 
-        if (useUncertainties && ! treeReader->isData()) {
+        if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
             //mgrAll->SetPrintAllUncertaintyVariations(true);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
             std::cout << "finding available PS scale variations...\n";
-            Event event = treeReader->buildEvent(0);
+            Event event = treeReader->buildEvent(0, false, false, false, true);
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
             if(numberOfPSVariations>=44) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
@@ -183,26 +199,58 @@ void FourTop::analyze(std::string method) {
             if (sampleIndex == 0 && considerBTagShape) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
                 mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
+            } else if (sampleIndex == 0) {
+                bTagShapeSystematics = {"light", "heavy"};
+                mgrAll->addSubUncertainties(shapeUncId::bTagShape, bTagShapeSystematics);
             }
             if (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy) {
                 useSplitJEC = false;
             }
             if (sampleIndex == 0 && useSplitJEC) {
                 std::cout << "split JEC" << std::endl;
-                JECSourcesGrouped = currentEvent->jetInfo().groupedJECVariations();
 
-                mgrAll->addSubUncertainties(shapeUncId::JEC, JECSourcesGrouped);
+                #if JECWRAPPER
+                JECWrapper* wrapper = selection->GetJECWrapper();
+                std::map< std::string, size_t > a = wrapper->GetUncertaintyMapping();
+                std::vector<std::string> inter;
+
+                for (auto& var : a) {
+                    inter.push_back(var.first);
+                }
+                JECSourcesGrouped = a;
+                mgrAll->addSubUncertainties(shapeUncId::JEC, inter);
+                std::cout << "added variations" << std::endl;
+
+                #else
+
+                JetInfo info = currentEvent->jetInfo();
+                std::map< std::string, size_t >* a = info.groupedJECVariationsMap();
+                std::vector<std::string> inter;
+
+                for (auto var : *a) {
+                    inter.push_back(var.first);
+                }
+
+                JECSourcesGrouped = *a;
+
+
+                mgrAll->addSubUncertainties(shapeUncId::JEC, inter);
+                std::cout << "added variations" << std::endl;
 
                 JECQCDComponents = {"light", "charm", "bottom"};
                 JECQCDComponents_flavor = {0, 4, 5};
                 mgrAll->addSubUncertainties(shapeUncId::JECFlavorQCD, JECQCDComponents);
 
+                #endif
+
             }
             if (sampleIndex == 0) {
                 wzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4Jet", "5Jet", "6PlusJet"};
                 mgrAll->addSubUncertainties(shapeUncId::WZSF, wzSFRegions);
-                //zzSFRegions = {"0Jet", "1Jet", "2Jet", "3Jet", "4PlusJet"};
-                //mgrAll->addSubUncertainties(shapeUncId::ZZSF, wzSFRegions);
+                zzSFRegions = {"0Jet", "1Jet", "2Jet", "3PlusJet"};
+                mgrAll->addSubUncertainties(shapeUncId::ZZSF, zzSFRegions);
+                ttVJetsRegions = {"AddJets", "AddBJets"};
+                mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
         }
         
@@ -216,8 +264,9 @@ void FourTop::analyze(std::string method) {
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (testRun && entry > 100) break;
-            //std::cout << entry << std::endl;
+            if (testRun && entry > 1000) break;
+            //if (entry > 10000) break;
+            // std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
@@ -305,20 +354,25 @@ void FourTop::analyze(std::string method) {
             }
 
             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
-                if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
+                //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
+                if (selection->HasAdditionalBJets()) {
+                    processNb = 1;
+                }
             }
 
             // Basic non-prompt handling (using MC to estimate the contribution):
             std::vector<double> fillVec;
             std::vector<std::pair<double, double>> fillVec2D;
             std::vector<std::pair<int, double>> singleEntries;
+            std::vector<std::pair<int, double>> singleEntriesNpNm;
             std::vector<std::string> subChannels;
 
             // fill all histograms
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
-            if (sampleReweighter && selection->leptonsArePrompt() && nominalClass > eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+            //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+            if (sampleReweighter && selection->leptonsArePrompt() && nominalClass != eventClass::crzz && nominalClass != eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
 
             // make a bool for filling checks. 
             // 
@@ -328,23 +382,33 @@ void FourTop::analyze(std::string method) {
             // if region != considerRegion && considerRegion != fail: skip
 
             if (FillRegion(nominalClass, st)) {
-                if (testRun) std::cout << "is fill " << std::endl;
+                if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
 
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
                 fillVec2D = selection->fillVector2D();
-
                 subChannels = GetSubClasses(nominalClass);
 
                 // make function bundling this behaviour.
                 mgrAll->at(nominalClass)->fillAllHistograms(subChannels, processNb, fillVec, weight);
                 mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, processNb, fillVec2D, weight);
                 mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntries, weight);
+
+                if (useNpNmDistributions) {
+                    singleEntriesNpNm = FillNpNmDistributions(nominalClass, offsets);
+                    if (selection->getLepton(0)->charge() > 0) {
+                        mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntriesNpNm, weight);
+                    } else {
+                        mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntriesNpNm, -1. * weight);
+                    }
+                }
             }
 
             // Systematics
-            if (currentEvent->isData() || ! useUncertainties || (processNb > 0 && st != selectionType::MCPrompt)) continue;
+            if (! useUncertainties)
+            if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt && st != selectionType::NPDD))) continue;
 
+            if (testRun) std::cout << "uncertainty time" << std::endl;
             //// Start filling histograms
             // loop uncertainties
             Channel* uncWrapper;
@@ -360,6 +424,9 @@ void FourTop::analyze(std::string method) {
             std::vector<std::pair<int, double>> singleEntriesDown = singleEntries;
             std::vector<std::pair<double, double>> fillVec2DUp = fillVec2D;
             std::vector<std::pair<double, double>> fillVec2DDown = fillVec2D;
+            std::vector<std::pair<int, double>> singleEntriesNpNmUp = singleEntriesNpNm;
+            std::vector<std::pair<int, double>> singleEntriesNpNmDown = singleEntriesNpNm;
+
 
             unsigned uncID = 0;
             while (uncID < shapeUncId::end) {
@@ -367,6 +434,7 @@ void FourTop::analyze(std::string method) {
                     uncID++;
                     continue;
                 }
+                if (st == selectionType::NPDD && uncID > 1) break; 
                 double weightUp = 1.;
                 double weightDown = 1.;
                 eventClass upClass = eventClass::fail;
@@ -374,9 +442,15 @@ void FourTop::analyze(std::string method) {
                 std::vector<std::string> subChannelsUp;
                 std::vector<std::string> subChannelsDown;
 
-                //std::cout << uncID << std::endl;
+                //if (testRun) std::cout << uncID << std::endl;
 
-                if (uncID <= shapeUncId::pileup) {
+                if (uncID == 0 && st == selectionType::NPDD) {
+                    weightUp = FakeRateWeightVariation(true, true) / FakeRateWeight();
+                    weightDown = FakeRateWeightVariation(false, true) / FakeRateWeight();
+                } else if (uncID == 1 && st == selectionType::NPDD) {
+                    weightUp = FakeRateWeightVariation(true, false) / FakeRateWeight();
+                    weightDown = FakeRateWeightVariation(false, false) / FakeRateWeight();
+                } else if (uncID <= shapeUncId::pileup) {
                     // all uncertainties with simple reweighting
                     std::string id = uncTranslateMap[shapeUncId(uncID)];
                     double weightNominalInv = 1. / reweighter[ id ]->weight( *currentEvent );
@@ -385,21 +459,12 @@ void FourTop::analyze(std::string method) {
                 } else if (uncID == shapeUncId::qcdScale) {
                     std::vector<double> qcdvariations;
                     if (hasValidQcds) {
-                        //if (isSignalSample) {
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2() / xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2() / xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
                         qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
-                        //} else {
-                        //    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1());
-                        //    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1());
-                        //    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2());
-                        //    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2());
-                        //    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5());
-                        //    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5());
-                        //}
                     } else {
                         qcdvariations = {weight, weight, weight, weight, weight, weight};
                     }
@@ -407,6 +472,17 @@ void FourTop::analyze(std::string method) {
                     uncWrapper->fillAllEnvelope(subChannels, shapeUncId::qcdScale, processNb, fillVec, qcdvariations);
                     uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::qcdScale, processNb, singleEntries, qcdvariations);
                     uncWrapper->fillAllEnvelope2Ds(subChannels, shapeUncId::qcdScale, processNb, fillVec2D, qcdvariations);
+                    if (useNpNmDistributions) {
+                        if (selection->getLepton(0)->charge() > 0) {
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::qcdScale, processNb, singleEntriesNpNm, qcdvariations);
+                        } else {
+                            std::vector<double> qcdVariationsNegs;
+                            for (auto qcdVar : qcdvariations) {
+                                qcdVariationsNegs.push_back(-1. * qcdVar);
+                            }
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::qcdScale, processNb, singleEntriesNpNm, qcdVariationsNegs);
+                        }
+                    }
                 } else if (uncID == shapeUncId::pdfShapeVar) {
                     std::vector<double> pdfVariations;
                     if (hasValidPdfs && xsecs.get()->numberOfLheVariations() > 9) {
@@ -432,7 +508,17 @@ void FourTop::analyze(std::string method) {
                     uncWrapper->fillAllEnvelope(subChannels, shapeUncId::pdfShapeVar, processNb, fillVec, pdfVariations);
                     uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::pdfShapeVar, processNb, singleEntries, pdfVariations);
                     uncWrapper->fillAllEnvelope2Ds(subChannels, shapeUncId::pdfShapeVar, processNb, fillVec2D, pdfVariations);
-
+                    if (useNpNmDistributions) {
+                        if (selection->getLepton(0)->charge() > 0) {
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::pdfShapeVar, processNb, singleEntriesNpNm, pdfVariations);
+                        } else {
+                            std::vector<double> pdfVariationsNegs;
+                            for (auto pdfVar : pdfVariations) {
+                                pdfVariationsNegs.push_back(-1. * pdfVar);
+                            }
+                            uncWrapper->fillAllEnvelopeSingles(subChannels, shapeUncId::pdfShapeVar, processNb, singleEntriesNpNm, pdfVariationsNegs);
+                        }
+                    }
                 } else if (uncID == shapeUncId::bTagShape) {
                     if (considerBTagShape) {
                         double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
@@ -443,11 +529,39 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec2D, weight * weightUp, weight * weightDown);
+                            if (useNpNmDistributions) {
+                                if (selection->getLepton(0)->charge() > 0) {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                                } else {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                                }
+                            }
                         }
 
                         weightUp = 1.;
                         weightDown = 1.;
-                    }
+                    } //else {
+                    //    for(std::string btagsys : bTagShapeSystematics){
+                    //        std::string btagString = "bTag_tight_WP_" + btagsys;
+                    //        double nombweight = reweighter[btagString]->weight( *currentEvent );
+                    //        weightUp = 1. * reweighter[btagString]->weightUp( *currentEvent) / nombweight;
+                    //        weightDown = 1. * reweighter[btagString]->weightDown( *currentEvent) / nombweight;
+                    //
+                    //        uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec, weight * weightUp, weight * weightDown);
+                    //        uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntries, weight * weightUp, weight * weightDown);
+                    //        uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, fillVec2D, weight * weightUp, weight * weightDown);
+                    //        if (useNpNmDistributions) {
+                    //            if (selection->getLepton(0)->charge() > 0) {
+                    //                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                    //            } else {
+                    //                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, btagsys, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                    //            }
+                    //        }
+                    //    }
+                    //
+                    //    weightUp = 1.;
+                    //    weightDown = 1.;
+                    //}
                 } else if (uncID == shapeUncId::isrShape && hasValidPSs) {                  
                     weightUp = currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2();
                     weightDown = currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5();
@@ -465,15 +579,11 @@ void FourTop::analyze(std::string method) {
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
                     weightUp *= reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
                         / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) );
-                } else if (uncID == shapeUncId::FR_mu) {
-                    weightUp = FakeRateWeightVariation(true, false) / FakeRateWeight();
-                    weightDown = FakeRateWeightVariation(false, false) / FakeRateWeight();
-                } else if (uncID == shapeUncId::FR_el) {
-                    weightUp = FakeRateWeightVariation(true, true) / FakeRateWeight();
-                    weightDown = FakeRateWeightVariation(false, true) / FakeRateWeight();
                 } else if (uncID == shapeUncId::WZSF) {
                     if (sampleReweighter) {
                         for (int i=0; i < 7; i++) {
+                            weightUp = 1.;
+                            weightDown = 1.;
                             if (selection->numberOfJets() == i || (i == 6 && selection->numberOfJets() >= 6)) {
                                 weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
                                 weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
@@ -482,40 +592,125 @@ void FourTop::analyze(std::string method) {
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                            if (useNpNmDistributions) {
+                                if (selection->getLepton(0)->charge() > 0) {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                                } else {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                                }
+                            }
                         }
-                        weightUp = 1.;
-                        weightDown = 1.;
                     } else {
                         for (std::string wzSFRegion : wzSFRegions) {
                             uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec, weight, weight);
                             uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntries, weight, weight);
                             uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, fillVec2D, weight, weight);
+                            if (useNpNmDistributions) {
+                                if (selection->getLepton(0)->charge() > 0) {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, weight, weight);
+                                } else {
+                                    uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, wzSFRegion, singleEntriesNpNm, -1. * weight, -1. * weight);
+                                }
+                            }
                         }
                     }
-                //else if (uncID == shapeUncId::ZZSF) {
-                //  if (sampleReweighter) {
-                //      for (int i=0; i < 5; i++) {
-                //          if (selection->numberOfJets() == i || (i == 4 && selection->numberOfJets() >= 4)) {
-                //              weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
-                //              weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
-                //          }
-                //          std::string zzSFRegion = zzSFRegions[i];
-                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight * weightUp, weight * weightDown);
-                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
-                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
-                //      }
-                //      weightUp = 1.;
-                //      weightDown = 1.;
-                //  } else {
-                //      for (std::string zzSFRegion : zzSFRegions) {
-                //          uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight, weight);
-                //          uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight, weight);
-                //          uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
-                //      }
-                //  }
+                } else if (uncID == shapeUncId::ZZSF) {
+                    //if (testRun) std::cout << "ZZSF unc" << std::endl;
+                    if (sampleReweighter) {
+                       // if (testRun) std::cout << "has rew" << std::endl;
+                        for (int i = 0; i < 4; i++) {
+
+                            weightUp = 1.;
+                            weightDown = 1.;
+                            if (selection->numberOfJets() == i || (i == 3 && selection->numberOfJets() >= 3)) {
+                                weightUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                                weightDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                            }
+                            std::string zzSFRegion = zzSFRegions[i];
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight * weightUp, weight * weightDown);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                        }
+                    } else {
+                        //if (testRun) std::cout << "has no rew" << std::endl;
+
+                        for (std::string zzSFRegion : zzSFRegions) {
+                            //if (testRun) std::cout << "fill " << zzSFRegion << std::endl;
+
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec, weight, weight);
+                            //if (testRun) std::cout << "fill all" << zzSFRegion << std::endl;
+
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, singleEntries, weight, weight);
+                            //if (testRun) std::cout << "fill single" << zzSFRegion << std::endl;
+
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, zzSFRegion, fillVec2D, weight, weight);
+                            //if (testRun) std::cout << "fill 2d" << zzSFRegion << std::endl;
+
+                        }
+                        //if (testRun) std::cout << "done fill" << std::endl;
+
+                    }
+                } else if (uncID == ttvNJetsUnc) {
+                    for (int i=0; i < 2; i++) {
+                        weightUp = 1.;
+                        weightDown = 1.;
+                        if (i == 0) {
+                            if (selection->numberOfLeps() == 2) {
+                                if (selection->numberOfJets() <= 2) {
+                                    weightUp = 0.92;
+                                } else if (selection->numberOfJets() == 3) {
+                                    weightUp = 0.95;
+                                } else if (selection->numberOfJets() == 4) {
+                                    weightUp = 1.03;
+                                } else if (selection->numberOfJets() == 5) {
+                                    weightUp = 1.20;
+                                } else if (selection->numberOfJets() == 6) {
+                                    weightUp = 1.42;
+                                } else if (selection->numberOfJets() >= 7) {
+                                    weightUp = 1.55;
+                                } 
+                            }
+                            if (selection->numberOfLeps() >= 3) {
+                                if (selection->numberOfJets() <= 2) {
+                                    weightUp = 0.96;
+                                } else if (selection->numberOfJets() == 3) {
+                                    weightUp = 1.16;
+                                } else if (selection->numberOfJets() == 4) {
+                                    weightUp = 1.28;
+                                } else if (selection->numberOfJets() == 5) {
+                                    weightUp = 1.46;
+                                } else if (selection->numberOfJets() == 6) {
+                                    weightUp = 1.44;
+                                } else if (selection->numberOfJets() >= 7) {
+                                    weightUp = 1.44;
+                                } 
+                            }
+                            weightDown = 1.;
+                        } else if (i==1) {
+                            if (splitAdditionalBees && st == selectionType::MCPrompt ) {
+                                if (selection->HasAdditionalBJets()) {
+                                    weightUp = 1.4;
+                                    weightDown = 0.6;
+                                }
+                            }
+                        }
+                        std::string ttVJetsRegion = ttVJetsRegions[i];
+                        uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, fillVec, weight * weightUp, weight * weightDown);
+                        uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, singleEntries, weight * weightUp, weight * weightDown);
+                        uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, fillVec2D, weight * weightUp, weight * weightDown);
+                        if (useNpNmDistributions) {
+                            if (selection->getLepton(0)->charge() > 0) {
+                                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                            } else {
+                                uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, ttVJetsRegion, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                            }
+                        }
+                    }
+                    weightUp = 1.;
+                    weightDown = 1.;
+                    
                 } else if ((uncID >= shapeUncId::JER_1p93 && (uncID != shapeUncId::JEC && uncID != shapeUncId::JECFlavorQCD)) || (uncID == shapeUncId::JEC && !useSplitJEC)) {
                     // JER and JEC
-
                     if( uncID == shapeUncId::JEC && considerBTagShape ) {
                         //weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, "JECUp" ) 
                         //                    / reweighter["bTag_shape"]->weight( *currentEvent );
@@ -524,51 +719,111 @@ void FourTop::analyze(std::string method) {
                     }
                     std::string empty = "";
 
-                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, empty);
+                    upClass = selection->classifyUncertainty
+                    (shapeUncId(uncID), true, 1000);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
+                    if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
 
-                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false, empty);
+                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000);
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
+                    if (useNpNmDistributions) singleEntriesNpNmDown = FillNpNmDistributions(downClass, offsets);
 
                     subChannelsUp = GetSubClasses(upClass);
                     subChannelsDown = GetSubClasses(downClass);
 
                     if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                     if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                    
+                    if (useNpNmDistributions) {
+                        double mod = 1.;
+                        std::vector<double> fillVecEmpty = {};
+                        std::vector<std::pair<double, double>> fillVec2DEmpty = {};
+
+
+                        if (selection->getLepton(0)->charge() > 0) mod = -1.;
+                        if (FillRegion(upClass, st)) mgrAll->fillAllUpHistograms(subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
+                        if (FillRegion(downClass, st)) mgrAll->fillAllDownHistograms(subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                    }
                 } else if (uncID == shapeUncId::JEC && useSplitJEC) {
-                    for (std::string jecSource : JECSourcesGrouped) {
-                        if (stringTools::stringContains(jecSource, "Total")) continue;
+                    //if (testRun) std::cout << "prestart? " << std::endl;
+
+                    for (auto jecSource : JECSourcesGrouped) {
+                        //std::cout << "start? " << std::endl;
+
+                        if (stringTools::stringContains(jecSource.first, "Total")) continue;
+                        std::string jecSourceStr = jecSource.first;
                         if (considerBTagShape) {
-                            std::string sourceUp = jecSource + "Up";
-                            std::string sourceDown = jecSource + "Down";
-                            
-                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp) 
+                            #if JECWRAPPER
+                            weightUp = 1.;
+                            weightDown = 1.;
+                            #else
+                            std::string sourceUp = jecSourceStr + "Up";
+                            std::string sourceDown = jecSourceStr + "Down";
+
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp, true, jecSource.second) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
-                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown) 
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown, true, jecSource.second) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
+                            #endif
                         }
+                        //std::cout << "classify? " << std::endl;
 
-                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
+
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource.second);
+                        //std::cout << "classify unc " << std::endl;
+
                         fillVecUp = selection->fillVector();
-                        singleEntriesUp = selection->singleFillEntries();
-                        fillVec2DUp = selection->fillVector2D();
+                        //std::cout << "fillvec " << std::endl;
 
-                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource);
+                        singleEntriesUp = selection->singleFillEntries();
+                       // std::cout << "singles " << std::endl;
+
+                        fillVec2DUp = selection->fillVector2D();
+                        //std::cout << "try first? " << std::endl;
+
+                        if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
+                        //std::cout << "first done? " << std::endl;
+
+
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource.second);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();
+                        if (useNpNmDistributions) singleEntriesNpNmDown = FillNpNmDistributions(downClass, offsets);
 
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
-                        if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSource, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
-                        if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSource, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
+                        if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (useNpNmDistributions) {
+                            //std::cout << "problem? " << std::endl;
+
+                            double mod = 1.;
+                            std::vector<double> fillVecEmpty = {};
+                            std::vector<std::pair<double, double>> fillVec2DEmpty = {};
+                            //std::cout << "set? " << std::endl;
+
+                            if (selection->getLepton(0)->charge() > 0) mod = -1.;
+                            //std::cout << "got mod? " << std::endl;
+
+                            if (FillRegion(upClass, st)) {
+                                //std::cout << "fill up? " << std::endl;
+                             
+                                mgrAll->fillAllSubUpHistograms(jecSourceStr, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
+                            }
+                            if (FillRegion(downClass, st)) {
+                                //std::cout << "fill down? " << std::endl;
+                                mgrAll->fillAllSubDownHistograms(jecSourceStr, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                            }
+                        }
                     }
                 } else if (uncID == shapeUncId::JECFlavorQCD && useSplitJEC) {
+                    #if ! JECWRAPPER
                     for (int i = 0; i < 3; i++) {
                         std::string source = JECQCDComponents[i];
                         std::string jecVar = "FlavorQCD";
@@ -583,28 +838,48 @@ void FourTop::analyze(std::string method) {
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
-                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecVar, flavor);
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000, flavor);
                         fillVecUp = selection->fillVector();
                         singleEntriesUp = selection->singleFillEntries();
                         fillVec2DUp = selection->fillVector2D();
+                        if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
 
-                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecVar, flavor);
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000, flavor);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();
+                        if (useNpNmDistributions) singleEntriesNpNmDown = FillNpNmDistributions(downClass, offsets);
 
                         subChannelsUp = GetSubClasses(upClass);
                         subChannelsDown = GetSubClasses(downClass);
 
                         if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(source, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecUp, singleEntriesUp, fillVec2DUp, weight * weightUp);
                         if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(source, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecDown, singleEntriesDown, fillVec2DDown, weight * weightDown);
+                        if (useNpNmDistributions) {
+                            double mod = 1.;
+                            std::vector<double> fillVecEmpty = {};
+                            std::vector<std::pair<double, double>> fillVec2DEmpty = {};
+
+                            if (selection->getLepton(0)->charge() > 0) mod = -1.;
+                            if (FillRegion(upClass, st)) mgrAll->fillAllSubUpHistograms(source, subChannelsUp, upClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmUp, fillVec2DEmpty, mod * weight * weightUp);
+                            if (FillRegion(downClass, st)) mgrAll->fillAllSubDownHistograms(source, subChannelsDown, downClass, shapeUncId(uncID), processNb, fillVecEmpty, singleEntriesNpNmDown, fillVec2DEmpty, mod * weight * weightDown);
+                        }
                     }
+                    #endif
                 }
 
-                if (uncID < shapeUncId::JER_1p93 || uncID == shapeUncId::FR_mu || uncID == shapeUncId::FR_el) {
+                if (uncID < shapeUncId::JER_1p93) {
                     uncWrapper->fillAllUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntries, weight * weightUp, weight * weightDown);
                     uncWrapper->fillAll2DUncertainties(subChannels, shapeUncId(uncID), processNb, fillVec2D, weight * weightUp, weight * weightDown);
+                    
+                    if (useNpNmDistributions) {
+                        if (selection->getLepton(0)->charge() > 0) {
+                            uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntriesNpNm, weight * weightUp, weight * weightDown);
+                        } else {
+                            uncWrapper->fillAllSingleUncertainties(subChannels, shapeUncId(uncID), processNb, singleEntriesNpNm, -1. * weight * weightUp, -1. * weight * weightDown);
+                        }
+                    }
                 }
 
                 uncID = uncID + 1;
@@ -657,7 +932,7 @@ void FourTop::analyze(std::string method) {
     //delete mgrAll;
     outfile->Close();
 
-    delete btagReweighter;
+    //delete btagReweighter;
 }
 
 bool FourTop::eventPassesTriggers() {
@@ -678,25 +953,83 @@ bool FourTop::eventPassesTriggers() {
 std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
     std::vector<std::string> subClasses;
 
-    if (currClass == eventClass::ssdl || (currClass == eventClass::cro && onlyCR) || (currClass == eventClass::crw && onlyCR)) {
-        if (selection->getLepton(0)->charge() > 0) subClasses.push_back("++");
-        else subClasses.push_back("--");
+    if (currClass == eventClass::ssdl || (currClass == eventClass::cro && onlyCR) || (currClass == eventClass::crw)) {
+        if (currClass == eventClass::ssdl && selection->getLepton(0)->charge() > 0) subClasses.push_back("++");
+        else if (currClass == eventClass::ssdl) subClasses.push_back("--");
 
         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("ee");
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
+        //std::cout << "is dl " << std::endl;
+        if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
+            if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("pureSig_ee");
+            else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("pureSig_mm");
+            else subClasses.push_back("pureSig_em");
+        } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
+            if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("pureTTV_ee");
+            else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("pureTTV_mm");
+            else subClasses.push_back("pureTTV_em");
+        } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
 
-        if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
+        if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
+            double score;
+            for (auto it : selection->GetDLMVA()->getClassAndScore()) {
+                if (it.first > 3) continue;
+                score = it.second;
+                break;
+            }
+            //if (score > 0.81) {
+            //    std::cout << selection->getEvent()->eventTags() << std::endl;
+            //    std::cout << "leptons:" << std::endl;
+            //    for (auto& lep : *(selection->getMediumLepCol())) {
+            //        std::cout << lep->isMuon() << " " << lep->pt() << " " << lep->eta() << std::endl;
+            //    }
+            //    std::cout << "jets:" << std::endl;
+            //    for (auto& jet : *(selection->getJetCol())) {
+            //        std::cout << jet->isBTaggedLoose() << " " << jet->isBTaggedMedium() << " " << jet->isBTaggedTight() << " " << jet->pt() << " " << jet->eta() << std::endl;
+            //    }
+            //}
+            //if (score > 0.81) subClasses.push_back("score15");
+            //if (score > 0.928) subClasses.push_back("score2");
+        }
     } else if (currClass == eventClass::trilep) {
         if (selection->getMediumLepCol()->hasOSSFPair()) {
             subClasses.push_back("OSSF");
         } else {
             subClasses.push_back("noOSSF");
         }
-    } else if (currClass == eventClass::crz3L && onlyCR) {
+
+        //std::cout << "is trilep " << std::endl;
+
+        if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
+        else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
+        else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
+
+        if (bdtOutput && currClass == eventClass::trilep && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
+            double score;
+            for (auto it : selection->GetMLMVA()->getClassAndScore()) {
+                if (it.first > 3) continue;
+                score = it.second;
+                break;
+            }
+            //if (score > 0.81) {
+            //    std::cout << selection->getEvent()->eventTags() << std::endl;
+            //    std::cout << "leptons:" << std::endl;
+            //    for (auto& lep : *(selection->getMediumLepCol())) {
+            //        std::cout << lep->isMuon() << " " << lep->pt() << " " << lep->eta() << std::endl;
+            //    }
+            //    std::cout << "jets:" << std::endl;
+            //    for (auto& jet : *(selection->getJetCol())) {
+            //        std::cout << jet->isBTaggedLoose() << " " << jet->isBTaggedMedium() << " " << jet->isBTaggedTight() << " " << jet->pt() << " " << jet->eta() << std::endl;
+            //    }
+            //}
+        }
+    } else if (currClass == eventClass::crz3L) {
         if (selection->numberOfLooseBJets() >= 2 && selection->numberOfJets() >= 3) {
             subClasses.push_back("SigZVeto");
         }
+        if (selection->numberOfMediumBJets() >= 1) subClasses.push_back("OneMedB");
+        if (selection->numberOfMediumBJets() > 1) subClasses.push_back("TwoMedB");
     }
 
     return subClasses;
@@ -709,9 +1042,9 @@ CombinedSampleReweighter* FourTop::createSampleReweighter(std::string dir) {
         std::string sampleName = samp.fileName();
         if (stringTools::stringStartsWith(sampleName, "WZTo") || stringTools::stringStartsWith(sampleName, "WZ_")) {
             sampleReweighter->addReweighter("WZ", std::make_shared< ReweighterSample >("WZ", dir));
-        } //else if (stringTools::stringStartsWith(sampleName, "ZZTo") || stringTools::stringStartsWith(sampleName, "ZZ_")) {
-          //  sampleReweighter->addReweighter("ZZ", std::make_shared< ReweighterSample >("ZZ", dir));
-        //}
+        } else if (stringTools::stringStartsWith(sampleName, "ZZTo4L")) {
+            sampleReweighter->addReweighter("ZZ", std::make_shared< ReweighterSample >("ZZTo4L", dir));
+        }
         
         //else if (stringTools::stringStartsWith(sampleName, "ZG")) {
           //  sampleReweighter->addReweighter("ZG", std::make_shared< ReweighterSample >("ZG", dir));
@@ -811,11 +1144,12 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             {trilep, ""},
             {fourlep, ""}};
 
-    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig"};
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig_mm", "pureSig_ee", "pureSig_em", "pureTTV_mm", "pureTTV_ee", "pureTTV_em", "pureTTB"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
-    std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
-    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF"};
-    std::vector<std::string> crzSubChannels = {"SigZVeto"};
+    std::vector<std::string> crwSubChannels = {"ee", "em", "mm"};
+    //std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};
+    std::vector<std::string> trilepSubChannels = {"OSSF", "noOSSF", "pureSig", "pureTTV", "pureTTB"};
+    std::vector<std::string> crzSubChannels = {"SigZVeto", "OneMedB", "TwoMedB"};
 
     if (considerRegion == eventClass::fail) {
         if (bdtOutput) {
@@ -843,10 +1177,15 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             mgrAll->at(eventClass::cro)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-23J1B", true));
             mgrAll->at(eventClass::crw)->set2DHistInfo(mva_DL->create2DHistograms("_CR-2L-45J2B", true));
         }
+        if (useNpNmDistributions) {
+            mgrAll->at(eventClass::cro)->updateHistInfo(HistogramConfig::createNpNmHistograms(eventClass::cro));
+            mgrAll->at(eventClass::crw)->updateHistInfo(HistogramConfig::createNpNmHistograms(eventClass::crw));
+        }
         
+        mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
+        mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
         if (onlyCR) mgrAll->at(eventClass::cro)->addSubChannels(croSubChannels);
-        if (onlyCR) mgrAll->at(eventClass::crz3L)->addSubChannels(crzSubChannels);
-        if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
+        //if (onlyCR) mgrAll->at(eventClass::crw)->addSubChannels(crwSubChannels);
 
         if (! onlyCR) {
             std::cout << "SRs are considered" << std::endl;
@@ -861,6 +1200,10 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
                 mgrAll->at(eventClass::ssdl)->set2DHistInfo(mva_DL->create2DHistograms(""));
                 mgrAll->at(eventClass::trilep)->set2DHistInfo(mva_ML->create2DHistograms(""));
                 mgrAll->at(eventClass::fourlep)->set2DHistInfo(mva_ML->create2DHistograms("", true));
+            }
+
+            if (useNpNmDistributions) {
+                mgrAll->at(eventClass::ssdl)->updateHistInfo(HistogramConfig::createNpNmHistograms(eventClass::ssdl));
             }
 
             mgrAll->at(eventClass::ssdl)->addSubChannels(dlSubChannels);
@@ -913,4 +1256,18 @@ bool FourTop::FillRegion(eventClass nominalClass, selectionType st) {
     if (considerRegion != eventClass::fail && nominalClass != considerRegion) return false;
 
     return true;
+}
+
+std::vector<std::pair<int, double>> FourTop::FillNpNmDistributions(eventClass currentClass, std::map<eventClass,int>& offsets) {
+    std::vector<std::pair<int, double>> singleEntriesNpNm;
+
+    if (currentClass != eventClass::ssdl && currentClass != eventClass::crw && currentClass != eventClass::cro) return singleEntriesNpNm;
+    
+    std::vector<double> singleEntriesVector = HistogramConfig::fillNpNmHistograms(currentClass, selection);
+    int minOffset = offsets[currentClass] + 6;
+
+    for (unsigned i=0; i<singleEntriesVector.size(); i++) {
+        singleEntriesNpNm.push_back({minOffset+i, singleEntriesVector[i]});
+    }
+    return singleEntriesNpNm;
 }

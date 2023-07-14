@@ -153,7 +153,7 @@ double ReweighterBTag::weight( const Event& event,
     // calculate the weight (central, up or down) for an event,
     // by multiplying those for individual jets in the event. 
     double weight = 1.;
-    for( const auto& jetPtr : event.jetCollection() ){
+    for( const auto& jetPtr : event.jetCollection().goodJetCollection() ){
         weight *= (this->*jetWeight)( *jetPtr );
     }
     return weight;
