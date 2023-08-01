@@ -639,7 +639,7 @@ void TreeReader::setOutputTree( TTree* outputTree,
     outputTree->Branch("Electron_jetRelIso", &_Electron_jetRelIso, "_Electron_jetRelIso[_nElectron]/F");
     outputTree->Branch("Electron_mvaTTH", &_Electron_mvaTTH, "_Electron_mvaTTH[_nElectron]/F");
     outputTree->Branch("Electron_tightCharge", &_Electron_tightCharge, "_Electron_tightCharge[_nElectron]/I");
-    outputTree->Branch("Electron_convVeto", &_Electron_convVeto, "_Electron_convVeto[_nElectron]/B");
+    outputTree->Branch("Electron_convVeto", &_Electron_convVeto, "_Electron_convVeto[_nElectron]/O");
     outputTree->Branch("Electron_lostHits", &_Electron_lostHits, "_Electron_lostHits[_nElectron]/b");
     outputTree->Branch("Electron_mvaFall17V2Iso", &_Electron_mvaFall17V2Iso, "_Electron_mvaFall17V2Iso[_nElectron]/F");
     outputTree->Branch("Electron_mvaFall17V2noIso", &_Electron_mvaFall17V2noIso, "_Electron_mvaFall17V2noIso[_nElectron]/F");
