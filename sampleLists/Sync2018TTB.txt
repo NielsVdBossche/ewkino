@@ -1,0 +1,1 @@
+ttbar ../Syncfile/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18MiniAODv2_singlelepton_2018_UL.root  88.40

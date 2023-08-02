@@ -657,32 +657,32 @@ void FourTop::analyze(std::string method) {
                         if (i == 0) {
                             if (selection->numberOfLeps() == 2) {
                                 if (selection->numberOfJets() <= 2) {
-                                    weightUp = 0.92;
+                                    weightUp = 0.99;//0.92;
                                 } else if (selection->numberOfJets() == 3) {
-                                    weightUp = 0.95;
+                                    weightUp = 0.99;//0.95;
                                 } else if (selection->numberOfJets() == 4) {
-                                    weightUp = 1.03;
+                                    weightUp = 1.07;//1.03;
                                 } else if (selection->numberOfJets() == 5) {
-                                    weightUp = 1.20;
+                                    weightUp = 1.18;//1.20;
                                 } else if (selection->numberOfJets() == 6) {
-                                    weightUp = 1.42;
+                                    weightUp = 1.30;//1.42;
                                 } else if (selection->numberOfJets() >= 7) {
-                                    weightUp = 1.55;
+                                    weightUp = 1.32;//1.55;
                                 } 
                             }
                             if (selection->numberOfLeps() >= 3) {
                                 if (selection->numberOfJets() <= 2) {
-                                    weightUp = 0.96;
+                                    weightUp = 1.1;//0.96;
                                 } else if (selection->numberOfJets() == 3) {
-                                    weightUp = 1.16;
+                                    weightUp = 1.17;//1.16;
                                 } else if (selection->numberOfJets() == 4) {
-                                    weightUp = 1.28;
+                                    weightUp = 1.22;//1.28;
                                 } else if (selection->numberOfJets() == 5) {
-                                    weightUp = 1.46;
+                                    weightUp = 1.28;//1.46;
                                 } else if (selection->numberOfJets() == 6) {
-                                    weightUp = 1.44;
+                                    weightUp = 1.22;//1.44;
                                 } else if (selection->numberOfJets() >= 7) {
-                                    weightUp = 1.44;
+                                    weightUp = 1.18;//1.44;
                                 } 
                             }
                             weightDown = 1.;
@@ -903,13 +903,13 @@ void FourTop::analyze(std::string method) {
         //gDirectory->mkdir("analytics");
         //gDirectory->cd("analytics");
         if (useUncertainties) {
-            std::cout << "writing uncertainties" << std::endl;
+            //std::cout << "writing uncertainties" << std::endl;
 
             outfile->cd();
             outfile->cd("Uncertainties");
 
             mgrAll->writeUncertaintyHistograms(outdir);
-            std::cout << "done writing uncertainties" << std::endl;
+            //std::cout << "done writing uncertainties" << std::endl;
         }
 
         if (printEventTags) {
@@ -924,10 +924,10 @@ void FourTop::analyze(std::string method) {
         }
 
     }
-    std::cout << "change proc " << std::endl;
+    // std::cout << "change proc " << std::endl;
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
-    std::cout << "Done " << std::endl;
+    // std::cout << "Done " << std::endl;
 
     //delete mgrAll;
     outfile->Close();

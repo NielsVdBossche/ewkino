@@ -46,8 +46,8 @@ TTZ          ../skims_v6/2016PreVFP/analysisSamples/TTZToLLNuNu_M-10_TuneCP5_13T
 # TTX         ../skims_v4/2016PreVFP/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFPv6.root                    21.585204
 # TTX         ../skims_v4/2016PreVFP/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_2016_ULpreVFPv6.root                        21.585204
 THQ         ../skims_v4/2016PreVFP/THQ_ctcvcp_4f_Hincl_TuneCP5_13TeV_madgraph_pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFPv6.root                                     0.07096
-TTT         ../skims_v4/2016PreVFP/TTTJ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFPv6.root                                                    0.00065
-TTT         ../skims_v4/2016PreVFP/TTTW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFPv6.root                                                    0.00102
+TTT         ../skims_v4/2016PreVFP/TTTJ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFPv6.root                                                    0.0007
+TTT         ../skims_v4/2016PreVFP/TTTW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v3_singlelepton_MC_2016_ULpreVFPv6.root                                                    0.0013
 TTX         ../skims_v4/2016PreVFP/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFPv6.root                                       0.07358
 
 
@@ -80,8 +80,8 @@ ZZ-H        ../skims_v4/2016PreVFP/VHToNonbb_M125_TuneCP5_13TeV-amcatnloFXFX_mad
 ZZ-H        ../skims_v4/2016PreVFP/ZZTo4L_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1_singlelepton_MC_additions_reduced.root                                                          1.256
 
 TWZ             ../skims_v6/2016PreVFP/TWZToLL_thad_Wlept_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root              0.003004
-TWZ             ../skims_v6/2016PreVFP/TWZToLL_thad_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root              0.003004
+# TWZ             ../skims_v6/2016PreVFP/TWZToLL_thad_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root              0.003004
 TWZ             ../skims_v6/2016PreVFP/TWZToLL_tlept_Whad_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root              0.003004
-TWZ             ../skims_v6/2016PreVFP/TWZToLL_tlept_Whad_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root              0.003004
+# TWZ             ../skims_v6/2016PreVFP/TWZToLL_tlept_Whad_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root              0.003004
 TWZ             ../skims_v6/2016PreVFP/TWZToLL_tlept_Wlept_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root             0.0015
-TWZ             ../skims_v6/2016PreVFP/TWZToLL_tlept_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root             0.0015
+# TWZ             ../skims_v6/2016PreVFP/TWZToLL_tlept_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v2_singlelepton_MC_2016_ULpreVFP_twz.root             0.0015
