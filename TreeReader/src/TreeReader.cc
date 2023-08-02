@@ -323,6 +323,10 @@ bool TreeReader::containsLheInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_lhePt" );
 }
 
+bool TreeReader::containsEFTInfo() const{
+    return treeHasBranchWithName( _currentTreePtr, "_nEFTWeights" );
+}
+
 bool TreeReader::containsSusyMassInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_mChi" );
 }
@@ -840,6 +844,14 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
             _currentTreePtr->SetBranchAddress("_gen_daughter_n",                               _gen_daughter_n,                               &b__gen_daughter_n);
             _currentTreePtr->SetBranchAddress("_gen_daughterIndex",                            _gen_daughterIndex,                            &b__gen_daughterIndex);
         }
+
+        if ( containsEFTInfo()) {
+            _hasEFTInfo = true;
+            _currentTreePtr->SetBranchAddress("_nDynScaleWeights",              &_nDynScaleWeights,  &b__nDynScaleWeights);
+            _currentTreePtr->SetBranchAddress("_dynScaleWeight",                _dynScaleWeight,     &b__dynScaleWeight);
+            _currentTreePtr->SetBranchAddress("_nEFTWeights",                   &_nEFTWeights,       &b__nEFTWeights);
+            _currentTreePtr->SetBranchAddress("_eftWeight",                     _eftWeight,          &b__eftWeight);
+        }
     }
 
     if (containsParticleLevelInfo()) {
@@ -1148,6 +1160,13 @@ void TreeReader::setOutputTree( TTree* outputTree ){
             outputTree->Branch("_gen_motherIndex",                              &_gen_motherIndex,                              "_gen_motherIndex[_gen_n]/I");
             outputTree->Branch("_gen_daughter_n",                               &_gen_daughter_n,                               "_gen_daughter_n[_gen_n]/I");
             outputTree->Branch("_gen_daughterIndex",                            &_gen_daughterIndex,                            "_gen_daughterIndex[_gen_n][10]/I");
+        }
+
+        if ( containsEFTInfo()) {
+            outputTree->Branch("_nDynScaleWeights",     &_nDynScaleWeights,   "_nDynScaleWeights/i");
+            outputTree->Branch("_dynScaleWeight",       &_dynScaleWeight,     "_dynScaleWeight[_nDynScaleWeights]/D");
+            outputTree->Branch("_nEFTWeights",          &_nEFTWeights,        "_nEFTWeights/i");
+            outputTree->Branch("_eftWeight",            &_eftWeight,          "_eftWeight[_nEFTWeights]/D");
         }
     } 
 
