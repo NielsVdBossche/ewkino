@@ -51,6 +51,15 @@ class TreeReader {
         Double_t        _psWeight[46];
         Float_t         _nTrueInt;
         Double_t        _lheHTIncoming;
+
+        // EFT reinterpretation
+        static const unsigned dynscale_n_max = 38;
+        static const unsigned eft_n_max = 37;
+        UInt_t          _nDynScaleWeights;
+        Double_t        _dynScaleWeight[ dynscale_n_max ];
+        UInt_t          _nEFTWeights;
+        Double_t        _eftWeight[ eft_n_max ];
+
 	// generator variables
         Double_t        _gen_met;
         Double_t        _gen_metPhi;
@@ -412,6 +421,7 @@ class TreeReader {
         bool containsFullGeneratorInfo() const;
         bool containsParticleLevelInfo() const;
         bool containsLheInfo() const;
+        bool containsEFTInfo() const;
         
         //check whether SUSY mass info is present in the current sample
 	// ( this is the case for SUSY signal scans )
@@ -435,6 +445,7 @@ class TreeReader {
         bool isSusy() const{ return _isSusy; }
         bool hasPL() const { return _hasPLInfo;}
         bool hasGenLvl() const { return _hasGenLevelInfo;}
+        bool hasEFT() const { return _hasEFTInfo;}
 
         //access number of samples and current sample
         const Sample& currentSample() const{ return *_currentSamplePtr; }
@@ -481,6 +492,7 @@ class TreeReader {
         // same for PL info
         bool _hasPLInfo = false;
         bool _hasGenLevelInfo = false;
+        bool _hasEFTInfo = false;
 
         //check whether current sample is initialized, throw an error if it is not 
         void checkCurrentSample() const;
@@ -527,6 +539,10 @@ class TreeReader {
         TBranch        *b__lheWeight;   
         TBranch        *b__nTrueInt;   
         TBranch        *b__lheHTIncoming;
+        TBranch        *b__nDynScaleWeights;
+        TBranch        *b__dynScaleWeight;
+        TBranch        *b__nEFTWeights;
+        TBranch        *b__eftWeight;
         TBranch        *b__gen_met;   
         TBranch        *b__gen_metPhi;   
         TBranch        *b__gen_nL;   
