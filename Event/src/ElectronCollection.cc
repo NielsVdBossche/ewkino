@@ -7,6 +7,12 @@ ElectronCollection::ElectronCollection( const TreeReader& treeReader ){
     }
 }
 
+ElectronCollection::ElectronCollection( const NanoReader& nanoReader ){
+    for( unsigned e = 0; e < nanoReader.GetElectronReader()._nLepton; ++ e){
+        push_back( Electron( nanoReader, e ) );
+    }
+}
+
 ElectronCollection ElectronCollection::buildVariedCollection( 
 		    Electron (Electron::*variedElectron)() const ) const{
     std::vector< std::shared_ptr< Electron > > electronVector;

@@ -16,7 +16,11 @@
 
 class Event;
 
-
+std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
+    TTree* treePtr, const std::vector<std::string> nameIdentifiers, const std::string& antiIdentifier = "");
+bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind );
+template <typename T>
+void setMapBranchAddresses(TTree* treePtr, std::map<std::string, T>& variableMap, std::map<std::string, TBranch*> branchMap);
 class TreeReader {
 
     public :

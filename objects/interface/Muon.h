@@ -28,6 +28,10 @@ class Muon : public LightLepton {
         bool isMediumPOGMuon() const{ return _isMediumPOGMuon; }
         bool isTightPOGMuon() const{ return _isTightPOGMuon; }
 
+        bool isGlobal() const{ return _isGlobal; }
+        bool isTracker() const{ return _isTracker; }
+        bool isStandalone() const{ return _isStandalone; }
+
         double segmentCompatibility() const{ return _segmentCompatibility; }
         double trackPt() const{ return _trackPt; }
         double trackPtError() const{ return _trackPtError; }
@@ -45,6 +49,11 @@ class Muon : public LightLepton {
         bool _isLoosePOGMuon = false;
         bool _isMediumPOGMuon = false;
         bool _isTightPOGMuon = false;
+        
+        // other ID variables
+        bool _isGlobal = false;
+        bool _isTracker = false;
+        bool _isStandalone = false;
 
         virtual Muon* clone() const & override{ return new Muon( *this ); }
         virtual Muon* clone() && override{ return new Muon( std::move(*this) ); }

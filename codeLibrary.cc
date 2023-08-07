@@ -28,7 +28,6 @@
 #include "Event/src/TriggerInfo.cc"
 #include "Event/src/GeneratorInfo.cc"
 #include "Event/src/LheCollection.cc"
-#include "Event/src/SusyMassInfo.cc"
 #include "Event/src/EventTags.cc"
 #include "Event/src/ParticleLevelInfo.cc"
 #include "Event/src/GenParticlesTop.cc"
@@ -54,6 +53,7 @@
 
 //include TreeReader code 
 #include "TreeReader/src/TreeReader.cc"
+#include "TreeReader/src/NanoReader.cc"
 #include "TreeReader/src/TreeReaderErrors.cc"
 
 //include plotting code 

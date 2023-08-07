@@ -5,6 +5,7 @@
 
 //include other parts of framework
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 
 EventTags::EventTags( const TreeReader& treeReader ) :
@@ -13,6 +14,11 @@ EventTags::EventTags( const TreeReader& treeReader ) :
     _eventNumber( treeReader._eventNb )
     {}
 
+EventTags::EventTags( const NanoReader& nanoReader ) :
+    _runNumber( nanoReader._run ),
+    _luminosityBlock( nanoReader._luminosityBlock ),
+    _eventNumber( nanoReader._event )
+{}
 
 EventTags::EventTags( const long unsigned runNumber, const long unsigned luminosityBlock, const long unsigned eventNumber ) :
     _runNumber( runNumber ),

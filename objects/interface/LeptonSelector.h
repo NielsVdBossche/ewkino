@@ -14,6 +14,10 @@ class LeptonSelector {
 
         virtual double coneCorrection() const = 0;
 
+        virtual bool isElectronSelector() const = 0;
+        virtual bool isMuonSelector() const = 0;
+        virtual bool isTauSelector() const = 0;
+
         virtual ~LeptonSelector(){}
 
     protected:

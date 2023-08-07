@@ -8,6 +8,7 @@ class LheCollection : public PhysicsObjectCollection< LheParticle > {
     
     public:
         LheCollection( const TreeReader& );
+        LheCollection( const NanoReader& );
         LheCollection() = default;
 
     private:

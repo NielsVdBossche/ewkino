@@ -43,12 +43,16 @@ Tau::Tau( const TreeReader& treeReader, const unsigned leptonIndex ) :
     _passTightMVANew2017( treeReader._tauTightMvaNew2017v2[ leptonIndex ] ),
     _passVTightMVANew2017( treeReader._tauVTightMvaNew2017v2[ leptonIndex ] )
         
-    {} 
+{} 
+
+Tau::Tau ( const NanoReader& nanoReader, const unsigned leptonIndex) :
+    Lepton( nanoReader.GetTauReader(), leptonIndex, new TauSelector( this ) )
+{}
 
 
 Tau::Tau( const Tau& rhs ) :
     Lepton( rhs, new TauSelector( this) ),
-   	_decayMode( rhs._decayMode ),
+    _decayMode( rhs._decayMode ),
     _passDecayModeFinding( rhs._passDecayModeFinding ),
     _passDecayModeFindingNew( rhs._passDecayModeFindingNew ),
     _passMuonVetoLoose( rhs._passMuonVetoLoose ),

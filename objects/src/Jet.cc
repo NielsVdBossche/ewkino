@@ -4,6 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#include <bitset>
 
 //include other parts of framework
 #include "../interface/JetSelector.h"
@@ -79,39 +80,51 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     }
 }
 
-Jet::Jet( const NanoReader& nanoReader, const unsigned jetIndex) :
-    PhysicsObject( 
-        nanoReader._Jet_pt[jetIndex], 
-        nanoReader._Jet_eta[jetIndex], 
-        nanoReader._Jet_phi[jetIndex], 
-        nanoReader.[jetIndex], // only mass given... -> introduce new way to set vector. Might just add a setMass option
-        nanoReader.is2016(),
-        nanoReader.is2016PreVFP(),
-        nanoReader.is2016PostVFP(), 
-        nanoReader.is2017(),
-        nanoReader.is2018()
-    ),
-    _deepCSV( nanoReader._Jet_btagDeepB[jetIndex] ),
-    _deepFlavor( nanoReader._Jet_btagDeepFlavB[jetIndex] ),
-
-    // WARNING : is hadron flavor defined for jets in data?
-    _hadronFlavor( nanoReader._Jet_hadronFlavour[jetIndex] ),
-
-    selector( new JetSelector( this ) )
+Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex) : 
+        PhysicsObject(
+                nanoReader._Jet_pt[jetIndex],
+                nanoReader._Jet_eta[jetIndex],
+                nanoReader._Jet_phi[jetIndex],
+                -1.,
+                nanoReader.is2016(),
+                nanoReader.is2016PreVFP(),
+                nanoReader.is2016PostVFP(),
+                nanoReader.is2017(),
+                nanoReader.is2018()),
+        _deepCSV(nanoReader._Jet_bTagDeepB[jetIndex]),
+        _deepFlavor(nanoReader._Jet_bTagDeepFlavB[jetIndex]),
+        selector(new JetSelector(this)) 
 {
-    // need to apply JER immediately here. Use Hybrid method and reset fourvector to new values!
+    // set jet hadron flavor, but only for simulation
+    if (nanoReader.containsGeneratorInfo()) {
+        _hadronFlavor = nanoReader._Jet_hadronFlavor[jetIndex];
+    }
 
-    // _pt_JECDown( nanoReader._jetSmearedPt_JECDown[jetIndex] ),
-    // _pt_JECUp( nanoReader._jetSmearedPt_JECUp[jetIndex] ),
+    // set jet ID
+    std::bitset<3> jetIdBits = std::bitset<3>(nanoReader._Jet_jetId[jetIndex]);
+    _isTight = jetIdBits[1];
+    _isTightLeptonVeto = jetIdBits[2];
 
-    // _pt_JERDown( nanoReader._jetSmearedPt_JERDown[jetIndex] ),
-    // _pt_JERUp( nanoReader._jetSmearedPt_JERUp[jetIndex] ),
+    // catch potential invalid values of deepCSV and deepFlavor
+    if (std::isnan(_deepCSV)) {
+        _deepCSV = 0.;
+    } else if (_deepCSV < 0) {
+        _deepCSV = 0.;
+    }
+    if (std::isnan(_deepFlavor)) {
+        _deepFlavor = 0.;
+    } else if (_deepFlavor < 0) {
+        _deepFlavor = 0.;
+    }
 
-    _isTight = (nanoReader._Jet_jetId[jetIndex] >= 2);
-    _isTightLeptonVeto = (nanoReader._Jet_jetId[jetIndex] >= 4);
+    // check that _hadronFlavor has a known value
+    if (!((_hadronFlavor == 0) || (_hadronFlavor == 4) || (_hadronFlavor == 5))) {
+        std::string msg = "ERROR in Jet constructor:";
+        msg += " jet hadronFlavor is " + std::to_string(_hadronFlavor);
+        msg += " while it should be 0, 4 or 5.";
+        throw std::runtime_error(msg);
+    }
 }
-
-
 
 Jet::Jet( const Jet& rhs ) : 
     PhysicsObject( rhs ),

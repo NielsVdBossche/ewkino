@@ -20,16 +20,21 @@ Muon::Muon( const TreeReader& treeReader, const unsigned leptonIndex ):
 }
 
 Muon::Muon( const NanoReader& nanoReader, const unsigned leptonIndex ):
-    //LightLepton( treeReader, leptonIndex, new MuonSelector( this ) ),
-    _segmentCompatibility( nanoReader._Mu_segmentComp[leptonIndex] ),
-    // _trackPt( nanoReader.[leptonIndex] ),
-    // _trackPtError( nanoReader.[leptonIndex] ),
-    // _relIso0p4DeltaBeta( nanoReader.[leptonIndex] ),
-    _isLoosePOGMuon( nanoReader._Mu_looseId[leptonIndex] ),
-    _isMediumPOGMuon( nanoReader._Mu_mediumId[leptonIndex] ),
-    _isTightPOGMuon( nanoReader._Mu_tightId[leptonIndex] )
+    LightLepton( nanoReader.GetMuonReader(), leptonIndex, new MuonSelector(this) ),
+    _segmentCompatibility( nanoReader._Muon_segmentComp[leptonIndex] ),
+    //_trackPt( treeReader._lMuonTrackPt[leptonIndex] ), // does not seem to exist in nanoAOD
+    _trackPtError( nanoReader._Muon_ptErr[leptonIndex] ),
+    _relIso0p4DeltaBeta( nanoReader._Muon_pfRelIso04_all[leptonIndex] ),
+    _isLoosePOGMuon( nanoReader._Muon_looseId[leptonIndex] ),
+    _isMediumPOGMuon( nanoReader._Muon_mediumId[leptonIndex] ),
+    _isTightPOGMuon( nanoReader._Muon_tightId[leptonIndex] ),
+    _isGlobal( nanoReader._Muon_isGlobal[leptonIndex] ),
+    _isTracker( nanoReader._Muon_isTracker[leptonIndex] ),
+    _isStandalone( nanoReader._Muon_isStandalone[leptonIndex] )
 {   
     //make sure also non-cone-corrected pt is set to the corrected value
+
+    
     _uncorrectedPt = pt();
     _uncorrectedE = energy();
     
@@ -51,7 +56,10 @@ Muon::Muon( const Muon& rhs ):
     _relIso0p4DeltaBeta( rhs._relIso0p4DeltaBeta ),
     _isLoosePOGMuon( rhs._isLoosePOGMuon ),
     _isMediumPOGMuon( rhs._isMediumPOGMuon ),
-    _isTightPOGMuon( rhs._isTightPOGMuon )
+    _isTightPOGMuon( rhs._isTightPOGMuon ),
+    _isGlobal( rhs._isGlobal ),
+    _isTracker( rhs._isTracker ),
+    _isStandalone( rhs._isStandalone )
     {}    
 
 
@@ -63,14 +71,19 @@ Muon::Muon( Muon&& rhs ) noexcept:
     _relIso0p4DeltaBeta( rhs._relIso0p4DeltaBeta ),
     _isLoosePOGMuon( rhs._isLoosePOGMuon ),
     _isMediumPOGMuon( rhs._isMediumPOGMuon ),
-    _isTightPOGMuon( rhs._isTightPOGMuon )
+    _isTightPOGMuon( rhs._isTightPOGMuon ),
+    _isGlobal( rhs._isGlobal ),
+    _isTracker( rhs._isTracker ),
+    _isStandalone( rhs._isStandalone )
     {}    
 
 
 std::ostream& Muon::print( std::ostream& os ) const{
     os << "Muon : ";
     LightLepton::print( os );
-    os << " / segmentCompatibility = " << _segmentCompatibility << " / trackPt = " << _trackPt << " / trackPtError = " << _trackPtError;
+    os << " / segmentCompatibility = " << _segmentCompatibility;
+    os << " / trackPt = " << _trackPt;
+    os << " / trackPtError = " << _trackPtError;
     if( _isTightPOGMuon ){
         os << " / tight POG muon";
     } else if( _isMediumPOGMuon ){
@@ -80,5 +93,8 @@ std::ostream& Muon::print( std::ostream& os ) const{
     } else {
         os << " / fails POG muon selection";
     }
+    os << " / isGlobal = " << _isGlobal;
+    os << " / isTracker = " << _isTracker;
+    os << " / isStandalone = " << _isStandalone;
     return os;
 }

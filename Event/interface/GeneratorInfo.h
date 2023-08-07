@@ -10,6 +10,7 @@ class GeneratorInfo{
     
     public:
         GeneratorInfo( const TreeReader& );
+        GeneratorInfo( const NanoReader& );
         ~GeneratorInfo();
 
         unsigned numberOfLheWeights() const{ return _numberOfLheWeights; }
@@ -19,6 +20,8 @@ class GeneratorInfo{
         unsigned firstPdfIndex() const{ return _firstPdfIndex; }
         unsigned numberOfPdfVariations() const{ return _numberOfPdfVariations; }
 
+        // order of scale weights:
+        // see here: https://cms-nanoaod-integration.web.cern.ch/autoDoc/
         double relativeWeightScaleVar( const unsigned scaleIndex ) const;
         double relativeWeight_MuR_1_MuF_1() const{ return relativeWeightScaleVar( 0 ); }
         double relativeWeight_MuR_1_MuF_2() const{ return relativeWeightScaleVar( 1 ); }
@@ -31,8 +34,13 @@ class GeneratorInfo{
         double relativeWeight_MuR_0p5_MuF_0p5() const{ return relativeWeightScaleVar( 8 ); }
 
         double relativeWeightPdfVar( const unsigned pdfIndex ) const;
-
         unsigned numberOfPsWeights() const{ return _numberOfPsWeights; }
+        // order of PS weights:
+        // see this line from the official nanoAOD producer,
+        // https://github.com/cms-sw/cmssw/blob/3d761d84ee43f5ab61cf104d5081e09b074159b1/
+        // PhysicsTools/NanoAOD/plugins/GenWeightsTableProducer.cc#L533
+        // (maybe find better source later...)
+        // see also here: https://cms-nanoaod-integration.web.cern.ch/autoDoc/
         double relativeWeightPsVar( const unsigned psIndex ) const;
         double relativeWeight_FSR_InverseSqrt2() const{ return relativeWeightPsVar( 2 ); }
         double relativeWeight_FSR_Sqrt2() const{ return relativeWeightPsVar( 3 ); }

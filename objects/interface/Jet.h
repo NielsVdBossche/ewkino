@@ -9,8 +9,9 @@
 #if JECONRUNTIME
 #include "../../CMSSW_imports/interface/JECWrapper.h"
 #endif
-//#include "JetSelector.h"
 
+// TODO: 
+// - JECs implementation -> add boolean to see if initialized and work based on that?
 
 template< typename objectType > class PhysicsObjectCollection;
 class JetSelector;

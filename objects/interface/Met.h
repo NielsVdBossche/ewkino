@@ -57,8 +57,10 @@ class Met : public PhysicsObject {
     public:
         Met() = default;
         Met( const TreeReader&, bool, bool );
+        Met( const NanoReader&);
 
         virtual bool isGood() const override{ return true; }
+        bool IsMetVariationsInitialized() const {return _metVariationsInitialized;}
 
         //met objects varied by respective uncertainties
         Met MetJECDown() const;
@@ -89,7 +91,6 @@ class Met : public PhysicsObject {
 
         Met ApplyPhiModulation(int runnb, std::string year, bool isMC, int npv, bool isUL = true);
     private:
-
         //JEC uncertainties
         double _pt_JECDown = 0;
         double _phi_JECDown = 0;
@@ -109,6 +110,9 @@ class Met : public PhysicsObject {
         double _phi_UnclDown = 0;
         double _pt_UnclUp = 0;
         double _phi_UnclUp = 0;
+
+        // Control variable, equivalent to checking if we're running on mini or nano
+        bool _metVariationsInitialized = false;
 
         Met variedMet( const double pt, const double phi ) const;
 	Met variedMetPxPy( const double px, const double py ) const;

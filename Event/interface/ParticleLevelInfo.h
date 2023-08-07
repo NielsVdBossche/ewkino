@@ -1,12 +1,13 @@
 #ifndef PARTICLELEVELINFO_H
 #define PARTICLELEVELINFO_H
 
-#include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 
 class ParticleLevelInfo {
     public:
         ParticleLevelInfo(const TreeReader&);
+        ParticleLevelInfo(const NanoReader&);
 
         ~ParticleLevelInfo() = default;
 

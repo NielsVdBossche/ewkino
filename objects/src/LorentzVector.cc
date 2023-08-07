@@ -42,6 +42,10 @@ LorentzVector::LorentzVector(const double pt, const double eta, const double phi
 {
     setZeroValues();    
     normalizePhi();
+    
+    // extra: if the provided energy is negative,
+    // use total momentum as proxy for energy
+    if( energy<0 ){ energyValue = momentum(); }
 }
 
 
@@ -52,6 +56,12 @@ double LorentzVector::mass() const{
     } else {
         return - ( std::sqrt( -m2 ) );
     }
+}
+
+
+double LorentzVector::momentum() const{
+    // calculate total momentum
+    return std::sqrt( transverseMomentum*transverseMomentum + zMomentum*zMomentum );
 }
 
 

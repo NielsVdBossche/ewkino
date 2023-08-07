@@ -15,7 +15,9 @@ Met::Met( const TreeReader& treeReader,
     _pt_UnclDown( treeReader._met_UnclDown ),
     _phi_UnclDown( treeReader._metPhi_UnclDown ),
     _pt_UnclUp( treeReader._met_UnclUp ),
-    _phi_UnclUp( treeReader._metPhi_UnclUp ) {
+    _phi_UnclUp( treeReader._metPhi_UnclUp ),
+    _metVariationsInitialized(true) 
+{
     
     if (readAllJECVariations) {
         _pxy_JECSourcesUp = std::vector<std::pair<double,double> >(_JECSources->size());
@@ -45,6 +47,11 @@ Met::Met( const TreeReader& treeReader,
     }
 }
 
+Met::Met( const NanoReader& nanoReader) :
+    PhysicsObject( nanoReader._MET_pt, 0., nanoReader._MET_phi, nanoReader._MET_pt,
+		    nanoReader.is2016(), nanoReader.is2016PreVFP(), nanoReader.is2016PostVFP(),
+		    nanoReader.is2017(), nanoReader.is2018() )
+{}
 
 Met Met::variedMet( const double pt, const double phi ) const{
     Met variedMet( *this );

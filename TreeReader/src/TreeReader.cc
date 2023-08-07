@@ -127,7 +127,7 @@ void TreeReader::readSamples2018( const std::string& list, const std::string& di
 std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
     TTree* treePtr,
     const std::vector<std::string> nameIdentifiers,
-    const std::string& antiIdentifier = "") {
+    const std::string& antiIdentifier) {
     // build a map of branches from a given tree
     // all branches whose name contains nameIdentifier and not antiIdentifier will be added
     // the return type is a pair of two objects:
@@ -581,11 +581,12 @@ Event* TreeReader::buildEventPtr( long unsigned entry,
 			readAllJECVariations, readGroupedJECVariations );
 }
 
-template< typename T > void setMapBranchAddresses( TTree* treePtr, 
-	std::map< std::string, T >& variableMap, 
-	std::map< std::string, TBranch* > branchMap ){
-    for( const auto& variable : variableMap ){
-        treePtr->SetBranchAddress( variable.first.c_str(), &variableMap[ variable.first ], &branchMap[ variable.first ] );
+template <typename T>
+void setMapBranchAddresses(TTree* treePtr,
+                           std::map<std::string, T>& variableMap,
+                           std::map<std::string, TBranch*> branchMap) {
+    for (const auto& variable : variableMap) {
+        treePtr->SetBranchAddress(variable.first.c_str(), &variableMap[variable.first], &branchMap[variable.first]);
     }
 }
 

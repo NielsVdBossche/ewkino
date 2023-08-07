@@ -42,6 +42,7 @@ class PhysicsObject{
         double px() const{ return vector.px(); }
         double py() const{ return vector.py(); }
         double pz() const{ return vector.pz(); }
+        double momentum() const{ return vector.momentum(); }
 
         virtual bool isGood() const{ return true; }
 
