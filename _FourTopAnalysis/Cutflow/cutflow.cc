@@ -51,8 +51,45 @@ std::vector<HistInfo>* getCutflowHist(std::string flag, bool genInfo) {
     return histInfoVec;
 }
 
+std::vector<HistInfo>* getSelectHist(std::string flag, bool genInfo) {
+    std::vector<HistInfo>* histInfoVec = new std::vector<HistInfo>;
+    *histInfoVec = {
+        HistInfo("electrons_" + flag, "", 2, -0.5, 1.5),
+        HistInfo("muons_" + flag, "", 2, -0.5, 1.5)
+    };
+
+    // variables for selection
+
+    return histInfoVec;
+}
+
+
 bool selectLeptonsPt(const Lepton& lepton) {
     return (lepton.pt() > 10);
+}
+
+bool selectLeptonsBase(const LightLepton& lepton) {
+    if (lepton.uncorrectedPt() < 10) return false;
+    if (lepton.absEta() > 2.5) return false;
+    if (fabs(lepton.dxy()) > 0.05) return false;
+    if (fabs(lepton.dz()) > 0.1) return false;
+    if (lepton.sip3d() >= 8) return false;
+    return true;
+}
+
+bool selectElectronsBase(const Electron& electron) {
+    if( electron.numberOfMissingHits() >= 2 ) return false;
+    return true;
+}
+
+
+bool selectMuonsBase(const Muon& muon) {
+    if( !muon.isMediumPOGMuon() ) return false;
+    return true;
+}
+
+bool selectLeptonsIrel(const LightLepton& lepton) {
+    return (lepton.miniIso() < 0.4);
 }
 
 bool selectLeptonsLooseMVA(const LightLepton& lepton) {
@@ -96,19 +133,19 @@ void FourTop::cutFlow(std::string& sortingMode) {
     //}
 
     std::string channelDL = "DL";
-    std::vector<HistInfo>* infoDL = getCutflowHist(channelDL, sortOnGenerator);
+    std::vector<HistInfo>* infoDL = getSelectHist(channelDL, sortOnGenerator);
     HistogramManager* DLManager = new HistogramManager(channelDL, infoDL);
 
     std::string channel3L = "3L";
-    std::vector<HistInfo>* info3L = getCutflowHist(channel3L, sortOnGenerator);
+    std::vector<HistInfo>* info3L = getSelectHist(channel3L, sortOnGenerator);
     HistogramManager* TriLManager = new HistogramManager(channel3L, info3L);
 
     std::string channel4L = "4L";
-    std::vector<HistInfo>* info4L = getCutflowHist(channel4L, sortOnGenerator);
+    std::vector<HistInfo>* info4L = getSelectHist(channel4L, sortOnGenerator);
     HistogramManager* FourLManager = new HistogramManager(channel4L, info4L);
 
     std::string channelGarbage = "garbage";
-    std::vector<HistInfo>* infoGarbage = getCutflowHist(channelGarbage, sortOnGenerator);
+    std::vector<HistInfo>* infoGarbage = getSelectHist(channelGarbage, sortOnGenerator);
     HistogramManager* garbageManager = new HistogramManager(channelGarbage, infoGarbage);
 
     std::cout << "event loop" << std::endl;
@@ -170,22 +207,39 @@ void FourTop::cutFlow(std::string& sortingMode) {
             unsigned long evNb = currentEvent->eventNumber();
 
             //if (std::find(evNbs.begin(), evNbs.end(), evNb) == evNbs.end()) continue;
-            evaluatedEvNbs.push_back(evNb);
-            eventTagsOutput << std::endl << std::endl;
-            eventTagsOutput << evNb << std::endl;
+            //evaluatedEvNbs.push_back(evNb);
+            //eventTagsOutput << std::endl << std::endl;
+            //eventTagsOutput << evNb << std::endl;
             //std::cout << evNb << std::endl;
 
-            selection->addNewEvent(currentEvent); 
-            if (! currentEvent->passMetFilters()) continue;
+            // selection->addNewEvent(currentEvent); 
+            // if (! currentEvent->passMetFilters()) continue;
 
-            if (! eventPassesTriggers()) continue;
+            // if (! eventPassesTriggers()) continue;
             // if (! selection->leptonsArePrompt()) continue;
             //eventTagsOutput << "has 3 leptons: " << std::endl;
             //if (selection->numberOfLeps() != 3) continue;
             //eventTagsOutput << "yes " << std::endl;
             currentEvent->removeTaus();
-            currentEvent->selectLooseLeptons();
+            // currentEvent->selectLooseLeptons();
             currentEvent->sortLeptonsByPt();
+
+            //currentEvent->selectLeptons(selectLeptonsPt);
+            currentEvent->selectLightLeptons(selectLeptonsBase);
+            currentEvent->selectElectrons(selectElectronsBase);
+            currentEvent->selectMuons(selectMuonsBase);
+            ElectronCollection electrons = currentEvent->electronCollection();
+            MuonCollection muons = currentEvent->muonCollection();
+            allDLHist->at(0)->Fill(0., electrons.size());
+            allDLHist->at(1)->Fill(0., muons.size());
+
+            electrons.selectObjects(selectElectronsBase);
+            muons.selectObjects(selectMuonsBase);
+
+            allDLHist->at(0)->Fill(1., electrons.size());
+            allDLHist->at(1)->Fill(1., muons.size());
+
+
 
             //for (auto lep : currentEvent->lightLeptonCollection()) {
             //    int nMissingHits = 0;
@@ -202,121 +256,121 @@ void FourTop::cutFlow(std::string& sortingMode) {
             //    eventTagsOutput << std::endl;
             //}
             //continue;
-            eventTagsOutput << "pass lepton selection: " << std::endl;
-            if (selection->numberOfLeps() < 2) continue;
-            //if (!selection->passLeptonSelection()) continue;
+            //eventTagsOutput << "pass lepton selection: " << std::endl;
+            //if (selection->numberOfLeps() < 2) continue;
+            ////if (!selection->passLeptonSelection()) continue;
 
-            eventTagsOutput << "true" << std::endl;
-            std::shared_ptr<TH1D> cutflowHist;
-            std::vector<std::shared_ptr<TH1D>>* currentHistSet;
+            //eventTagsOutput << "true" << std::endl;
+            //std::shared_ptr<TH1D> cutflowHist;
+            //std::vector<std::shared_ptr<TH1D>>* currentHistSet;
 
-            int nLeps = selection->numberOfLeps();
-            int nTightLeps = nLeps;
+            //int nLeps = selection->numberOfLeps();
+            //int nTightLeps = nLeps;
 
-            eventTagsOutput << "nLeps == " << nLeps << std::endl;
-            //if (nLeps > 2) continue;
+            //eventTagsOutput << "nLeps == " << nLeps << std::endl;
+            ////if (nLeps > 2) continue;
 
-            //if (nLeps < 2) continue;
+            ////if (nLeps < 2) continue;
 
-            if (nLeps == 2) {
-                cutflowHist = dlHist;
-                currentHistSet = allDLHist;
-            } else if (nLeps == 3) {
-                cutflowHist = trilepHist;
-                currentHistSet = all3LHist;
-            } else if (nLeps >= 4) {
-                cutflowHist = fourlepHist;
-                currentHistSet = all4LHist;
-            }
+            //if (nLeps == 2) {
+            //    cutflowHist = dlHist;
+            //    currentHistSet = allDLHist;
+            //} else if (nLeps == 3) {
+            //    cutflowHist = trilepHist;
+            //    currentHistSet = all3LHist;
+            //} else if (nLeps >= 4) {
+            //    cutflowHist = fourlepHist;
+            //    currentHistSet = all4LHist;
+            //}
 
-            weight = 1.;// currentEvent->weight();
-            //weight *= reweighter.totalWeight(*currentEvent);
-            selection->classifyEvent();
-            eventClass nominalClass = selection->getCurrentClass();
+            //weight = 1.;// currentEvent->weight();
+            ////weight *= reweighter.totalWeight(*currentEvent);
+            //selection->classifyEvent();
+            //eventClass nominalClass = selection->getCurrentClass();
 
-            //std::cout << nLeps << std::endl;
-            cutflowHist->Fill(0., weight);
-            
+            ////std::cout << nLeps << std::endl;
+            //cutflowHist->Fill(0., weight);
+            //
 
-            cutflowHist->Fill(1., weight);
-            
+            //cutflowHist->Fill(1., weight);
+            //
 
-            currentHistSet->at(7)->Fill(currentEvent->numberOfGoodJets(), weight);
-            currentHistSet->at(8)->Fill(currentEvent->numberOfLooseBTaggedJets(), weight);
-            currentHistSet->at(9)->Fill(currentEvent->numberOfMediumBTaggedJets(), weight);
-            currentHistSet->at(10)->Fill(currentEvent->HT(), weight);
+            //currentHistSet->at(7)->Fill(currentEvent->numberOfGoodJets(), weight);
+            //currentHistSet->at(8)->Fill(currentEvent->numberOfLooseBTaggedJets(), weight);
+            //currentHistSet->at(9)->Fill(currentEvent->numberOfMediumBTaggedJets(), weight);
+            //currentHistSet->at(10)->Fill(currentEvent->HT(), weight);
 
-            cutflowHist->Fill(6., weight);
-            
-            currentEvent->sortLeptonsByPt();
-            
-            eventTagsOutput << "Lepton pts for trigger: " << selection->getLepton(0)->pt() << " " << selection->getLepton(1)->pt() << std::endl;
+            //cutflowHist->Fill(6., weight);
+            //
+            //currentEvent->sortLeptonsByPt();
+            //
+            //eventTagsOutput << "Lepton pts for trigger: " << selection->getLepton(0)->pt() << " " << selection->getLepton(1)->pt() << std::endl;
 
-            if (selection->getLepton(0)->pt() < 25 || selection->getLepton(1)->pt() < 20) continue;
+            //if (selection->getLepton(0)->pt() < 25 || selection->getLepton(1)->pt() < 20) continue;
 
-            cutflowHist->Fill(7., weight);
-            
-            eventTagsOutput << "pass low mass veto: " << std::endl;
+            //cutflowHist->Fill(7., weight);
+            //
+            //eventTagsOutput << "pass low mass veto: " << std::endl;
 
-            // Remove mass resonances
-            if (! selection->passLowMassVeto()) continue;
+            //// Remove mass resonances
+            //if (! selection->passLowMassVeto()) continue;
 
-            eventTagsOutput << "true" << std::endl;
-
-
-            cutflowHist->Fill(8., weight);
-            
-            eventTagsOutput << "Z veto: " << std::endl;
-
-            if (!selection->passZBosonVeto()) continue;
-            eventTagsOutput << "Passed" << std::endl;
-
-            cutflowHist->Fill(9., weight);
-            
-
-            currentHistSet->at(13)->Fill(currentEvent->numberOfJets(), weight);
-            eventTagsOutput << "NJets " << selection->numberOfJets() << std::endl;
+            //eventTagsOutput << "true" << std::endl;
 
 
-            if ((nLeps == 2 && selection->numberOfJets() < 3) || (nLeps == 3 && selection->numberOfJets() < 3) || (nLeps == 4 && selection->numberOfJets() < 2)) continue;
-            cutflowHist->Fill(10., weight);
-            
+            //cutflowHist->Fill(8., weight);
+            //
+            //eventTagsOutput << "Z veto: " << std::endl;
 
-            if (selection->numberOfLooseBJets() == 2) currentHistSet->at(16)->Fill(selection->numberOfJets(), weight);
-            if (selection->numberOfLooseBJets() == 3) currentHistSet->at(19)->Fill(selection->numberOfJets(), weight);
-            if (selection->numberOfMediumBJets() == 2) currentHistSet->at(17)->Fill(selection->numberOfJets(), weight);
+            //if (!selection->passZBosonVeto()) continue;
+            //eventTagsOutput << "Passed" << std::endl;
 
-            currentHistSet->at(14)->Fill(selection->numberOfLooseBJets(), weight);
-            currentHistSet->at(15)->Fill(selection->numberOfMediumBJets(), weight);
+            //cutflowHist->Fill(9., weight);
+            //
 
-            eventTagsOutput << "Loose Bs " << selection->numberOfLooseBJets() << std::endl;
-
-            if ((nLeps < 4 && selection->numberOfLooseBJets() < 2) || (nLeps == 4 && selection->numberOfLooseBJets() < 1)) continue;
-            cutflowHist->Fill(11., weight);
-            
+            //currentHistSet->at(13)->Fill(currentEvent->numberOfJets(), weight);
+            //eventTagsOutput << "NJets " << selection->numberOfJets() << std::endl;
 
 
-            //if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6)) continue;
-            //cutflowHist->Fill(12., weight);
-            
-            eventTagsOutput << "HT " << selection->getHT() << std::endl;
+            //if ((nLeps == 2 && selection->numberOfJets() < 3) || (nLeps == 3 && selection->numberOfJets() < 3) || (nLeps == 4 && selection->numberOfJets() < 2)) continue;
+            //cutflowHist->Fill(10., weight);
+            //
+
+            //if (selection->numberOfLooseBJets() == 2) currentHistSet->at(16)->Fill(selection->numberOfJets(), weight);
+            //if (selection->numberOfLooseBJets() == 3) currentHistSet->at(19)->Fill(selection->numberOfJets(), weight);
+            //if (selection->numberOfMediumBJets() == 2) currentHistSet->at(17)->Fill(selection->numberOfJets(), weight);
+
+            //currentHistSet->at(14)->Fill(selection->numberOfLooseBJets(), weight);
+            //currentHistSet->at(15)->Fill(selection->numberOfMediumBJets(), weight);
+
+            //eventTagsOutput << "Loose Bs " << selection->numberOfLooseBJets() << std::endl;
+
+            //if ((nLeps < 4 && selection->numberOfLooseBJets() < 2) || (nLeps == 4 && selection->numberOfLooseBJets() < 1)) continue;
+            //cutflowHist->Fill(11., weight);
+            //
 
 
-            currentHistSet->at(18)->Fill(selection->getHT(), weight);
+            ////if ((nLeps == 2 && selection->numberOfLooseBJets() == 2 && selection->numberOfJets() < 6)) continue;
+            ////cutflowHist->Fill(12., weight);
+            //
+            //eventTagsOutput << "HT " << selection->getHT() << std::endl;
 
-            if ((nLeps == 2 && selection->getHT() < 200) || (nLeps == 3 && selection->getHT() < 200)) continue;
-            cutflowHist->Fill(13., weight);
-            //if (nominalClass == eventClass::trilep || nominalClass == eventClass::ssdl) eventTagsNBS << currentEvent->eventNumber() << std::endl;
-            if (! selection->passPhotonOverlapRemoval()) continue;
 
-            eventTagsNBS << currentEvent->eventNumber() << std::endl;
-            if (selection->numberOfLooseBJets() == 2) currentHistSet->at(20)->Fill(selection->numberOfJets(), weight);
-            if (selection->numberOfLooseBJets() == 3) currentHistSet->at(21)->Fill(selection->numberOfJets(), weight);
-            if (selection->numberOfMediumBJets() == 2) currentHistSet->at(22)->Fill(selection->numberOfJets(), weight);
+            //currentHistSet->at(18)->Fill(selection->getHT(), weight);
 
-            if (nominalClass == eventClass::ssdl) cutflowHist->Fill(14., weight);
-            if (nominalClass == eventClass::trilep) cutflowHist->Fill(15., weight);
-            if (nominalClass == eventClass::fourlep) cutflowHist->Fill(16., weight);
+            //if ((nLeps == 2 && selection->getHT() < 200) || (nLeps == 3 && selection->getHT() < 200)) continue;
+            //cutflowHist->Fill(13., weight);
+            ////if (nominalClass == eventClass::trilep || nominalClass == eventClass::ssdl) eventTagsNBS << currentEvent->eventNumber() << std::endl;
+            //if (! selection->passPhotonOverlapRemoval()) continue;
+
+            //eventTagsNBS << currentEvent->eventNumber() << std::endl;
+            //if (selection->numberOfLooseBJets() == 2) currentHistSet->at(20)->Fill(selection->numberOfJets(), weight);
+            //if (selection->numberOfLooseBJets() == 3) currentHistSet->at(21)->Fill(selection->numberOfJets(), weight);
+            //if (selection->numberOfMediumBJets() == 2) currentHistSet->at(22)->Fill(selection->numberOfJets(), weight);
+
+            //if (nominalClass == eventClass::ssdl) cutflowHist->Fill(14., weight);
+            //if (nominalClass == eventClass::trilep) cutflowHist->Fill(15., weight);
+            //if (nominalClass == eventClass::fourlep) cutflowHist->Fill(16., weight);
         }
 
         // Output management: save histograms to a ROOT file.
