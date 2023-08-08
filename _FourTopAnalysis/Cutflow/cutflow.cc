@@ -69,6 +69,7 @@ bool selectLeptonsPt(const Lepton& lepton) {
 }
 
 bool selectLeptonsBase(const LightLepton& lepton) {
+    if (! lepton.isPrompt()) return false;
     if (lepton.uncorrectedPt() < 10) return false;
     if (lepton.absEta() > 2.5) return false;
     if (fabs(lepton.dxy()) > 0.05) return false;
