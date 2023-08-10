@@ -3,6 +3,7 @@
 
 //include other parts of framework
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 #include "../../objects/interface/GenMet.h"
 #include "LheCollection.h"
 
@@ -20,21 +21,24 @@ class GeneratorInfo{
         unsigned firstPdfIndex() const{ return _firstPdfIndex; }
         unsigned numberOfPdfVariations() const{ return _numberOfPdfVariations; }
 
-        // order of scale weights:
+        // order of scale weights in nano:
         // see here: https://cms-nanoaod-integration.web.cern.ch/autoDoc/
+
+        // MiniAOD implementation
         double relativeWeightScaleVar( const unsigned scaleIndex ) const;
-        double relativeWeight_MuR_1_MuF_1() const{ return relativeWeightScaleVar( 0 ); }
-        double relativeWeight_MuR_1_MuF_2() const{ return relativeWeightScaleVar( 1 ); }
-        double relativeWeight_MuR_1_MuF_0p5() const{ return relativeWeightScaleVar( 2 ); }
-        double relativeWeight_MuR_2_MuF_1() const{ return relativeWeightScaleVar( 3 ); }
-        double relativeWeight_MuR_2_MuF_2() const{ return relativeWeightScaleVar( 4 ); }
-        double relativeWeight_MuR_2_MuF_0p5() const{ return relativeWeightScaleVar( 5 ); }
-        double relativeWeight_MuR_0p5_MuF_1() const{ return relativeWeightScaleVar( 6 ); }
-        double relativeWeight_MuR_0p5_MuF_2() const{ return relativeWeightScaleVar( 7 ); }
-        double relativeWeight_MuR_0p5_MuF_0p5() const{ return relativeWeightScaleVar( 8 ); }
+        double relativeWeight_MuR_1_MuF_1() const{ return (miniAODSetup ? relativeWeightScaleVar( 0 ) : relativeWeightScaleVar(4)); }
+        double relativeWeight_MuR_1_MuF_2() const{ return (miniAODSetup ? relativeWeightScaleVar( 1 ) : relativeWeightScaleVar(5)); }
+        double relativeWeight_MuR_1_MuF_0p5() const{ return (miniAODSetup ? relativeWeightScaleVar( 2 ) : relativeWeightScaleVar(3)); }
+        double relativeWeight_MuR_2_MuF_1() const{ return (miniAODSetup ? relativeWeightScaleVar( 3 ) : relativeWeightScaleVar(7)); }
+        double relativeWeight_MuR_2_MuF_2() const{ return (miniAODSetup ? relativeWeightScaleVar( 4 ) : relativeWeightScaleVar(8)); }
+        double relativeWeight_MuR_2_MuF_0p5() const{ return (miniAODSetup ? relativeWeightScaleVar( 5 ) : relativeWeightScaleVar(6)); }
+        double relativeWeight_MuR_0p5_MuF_1() const{ return (miniAODSetup ? relativeWeightScaleVar( 6 ) : relativeWeightScaleVar(1)); }
+        double relativeWeight_MuR_0p5_MuF_2() const{ return (miniAODSetup ? relativeWeightScaleVar( 7 ) : relativeWeightScaleVar(2)); }
+        double relativeWeight_MuR_0p5_MuF_0p5() const{ return (miniAODSetup ? relativeWeightScaleVar( 8 ) : relativeWeightScaleVar(0)); }
 
         double relativeWeightPdfVar( const unsigned pdfIndex ) const;
         unsigned numberOfPsWeights() const{ return _numberOfPsWeights; }
+
         // order of PS weights:
         // see this line from the official nanoAOD producer,
         // https://github.com/cms-sw/cmssw/blob/3d761d84ee43f5ab61cf104d5081e09b074159b1/
@@ -44,20 +48,19 @@ class GeneratorInfo{
         double relativeWeightPsVar( const unsigned psIndex ) const;
         double relativeWeight_FSR_InverseSqrt2() const{ return relativeWeightPsVar( 2 ); }
         double relativeWeight_FSR_Sqrt2() const{ return relativeWeightPsVar( 3 ); }
-        double relativeWeight_FSR_0p5() const{ return relativeWeightPsVar( 4 ); }
-        double relativeWeight_FSR_2() const{ return relativeWeightPsVar( 5 ); }
+        double relativeWeight_FSR_0p5() const{ return (miniAODSetup ? relativeWeightPsVar( 4 ) : relativeWeightPsVar(3)); }
+        double relativeWeight_FSR_2() const{ return (miniAODSetup ? relativeWeightPsVar( 5 ) : relativeWeightPsVar(1)); }
         double relativeWeight_FSR_0p25() const{ return relativeWeightPsVar( 6 ); }
         double relativeWeight_FSR_4() const{ return relativeWeightPsVar( 7 ); }
         double relativeWeight_ISR_InverseSqrt2() const{ return relativeWeightPsVar( 24 ); }
         double relativeWeight_ISR_Sqrt2() const{ return relativeWeightPsVar( 25 ); }
-        double relativeWeight_ISR_0p5() const{ return relativeWeightPsVar( 26 ); }
-        double relativeWeight_ISR_2() const{ return relativeWeightPsVar( 27 ); }
+        double relativeWeight_ISR_0p5() const{ return (miniAODSetup ? relativeWeightPsVar( 26 ) : relativeWeightPsVar(2)); }
+        double relativeWeight_ISR_2() const{ return (miniAODSetup ? relativeWeightPsVar( 27 ) : relativeWeightPsVar(0)); }
         double relativeWeight_ISR_0p25() const{ return relativeWeightPsVar( 28 ); }
         double relativeWeight_ISR_4() const{ return relativeWeightPsVar( 29 ); }
 
         unsigned ttgEventType() const{ return _ttgEventType; }
         unsigned zgEventType() const{ return _zgEventType; }
-        double partonLevelHT() const{ return _partonLevelHT; }
         float numberOfTrueInteractions() const{ return _numberOfTrueInteractions; }
 
         double prefireWeight() const{ return _prefireWeight; }
@@ -68,20 +71,34 @@ class GeneratorInfo{
 
         LheCollection* getLheCollection() const {return lheCollectionPtr;}
     private:
-        static constexpr unsigned maxNumberOfLheWeights = 148;
-        unsigned _numberOfLheWeights;
-        double _lheWeights[maxNumberOfLheWeights];
-        static constexpr unsigned maxNumberOfPsWeights = 46;
-        unsigned _numberOfPsWeights;
-        double _psWeights[maxNumberOfPsWeights];
-        double _prefireWeight;
-        double _prefireWeightDown;
-        double _prefireWeightUp;
+        bool miniAODSetup = true;
 
-        unsigned _ttgEventType;
-        unsigned _zgEventType;
-        double _partonLevelHT;
-        float _numberOfTrueInteractions;
+        // nanoAOD LHE Weights
+        unsigned _numberOfLHEPdfWeights = 0;
+        unsigned _numberOfLHEScaleWeights = 0;
+        static constexpr unsigned maxNumberOfLHEPdfWeights = 103;
+        static constexpr unsigned maxNumberOfLHEScaleWeights = 9;
+        double _LHEPdfWeights[maxNumberOfLHEPdfWeights];
+        double _LHEScaleWeights[maxNumberOfLHEScaleWeights];
+
+        // MiniAOD LHE Weights
+        static constexpr unsigned maxNumberOfLheWeights = 148;
+        unsigned _numberOfLheWeights = 0;
+        double _lheWeights[maxNumberOfLheWeights];
+
+        // PS Weights
+        static constexpr unsigned maxNumberOfPsWeights = 46;
+        static constexpr unsigned maxNumberOfPsWeightsNano = 4;
+        unsigned _numberOfPsWeights = 0;
+        double _psWeights[maxNumberOfPsWeights];
+
+        double _prefireWeight = 0;
+        double _prefireWeightDown = 0;
+        double _prefireWeightUp = 0;
+
+        unsigned _ttgEventType = 0;
+        unsigned _zgEventType = 0;
+        float _numberOfTrueInteractions = 0;
 
         unsigned _firstScaleIndex;
         unsigned _numberOfScaleVariations;
@@ -90,6 +107,7 @@ class GeneratorInfo{
 
         std::shared_ptr< GenMet > _genMetPtr;
 
+        // likely remove in future
         LheCollection* lheCollectionPtr = nullptr;
 };
 

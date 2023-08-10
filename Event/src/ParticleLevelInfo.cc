@@ -12,3 +12,17 @@ ParticleLevelInfo::ParticleLevelInfo(const TreeReader& treeReader) {
         }
     }
 }
+
+
+// ParticleLevelProducer
+ParticleLevelInfo::ParticleLevelInfo(const NanoReader& nanoReader) {
+    // no particle level jets in nanoAOD -> check later in nanosrcfile and compare to original file to see if it works out
+    particleLevelBees = 0;
+    for (unsigned i=0; i<nanoReader._nGenJet; i++) {
+        if (nanoReader._GenJet_partonFlavour[i] == 5) {
+            particleLevelBees++;
+            std::shared_ptr<LorentzVector> newLV = std::make_shared<LorentzVector>(nanoReader._GenJet_pt[i], nanoReader._GenJet_eta[i], nanoReader._GenJet_phi[i], -1.);
+            plBeeVectors.push_back(newLV);
+        }
+    }
+}

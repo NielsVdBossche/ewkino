@@ -13,6 +13,7 @@ class NanoReader : public TreeReader {
         class LeptonReader {
             public:
                 LeptonReader(NanoReader&, TTree*, std::string);
+                virtual ~LeptonReader() = default;
                 static const unsigned nLepton_max = 20;
 
                 // universal for LorentzVector
@@ -44,6 +45,7 @@ class NanoReader : public TreeReader {
         class LightLeptonReader : public LeptonReader {
             public:
                 LightLeptonReader(NanoReader&, TTree*, std::string);
+                virtual ~LightLeptonReader() = default;
 
                 Float_t         _Lepton_sip3d[nLepton_max];
                 // Isolation variables
@@ -53,7 +55,6 @@ class NanoReader : public TreeReader {
                 // jet-lepton variables
                 Float_t         _Lepton_jetPtRelv2[nLepton_max];
                 Float_t         _Lepton_jetRelIso[nLepton_max];
-
                 // other variables
                 Bool_t          _Lepton_isPFCand[nLepton_max];
                 UChar_t         _Lepton_jetNDauCharged[nLepton_max];
@@ -89,16 +90,30 @@ class NanoReader : public TreeReader {
         Float_t _LHEPdfWeight[nLHEPdfWeight_max];
         Float_t _LHEScaleWeight[nLHEScaleWeight_max];
         Float_t _PSWeight[nPSWeight_max];
+        Float_t _L1PreFiringWeight_Nom;
+        Float_t _L1PreFiringWeight_Up;
+        Float_t _L1PreFiringWeight_Dn;
+        // Pileup
+        Float_t _Pileup_nTrueInt;
+        Int_t _PV_npvs;
         // gen particles
-        UInt_t _nGenPart;
+        UInt_t  _nGenPart;
         Float_t _GenPart_pt[nGenPart_max];
         Float_t _GenPart_eta[nGenPart_max];
         Float_t _GenPart_phi[nGenPart_max];
         Float_t _GenPart_mass[nGenPart_max];
-        Int_t _GenPart_genPartIdxMother[nGenPart_max];
-        Int_t _GenPart_pdgId[nGenPart_max];
-        Int_t _GenPart_status[nGenPart_max];
-        Int_t _GenPart_statusFlags[nGenPart_max];
+        Int_t   _GenPart_genPartIdxMother[nGenPart_max];
+        Int_t   _GenPart_pdgId[nGenPart_max];
+        Int_t   _GenPart_status[nGenPart_max];
+        Int_t   _GenPart_statusFlags[nGenPart_max];
+        // GenJet variables (replacing PL jets, not sure if best option but ok)
+        Float_t    _GenJet_eta[nGenJet_max];
+        Float_t    _GenJet_mass[nGenJet_max];
+        Float_t    _GenJet_phi[nGenJet_max];
+        Float_t    _GenJet_pt[nGenJet_max];
+        Int_t      _GenJet_partonFlavour[nGenJet_max];
+        UChar_t    _GenJet_hadronFlavour[nGenJet_max];
+        UInt_t     _nGenJet;
         // gen MET
         Float_t _GenMET_pt;
         Float_t _GenMET_phi;
@@ -146,10 +161,32 @@ class NanoReader : public TreeReader {
         // variables related to missing transverse energy
         Float_t         _MET_pt;
         Float_t         _MET_phi;
-        // maps for passing triggers and metfilters
-        std::map<std::string, Bool_t> _triggerMap;
-        std::map<std::string, Bool_t> _METFilterMap;
 
+        // Trigger manager
+        class TriggerReader {
+            public:
+                TriggerReader(NanoReader&, TTree*, bool);
+                ~TriggerReader() = default;
+                // std::map<std::string, Bool_t> _triggerMap;
+                std::map<std::string, std::vector<Bool_t*>> _triggerMap;
+
+                std::vector<Bool_t*>& operator[](const std::string& trigger) {return _triggerMap[trigger];}
+                // std::map<std::string, Bool_t> _METFilterMap;
+
+                void initFlags(NanoReader&);
+                std::map<std::string, std::vector<std::string>>& getFlags() {return triggerNames;}
+            private:
+                // initialize triggerMap
+                void initializeTriggerMap( TTree* );
+                //void initializeMETFilterMap( TTree* );
+
+                std::map<std::string, std::vector<std::string>> triggerNames;
+                std::map<std::string, TBranch*> b__triggerMap;
+                // std::map<std::string, TBranch*> b__METFilterMap;
+        };
+
+        // MET Filters
+        Bool_t _Flag_METFilters;
 
         // methods
         bool containsGeneratorInfo() const;
@@ -158,16 +195,13 @@ class NanoReader : public TreeReader {
         const LightLeptonReader& GetElectronReader() const {return *electronReader;}
         const LightLeptonReader& GetMuonReader() const {return *muonReader;}
         const LeptonReader& GetTauReader() const {return *tauReader;}
+        TriggerReader& GetTriggerReader() const {return *triggerReader;}
 
     private:
-        // initialize triggerMap
-        void initializeTriggerMap( TTree* );
-        void initializeMETFilterMap( TTree* );
-
-
-        LightLeptonReader*  electronReader;
-        LightLeptonReader*  muonReader;
-        LeptonReader*       tauReader;
+        LightLeptonReader*  electronReader = nullptr;
+        LightLeptonReader*  muonReader = nullptr;
+        LeptonReader*       tauReader = nullptr;
+        TriggerReader*      triggerReader = nullptr;
 
         // list of branches
         TBranch* b__run;
@@ -180,6 +214,11 @@ class NanoReader : public TreeReader {
         TBranch* b__LHEScaleWeight;
         TBranch* b__nPSWeight;
         TBranch* b__PSWeight;
+        TBranch* b__L1PreFiringWeight_Nom;
+        TBranch* b__L1PreFiringWeight_Up;
+        TBranch* b__L1PreFiringWeight_Dn;
+        TBranch* b__Pileup_nTrueInt;
+        TBranch* b__PV_npvs;
         TBranch* b__nGenPart;
         TBranch* b__GenPart_pt;
         TBranch* b__GenPart_eta;
@@ -273,10 +312,16 @@ class NanoReader : public TreeReader {
         TBranch* b__Jet_nConstituents;
         TBranch* b__Jet_hadronFlavor;
         TBranch* b__Jet_jetId;
+        TBranch* b__GenJet_eta;
+        TBranch* b__GenJet_mass;
+        TBranch* b__GenJet_phi;
+        TBranch* b__GenJet_pt;
+        TBranch* b__GenJet_partonFlavour;
+        TBranch* b__GenJet_hadronFlavour;
+        TBranch* b__nGenJet;
         TBranch* b__MET_pt;
         TBranch* b__MET_phi;
-        std::map<std::string, TBranch*> b__triggerMap;
-        std::map<std::string, TBranch*> b__METFilterMap;
+        TBranch* b__Flag_METFilters;
 };
 
 #endif

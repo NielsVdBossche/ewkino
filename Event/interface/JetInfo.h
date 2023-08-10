@@ -31,8 +31,8 @@ class JetInfo{
 	std::vector< std::string > _JECSources;
 	std::vector< std::string > _JECGrouped;
 
-    std::map< std::string, size_t >* _groupedJEC_Ids;
-    std::map< std::string, size_t >* _sourcesJEC_Ids;
+    std::map< std::string, size_t >* _groupedJEC_Ids = nullptr;
+    std::map< std::string, size_t >* _sourcesJEC_Ids = nullptr;
 };
 
 #endif

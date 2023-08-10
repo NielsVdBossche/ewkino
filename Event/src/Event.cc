@@ -38,13 +38,17 @@ Event::Event(const NanoReader& nanoReader,
     _jetCollectionPtr(new JetCollection(nanoReader)),
     _metPtr(new Met(nanoReader)),
     // make additional information structures
-    _triggerInfoPtr(new TriggerInfo(nanoReader,
-                                    readIndividualTriggers, readIndividualMetFilters)),
+    _triggerInfoPtr(new TriggerInfo(nanoReader, readIndividualTriggers, readIndividualMetFilters)),
+    _jetInfoPtr( new JetInfo( nanoReader ) ),
     _eventTagsPtr(new EventTags(nanoReader)),
     _generatorInfoPtr(nanoReader.isMC() ? new GeneratorInfo(nanoReader) : nullptr),
+    _numberOfVertices( nanoReader._PV_npvs ),
+
     _weight(nanoReader._scaledWeight),
     _genWeight(nanoReader._genWeight),
-    _samplePtr(nanoReader.currentSamplePtr()) 
+    _samplePtr(nanoReader.currentSamplePtr()),
+    _particleLevelInfoPtr( nanoReader.hasGenLvl() ? new ParticleLevelInfo(nanoReader) : nullptr),
+    _genLevelPtr( nanoReader.hasGenLvl() ? new GenParticlesTop(nanoReader) : nullptr)
 {}
 
 Event::~Event(){

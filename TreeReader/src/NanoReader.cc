@@ -8,19 +8,6 @@ NanoReader::NanoReader(const std::string& sampleListFile, const std::string& sam
     _groupedJEC_Ids = new std::map<std::string, size_t>();
 }
 
-
-void NanoReader::initializeTriggerMap(TTree* treePtr) {
-    auto triggerMaps = buildBranchMap(treePtr, {"HLT_"});
-    _triggerMap = triggerMaps.first;
-    b__triggerMap = triggerMaps.second;
-}
-
-void NanoReader::initializeMETFilterMap(TTree* treePtr) {
-    auto filterMaps = buildBranchMap(treePtr, {"Flag_"});
-    _METFilterMap = filterMaps.first;
-    b__METFilterMap = filterMaps.second;
-}
-
 bool NanoReader::containsGeneratorInfo() const {
     // note: only checking genWeight branch,
     // this does in principle not guarantee that e.g. LHEPdfWeight are present.
@@ -33,12 +20,24 @@ bool NanoReader::containsGenParticles() const {
 
 void NanoReader::initTree(const bool resetTriggersAndFilters) {
     checkCurrentTree();
+    if (electronReader) delete electronReader;
+    if (muonReader) delete muonReader;
+    if (tauReader) delete tauReader;
+    if (triggerReader) delete triggerReader;
+
     _currentTreePtr->SetMakeClass(1);
 
     // set branch addresses of all variables
     _currentTreePtr->SetBranchAddress("run", &_run, &b__run);
     _currentTreePtr->SetBranchAddress("luminosityBlock", &_luminosityBlock, &b__luminosityBlock);
     _currentTreePtr->SetBranchAddress("event", &_event, &b__event);
+
+    _currentTreePtr->SetBranchAddress("L1PreFiringWeight_Nom",  &_L1PreFiringWeight_Nom,  &b__L1PreFiringWeight_Nom);
+    _currentTreePtr->SetBranchAddress("L1PreFiringWeight_Up",   &_L1PreFiringWeight_Up,   &b__L1PreFiringWeight_Up);
+    _currentTreePtr->SetBranchAddress("L1PreFiringWeight_Dn",   &_L1PreFiringWeight_Dn,   &b__L1PreFiringWeight_Dn);
+
+    _currentTreePtr->SetBranchAddress("_Pileup_nTrueInt", &_Pileup_nTrueInt, &b__Pileup_nTrueInt);
+    _currentTreePtr->SetBranchAddress("PV_npvs", &_PV_npvs, &b__PV_npvs);
     // generator info
     if (containsGeneratorInfo()) {
         _currentTreePtr->SetBranchAddress("genWeight",          &_genWeight,       &b__genWeight);
@@ -62,6 +61,14 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
         _currentTreePtr->SetBranchAddress("GenPart_statusFlags",       _GenPart_statusFlags,        &b__GenPart_statusFlags);
         _currentTreePtr->SetBranchAddress("GenMET_pt",                 &_GenMET_pt,                 &b__GenMET_pt);
         _currentTreePtr->SetBranchAddress("GenMET_phi",                &_GenMET_phi,                &b__GenMET_phi);
+
+        _currentTreePtr->SetBranchAddress("GenJet_eta",                _GenJet_eta,            &b__GenJet_eta);
+        _currentTreePtr->SetBranchAddress("GenJet_mass",               _GenJet_mass,           &b__GenJet_mass);
+        _currentTreePtr->SetBranchAddress("GenJet_phi",                _GenJet_phi,            &b__GenJet_phi);
+        _currentTreePtr->SetBranchAddress("GenJet_pt",                 _GenJet_pt,             &b__GenJet_pt);
+        _currentTreePtr->SetBranchAddress("GenJet_partonFlavour",      _GenJet_partonFlavour,  &b__GenJet_partonFlavour);
+        _currentTreePtr->SetBranchAddress("GenJet_hadronFlavour",      _GenJet_hadronFlavour,  &b__GenJet_hadronFlavour);
+        _currentTreePtr->SetBranchAddress("nGenJet",                  &_nGenJet,               &b__nGenJet);
     }
     // variables related to electrons
     electronReader = new LightLeptonReader(*this, _currentTreePtr, "Electron");
@@ -116,15 +123,6 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("MET_pt",  &_MET_pt,  &b__MET_pt);
     _currentTreePtr->SetBranchAddress("MET_phi", &_MET_phi, &b__MET_phi);
 
-    // add all individually stored triggers
-    if (resetTriggersAndFilters || _triggerMap.empty()) {
-        initializeTriggerMap(_currentTreePtr);
-    }
-    setMapBranchAddresses(_currentTreePtr, _triggerMap, b__triggerMap);
-
-    // add all individually stored MET filters
-    if (resetTriggersAndFilters || _METFilterMap.empty()) {
-        initializeMETFilterMap(_currentTreePtr);
-    }
-    setMapBranchAddresses(_currentTreePtr, _METFilterMap, b__METFilterMap);
+    triggerReader = new TriggerReader(*this, _currentTreePtr, resetTriggersAndFilters);
+    _currentTreePtr->SetBranchAddress("Flag_METFilters", &_Flag_METFilters, &b__Flag_METFilters);
 }

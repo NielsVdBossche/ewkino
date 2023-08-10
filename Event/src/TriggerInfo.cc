@@ -17,6 +17,12 @@ std::string cleanName( const std::string& name ){
     return ret;
 }
 
+bool passAnyTrigger(const std::vector<Bool_t*>& triggerBits) {
+    for (auto& trigBit : triggerBits) {
+        if (*trigBit) return true;
+    }
+    return false;
+}
 
 TriggerInfo::TriggerInfo( const TreeReader& treeReader, const bool readIndividualTriggers, const bool readIndividualMetFilters ) :
     _passTriggers_e( treeReader._passTrigger_e ),
@@ -46,6 +52,24 @@ TriggerInfo::TriggerInfo( const TreeReader& treeReader, const bool readIndividua
     }
 }
 
+TriggerInfo::TriggerInfo( const NanoReader& nanoReader ) :
+    _passMetFilters(nanoReader._Flag_METFilters)
+{
+    NanoReader::TriggerReader& triggers = nanoReader.GetTriggerReader();
+    _passTriggers_e = passAnyTrigger(triggers["_passTriggers_e"]);
+    _passTriggers_m = passAnyTrigger(triggers["_passTriggers_m"]);
+    _passTriggers_ee = passAnyTrigger(triggers["_passTriggers_ee"]);
+    _passTriggers_em = passAnyTrigger(triggers["_passTriggers_em"]);
+    _passTriggers_et = passAnyTrigger(triggers["_passTriggers_et"]);
+    _passTriggers_mm = passAnyTrigger(triggers["_passTriggers_mm"]);
+    _passTriggers_mt = passAnyTrigger(triggers["_passTriggers_mt"]);
+    _passTriggers_eee = passAnyTrigger(triggers["_passTriggers_eee"]);
+    _passTriggers_eem = passAnyTrigger(triggers["_passTriggers_eem"]);
+    _passTriggers_emm = passAnyTrigger(triggers["_passTriggers_emm"]);
+    _passTriggers_mmm = passAnyTrigger(triggers["_passTriggers_mmm"]);
+    _passTriggers_FR = passAnyTrigger(triggers["_passTriggers_FR"]);
+    _passTriggers_FR_iso = passAnyTrigger(triggers["_passTriggers_FR_iso"]);
+}
 
 bool passTriggerOrFilter( const std::map< std::string, bool >& decisionMap,  const std::string& name ){
     auto decisionIt = decisionMap.find( name );

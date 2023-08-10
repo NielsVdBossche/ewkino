@@ -3,6 +3,8 @@
 
 #include "../../TreeReader/interface/NanoReader.h"
 
+// Mainly to check for additional b-jets.
+// Not true particle level if nanoAOD is used, rather using GenJets
 
 class ParticleLevelInfo {
     public:

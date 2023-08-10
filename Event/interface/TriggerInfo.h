@@ -7,6 +7,7 @@
 
 //include other parts of framework
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 
 class TriggerInfo{
@@ -15,6 +16,7 @@ class TriggerInfo{
 
         //WARNING : turning on 'readIndividualTriggers' and/or 'readIndividualMETFilters' is relatively slow ( takes slightly more time than building the entire event! )
         TriggerInfo( const TreeReader&, const bool readIndividualTriggers = false, const bool readIndividualMetFilters = false );
+        TriggerInfo( const NanoReader&);
 
         bool passTriggers_e() const{ return _passTriggers_e; }
         bool passTriggers_m() const{ return _passTriggers_m; }
@@ -37,20 +39,20 @@ class TriggerInfo{
         void printAvailableMetFilters() const;
 
     private:
-        bool _passTriggers_e;
-        bool _passTriggers_m;
-        bool _passTriggers_ee;
-        bool _passTriggers_em;
-        bool _passTriggers_et;
-        bool _passTriggers_mm;
-        bool _passTriggers_mt;
-        bool _passTriggers_eee;
-        bool _passTriggers_eem;
-        bool _passTriggers_emm;
-        bool _passTriggers_mmm;
-        bool _passTriggers_FR;
-        bool _passTriggers_FR_iso;
-        bool _passMetFilters;
+        bool _passTriggers_e = false;
+        bool _passTriggers_m = false;
+        bool _passTriggers_ee = false;
+        bool _passTriggers_em = false;
+        bool _passTriggers_et = false;
+        bool _passTriggers_mm = false;
+        bool _passTriggers_mt = false;
+        bool _passTriggers_eee = false;
+        bool _passTriggers_eem = false;
+        bool _passTriggers_emm = false;
+        bool _passTriggers_mmm = false;
+        bool _passTriggers_FR = false;
+        bool _passTriggers_FR_iso = false;
+        bool _passMetFilters = false;
         std::map< std::string, bool > individualTriggerMap; 
         std::map< std::string, bool > individualMetFilterMap; 
 };
