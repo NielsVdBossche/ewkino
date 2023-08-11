@@ -143,6 +143,7 @@ void FourTop::analyze(std::string method) {
     std::vector<std::string> wzSFRegions;
     std::vector<std::string> zzSFRegions;
     std::vector<std::string> ttVJetsRegions;
+    std::vector<std::string> eftVariables;
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -158,7 +159,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        bool useSplitJEC = true;
+        bool useSplitJEC = false;
         bool splitAdditionalBees = false;
         unsigned nominalBees = 0;
         
@@ -253,6 +254,18 @@ void FourTop::analyze(std::string method) {
                 mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
         }
+        if (treeReader->hasEFT()) {
+            generateMatrix();
+
+            eftVariables = {"nom", "cQQ8", "cQQ1", "cQt1", "ctt", "cQt8", "ctHRe", "ctHIm", 
+                            "cQQ8_cQQ8", "cQQ8_cQQ1", "cQQ8_cQt1", "cQQ8_ctt", "cQQ8_cQt8", "cQQ8_ctHRe", 
+                            "cQQ8_ctHIm", "cQQ1_cQQ1", "cQQ1_cQt1", "cQQ1_ctt", "cQQ1_cQt8", "cQQ1_ctHRe", 
+                            "cQQ1_ctHIm", "cQt1_cQt1", "cQt1_ctt", "cQt1_cQt8", "cQt1_ctHRe", "cQt1_ctHIm", 
+                            "ctt_ctt", "ctt_cQt8", "ctt_ctHRe", "ctt_ctHIm", "cQt8_cQt8", "cQt8_ctHRe", 
+                            "cQt8_ctHIm", "ctHRe_ctHRe", "ctHRe_ctHIm", "ctHIm_ctHIm"};
+
+            mgrAll->addSubUncertainties(shapeUncId::eft, eftVariables);
+        }
         
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         mgrAll->newSample(uniqueName);
@@ -271,7 +284,7 @@ void FourTop::analyze(std::string method) {
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true );
+            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true ); // change this last boolean
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
@@ -649,6 +662,13 @@ void FourTop::analyze(std::string method) {
                         }
                         //if (testRun) std::cout << "done fill" << std::endl;
 
+                    }
+                } else if (uncID == eft && treeReader->hasEFT()) {
+                    std::vector<double> weightVar = transformWeights(currentEvent->generatorInfo().getNEFTWeights(), currentEvent->generatorInfo().getEFTWeights());
+                    for (unsigned eftID = 0; eftID < weightVar.size(); eftID++) {
+                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec, weightVar[eftID], 0.);
+                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], singleEntries, weightVar[eftID], 0.);
+                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec2D, weightVar[eftID], 0.);
                     }
                 } else if (uncID == ttvNJetsUnc) {
                     for (int i=0; i < 2; i++) {
