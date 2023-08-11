@@ -59,6 +59,9 @@ class GeneratorInfo{
         const GenMet& genMet() const{ return *_genMetPtr; }
 
         LheCollection* getLheCollection() const {return lheCollectionPtr;}
+
+        unsigned getNEFTWeights() const {return _nEFTWeights;}
+        double*  getEFTWeights() {return _eftWeight;}
     private:
         static constexpr unsigned maxNumberOfLheWeights = 148;
         unsigned _numberOfLheWeights;
@@ -79,6 +82,14 @@ class GeneratorInfo{
         unsigned _numberOfScaleVariations;
         unsigned _firstPdfIndex;
         unsigned _numberOfPdfVariations;
+
+        // Relevant when performing EFT interpretation studies
+        static constexpr unsigned maxNumberOfDynScaleWeights = 38;
+        unsigned _nDynScaleWeights = 0;
+        double _dynScaleWeight[maxNumberOfDynScaleWeights];
+        static constexpr unsigned maxNumberOfEFTWeights = 37;
+        unsigned _nEFTWeights = 0;
+        double _eftWeight[maxNumberOfEFTWeights];
 
         std::shared_ptr< GenMet > _genMetPtr;
 

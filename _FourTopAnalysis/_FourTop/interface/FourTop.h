@@ -94,6 +94,10 @@ class FourTop {
         TH2D* FakeRatesElectron = nullptr;
         TH2D* FakeRatesMuon = nullptr;
 
+        // Matrix of EFT
+        std::vector<std::vector<double>>* inverted_matrix;
+        std::map<int, std::vector<int>>* combinations;
+        std::vector<std::vector<double>>* param_points;
     public:
         // Loading settings for analysis, preparing trees, ...
         FourTop(std::string outputName, std::vector<std::string>& argvString, int mode = 0);
@@ -137,6 +141,12 @@ class FourTop {
         CombinedSampleReweighter* createSampleReweighter(std::string dir);
 
         std::vector<std::pair<int, double>> FillNpNmDistributions(eventClass currentClass, std::map<eventClass,int>& offsets);
+
+        // matrix calculation + inversion for storage
+        // 
+        void generateMatrix();
+        std::vector<double> transformWeights(unsigned nWeights, double* eftWeights);
+        double calcEntry(unsigned nWeights, double* eftWeights, std::vector<int>& combination);
 };
 
 

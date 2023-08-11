@@ -23,6 +23,7 @@ enum shapeUncId {
     WZSF,
     ZZSF,
     ttvNJetsUnc,
+    eft,
     JER_1p93,
     JER_2p5,
     JEC,
