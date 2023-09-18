@@ -614,11 +614,14 @@ template< typename T> void setMapOutputBranches( TTree* treePtr,
 template< typename T> void setMapOutputBranchesWithVectors( TTree* treePtr, 
 			    std::map< std::string, size_t >& variableIds,
                 std::vector< T >& variableValues,
-			    std::string branchDataType ){
+			    std::string branchDataType,
+                std::string prefix="",
+                std::string postfix="" ){
     // note: branchDataType should be e.g. "/O" for boolean, "[nJets]/D" for an array of doubles.
     // mind the slash!
     for (const auto& variable : variableIds) {
-        treePtr->Branch(variable.first.c_str(), &variableValues[variable.second], (variable.first + branchDataType).c_str());
+        std::string tmp_branchname = prefix + variable.first + postfix;
+        treePtr->Branch(tmp_branchname.c_str(), &variableValues[variable.second], (tmp_branchname + branchDataType).c_str());
     }
 }
 
@@ -1225,22 +1228,22 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     setMapOutputBranches( outputTree, _MetFilterMap, "/O" );
 
     // write split JEC uncertainties to output tree
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetPt_JECSourcesUp, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetPt_JECSourcesDown, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesUp, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesDown, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetPt_JECGroupedUp, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetPt_JECGroupedDown, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedUp, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedDown, "[_nJets]/D" );
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETx_JECSourcesUp, "/D");
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETx_JECSourcesDown, "/D");
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesUp, "/D");
-    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesDown, "/D");
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedUp, "/D");
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedDown, "/D");
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedUp, "/D");
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedDown, "/D");
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetPt_JECSourcesUp, "[_nJets]/D", "_jetPt_", "_JECSourcesUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetPt_JECSourcesDown, "[_nJets]/D", "_jetPt_", "_JECSourcesDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesUp, "[_nJets]/D", "_jetSmearedPt_", "_JECSourcesUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _jetSmearedPt_JECSourcesDown, "[_nJets]/D", "_jetSmearedPt_", "_JECSourcesDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetPt_JECGroupedUp, "[_nJets]/D", "_jetPt_", "_JECGroupedUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetPt_JECGroupedDown, "[_nJets]/D", "_jetPt_", "_JECGroupedDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedUp, "[_nJets]/D", "_jetSmearedPt_", "_JECGroupedUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _jetSmearedPt_JECGroupedDown, "[_nJets]/D", "_jetSmearedPt_", "_JECGroupedDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETx_JECSourcesUp, "/D", "_corrMETx_", "_JECSourcesUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETx_JECSourcesDown, "/D", "_corrMETx_", "_JECSourcesDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesUp, "/D", "_corrMETy_", "_JECSourcesUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesDown, "/D", "_corrMETy_", "_JECSourcesDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedUp, "/D", "_corrMETx_", "_JECGroupedUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedDown, "/D", "_corrMETx_", "_JECSoGroupedDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedUp, "/D", "_corrMETy_", "_JECGroupedUp" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedDown, "/D", "_corrMETy_", "_JECSoGroupedDown" );
 }
 
 void TreeReader::setLeanOutputTree( TTree* outputTree ){
