@@ -13,6 +13,7 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
+    //useUncertainties = false;
     useNpNmDistributions = false;
     bool isNPControl = false;
     double chMisCorr = 0.;
@@ -444,7 +445,7 @@ void FourTop::analyze(std::string method) {
             }
 
             // Systematics
-            if (! useUncertainties)
+            if (! useUncertainties) continue;
             if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt && st != selectionType::NPDD))) continue;
 
             if (testRun) std::cout << "uncertainty time" << std::endl;
