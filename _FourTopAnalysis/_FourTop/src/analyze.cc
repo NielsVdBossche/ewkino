@@ -122,6 +122,20 @@ void FourTop::analyze(std::string method) {
         std::cout << "Running method " << "MCAll" << std::endl;
     }
 
+    if (treeReader->hasEFT()) {
+        generateMatrix();
+
+        processes = {"nom", "cQQ8", "cQQ1", "cQt1", "ctt", "cQt8", "ctHRe", "ctHIm", 
+                        "cQQ8_cQQ8", "cQQ8_cQQ1", "cQQ8_cQt1", "cQQ8_ctt", "cQQ8_cQt8", "cQQ8_ctHRe", 
+                        "cQQ8_ctHIm", "cQQ1_cQQ1", "cQQ1_cQt1", "cQQ1_ctt", "cQQ1_cQt8", "cQQ1_ctHRe", 
+                        "cQQ1_ctHIm", "cQt1_cQt1", "cQt1_ctt", "cQt1_cQt8", "cQt1_ctHRe", "cQt1_ctHIm", 
+                        "ctt_ctt", "ctt_cQt8", "ctt_ctHRe", "ctt_ctHIm", "cQt8_cQt8", "cQt8_ctHRe", 
+                        "cQt8_ctHIm", "ctHRe_ctHRe", "ctHRe_ctHIm", "ctHIm_ctHIm"};
+        useUncertainties = false;
+        //mgrAll->addSubUncertainties(shapeUncId::eft, eftVariables);
+    }
+    
+
     mgrAll->initHistogramStacks(processes, useUncertainties);
 
     if (st == selectionType::NPDD) {
@@ -254,19 +268,19 @@ void FourTop::analyze(std::string method) {
                 mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
         }
-        if (treeReader->hasEFT()) {
-            generateMatrix();
-
-            eftVariables = {"nom", "cQQ8", "cQQ1", "cQt1", "ctt", "cQt8", "ctHRe", "ctHIm", 
-                            "cQQ8_cQQ8", "cQQ8_cQQ1", "cQQ8_cQt1", "cQQ8_ctt", "cQQ8_cQt8", "cQQ8_ctHRe", 
-                            "cQQ8_ctHIm", "cQQ1_cQQ1", "cQQ1_cQt1", "cQQ1_ctt", "cQQ1_cQt8", "cQQ1_ctHRe", 
-                            "cQQ1_ctHIm", "cQt1_cQt1", "cQt1_ctt", "cQt1_cQt8", "cQt1_ctHRe", "cQt1_ctHIm", 
-                            "ctt_ctt", "ctt_cQt8", "ctt_ctHRe", "ctt_ctHIm", "cQt8_cQt8", "cQt8_ctHRe", 
-                            "cQt8_ctHIm", "ctHRe_ctHRe", "ctHRe_ctHIm", "ctHIm_ctHIm"};
-
-            mgrAll->addSubUncertainties(shapeUncId::eft, eftVariables);
-        }
-        
+//        if (treeReader->hasEFT()) {
+//            generateMatrix();
+//
+//            eftVariables = {"nom", "cQQ8", "cQQ1", "cQt1", "ctt", "cQt8", "ctHRe", "ctHIm", 
+//                            "cQQ8_cQQ8", "cQQ8_cQQ1", "cQQ8_cQt1", "cQQ8_ctt", "cQQ8_cQt8", "cQQ8_ctHRe", 
+//                            "cQQ8_ctHIm", "cQQ1_cQQ1", "cQQ1_cQt1", "cQQ1_ctt", "cQQ1_cQt8", "cQQ1_ctHRe", 
+//                            "cQQ1_ctHIm", "cQt1_cQt1", "cQt1_ctt", "cQt1_cQt8", "cQt1_ctHRe", "cQt1_ctHIm", 
+//                            "ctt_ctt", "ctt_cQt8", "ctt_ctHRe", "ctt_ctHIm", "cQt8_cQt8", "cQt8_ctHRe", 
+//                            "cQt8_ctHIm", "ctHRe_ctHRe", "ctHRe_ctHIm", "ctHIm_ctHIm"};
+//
+//            mgrAll->addSubUncertainties(shapeUncId::eft, eftVariables);
+//        }
+//        
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         mgrAll->newSample(uniqueName);
 
@@ -414,6 +428,18 @@ void FourTop::analyze(std::string method) {
                     } else {
                         mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntriesNpNm, -1. * weight);
                     }
+                }
+            }
+
+            if (treeReader->hasEFT()) {
+                // loop over processes and add all weights
+                std::vector<double> weightVar = transformWeights(currentEvent->generatorInfo().getNEFTWeights(), currentEvent->generatorInfo().getEFTWeights());
+
+                for (unsigned i = 1; i<processes.size(); i++) {
+                    // make function bundling this behaviour.
+                    mgrAll->at(nominalClass)->fillAllHistograms(subChannels, i, fillVec, weightVar[i]);
+                    mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, i, fillVec2D, weightVar[i]);
+                    mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, i, singleEntries, weightVar[i]);
                 }
             }
 
@@ -665,11 +691,11 @@ void FourTop::analyze(std::string method) {
                     }
                 } else if (uncID == eft && treeReader->hasEFT()) {
                     std::vector<double> weightVar = transformWeights(currentEvent->generatorInfo().getNEFTWeights(), currentEvent->generatorInfo().getEFTWeights());
-                    for (unsigned eftID = 0; eftID < weightVar.size(); eftID++) {
-                            uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec, weightVar[eftID], 0.);
-                            uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], singleEntries, weightVar[eftID], 0.);
-                            uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec2D, weightVar[eftID], 0.);
-                    }
+                    //for (unsigned eftID = 0; eftID < weightVar.size(); eftID++) {
+                    //        uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec, weightVar[eftID], 0.);
+                    //        uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], singleEntries, weightVar[eftID], 0.);
+                    //        uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec2D, weightVar[eftID], 0.);
+                    //}
                 } else if (uncID == ttvNJetsUnc) {
                     for (int i=0; i < 2; i++) {
                         weightUp = 1.;
