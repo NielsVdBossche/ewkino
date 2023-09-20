@@ -1241,9 +1241,9 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesUp, "/D", "_corrMETy_", "_JECSourcesUp" );
     setMapOutputBranchesWithVectors( outputTree, *_sourcesJEC_Ids, _corrMETy_JECSourcesDown, "/D", "_corrMETy_", "_JECSourcesDown" );
     setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedUp, "/D", "_corrMETx_", "_JECGroupedUp" );
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedDown, "/D", "_corrMETx_", "_JECSoGroupedDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedDown, "/D", "_corrMETx_", "_JECGroupedDown" );
     setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedUp, "/D", "_corrMETy_", "_JECGroupedUp" );
-    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedDown, "/D", "_corrMETy_", "_JECSoGroupedDown" );
+    setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedDown, "/D", "_corrMETy_", "_JECGroupedDown" );
 }
 
 void TreeReader::setLeanOutputTree( TTree* outputTree ){

@@ -123,7 +123,8 @@ void FourTop::analyze(std::string method) {
         std::cout << "Running method " << "MCAll" << std::endl;
     }
 
-    if (treeReader->hasEFT()) {
+    if (true) {
+        std::cout << "EFT stuff found" << std::endl;
         generateMatrix();
 
         processes = {"nom", "cQQ8", "cQQ1", "cQt1", "ctt", "cQt8", "ctHRe", "ctHIm", 
@@ -430,19 +431,19 @@ void FourTop::analyze(std::string method) {
                         mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntriesNpNm, -1. * weight);
                     }
                 }
-            }
 
-            if (treeReader->hasEFT()) {
-                // loop over processes and add all weights
-                std::vector<double> weightVar = transformWeights(currentEvent->generatorInfo().getNEFTWeights(), currentEvent->generatorInfo().getEFTWeights());
+                if (treeReader->hasEFT()) {
+                    // loop over processes and add all weights
+                    std::vector<double> weightVar = transformWeights(currentEvent->generatorInfo().getNEFTWeights(), currentEvent->generatorInfo().getEFTWeights());
 
-                for (unsigned i = 1; i<processes.size(); i++) {
-                    // make function bundling this behaviour.
-                    mgrAll->at(nominalClass)->fillAllHistograms(subChannels, i, fillVec, weightVar[i]);
-                    mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, i, fillVec2D, weightVar[i]);
-                    mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, i, singleEntries, weightVar[i]);
+                    for (unsigned i = 1; i<processes.size(); i++) {
+                        mgrAll->at(nominalClass)->fillAllHistograms(subChannels, i, fillVec, weightVar[i-1]);
+                        mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, i, fillVec2D, weightVar[i-1]);
+                        mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, i, singleEntries, weightVar[i-1]);
+                    }
                 }
             }
+
 
             // Systematics
             if (! useUncertainties) continue;

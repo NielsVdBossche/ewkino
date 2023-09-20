@@ -621,7 +621,9 @@ void FourTop::generateMatrix() {
 std::vector<double> FourTop::transformWeights(unsigned nWeights, double* eftWeights) {
     std::vector<double> transformed_vector;
     for (unsigned i=0; i<36; i++) {
-        transformed_vector.push_back(calcEntry(nWeights, eftWeights, (*combinations)[i]));
+        //std::cout << i << std::endl;
+        double weight_tmp = calcEntry(nWeights, eftWeights, (*combinations)[i]);
+        transformed_vector.push_back(weight_tmp);
     }
     // elke rij van inverse matrix overlopen en element per element vermenigvuldigen en optellen met transformed_vector
     std::vector<double> final_weights;
@@ -637,13 +639,21 @@ std::vector<double> FourTop::transformWeights(unsigned nWeights, double* eftWeig
 
 double FourTop::calcEntry(unsigned nWeights, double* eftWeights, std::vector<int>& combination) {
     double sum = 0.;
-    for (unsigned i=0; i<nWeights; i++) {
+    //std::cout << "in calcentry, nWeights:" << nWeights << ", combinations: " << combination.size() << std::endl;
+    //std::cout << "outer loop" << std::endl;
+    //std::cout << "param points size " << param_points->size();
+    for (unsigned i=0; i<nWeights-1; i++) {
         double prod = 1.;
+        //std::cout << "inner loop " << i << std::endl;
         for (auto param : combination) {
+           // std::cout << param << std::endl;
             prod *= (*param_points)[i][param];
         }
-        sum += eftWeights[i] * prod;
+        //std::cout << "inner loop done " << std::endl;
+        sum += eftWeights[i+1] * prod; // double check but first weight should be dummy
     }
+    //std::cout << "outer loop done" << std::endl;
+
     return sum / 36.;
 }
 
