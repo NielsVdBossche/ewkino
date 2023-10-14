@@ -53,7 +53,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     fourTopScore      = ftEvent->getMVAScores()[1];
     ttWScore          = ftEvent->getMVAScores()[2];
     ttbarScore        = ftEvent->getMVAScores()[0];
-
+    // std::cout << ftEvent->getCurrentClass() << std::endl;
     eventClass        = ftEvent->getCurrentClass();
 
     if (ftEvent->getEvent()->hasOSSFLightLeptonPair()) invariant_mass_ll = ftEvent->getEvent()->bestZBosonCandidateMass();   
@@ -103,6 +103,7 @@ void OutputTreeVariables::pInitTree() {
     tree->Branch("bTagWP",         &bTagWP);
     tree->Branch("nElectrons",     &nElectrons,              "nElectrons/i");
     tree->Branch("electronPt",     &electronPt);
+    tree->Branch("isElectron",     &isElectron);
     tree->Branch("electronCharge", &electronCharge);
     tree->Branch("muonCharge",     &muonCharge);
     tree->Branch("nMuons",         &nMuons,                  "nMuons/i");
@@ -111,7 +112,7 @@ void OutputTreeVariables::pInitTree() {
     tree->Branch("fourTopScore",   &fourTopScore,            "fourTopScore/D");
     tree->Branch("ttWScore",       &ttWScore,                "ttWScore/D");
     tree->Branch("ttbarScore",     &ttbarScore,              "ttbarScore/D");
-    tree->Branch("eventClass",     &eventClass,              "eventClass/D");
+    tree->Branch("eventClass",     &eventClass,              "eventClass/i");
     tree->Branch("min_dR_bb",      &min_dR_bb,               "min_dR_bb/D");
     tree->Branch("dR_l1l2",        &dR_l1l2,                 "dR_l1l2/D");
     tree->Branch("dPhi_l1l2",      &dPhi_l1l2,               "dPhi_l1l2/D");

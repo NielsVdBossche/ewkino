@@ -22,22 +22,22 @@ void FourTop::analyzeToTree(std::string method) {
 
 
     if (testRun) std::cout << "initializing" << std::endl;
-    //if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
-    //    // still needed?
-    //    // uncTranslateMap = mgrAll->getTranslateUnc(); 
-//
-    //    std::cout << "building reweighter" << std::endl;
-    //    btagReweighter = new ReweighterBTagShape*();
-    //    reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, testRun );
-    //    if (leanEventSelection && !testRun && (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy)) {
-    //        addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
-    //    } else if (leanEventSelection && !testRun) {
-    //        addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
-    //    } else if (!testRun) {
-    //        addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
-    //    }
-    //    sampleReweighter = createSampleReweighter("ANWeights/SampleNJetSF/");
-    //}
+    if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
+        // still needed?
+        // uncTranslateMap = mgrAll->getTranslateUnc(); 
+
+        std::cout << "building reweighter" << std::endl;
+        btagReweighter = new ReweighterBTagShape*();
+        reweighter = reweighterFactory->buildReweighter( "../weights/", yearString, treeReader->sampleVector(), btagReweighter, testRun );
+        if (leanEventSelection && !testRun && (considerRegion == eventClass::ttbar || considerRegion == eventClass::dy)) {
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean_OSDL");
+        } else if (leanEventSelection && !testRun) {
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Lean");
+        } else if (!testRun) {
+            addBTaggingNormFactors(*btagReweighter, "ANWeights/bTagNorms/Original");
+        }
+        sampleReweighter = createSampleReweighter("ANWeights/SampleNJetSF/");
+    }
 
     // default methods
     if (method == "MCPrompt") {
@@ -118,7 +118,7 @@ void FourTop::analyzeToTree(std::string method) {
             // apply correct weights, change processNb if needed
             double weight = currentEvent->weight();
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
-                //weight *= reweighter.totalWeight( *currentEvent );
+                weight *= reweighter.totalWeight( *currentEvent );
 
                 if (st == selectionType::MCPrompt) {
                     if (! selection->leptonsArePrompt()) continue;
