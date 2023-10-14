@@ -29,7 +29,12 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     jetPt             = {}; // only tight jets
     bTagWP            = {0}; // 0=no, 1=loose, 2=med, 3=tight?
     for (int i=0; i<nJets; i++) {
-        jetPt.push_back(ftEvent->getJet(i)->pt());
+        Jet* jet = ftEvent->getJet(i);
+        jetPt.push_back(jet->pt());
+        if (jet->isBTaggedTight()) bTagWP.push_back(3);
+        else if (jet->isBTaggedMedium()) bTagWP.push_back(2);
+        else if (jet->isBTaggedLoose()) bTagWP.push_back(1);
+        else bTagWP.push_back(0);
     }
 
     // potentially change this to just have the nBTight/med/loose? Rather than wp based, then again count 3/2/1/0 is also possible
