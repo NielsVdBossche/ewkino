@@ -25,6 +25,7 @@
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 #include "../../HistogramHandling/interface/ChannelManager.h"
 
+#include "../../OutputTreeHandler/interface/OutputTree.h"
 
 #include "../../../weights/interface/CombinedReweighter.h"
 #include "../../../weights/interface/ConcreteReweighterFactory.h"
@@ -59,6 +60,14 @@ class FourTop {
         std::string searchRegion = "All";
         // IO-management
         TFile* outfile;
+        // metadata
+        std::string outputFileTags;
+        std::string branchString;
+        std::string commithash;
+        std::string timestampExport;
+        std::string anTypeStr = "";
+        TH1F* intLuminosityMC;
+
 
         Event* currentEvent = nullptr;
         EventFourT* selection;
@@ -115,6 +124,7 @@ class FourTop {
 
         // Main loop functions
         void analyze(std::string method);
+        void analyzeToTree(std::string method);
         void testRuns();
         
         std::map<eventClass, int> FillHistogramManager(ChannelManager* mgrAll);
@@ -147,6 +157,9 @@ class FourTop {
         void generateMatrix();
         std::vector<double> transformWeights(unsigned nWeights, double* eftWeights);
         double calcEntry(unsigned nWeights, double* eftWeights, std::vector<int>& combination);
+
+        void WriteMetadata(TFile* file);
+        std::string GetOutputfileTags() {return outputFileTags;};
 };
 
 

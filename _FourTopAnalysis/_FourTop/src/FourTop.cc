@@ -18,6 +18,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
+    //treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
 
     Sample samp = treeReader->sampleVector()[0];
 
@@ -84,9 +85,7 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             } else if (sampleZero.is2016PreVFP()) {
                 newYearString = "2016PreVFP";
             }
-
             std::cout << "year string is: " << newYearString << std::endl;
-
             if (! analysisTools::checkYearStringNoErr( newYearString )) {
                 std::cout << "force year string to 2018" << std::endl;
                 newYearString = "2018";
@@ -101,6 +100,9 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         if (searchRegion != "All") {
             oss << "_" << searchRegion;
         }
+        // don't include samplelistname
+        outputFileTags = argvString[2] + "_" + oss.str();
+
         oss << "_" << strippedSampleList << ".root";
 
         outputFileName += oss.str();
@@ -112,21 +114,21 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         outfile->mkdir("Nominal");
         outfile->mkdir("Uncertainties");
         
-        TH1F* intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
+        intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
 
         intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
         intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
         
         // also write metadata here. This includes branch?
         #ifdef GIT_BRANCH
-        std::string branchString = GIT_BRANCH;
+        branchString = GIT_BRANCH;
         TObjString branchInfo(branchString.c_str());
         outfile->WriteObject(&branchInfo, "Branch");
         #endif
 
         #ifdef GIT_HASH
-        std::string commithash = GIT_HASH;
-        TObjString commitInfo(branchString.c_str());
+        commithash = GIT_HASH;
+        TObjString commitInfo(commithash.c_str());
         outfile->WriteObject(&commitInfo, "commit_hash");
         #endif
         
@@ -135,13 +137,15 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         if (timestampOutputName != "") {
             time << timestampOutputName;
         } else {
-            time << std::put_time(&tm, "%Y_%m_%d-%H_%M");
+            time << std::put_time(&tm, "%Y-%m-%d_%H-%M");
         }
         //time << std::put_time(&tm, "%Y_%m_%d-%H_%M"); //);"%d_%m_%Y-%H_%M");
         TObjString timestamp(time.str().c_str());
+        timestampExport = time.str();
         outfile->WriteObject(&timestamp, "Timestamp");
         if (argvString.size() > 2) {
             TObjString anType(argvString[2].c_str());
+            anTypeStr = argvString[2];
             outfile->WriteObject(&anType, "AN_Type");
         }
 
@@ -189,6 +193,41 @@ void FourTop::createMVAHandlers() {
     selection->setDLMVA(mva_DL);
     selection->setMLMVA(mva_ML);
 }
+
+void FourTop::WriteMetadata(TFile* file) {
+    #ifdef GIT_BRANCH
+    branchString = GIT_BRANCH;
+    TObjString branchInfo(branchString.c_str());
+    file->WriteObject(&branchInfo, "Branch");
+    #endif
+
+    #ifdef GIT_HASH
+    commithash = GIT_HASH;
+    TObjString commitInfo(commithash.c_str());
+    file->WriteObject(&commitInfo, "commit_hash");
+    #endif
+
+    TObjString timestamp(timestampExport.c_str());
+    file->WriteObject(&timestamp, "Timestamp");
+
+    if (anTypeStr != "") {
+        TObjString anType(anTypeStr.c_str());
+        file->WriteObject(&anType, "AN_Type");
+    }
+
+    TObjString eventSelectionType = "OriginalSelection";
+    if (leanEventSelection) {
+        eventSelectionType = "LooseSelection";
+    }
+    file->WriteObject(&eventSelectionType, "EventSelectionType");
+
+    // todo: check if root likes this
+    //TH1F* intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
+
+    intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
+    intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
+}
+
 
 void FourTop::addBTaggingNormFactors(ReweighterBTagShape* reweighter, std::string dir) {
     std::vector<Sample> sampleVector = treeReader->sampleVector();

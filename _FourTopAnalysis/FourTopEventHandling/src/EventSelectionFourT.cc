@@ -478,3 +478,11 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned vari
     classifyEvent();
     return currentClass;
 }
+
+void EventFourT::scoreCurrentEvent() {
+    MVAHandler_4T* currentMVA = dl_MVA;
+    //if (currentClass == eventClass::cro || currentClass == eventClass::crw || currentClass == eventClass::ssdl) 
+    if (currentClass == eventClass::crz3L || currentClass == eventClass::crz4L || currentClass == eventClass::cro3L || currentClass > eventClass::ssdl) currentMVA = ml_MVA;
+    
+    scoresMVA = currentMVA->scoreEvent();
+}

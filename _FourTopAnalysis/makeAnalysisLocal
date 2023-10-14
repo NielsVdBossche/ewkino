@@ -1,0 +1,16 @@
+CC=g++ -Wall -Wextra -O3 -g
+CFLAGS= -Wl,--no-as-needed,-lpthread
+CXXFLAGS = -std=gnu++17
+LDFLAGS=`root-config --glibs --cflags` -lTMVA
+SOURCES= analyzeCodeToTTreee.cc ../codeLibrary.o _FourTop/src/*.cc FourTopEventHandling/src/*.cc histogramSetups/*.cc additionalTools/src/*.cc TopQuarkReconstruction/src/*.cc HistogramHandling/src/*.cc SampleSF/src/*.cc OutputTreeHandler/src/*.cc
+OBJECTS=$(SOURCES:.cc=.o)
+EXECUTABLE=testCodeLocalExec
+GIT_BRANCH=`git branch | grep "^\*" | sed 's/^..//'`
+GIT_HASH=`git rev-parse HEAD`
+export VERSION_FLAGS=-DGIT_HASH="\"$(GIT_HASH)\"" -DGIT_BRANCH="\"$(GIT_BRANCH)\""
+
+all:
+	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) $(VERSION_FLAGS) -o $(EXECUTABLE)
+	
+clean:
+	rm -rf *o $(EXECUTABLE)

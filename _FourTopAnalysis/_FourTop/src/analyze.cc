@@ -161,6 +161,20 @@ void FourTop::analyze(std::string method) {
     std::vector<std::string> ttVJetsRegions;
     std::vector<std::string> eftVariables;
 
+
+
+
+    // Rather than histogram manager, set up output tree here based on chosen settings
+    // sstd::shared_ptr<OutputTree> outputTree;
+    // s// if else: choose which tree to construct. Allow multiple? depending on the settings
+    // soutputTree = std::make_shared<OutputTree>();
+
+
+
+
+
+
+
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
         std::cout << "init sample" << std::endl;
@@ -198,6 +212,9 @@ void FourTop::analyze(std::string method) {
             }
         }
 
+
+        // TODO: similar to following code: add variations that we will save in the following steps
+        // 
         if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
             //mgrAll->SetPrintAllUncertaintyVariations(true);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
@@ -442,6 +459,9 @@ void FourTop::analyze(std::string method) {
                         mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, i, singleEntries, weightVar[i-1]);
                     }
                 }
+
+                // Filling step: fill nominal variables here or apply correct variation and fill variables
+                // I think ideally we don't want to use the old way anymore... Maybe separate loop to keep it simple?
             }
 
 

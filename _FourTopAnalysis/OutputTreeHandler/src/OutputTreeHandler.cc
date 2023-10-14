@@ -1,0 +1,96 @@
+#include "../interface/OutputTreeHandler.h"
+#include "../interface/OutputTreeSysVar.h"
+#include "../interface/OutputTreeWeightVar.h"
+
+#include <iostream>
+#include "../../../Tools/interface/Sample.h"
+#include "../../../Tools/interface/stringTools.h"
+
+#include "../../FourTopEventHandling/interface/EventFourT.h"
+
+OutputTreeHandler::OutputTreeHandler(std::vector<std::string>& processes) {
+    for (auto entry : processes) {
+        processNames.push_back(entry);
+        //std::shared_ptr<OutputTree> tmp = std::make_shared<OutputTreeVariables>()
+    }
+
+    
+}
+
+OutputTreeHandler::~OutputTreeHandler() {
+
+}
+
+void OutputTreeHandler::ChangeProcess(unsigned processNumber, std::string& newProcess) {
+    if (processNumber > processNames.size()+1) {
+        std::cerr << "Error: Processnumber " << processNumber 
+                << " is way larger than the current number of stored processes ("
+                << processNames.size() << ")." << std::endl;
+        exit(1);
+    } else if (processNumber == processNames.size()+1) {
+        processNames.push_back(newProcess);
+    } else {
+        processNames[processNumber] = newProcess;
+    }
+}
+
+TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string mainName) {
+    // use Sample class?
+    // anyway
+    // change maintree to JEC_VAR_tree or JER_VAR_tree?
+    std::string outputFilename = "Output/" + mainName + "_" + outputFileTags + "_";
+
+    // what does this do that nothing else can do? Like what if I want to do just a more extreme skim?
+    // then again need the weight variations explicitely... in python
+
+    // if MC: split unique name at _crab_
+    // if data, split at _singlelepton
+    std::string uniquename = sample.uniqueName();
+    if (sample.isMC()) {
+        uniquename = stringTools::split(uniquename, "_crab_")[0];
+    } else {
+        uniquename = stringTools::split(uniquename, "_singlelepton")[0];
+    }
+    outputFilename += uniquename + ".root";
+    
+    // add identifier of sample
+    // also in file
+    currentFile = new TFile(outputFilename.c_str(), "recreate");
+
+    // also keep metadata somewhere in a class -> done, kinda
+    // maybe fourtop class can have a "write metadata" thing -> exactly
+    
+    // create output tree per process with correct tags, tags can be passed in setup? -> todo
+
+    // next step: create trees
+    currentFile->cd();
+
+    // depends on set up, for now: create a OutputTree object, or a deriv
+    // for now:
+    mapping.clear();
+    std::string test = "test";
+
+    std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeWeightVar>(currentFile, test, test);
+    mapping.push_back(new_outtree);
+    //for (unsigned i=0; i<processNames.size(); i++) {
+    //    std::shared_ptr new_outtree = std::make_shared<OutputTree>();
+    //    mapping.push_back(new_outtree);
+    //}
+
+    return currentFile;
+}
+
+void OutputTreeHandler::FlushTrees() {
+    for (auto tree : mapping) {
+        tree->SaveToFile(currentFile);
+    }
+    
+    mapping.clear();
+    
+}
+
+void OutputTreeHandler::FillAt(unsigned pNb, EventFourT* ftEvent, double wgt) {
+    mapping[pNb]->FillTree(ftEvent, wgt);
+    mapping[pNb]->AddEntry();
+}
+

@@ -148,6 +148,7 @@ class EventFourT {
         void fillMVAScores(std::vector<double>& scoresMVANew) {scoresMVA = scoresMVANew;}
         bool isMVARated() const {return scoresMVA.size() != 0;}
         std::vector<double>& getMVAScores() {return scoresMVA;}
+        void scoreCurrentEvent();
         
         // HistogramFillers
         //std::vector<double> fillAllHists(bool multilep, EventFourT* selec);
