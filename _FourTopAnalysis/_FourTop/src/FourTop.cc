@@ -17,8 +17,8 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     // prepare details of analysis in separate functions
     
     // First setting are samples to work through
-    //treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
+    treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
+    //treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
 
     Sample samp = treeReader->sampleVector()[0];
 

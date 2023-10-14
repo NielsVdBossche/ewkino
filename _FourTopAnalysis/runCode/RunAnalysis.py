@@ -4,14 +4,14 @@ import os
 from datetime import datetime
 import ClearCondorFiles
 
-def PrepareJobDescription(additionalArguments):
+def PrepareJobDescription(additionalArguments, exe="MainAnalysis.sh"):
     argstring = "$(Samplelist) $(Method)"
 
     for arg in additionalArguments:
         argstring += " " + arg
     
     with open("AnalysisJob.sub", 'w') as f:
-        f.write('executable = MainAnalysis.sh\n')
+        f.write('executable = '+ exe +'.sh\n')
         f.write('arguments = {}\n\n'.format(argstring))
         f.write('output = /user/nivanden/condor/output/analysis_exec_$(method)_$(ClusterId)_$(ProcId).out\n')
         f.write('error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcId).err\n')
@@ -51,6 +51,7 @@ if __name__ == "__main__":
     additionalArgs = [timestamp]
     customSamplelist = False
     runData = False
+    useTree = False
     customSamplelistName = ""
     specificSample = ""
     specificEra = ""
@@ -92,12 +93,16 @@ if __name__ == "__main__":
             sets = {"MCAll" : [mc_miss], "nonPromptDD" : [mc_miss], "ChargeDD" : [dataSL], "MCPrompt" : [mc_miss], "nonPromptDDControl" : [mc_miss], "MCAllBJetTest" : [mc_miss]}
         elif "inclusiveclasses" in optionLower:
             additionalArgs.append(option)
+        elif "tree" in optionLower:
+            useTree = True
         else:
             print("Unrecognized option: {}. Usage: ./RunAnalysis.py <AnalysisType> [-CR] [-LEAN] [path/to/samplelist] [era=[16Pre, 16Post, 17, 18]]".format(option))
 
     
-    
-    PrepareJobDescription(additionalArgs)
+    if useTree:
+        PrepareJobDescription(additionalArgs, "TreeAnalysis")
+    else:
+        PrepareJobDescription(additionalArgs)
     
     queueString = "queue 1 Samplelist, Method from (\n"
     requiredMethods = matches[runType]
