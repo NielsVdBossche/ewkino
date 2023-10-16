@@ -24,6 +24,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
 
     // Base variables
     nominalWeight     = weight;
+    noSFWeight        = ftEvent->getEvent()->weight();
     
     nJets             = ftEvent->numberOfJets();//ftEvent->numberOfJets();
     jetPt             = {}; // only tight jets
@@ -103,6 +104,8 @@ void OutputTreeVariables::pInitTree() {
     std::shared_ptr<TTree> tree = GetTree();
 
     tree->Branch("nominalWeight",  &nominalWeight,           "nominalWeight/D");
+    tree->Branch("noSFWeight",     &noSFWeight,              "noSFWeight/D");
+    
     tree->Branch("nJets",          &nJets,                   "nJets/i");
     tree->Branch("jetPt",          &jetPt);
     tree->Branch("bTagWP",         &bTagWP);
