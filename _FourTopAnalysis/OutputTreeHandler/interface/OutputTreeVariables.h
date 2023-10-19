@@ -15,7 +15,7 @@ class OutputTreeVariables : public OutputTree {
 
         // Base variables
         double nominalWeight;
-        double noSFWeight;
+        long unsigned eventNb;
         
         unsigned nJets;
         std::vector<double> jetPt; // only tight jets
