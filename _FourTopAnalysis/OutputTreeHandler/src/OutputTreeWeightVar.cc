@@ -9,7 +9,7 @@ OutputTreeWeightVar::OutputTreeWeightVar(TFile* outputfile, std::string& treeNam
     // std::shared_ptr<TTree> tree = GetTree();
     GetTree()->Branch("weightVariations",   &weightVariations);
     GetTree()->Branch("eftVariations",   &eftVariations);
-    // GetTree()->Branch("eftVariations",   &eftVariations);
+    GetTree()->Branch("scaleVariations",   &scaleVariations);
 
 }
 

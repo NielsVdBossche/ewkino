@@ -19,6 +19,7 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         std::vector<std::string> weightVariationsNaming;
         std::vector<double> weightVariations;
         std::vector<double> eftVariations;
+        std::vector<double> scaleVariations;
         
         // good for simple weights, but 100 pdfs? Might have separate vectors for such things
         

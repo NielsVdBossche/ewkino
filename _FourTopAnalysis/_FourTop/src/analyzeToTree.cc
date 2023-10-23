@@ -1,6 +1,7 @@
 #include "../interface/FourTop.h"
 
 #include "../../OutputTreeHandler/interface/OutputTreeHandler.h"
+#include "../../OutputTreeHandler/interface/OutputTreeWeightVar.h"
 
 void FourTop::analyzeToTree(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
@@ -62,6 +63,11 @@ void FourTop::analyzeToTree(std::string method) {
     for (unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ) {
         treeReader->initSample();
         std::cout << "init sample" << std::endl;
+
+        int numberOfPdfVariations = 0;
+        bool hasValidQcds = false;
+        bool hasValidPdfs = false;
+
         // one tree per sample per process
         // sample decides the filename, process the treename
         // naming structure:
@@ -95,14 +101,14 @@ void FourTop::analyzeToTree(std::string method) {
             // if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
             // if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
-            // if (! treeReader->isData() && useUncertainties) {
-            //     numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
-            //     if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
-            //     else hasValidQcds = false;
-            // 
-            //     if (numberOfPdfVariations>=100) hasValidPdfs = true;
-            //     else hasValidPdfs = false;
-            // }
+            if (! treeReader->isData() && useUncertainties) {
+                numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
+                else hasValidQcds = false;
+            
+                if (numberOfPdfVariations>=100) hasValidPdfs = true;
+                else hasValidPdfs = false;
+            }
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
                 continue;
@@ -182,8 +188,23 @@ void FourTop::analyzeToTree(std::string method) {
                 // check if we need to fill and fill here with correct stuff
                 // add some piece in the adding of the event to automatically apply the sys variation we want
                 selection->scoreCurrentEvent();
+                
+                // QCD Variations
+                std::vector<double> qcdvariations;
+                if (hasValidQcds) {
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2() / xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2() / xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
+                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
+                } else {
+                    qcdvariations = {weight, weight, weight, weight, weight, weight};
+                }
+                ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->scaleVariations = qcdvariations;
+                
+
                 outputTreeHandler->FillAt(0, selection, weight);
-                                
             }
         }
         outputTreeHandler->FlushTrees();

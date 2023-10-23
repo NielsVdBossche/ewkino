@@ -30,6 +30,7 @@ class OutputTreeHandler
 
         // Filling trees and stuff
         void FillAt(unsigned pNb, EventFourT* ftEvent, double wgt);
+        std::shared_ptr<OutputTree> GetTree(unsigned pNb) {return mapping[pNb];}
 };
 
 #endif
