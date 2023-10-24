@@ -68,6 +68,10 @@ void FourTop::analyzeToTree(std::string method) {
         bool hasValidQcds = false;
         bool hasValidPdfs = false;
 
+        if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
+            xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
+        }
+
         // one tree per sample per process
         // sample decides the filename, process the treename
         // naming structure:
@@ -76,7 +80,6 @@ void FourTop::analyzeToTree(std::string method) {
         // need something to manage these trees.
 
         // prepare run
-        //
         TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags);
         WriteMetadata(newOutputFile);
         if (testRun) std::cout << "Starting event loop" << std::endl;
