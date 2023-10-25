@@ -35,3 +35,7 @@ void OutputTreeWeightVar::FillTree(EventFourT* ftEvent, double weight) {
     }
     // blabla filling
 }
+
+void OutputTreeWeightVar::SetSaleVariations(std::vector<double>& scaleVar) {
+    scaleVariations = scaleVar;
+}

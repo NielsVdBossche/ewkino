@@ -25,6 +25,8 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         
 
         void FillTree(EventFourT* ftEvent, double weight);
+        void SetSaleVariations(std::vector<double>& scaleVar);
+
         OutputTreeWeightVar(TFile* outputfile, std::string& treeName, std::string& outputLevel);
         ~OutputTreeWeightVar();
 };
