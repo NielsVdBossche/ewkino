@@ -13,7 +13,7 @@
 bool selectLeptonsLooseMVA(const Lepton& lepton) {
     if (! lepton.isLightLepton()) return true;
     const LightLepton& el = (LightLepton&) lepton;
-    return (el.leptonMVATOP() > 0.);
+    return (el.leptonMVATOPUL() > 0.);
 }
 
 EventFourT::EventFourT(std::string uncertaintyFile) {
