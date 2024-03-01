@@ -52,7 +52,6 @@ void FourTop::analyzeToTree(std::string method) {
 
     OutputTreeHandler* outputTreeHandler = new OutputTreeHandler(processes, outputSubfolder);
 
-
     // tmp for structure purposes 
     bool isNPControl = false;
     bool splitAdditionalBees = true;

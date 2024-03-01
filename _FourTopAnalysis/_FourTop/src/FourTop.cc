@@ -162,10 +162,11 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
 
             outfile->WriteObject(&eventSelectionType, "EventSelectionType");
         } else {
-            outputSubfolder = timestampOutputName;
+            outputSubfolder = outputBase + timestampOutputName;
             if (onlyCR) outputSubfolder += "_CR";
             // if (infuseNonPrompt) outputSubfolder += "_XNP";
             // if (leanEventSelection == false) outputSubfolder += "_OldSel";
+            if (testRun) outputSubfolder = outputBase + "test";
         }
 
         if (mode == 1) {
