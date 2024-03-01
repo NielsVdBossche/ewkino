@@ -1,26 +1,12 @@
 executable = MainAnalysis.sh
-arguments = $(Samplelist) $(Method) timestamp=2023-08-01_09-37
+arguments = $(Samplelist) $(Method) timestamp=2023-09-19_14-00
 
 output = /user/nivanden/condor/output/analysis_exec_$(method)_$(ClusterId)_$(ProcId).out
 error = /user/nivanden/condor/error/analysis_exec_$(method)_$(ClusterId)_$(ProcId).err
 log = /user/nivanden/condor/logs/analysis_exec_$(method)_$(ClusterId)_$(ProcId).log
 
 queue 1 Samplelist, Method from (
-	TmpLists/2016PreVFP_fullStat_TTW_0.txt, MCPrompt
-	TmpLists/2016PreVFP_fullStat_TTW_1.txt, MCPrompt
-	TmpLists/2016PostVFP_fullStat_TTW_0.txt, MCPrompt
-	TmpLists/2016PostVFP_fullStat_TTW_1.txt, MCPrompt
-	TmpLists/2017_fullStat_TTW_0.txt, MCPrompt
-	TmpLists/2017_fullStat_TTW_1.txt, MCPrompt
-	TmpLists/2018_fullStat_TTW_0.txt, MCPrompt
-	TmpLists/2018_fullStat_TTW_1.txt, MCPrompt
-	TmpLists/2016PreVFP_fullStat_TTW_0.txt, nonPromptDD
-	TmpLists/2016PreVFP_fullStat_TTW_1.txt, nonPromptDD
-	TmpLists/2016PostVFP_fullStat_TTW_0.txt, nonPromptDD
-	TmpLists/2016PostVFP_fullStat_TTW_1.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTW_0.txt, nonPromptDD
-	TmpLists/2017_fullStat_TTW_1.txt, nonPromptDD
-	TmpLists/2018_fullStat_TTW_0.txt, nonPromptDD
-	TmpLists/2018_fullStat_TTW_1.txt, nonPromptDD
+	test_EFT_Sample.txt, MCPrompt
 )
+
 
