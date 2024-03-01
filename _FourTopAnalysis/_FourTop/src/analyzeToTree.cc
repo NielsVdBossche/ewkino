@@ -109,7 +109,7 @@ void FourTop::analyzeToTree(std::string method) {
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true ); // change this last boolean
+            currentEvent = treeReader->buildEventPtr(entry, false, false, false, false); // change this last boolean to an option -> basically is this a syst variation run or not
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
