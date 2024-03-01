@@ -153,7 +153,7 @@ if __name__ == "__main__":
     if "CR" in additionalArgs:
         foldername += "_CR"
 
-    folder = os.path.join("Output", foldername)
+    folder = os.path.join("../Output", foldername)
     os.makedirs(folder)
 
     # print queuestring at end of job description

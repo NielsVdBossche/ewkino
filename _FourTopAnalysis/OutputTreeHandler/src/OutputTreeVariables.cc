@@ -30,7 +30,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     nJets             = ftEvent->numberOfJets();//ftEvent->numberOfJets();
     jetPt             = {}; // only tight jets
     bTagWP            = {0}; // 0=no, 1=loose, 2=med, 3=tight?
-    for (int i=0; i<nJets; i++) {
+    for (unsigned i=0; i < nJets; i++) {
         Jet* jet = ftEvent->getJet(i);
         jetPt.push_back(jet->pt());
         if (jet->isBTaggedTight()) bTagWP.push_back(3);
@@ -45,7 +45,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     electronPt        = {};
     electronCharge    = {};
     isElectron        = {};
-    for (int i=0; i<nElectrons; i++) {
+    for (unsigned i=0; i < nElectrons; i++) {
         electronPt.push_back(ftEvent->getLepton(i)->pt());
         electronCharge.push_back(ftEvent->getLepton(i)->charge());
         isElectron.push_back(ftEvent->getLepton(i)->isElectron());
@@ -101,7 +101,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
 
 void OutputTreeVariables::pInitTree() {
     // get tree
-
+    std::cout << "init tree" << std::endl;
     std::shared_ptr<TTree> tree = GetTree();
 
     tree->Branch("nominalWeight",  &nominalWeight,           "nominalWeight/D");

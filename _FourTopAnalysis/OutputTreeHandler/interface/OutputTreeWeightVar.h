@@ -17,15 +17,14 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         // alternative: 2 vectors, on with names and one with variations, naming vector can even be stored separately
         // metadata vector basically
         std::vector<std::string> weightVariationsNaming;
-        std::vector<double>* weightVariations;
-        std::vector<double>* eftVariations;
-        std::vector<double>* scaleVariations;
-        std::vector<double>* pdfVariations;
-        
-        std::vector<double>* expUp;
-        std::vector<double>* expDown;
+        std::vector<double> weightVariations;
+        std::vector<double> eftVariations;
+        std::vector<double> scaleVariations;
+        std::vector<double> pdfVariations;
 
-        
+        std::vector<double> expUp;
+        std::vector<double> expDown;
+
         // good for simple weights, but 100 pdfs? Might have separate vectors for such things
         void FillTree(EventFourT* ftEvent, double weight);
         void SetSaleVariations(std::vector<double>& scaleVar);
