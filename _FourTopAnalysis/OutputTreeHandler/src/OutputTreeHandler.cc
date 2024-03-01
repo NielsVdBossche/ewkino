@@ -8,13 +8,12 @@
 
 #include "../../FourTopEventHandling/interface/EventFourT.h"
 
-OutputTreeHandler::OutputTreeHandler(std::vector<std::string>& processes) {
+OutputTreeHandler::OutputTreeHandler(std::vector<std::string>& processes, std::string& outputSubfolder) {
     for (auto entry : processes) {
         processNames.push_back(entry);
         //std::shared_ptr<OutputTree> tmp = std::make_shared<OutputTreeVariables>()
     }
-
-    
+    outputfolder = outputSubfolder;    
 }
 
 OutputTreeHandler::~OutputTreeHandler() {
@@ -34,11 +33,11 @@ void OutputTreeHandler::ChangeProcess(unsigned processNumber, std::string& newPr
     }
 }
 
-TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string mainName) {
+TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name) {
     // use Sample class?
     // anyway
     // change maintree to JEC_VAR_tree or JER_VAR_tree?
-    std::string outputFilename = "Output/" + mainName + "_" + outputFileTags + "_";
+    std::string outputFilename = outputfolder + "/Tree_";
 
     // what does this do that nothing else can do? Like what if I want to do just a more extreme skim?
     // then again need the weight variations explicitely... in python
@@ -51,8 +50,9 @@ TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string&
     } else {
         uniquename = stringTools::split(uniquename, "_singlelepton")[0];
     }
-    outputFilename += uniquename + ".root";
+    outputFilename += uniquename + "_";
     
+    outputFilename += outputFileTags + "_" + name + ".root";
     // add identifier of sample
     // also in file
     currentFile = new TFile(outputFilename.c_str(), "recreate");
@@ -68,7 +68,7 @@ TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string&
     // depends on set up, for now: create a OutputTree object, or a deriv
     // for now:
     mapping.clear();
-    std::string test = "test";
+    std::string test = "tree";
 
     std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeWeightVar>(currentFile, test, test);
     mapping.push_back(new_outtree);

@@ -7,7 +7,6 @@ void FourTop::analyzeToTree(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
-
     if (onlyCR) {
         std::cout << "ANALYZING ONLY CR" << std::endl;
     } else {
@@ -51,15 +50,23 @@ void FourTop::analyzeToTree(std::string method) {
         std::cout << "Running method " << "MCPrompt" << std::endl;
     }
 
-    OutputTreeHandler* outputTreeHandler = new OutputTreeHandler(processes);
+    OutputTreeHandler* outputTreeHandler = new OutputTreeHandler(processes, outputSubfolder);
 
 
     // tmp for structure purposes 
     bool isNPControl = false;
     bool splitAdditionalBees = true;
+    bool uncertaintyExperimentWeight = false;
+    bool uncertaintyTheoryWeight = true;
+
     double chMisCorr = 1.;
-    if (testRun) std::cout << "Starting sample loop" << std::endl;
+    std::vector<std::string> expUncertainties = {
+        "pileup", "muonIDSyst", "muonIDStat", "electronIDSyst", "electronIDStat", "prefire"
+    };
+    std::vector<std::string> bTagShapeSystematics;
+
     
+    if (testRun) std::cout << "Starting sample loop" << std::endl;
     for (unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ) {
         treeReader->initSample();
         std::cout << "init sample" << std::endl;
@@ -68,8 +75,18 @@ void FourTop::analyzeToTree(std::string method) {
         bool hasValidQcds = false;
         bool hasValidPdfs = false;
 
-        if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
+        bool considerBTagShape = false;
+
+
+        if (uncertaintyTheoryWeight && ! treeReader->isData() && st != selectionType::NPDD) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
+        }
+
+        if (uncertaintyExperimentWeight && ! treeReader->isData() && st != selectionType::NPDD) {
+            considerBTagShape = ! testRun;
+            if (sampleIndex == 0 && considerBTagShape) {
+                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+            }
         }
 
         // one tree per sample per process
@@ -192,27 +209,57 @@ void FourTop::analyzeToTree(std::string method) {
                 // add some piece in the adding of the event to automatically apply the sys variation we want
                 selection->scoreCurrentEvent();
                 
-                // QCD Variations
-                std::vector<double> qcdvariations;
-                if (hasValidQcds) {
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2() / xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2() / xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
-                    // Unrenormalized version
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1());
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1());
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2());
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2());
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5());
-                    qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5());
-                } else {
-                    qcdvariations = {weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight};
+                if (uncertaintyTheoryWeight) {               
+                    // QCD Variations
+                    std::vector<double> qcdvariations;
+                    if (hasValidQcds) {
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1() / xsecs.get()->crossSectionRatio_MuR_2_MuF_1() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_1() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2() / xsecs.get()->crossSectionRatio_MuR_2_MuF_2() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2() / xsecs.get()->crossSectionRatio_MuR_1_MuF_2() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_1_MuF_0p5() );
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5() / xsecs.get()->crossSectionRatio_MuR_0p5_MuF_0p5() );
+                        // Unrenormalized version
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_1());
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_1());
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_2_MuF_2());
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_2());
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_1_MuF_0p5());
+                        qcdvariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_MuR_0p5_MuF_0p5());
+                    } else {
+                        qcdvariations = {weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight};
+                    }
+                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetSaleVariations(qcdvariations);
                 }
-                ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetSaleVariations(qcdvariations);
-                
+                if (uncertaintyExperimentWeight) {
+                    // Experimental variations
+                    std::vector<double> expUpVar;
+                    std::vector<double> expDownVar;
+
+                    // Uncertainties defined earlier: pileup, muon stat, syst, electrons stat, syst, prefire
+                    for (auto uncID : expUncertainties) {
+                        double weightNominalInv = 1. / reweighter[ uncID ]->weight( *currentEvent );
+                        expUpVar.push_back(reweighter[ uncID ]->weightUp( *currentEvent ) * weightNominalInv);
+                        expDownVar.push_back(reweighter[ uncID ]->weightDown( *currentEvent ) * weightNominalInv);
+                    }
+
+                    // electronReco
+                    expUpVar.push_back(reweighter[ "electronReco_pTBelow20" ]->weightDown(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightDown(*currentEvent) 
+                        / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) ));
+                    expDownVar.push_back(reweighter[ "electronReco_pTBelow20" ]->weightUp(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weightUp(*currentEvent) 
+                        / ( reweighter[ "electronReco_pTBelow20" ]->weight(*currentEvent) * reweighter[ "electronReco_pTAbove20" ]->weight(*currentEvent) ));
+                    
+                    // bTagging
+                    if (considerBTagShape) {
+                        double nombweight = reweighter["bTag_shape"]->weight( *currentEvent );
+                        for(std::string btagsys : bTagShapeSystematics){
+                            expUpVar.push_back(1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightUp( *currentEvent, btagsys ) / nombweight);
+                            expDownVar.push_back(1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight);
+                        }
+                    }
+
+                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetExperimentalWeightVariations(expUpVar, expDownVar);
+                }
 
                 outputTreeHandler->FillAt(0, selection, weight);
             }

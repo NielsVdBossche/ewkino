@@ -8,17 +8,14 @@
 #include "TObjString.h"
 
 #include "../../../Tools/interface/systemTools.h"
-#if MEMLEAK
-#include "../../../memleak/debug_new.h" 
-#endif
 
-FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, int mode) {
+FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFile) {
     // Set settings according to input
     // prepare details of analysis in separate functions
     
     // First setting are samples to work through
     treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    //treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
+    // treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
 
     Sample samp = treeReader->sampleVector()[0];
 
@@ -35,7 +32,8 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
     selection = new EventFourTLoose(jecUncertaintyFile);
 
     if (mode < 2) {
-        std::string outputFileName = "Output/" + outputName + "_";
+        std::string outputBase = "Output/";
+        std::string outputFileName = outputBase + "AnalysisOutput_" + argvString[2] + "_";
         std::ostringstream oss;
 
         auto t = std::time(nullptr);
@@ -71,7 +69,6 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
             }
         }
 
-
         std::string strippedSampleList = "";
 
         if (argvString[1] != "allSamples.txt") {
@@ -102,34 +99,19 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         }
         // don't include samplelistname
         outputFileTags = argvString[2] + "_" + oss.str();
-
         oss << "_" << strippedSampleList << ".root";
-
         outputFileName += oss.str();
-
         std::cout << outputFileName.c_str() << std::endl;
 
-        outfile = new TFile(outputFileName.c_str(), "recreate");
-        
-        outfile->mkdir("Nominal");
-        outfile->mkdir("Uncertainties");
-        
-        intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
-
-        intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
-        intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
-        
-        // also write metadata here. This includes branch?
+        // 
         #ifdef GIT_BRANCH
         branchString = GIT_BRANCH;
         TObjString branchInfo(branchString.c_str());
-        outfile->WriteObject(&branchInfo, "Branch");
         #endif
 
         #ifdef GIT_HASH
         commithash = GIT_HASH;
         TObjString commitInfo(commithash.c_str());
-        outfile->WriteObject(&commitInfo, "commit_hash");
         #endif
         
         std::stringstream time;
@@ -142,18 +124,49 @@ FourTop::FourTop(std::string outputName, std::vector<std::string>& argvString, i
         //time << std::put_time(&tm, "%Y_%m_%d-%H_%M"); //);"%d_%m_%Y-%H_%M");
         TObjString timestamp(time.str().c_str());
         timestampExport = time.str();
-        outfile->WriteObject(&timestamp, "Timestamp");
-        if (argvString.size() > 2) {
-            TObjString anType(argvString[2].c_str());
-            anTypeStr = argvString[2];
-            outfile->WriteObject(&anType, "AN_Type");
-        }
 
         TObjString eventSelectionType = "OriginalSelection";
         if (leanEventSelection) {
             eventSelectionType = "LooseSelection";
         }
-        outfile->WriteObject(&eventSelectionType, "EventSelectionType");
+
+
+        if (produceFile) {
+            outputFileName = "AnalysisOutput_" + argvString[2];
+
+            outfile = new TFile(outputFileName.c_str(), "recreate");
+            outfile->mkdir("Nominal");
+            outfile->mkdir("Uncertainties");
+            
+            intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
+
+            intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
+            intLuminosityMC->Write("IntLumi", TObject::kOverwrite);
+            
+            // also write metadata here. This includes branch?
+            #ifdef GIT_BRANCH
+            outfile->WriteObject(&branchInfo, "Branch");
+            #endif
+
+            #ifdef GIT_HASH
+            outfile->WriteObject(&commitInfo, "commit_hash");
+            #endif
+        
+            outfile->WriteObject(&timestamp, "Timestamp");
+            
+            if (argvString.size() > 2) {
+                TObjString anType(argvString[2].c_str());
+                anTypeStr = argvString[2];
+                outfile->WriteObject(&anType, "AN_Type");
+            }
+
+            outfile->WriteObject(&eventSelectionType, "EventSelectionType");
+        } else {
+            outputSubfolder = timestampOutputName;
+            if (onlyCR) outputSubfolder += "_CR";
+            // if (infuseNonPrompt) outputSubfolder += "_XNP";
+            // if (leanEventSelection == false) outputSubfolder += "_OldSel";
+        }
 
         if (mode == 1) {
             createMVAHandlers();

@@ -1,7 +1,6 @@
 #ifndef FOURTOP_OUTPUTTREEHANDLER_H
 #define FOURTOP_OUTPUTTREEHANDLER_H
 
-
 #include "OutputTree.h"
 
 // similar functionality as channelmanager: make sure naming is correct, trees are generated all the same
@@ -15,17 +14,18 @@ class OutputTreeHandler
     private:
         TFile* currentFile; // changes for each sample.
 
+        std::string outputfolder;
         std::vector<std::shared_ptr<OutputTree>> mapping;
         std::vector<std::string> processNames;
-        
+
     public:
-        OutputTreeHandler(std::vector<std::string>& processes);
+        OutputTreeHandler(std::vector<std::string>& processes, std::string& outputSubfolder);
         ~OutputTreeHandler();
 
         void ChangeProcess(unsigned processNumber, std::string& newProcess);
 
         // general IO
-        TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string mainName="MainTree");
+        TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name="base");
         void FlushTrees();
 
         // Filling trees and stuff

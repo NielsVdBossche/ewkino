@@ -46,7 +46,8 @@ if __name__ == "__main__":
     baseCommand = "./analysisExec $1 $2"
     
     dateTimeObj = datetime.now()
-    timestamp = "timestamp=" + dateTimeObj.strftime("%Y-%m-%d_%H-%M")
+    time = dateTimeObj.strftime("%Y-%m-%d_%H-%M")
+    timestamp = "timestamp=" + time
  
     additionalArgs = [timestamp]
     customSamplelist = False
@@ -146,6 +147,14 @@ if __name__ == "__main__":
 
     with open("AnalysisJob.sub", 'a') as f:
         f.write(queueString)
+
+    # outputfolder preparation:
+    foldername = time
+    if "CR" in additionalArgs:
+        foldername += "_CR"
+
+    folder = os.path.join("Output", foldername)
+    os.makedirs(folder)
 
     # print queuestring at end of job description
     os.system('condor_submit AnalysisJob.sub')

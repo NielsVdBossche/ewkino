@@ -59,7 +59,8 @@ class FourTop {
         std::string yearString = "Combi";
         std::string searchRegion = "All";
         // IO-management
-        TFile* outfile;
+        TFile* outfile = nullptr;
+        std::string outputSubfolder;
         // metadata
         std::string outputFileTags;
         std::string branchString;
@@ -109,7 +110,7 @@ class FourTop {
         std::vector<std::vector<double>>* param_points;
     public:
         // Loading settings for analysis, preparing trees, ...
-        FourTop(std::string outputName, std::vector<std::string>& argvString, int mode = 0);
+        FourTop(std::vector<std::string>& argvString, int mode = 0, bool produceFile = true);
         ~FourTop();
 
         // Prepare
