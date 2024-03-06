@@ -129,15 +129,15 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
             eventSelectionType = "LooseSelection";
         }
 
-        intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
 
         if (produceFile) {
             outputFileName = "AnalysisOutput_" + argvString[2];
 
             outfile = new TFile(outputFileName.c_str(), "recreate");
             outfile->mkdir("Nominal");
-            outfile->mkdir("Uncertainties");
+            outfile->mkdir("Uncertainties");>
             
+            intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
 
             intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
             intLuminosityMC->Write("IntLumi", TObject::kOverwrite);

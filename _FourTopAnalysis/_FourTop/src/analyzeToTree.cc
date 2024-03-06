@@ -13,6 +13,9 @@ void FourTop::analyzeToTree(std::string method) {
         std::cout << "ANALYZING SR + CR" << std::endl;
     }
 
+    double chMisCorr = 0.;
+    bool uncertaintySwitch = true;
+
     // Reweighter creation
     // std::map<shapeUncId, std::string> uncTranslateMap;
     std::shared_ptr< ReweighterFactory >reweighterFactory( new FourTopReweighterFactory() );
@@ -48,6 +51,20 @@ void FourTop::analyzeToTree(std::string method) {
         st = selectionType::MCPrompt;
 
         std::cout << "Running method " << "MCPrompt" << std::endl;
+    } else if (method == "ChargeDD") {
+        initDdChargeMisID(&chMisCorr);
+        processes = {"ChargeMisID"};
+        uncertaintySwitch = false;
+
+        selection->setSelectionType(selectionType::ChargeMisDD);
+        st = selectionType::ChargeMisDD;
+    } else if (method == "nonPromptDD") {
+        initFakerate();
+        processes = {"nonPromptElectron", "nonPromptMuon"};
+        uncertaintySwitch = false;
+
+        selection->setSelectionType(selectionType::NPDD);
+        st = selectionType::NPDD;
     }
 
     OutputTreeHandler* outputTreeHandler = new OutputTreeHandler(processes, outputSubfolder);
@@ -55,10 +72,9 @@ void FourTop::analyzeToTree(std::string method) {
     // tmp for structure purposes 
     bool isNPControl = false;
     bool splitAdditionalBees = true;
-    bool uncertaintyExperimentWeight = false;
-    bool uncertaintyTheoryWeight = true;
+    bool uncertaintyExperimentWeight = false & uncertaintySwitch;
+    bool uncertaintyTheoryWeight = true & uncertaintySwitch;
 
-    double chMisCorr = 1.;
     std::vector<std::string> expUncertainties = {
         "pileup", "muonIDSyst", "muonIDStat", "electronIDSyst", "electronIDStat", "prefire"
     };
@@ -75,7 +91,6 @@ void FourTop::analyzeToTree(std::string method) {
         bool hasValidPdfs = false;
 
         bool considerBTagShape = false;
-
 
         if (uncertaintyTheoryWeight && ! treeReader->isData() && st != selectionType::NPDD) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
@@ -260,7 +275,7 @@ void FourTop::analyzeToTree(std::string method) {
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetExperimentalWeightVariations(expUpVar, expDownVar);
                 }
 
-                outputTreeHandler->FillAt(0, selection, weight);
+                outputTreeHandler->FillAt(processNb, selection, weight);
             }
         }
         outputTreeHandler->FlushTrees();

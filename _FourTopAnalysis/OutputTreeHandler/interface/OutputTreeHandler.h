@@ -3,6 +3,7 @@
 
 #include "OutputTree.h"
 
+#include "../../globalSettings.h"
 // similar functionality as channelmanager: make sure naming is correct, trees are generated all the same
 // 
 
@@ -25,7 +26,7 @@ class OutputTreeHandler
         void ChangeProcess(unsigned processNumber, std::string& newProcess);
 
         // general IO
-        TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name="base");
+        TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name="base", std::string runtype="MCPrompt");
         void FlushTrees();
 
         // Filling trees and stuff

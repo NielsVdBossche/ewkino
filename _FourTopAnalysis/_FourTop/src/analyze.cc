@@ -169,12 +169,6 @@ void FourTop::analyze(std::string method) {
     // s// if else: choose which tree to construct. Allow multiple? depending on the settings
     // soutputTree = std::make_shared<OutputTree>();
 
-
-
-
-
-
-
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
         std::cout << "init sample" << std::endl;

@@ -33,7 +33,7 @@ void OutputTreeHandler::ChangeProcess(unsigned processNumber, std::string& newPr
     }
 }
 
-TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name) {
+TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name, std::string runtype) {
     // use Sample class?
     // anyway
     // change maintree to JEC_VAR_tree or JER_VAR_tree?
@@ -69,13 +69,15 @@ TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string&
     // for now:
     mapping.clear();
     std::string test = "tree";
-
-    std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeWeightVar>(currentFile, test, test);
-    mapping.push_back(new_outtree);
-    //for (unsigned i=0; i<processNames.size(); i++) {
-    //    std::shared_ptr new_outtree = std::make_shared<OutputTree>();
-    //    mapping.push_back(new_outtree);
-    //}
+    for (auto process : processNames) {
+        if (runtype == "MCPrompt") {
+            std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeWeightVar>(currentFile, process, test);
+            mapping.push_back(new_outtree);
+        } else if (runtype == "nonPromptDD" || runtype == "ChargeDD") {
+            std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeVariables>(currentFile, process, test);
+            mapping.push_back(new_outtree);
+        }
+    }
 
     return currentFile;
 }
