@@ -98,12 +98,11 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
             oss << "_" << searchRegion;
         }
         // don't include samplelistname
-        outputFileTags = argvString[2] + "_" + oss.str();
+        outputFileTags = argvString[2] + "_" + getYearString();
         oss << "_" << strippedSampleList << ".root";
         outputFileName += oss.str();
         std::cout << outputFileName.c_str() << std::endl;
 
-        // 
         #ifdef GIT_BRANCH
         branchString = GIT_BRANCH;
         TObjString branchInfo(branchString.c_str());
