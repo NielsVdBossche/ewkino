@@ -1,6 +1,8 @@
 #include "../interface/OutputTreeVariables.h"
 
 #include "../../../Tools/interface/stringTools.h"
+#include "../../FourTopEventHandling/interface/MVAHandler.h"
+
 
 OutputTreeVariables::OutputTreeVariables(TFile* outputfile, std::string& treeName, std::string& outputLevel) : 
     OutputTree(outputfile, treeName), outputLevel(outputLevel)
@@ -14,6 +16,10 @@ OutputTreeVariables::OutputTreeVariables(TFile* outputfile, std::string& treeNam
 }
 
 OutputTreeVariables::~OutputTreeVariables() {
+}
+
+void OutputTreeVariables::FillTree(EventFourT* ftEvent, double weight) {
+    FillBaseTree(weight, ftEvent);
 }
 
 void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
@@ -40,20 +46,26 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     }
 
     // potentially change this to just have the nBTight/med/loose? Rather than wp based, then again count 3/2/1/0 is also possible
-
-    nElectrons        = ftEvent->numberOfLeps(); // potentially in 1 variable?
+    nElectrons        = 0; // potentially in 1 variable?
     electronPt        = {};
     electronCharge    = {};
-    isElectron        = {};
-    for (unsigned i=0; i < nElectrons; i++) {
-        electronPt.push_back(ftEvent->getLepton(i)->pt());
-        electronCharge.push_back(ftEvent->getLepton(i)->charge());
-        isElectron.push_back(ftEvent->getLepton(i)->isElectron());
-    }
 
-    muonCharge        = {};
     nMuons            = 0;
     muonPt            = {};
+    muonCharge        = {};
+    // isElectron        = {};
+    for (unsigned i=0; i < ftEvent->numberOfLeps(); i++) {
+        Lepton* lepton = ftEvent->getLepton(i);
+        if (lepton->isElectron()) {
+            nElectrons++;
+            electronPt.push_back(lepton->pt());
+            electronCharge.push_back(lepton->charge());
+        } else if (lepton->isMuon()) {
+            nMuons++;
+            muonPt.push_back(lepton->pt());
+            muonCharge.push_back(lepton->charge());
+        }
+    }
 
     ptMiss            = ftEvent->getMET();
 
@@ -66,37 +78,46 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     if (ftEvent->getEvent()->hasOSSFLightLeptonPair()) invariant_mass_ll = ftEvent->getEvent()->bestZBosonCandidateMass();   
     else invariant_mass_ll = 0.;
 
+    MVAHandler_4T* mva = ftEvent->GetDLMVA();
+    unsigned evClass =unsigned(ftEvent->getCurrentClass());
+    if (evClass == eventClass::crz3L || evClass == eventClass::crz4L || evClass == eventClass::cro3L || evClass > eventClass::ssdl) mva = ftEvent->GetMLMVA();
+
     // bdt vars
-    min_dR_bb       = 0.;
-    dR_l1l2         = 0.;
-    dPhi_l1l2       = 0.;
-    dEta_l1l2       = 0.;
+    min_dR_bb       = mva->deltaRBjets;
+    dR_l1l2         = mva->dRleps;
+    dPhi_l1l2       = mva->aziAngle;
+    dEta_l1l2       = deltaEta(*ftEvent->getLepton(0), *ftEvent->getLepton(1));
     min_dR_ll       = 0.;
     min_dPhi_ll     = 0.;
     min_dEta_ll     = 0.;
-    max_mOverPt     = 0.;
-    min_dR_lepB     = 0.;
-    minTwo_dR_lepB  = 0.;
-    max_DF_1        = 0.;
-    max_DF_2        = 0.;
-    max_DF_3        = 0.;
-    max_DF_4        = 0.;
-    df_j1           = 0.;
-    df_j2           = 0.;
-    df_j3           = 0.;
-    df_j4           = 0.;
-    mtop1           = 0.;
-    mtop2           = 0.;
-    mW1             = 0.;
-    mW2             = 0.;
-    mt_l1           = 0.;
-    mt_l2           = 0.;
-    mt2_ll          = 0.;
-    mt2_bb          = 0.;
-    mt2_lblb        = 0.;
-    m_l1l2          = 0.;
-    m_l2l3          = 0.;
-    m_l1l3          = 0.;
+    max_mOverPt     = mva->massToPt;
+    min_dR_lepB     = mva->min_dr_lep_b;
+    minTwo_dR_lepB  = mva->sec_min_dr_lep_b;
+    max_DF_1        = mva->bTagLead;
+    max_DF_2        = mva->bTagSub;
+    max_DF_3        = mva->bTagThird;
+    max_DF_4        = mva->bTagFourth;
+    df_j1           = mva->bTagPtLead;
+    df_j2           = mva->bTagPtSub;
+    df_j3           = mva->bTagPtThird;
+    df_j4           = mva->bTagPtFourth;
+    mtop1           = mva->massBestTop;
+    mtop2           = mva->massBestTopW;
+    mW1             = mva->massSecTop;
+    mW2             = mva->massSecTopW;
+    mt_l1           = mva->mtLeadLepMET;
+    mt_l2           = mva->mtSubLeadLepMET;
+    mt2_ll          = mva->m2ll;
+    mt2_bb          = mva->m2bb;
+    mt2_lblb        = mva->m2lblb;
+    m_l1l2          = (*ftEvent->getLepton(0) + *ftEvent->getLepton(1)).mass();
+    if (nElectrons + nMuons >= 3) {
+        m_l2l3          = (*ftEvent->getLepton(1) + *ftEvent->getLepton(2)).mass();
+        m_l1l3          = (*ftEvent->getLepton(0) + *ftEvent->getLepton(2)).mass();
+    } else {
+        m_l2l3 = 0.;
+        m_l1l3 = 0.;
+    }
 }
 
 void OutputTreeVariables::pInitTree() {
@@ -114,7 +135,7 @@ void OutputTreeVariables::pInitTree() {
     tree->Branch("bTagWP",         &bTagWP);
     tree->Branch("nElectrons",     &nElectrons,              "nElectrons/i");
     tree->Branch("electronPt",     &electronPt);
-    tree->Branch("isElectron",     &isElectron);
+    //tree->Branch("isElectron",     &isElectron);
     tree->Branch("electronCharge", &electronCharge);
     tree->Branch("muonCharge",     &muonCharge);
     tree->Branch("nMuons",         &nMuons,                  "nMuons/i");

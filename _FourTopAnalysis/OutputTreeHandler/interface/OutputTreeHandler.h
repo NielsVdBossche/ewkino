@@ -26,7 +26,7 @@ class OutputTreeHandler
         void ChangeProcess(unsigned processNumber, std::string& newProcess);
 
         // general IO
-        TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name="base", std::string runtype="MCPrompt");
+        TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string runtype, std::string name="base");
         void FlushTrees();
 
         // Filling trees and stuff

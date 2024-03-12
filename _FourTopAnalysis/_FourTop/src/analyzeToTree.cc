@@ -25,7 +25,7 @@ void FourTop::analyzeToTree(std::string method) {
 
 
     if (testRun) std::cout << "initializing" << std::endl;
-    if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
+    if (! treeReader->sampleVector()[0].isData() && method == "Obs") {
         // still needed?
         // uncTranslateMap = mgrAll->getTranslateUnc(); 
 
@@ -65,15 +65,22 @@ void FourTop::analyzeToTree(std::string method) {
 
         selection->setSelectionType(selectionType::NPDD);
         st = selectionType::NPDD;
+    } else if (method == "Obs") {
+        processes = {"Data"};
+        selection->setSelectionType(selectionType::Data);
+        st = selectionType::Data;
+        uncertaintySwitch = false;
+
+        std::cout << "Running method " << "Obs" << std::endl;
     }
 
     OutputTreeHandler* outputTreeHandler = new OutputTreeHandler(processes, outputSubfolder);
 
     // tmp for structure purposes 
     bool isNPControl = false;
-    bool splitAdditionalBees = true;
-    bool uncertaintyExperimentWeight = false & uncertaintySwitch;
-    bool uncertaintyTheoryWeight = true & uncertaintySwitch;
+    bool splitAdditionalBees = false;
+    bool uncertaintyExperimentWeight = false && uncertaintySwitch;
+    bool uncertaintyTheoryWeight = true && uncertaintySwitch;
 
     std::vector<std::string> expUncertainties = {
         "pileup", "muonIDSyst", "muonIDStat", "electronIDSyst", "electronIDStat", "prefire"
@@ -92,15 +99,20 @@ void FourTop::analyzeToTree(std::string method) {
 
         bool considerBTagShape = false;
 
-        if (uncertaintyTheoryWeight && ! treeReader->isData() && st != selectionType::NPDD) {
+        if (uncertaintyTheoryWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
         }
 
-        if (uncertaintyExperimentWeight && ! treeReader->isData() && st != selectionType::NPDD) {
+        if (uncertaintyExperimentWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             considerBTagShape = ! testRun;
             if (sampleIndex == 0 && considerBTagShape) {
                 bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
             }
+        }
+        
+        if (st == selectionType::MCPrompt) {
+            std::string currProcName = treeReader->sampleVector()[sampleIndex].processName();1
+            outputTreeHandler->ChangeProcess(0, currProcName);
         }
 
         // one tree per sample per process
@@ -111,7 +123,7 @@ void FourTop::analyzeToTree(std::string method) {
         // need something to manage these trees.
 
         // prepare run
-        TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags);
+        TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags, method);
         WriteMetadata(newOutputFile);
         if (testRun) std::cout << "Starting event loop" << std::endl;
 
@@ -282,5 +294,5 @@ void FourTop::analyzeToTree(std::string method) {
     }
 
     delete outputTreeHandler;
-    outfile->Close();
+    // outfile->Close();
 }

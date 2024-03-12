@@ -9,7 +9,7 @@ class OutputTreeVariables : public OutputTree {
         OutputTreeVariables(TFile* outputfile, std::string& treeName, std::string& outputLevel);
         ~OutputTreeVariables();
         
-        virtual void FillTree(EventFourT*, double) = 0;
+        virtual void FillTree(EventFourT*, double);
         void FillBaseTree(double weight, EventFourT* ftEvent);
         unsigned GetOutputInt() const {return outputInt;}
 

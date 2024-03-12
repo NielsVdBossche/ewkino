@@ -235,7 +235,7 @@ void FourTop::WriteMetadata(TFile* file) {
     file->WriteObject(&eventSelectionType, "EventSelectionType");
 
     // todo: check if root likes this
-    //TH1F* intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
+    TH1F* intLuminosityMC = new TH1F("IntegratedLumiMC", "IntegratedLumiMC", 1, 0, 1);
 
     intLuminosityMC->SetBinContent(1, treeReader->getIntLumi());
     intLuminosityMC->Write("IntLumi", TObject::kOverwrite);

@@ -33,7 +33,7 @@ void OutputTreeHandler::ChangeProcess(unsigned processNumber, std::string& newPr
     }
 }
 
-TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name, std::string runtype) {
+TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string runtype, std::string name) {
     // use Sample class?
     // anyway
     // change maintree to JEC_VAR_tree or JER_VAR_tree?
@@ -73,7 +73,7 @@ TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string&
         if (runtype == "MCPrompt") {
             std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeWeightVar>(currentFile, process, test);
             mapping.push_back(new_outtree);
-        } else if (runtype == "nonPromptDD" || runtype == "ChargeDD") {
+        } else if (runtype == "nonPromptDD" || runtype == "ChargeDD" || runtype == "Obs") {
             std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeVariables>(currentFile, process, test);
             mapping.push_back(new_outtree);
         }
