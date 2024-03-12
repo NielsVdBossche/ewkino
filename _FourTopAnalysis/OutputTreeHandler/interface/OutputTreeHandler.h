@@ -29,6 +29,7 @@ class OutputTreeHandler
         TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string name="base", std::string runtype="MCPrompt");
         void FlushTrees();
 
+        void WriteExpWeightNaming(std::vector<std::string>& weightNames);
         // Filling trees and stuff
         void FillAt(unsigned pNb, EventFourT* ftEvent, double wgt);
         std::shared_ptr<OutputTree> GetTree(unsigned pNb) {return mapping[pNb];}

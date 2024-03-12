@@ -71,11 +71,11 @@ void FourTop::analyzeToTree(std::string method) {
 
     // tmp for structure purposes 
     bool isNPControl = false;
-    bool splitAdditionalBees = true;
-    bool uncertaintyExperimentWeight = false & uncertaintySwitch;
+    bool splitAdditionalBees = false;
+    bool uncertaintyExperimentWeight = true & uncertaintySwitch;
     bool uncertaintyTheoryWeight = true & uncertaintySwitch;
 
-    std::vector<std::string> expUncertainties = {
+    std::vector<std::string> expUncertaintiesSimple = {
         "pileup", "muonIDSyst", "muonIDStat", "electronIDSyst", "electronIDStat", "prefire"
     };
     std::vector<std::string> bTagShapeSystematics;
@@ -96,12 +96,6 @@ void FourTop::analyzeToTree(std::string method) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
         }
 
-        if (uncertaintyExperimentWeight && ! treeReader->isData() && st != selectionType::NPDD) {
-            considerBTagShape = ! testRun;
-            if (sampleIndex == 0 && considerBTagShape) {
-                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
-            }
-        }
 
         // one tree per sample per process
         // sample decides the filename, process the treename
@@ -113,6 +107,18 @@ void FourTop::analyzeToTree(std::string method) {
         // prepare run
         TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags);
         WriteMetadata(newOutputFile);
+
+        if (uncertaintyExperimentWeight && ! treeReader->isData() && st != selectionType::NPDD) {
+            considerBTagShape = ! testRun;
+            if (sampleIndex == 0 && considerBTagShape) {
+                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+            }
+
+            std::vector<std::string> expUncertaintiesAll = expUncertaintiesSimple;
+            expUncertaintiesAll.push_back("ElectronReco");
+            expUncertaintiesAll.insert(expUncertaintiesAll.end(), bTagShapeSystematics.begin(), bTagShapeSystematics.end());
+            outputTreeHandler->WriteExpWeightNaming(expUncertaintiesAll);
+        }
         if (testRun) std::cout << "Starting event loop" << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
@@ -251,7 +257,7 @@ void FourTop::analyzeToTree(std::string method) {
                     std::vector<double> expDownVar;
 
                     // Uncertainties defined earlier: pileup, muon stat, syst, electrons stat, syst, prefire
-                    for (auto uncID : expUncertainties) {
+                    for (auto uncID : expUncertaintiesSimple) {
                         double weightNominalInv = 1. / reweighter[ uncID ]->weight( *currentEvent );
                         expUpVar.push_back(reweighter[ uncID ]->weightUp( *currentEvent ) * weightNominalInv);
                         expDownVar.push_back(reweighter[ uncID ]->weightDown( *currentEvent ) * weightNominalInv);
