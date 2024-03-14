@@ -91,6 +91,17 @@ void OutputTreeHandler::FlushTrees() {
     
 }
 
+void OutputTreeHandler::WriteExpWeightNaming(std::vector<std::string>& weightNames) {
+    std::shared_ptr<TTree> tree = std::make_shared<TTree>("Namingscheme", "Namingscheme");
+    std::vector<std::string> tmp;
+    tree->Branch("ExperimentalWeightNames", &tmp);
+    tmp = weightNames;
+    tree->Fill();
+    currentFile->cd();
+    tree->Write(tree->GetName(), TObject::kOverwrite);
+}
+
+
 void OutputTreeHandler::FillAt(unsigned pNb, EventFourT* ftEvent, double wgt) {
     mapping[pNb]->FillTree(ftEvent, wgt);
     mapping[pNb]->AddEntry();

@@ -25,7 +25,7 @@ void FourTop::analyzeToTree(std::string method) {
 
 
     if (testRun) std::cout << "initializing" << std::endl;
-    if (! treeReader->sampleVector()[0].isData() && method == "Obs") {
+    if (! treeReader->sampleVector()[0].isData() && method != "Obs") {
         // still needed?
         // uncTranslateMap = mgrAll->getTranslateUnc(); 
 
@@ -43,9 +43,9 @@ void FourTop::analyzeToTree(std::string method) {
     }
 
     // default methods
+    if (testRun) std::cout << "Setting selection typ" << std::endl;
     if (method == "MCPrompt") {
         processes = {""};
-        if (testRun) std::cout << "Setting selection time" << std::endl;
 
         selection->setSelectionType(selectionType::MCPrompt);
         st = selectionType::MCPrompt;
@@ -79,10 +79,10 @@ void FourTop::analyzeToTree(std::string method) {
     // tmp for structure purposes 
     bool isNPControl = false;
     bool splitAdditionalBees = false;
-    bool uncertaintyExperimentWeight = false && uncertaintySwitch;
-    bool uncertaintyTheoryWeight = true && uncertaintySwitch;
+    bool uncertaintyExperimentWeight = true & uncertaintySwitch;
+    bool uncertaintyTheoryWeight = true & uncertaintySwitch;
 
-    std::vector<std::string> expUncertainties = {
+    std::vector<std::string> expUncertaintiesSimple = {
         "pileup", "muonIDSyst", "muonIDStat", "electronIDSyst", "electronIDStat", "prefire"
     };
     std::vector<std::string> bTagShapeSystematics;
@@ -102,16 +102,9 @@ void FourTop::analyzeToTree(std::string method) {
         if (uncertaintyTheoryWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
         }
-
-        if (uncertaintyExperimentWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
-            considerBTagShape = ! testRun;
-            if (sampleIndex == 0 && considerBTagShape) {
-                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
-            }
-        }
         
         if (st == selectionType::MCPrompt) {
-            std::string currProcName = treeReader->sampleVector()[sampleIndex].processName();1
+            std::string currProcName = treeReader->sampleVector()[sampleIndex].processName();
             outputTreeHandler->ChangeProcess(0, currProcName);
         }
 
@@ -125,6 +118,19 @@ void FourTop::analyzeToTree(std::string method) {
         // prepare run
         TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags, method);
         WriteMetadata(newOutputFile);
+
+        if (uncertaintyExperimentWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
+            considerBTagShape = ! testRun;
+            if (sampleIndex == 0 && considerBTagShape) {
+                bTagShapeSystematics = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->availableSystematics();
+            }
+
+            std::vector<std::string> expUncertaintiesAll = expUncertaintiesSimple;
+            expUncertaintiesAll.push_back("ElectronReco");
+            expUncertaintiesAll.insert(expUncertaintiesAll.end(), bTagShapeSystematics.begin(), bTagShapeSystematics.end());
+            outputTreeHandler->WriteExpWeightNaming(expUncertaintiesAll);
+        }
+
         if (testRun) std::cout << "Starting event loop" << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
@@ -263,7 +269,7 @@ void FourTop::analyzeToTree(std::string method) {
                     std::vector<double> expDownVar;
 
                     // Uncertainties defined earlier: pileup, muon stat, syst, electrons stat, syst, prefire
-                    for (auto uncID : expUncertainties) {
+                    for (auto uncID : expUncertaintiesSimple) {
                         double weightNominalInv = 1. / reweighter[ uncID ]->weight( *currentEvent );
                         expUpVar.push_back(reweighter[ uncID ]->weightUp( *currentEvent ) * weightNominalInv);
                         expDownVar.push_back(reweighter[ uncID ]->weightDown( *currentEvent ) * weightNominalInv);
