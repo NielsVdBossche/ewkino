@@ -164,7 +164,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             }
 
             if (a != nullptr) {
-                considerBTagShape = true;
+                considerBTagShape = ! testRun;
                 JECSourcesMapping = *a;
                 for (auto var : *a) {
                     JECSourcesNames.push_back(var.first);
