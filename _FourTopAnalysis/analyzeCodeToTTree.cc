@@ -30,5 +30,5 @@ int main(int argc, char* argv[]) {
     //bool onlyCR = false;
     //if (argc >= 4 && argvStr[3] == "CR") onlyCR = true;
 
-    analysisObject.analyzeToTree(argvStr[2]);
+    analysisObject.analyzeToTree(argvStr[2], argvStr[3]);
 }

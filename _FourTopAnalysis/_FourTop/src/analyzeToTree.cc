@@ -3,7 +3,7 @@
 #include "../../OutputTreeHandler/interface/OutputTreeHandler.h"
 #include "../../OutputTreeHandler/interface/OutputTreeWeightVar.h"
 
-void FourTop::analyzeToTree(std::string method) {
+void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
@@ -74,6 +74,49 @@ void FourTop::analyzeToTree(std::string method) {
         std::cout << "Running method " << "Obs" << std::endl;
     }
 
+    // translate to a booltype thing? idk
+    std::string outputfile_suffix = "base";
+    bool jec_grouped = false;
+    bool jec_sources = false;
+    bool nominal_run = false;
+    std::vector<std::string> uncertaintyNames = {};
+    std::vector<shapeUncId> uncertaintyIDs = {};
+    if (uncertaintyflag == "nominal") {
+        nominal_run = true;
+    } else if (uncertaintyflag == "jec_single") {
+        uncertaintySwitch = false;
+        outputfile_suffix = "JEC";
+        uncertaintyNames = {"Unc_JEC_Up", "Unc_JEC_Down"};
+        uncertaintyIDs = {shapeUncId::JEC, shapeUncId::JEC};
+    } else if (uncertaintyflag == "jec_grouped") {
+        uncertaintySwitch = false;
+        outputfile_suffix = "GroupedJEC";
+        jec_grouped = true;
+    } else if (uncertaintyflag == "jec_individual") {
+        uncertaintySwitch = false;
+        outputfile_suffix = "SourcesJEC";
+        jec_sources = true;
+    } else if (uncertaintyflag == "jer") {
+        uncertaintySwitch = false;
+        outputfile_suffix = "JER";
+        uncertaintyNames = {"Unc_JER_1p93_Up", "Unc_JER_1p93_Down", "Unc_JER_2p5_Up", "Unc_JER_2p5_Down"};
+        uncertaintyIDs = {shapeUncId::JER_1p93, shapeUncId::JER_1p93, shapeUncId::JER_2p5, shapeUncId::JER_2p5};
+    } else if (uncertaintyflag == "met") {
+        uncertaintySwitch = false;
+        outputfile_suffix = "MET";
+        uncertaintyNames = {"Unc_METUnclustered_Up", "Unc_METUnclustered_Down"};
+        uncertaintyIDs = {shapeUncId::MET, shapeUncId::MET};
+    } else if (uncertaintyflag == "hem") {
+        if (yearString != "2018") {
+            std::cerr << "HEM Issue does not exist in pre-2018. Exiting..." << std::endl;
+            exit(1);
+        }
+        uncertaintySwitch = false;
+        outputfile_suffix = "HEMIssue";
+        uncertaintyNames = {"Unc_HEMIssue_Up", "Unc_HEMIssue_Down"};
+        uncertaintyIDs = {shapeUncId::HEMIssue, shapeUncId::HEMIssue};
+    }
+
     OutputTreeHandler* outputTreeHandler = new OutputTreeHandler(processes, outputSubfolder);
 
     // tmp for structure purposes 
@@ -92,12 +135,15 @@ void FourTop::analyzeToTree(std::string method) {
     for (unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ) {
         treeReader->initSample();
         std::cout << "init sample" << std::endl;
+        
+        currentEvent = treeReader->buildEventPtr(0, false, false, jec_sources, jec_grouped);
 
         int numberOfPdfVariations = 0;
         bool hasValidQcds = false;
         bool hasValidPdfs = false;
-
         bool considerBTagShape = false;
+        std::map<std::string, size_t> JECSourcesMapping;
+        std::vector<std::string> JECSourcesNames = {};
 
         if (uncertaintyTheoryWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
@@ -106,17 +152,51 @@ void FourTop::analyzeToTree(std::string method) {
         if (st == selectionType::MCPrompt) {
             std::string currProcName = treeReader->sampleVector()[sampleIndex].processName();
             outputTreeHandler->ChangeProcess(0, currProcName);
+
+            // need to change processes for the uncertainties
+            JetInfo info = currentEvent->jetInfo();
+            std::map< std::string, size_t >* a = nullptr;
+            if (jec_grouped) {
+                // get names
+                a = info.groupedJECVariationsMap();
+            } else if (jec_sources) {
+                a = info.allJECVariationsMap();
+            }
+
+            if (a != nullptr) {
+                considerBTagShape = true;
+                JECSourcesMapping = *a;
+                for (auto var : *a) {
+                    JECSourcesNames.push_back(var.first);
+                    JECSourcesNames.push_back(var.first);
+                    uncertaintyNames.push_back("Unc_" + var.first + "_Up");
+                    uncertaintyNames.push_back("Unc_" + var.first + "_Down");
+                    uncertaintyIDs.push_back(shapeUncId::JEC);
+                    uncertaintyIDs.push_back(shapeUncId::JEC);
+                    if (var.first == "FlavorQCD") {
+                        JECSourcesNames.push_back(var.first);
+                        JECSourcesNames.push_back(var.first);
+                        uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
+                        uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
+                        uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
+                        uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
+                        uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
+                        uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
+                        uncertaintyNames.push_back("Unc_" + var.first + "_light" + "_Up");
+                        uncertaintyNames.push_back("Unc_" + var.first + "_light" + "_Down");
+                        uncertaintyNames.push_back("Unc_" + var.first + "_charm" + "_Up");
+                        uncertaintyNames.push_back("Unc_" + var.first + "_charm" + "_Down");
+                        uncertaintyNames.push_back("Unc_" + var.first + "_bottom" + "_Up");
+                        uncertaintyNames.push_back("Unc_" + var.first + "_bottom" + "_Down");
+                    }
+                }
+            }
+            if (uncertaintyNames.size() != 0) {
+                outputTreeHandler->ChangeAllProcesses(uncertaintyNames);
+            }
         }
-
-        // one tree per sample per process
-        // sample decides the filename, process the treename
-        // naming structure:
-        // PROCESS_central
-        // PROCESS_sys_VAR
-        // need something to manage these trees.
-
         // prepare run
-        TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags, method);
+        TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags, method, outputfile_suffix);
         WriteMetadata(newOutputFile);
 
         if (uncertaintyExperimentWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
@@ -142,7 +222,7 @@ void FourTop::analyzeToTree(std::string method) {
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr(entry, false, false, false, false); // change this last boolean to an option -> basically is this a syst variation run or not
+            currentEvent = treeReader->buildEventPtr(entry, false, false, jec_sources, jec_grouped); // change this last boolean to an option -> basically is this a syst variation run or not
 
             // Check triggers here
             if (! eventPassesTriggers()) continue;
@@ -236,7 +316,7 @@ void FourTop::analyzeToTree(std::string method) {
             if (sampleReweighter && selection->leptonsArePrompt() && nominalClass != eventClass::crzz && nominalClass != eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
             
 
-            if (FillRegion(nominalClass, st)) {
+            if (FillRegion(nominalClass, st) && nominal_run) {
                 // check if we need to fill and fill here with correct stuff
                 // add some piece in the adding of the event to automatically apply the sys variation we want
                 selection->scoreCurrentEvent();
@@ -261,7 +341,7 @@ void FourTop::analyzeToTree(std::string method) {
                     } else {
                         qcdvariations = {weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight};
                     }
-                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetSaleVariations(qcdvariations);
+                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetScaleVariations(qcdvariations);
                 }
                 if (uncertaintyExperimentWeight) {
                     // Experimental variations
@@ -294,6 +374,49 @@ void FourTop::analyzeToTree(std::string method) {
                 }
 
                 outputTreeHandler->FillAt(processNb, selection, weight);
+            } else {
+                // Here, variations in variables can be considered explicitely. Loop over what is loaded.
+                for (unsigned i=0; i < uncertaintyIDs.size(); i++) {
+                    shapeUncId uncID = uncertaintyIDs[i];
+
+                    // Even parts should always be up, uneven down
+                    bool up = true;
+                    if (i % 2 != 0) up = false;
+                    double var_weight = 1.;
+
+                    // important when dealing with sources and grouped variation -> 1000 by default
+                    unsigned variation_number = 1000;
+                    if (uncID == shapeUncId::JEC && (jec_grouped || jec_sources)) {
+                        variation_number = JECSourcesMapping[JECSourcesNames[i]];
+                        if (considerBTagShape) {
+                            std::string source = JECSourcesNames[i];
+                            if (up) source += "Up";
+                            else source += "Down";
+                            var_weight = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, source, true, variation_number) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                        }
+                    }
+
+                    // arange flavor for JECFlavorQCD
+                    unsigned flavor = 0;
+                    if (uncID == shapeUncId::JECFlavorQCD) {
+                        if (stringTools::stringContains(uncertaintyNames[i], "charm")) flavor = 4;
+                        else if (stringTools::stringContains(uncertaintyNames[i], "bottom")) flavor = 5;
+                        if (considerBTagShape) {
+                            std::string source = "FlavorQCD";
+                            if (up) source += "Up";
+                            else source += "Down";
+                            var_weight = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, source, flavor) 
+                                                / reweighter["bTag_shape"]->weight( *currentEvent );
+                        }
+                    }
+                    eventClass currentClass = selection->classifyUncertainty(shapeUncId(uncID), up, variation_number, flavor);
+                    if (FillRegion(currentClass, st)) {
+                        // do filling sequence
+                        selection->scoreCurrentEvent();
+                        outputTreeHandler->FillAt(i, selection, weight * var_weight);
+                    }
+                }
             }
         }
         outputTreeHandler->FlushTrees();

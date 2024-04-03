@@ -781,8 +781,7 @@ void FourTop::analyze(std::string method) {
                     }
                     std::string empty = "";
 
-                    upClass = selection->classifyUncertainty
-                    (shapeUncId(uncID), true, 1000);
+                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();

@@ -24,6 +24,7 @@ class OutputTreeHandler
         ~OutputTreeHandler();
 
         void ChangeProcess(unsigned processNumber, std::string& newProcess);
+        void ChangeAllProcesses(std::vector<std::string>& processes);
 
         // general IO
         TFile* InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string runtype, std::string name="base");

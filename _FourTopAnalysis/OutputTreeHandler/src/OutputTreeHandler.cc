@@ -33,6 +33,13 @@ void OutputTreeHandler::ChangeProcess(unsigned processNumber, std::string& newPr
     }
 }
 
+void OutputTreeHandler::ChangeAllProcesses(std::vector<std::string>& processes) {
+    for (unsigned i=0; i < processes.size(); i++) {
+        ChangeProcess(i, processes[i]);
+    }
+}
+
+
 TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string& outputFileTags, std::string runtype, std::string name) {
     // use Sample class?
     // anyway
@@ -70,10 +77,10 @@ TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string&
     mapping.clear();
     std::string test = "tree";
     for (auto process : processNames) {
-        if (runtype == "MCPrompt") {
+        if (runtype == "MCPrompt" && name == "base") {
             std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeWeightVar>(currentFile, process, test);
             mapping.push_back(new_outtree);
-        } else if (runtype == "nonPromptDD" || runtype == "ChargeDD" || runtype == "Obs") {
+        } else if (runtype == "nonPromptDD" || runtype == "ChargeDD" || runtype == "Obs" || name != "base") {
             std::shared_ptr<OutputTree> new_outtree = std::make_shared<OutputTreeVariables>(currentFile, process, test);
             mapping.push_back(new_outtree);
         }

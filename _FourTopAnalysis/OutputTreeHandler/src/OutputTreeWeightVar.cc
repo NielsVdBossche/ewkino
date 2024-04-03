@@ -38,7 +38,7 @@ void OutputTreeWeightVar::FillTree(EventFourT* ftEvent, double weight) {
     // blabla filling
 }
 
-void OutputTreeWeightVar::SetSaleVariations(std::vector<double>& scaleVar) {
+void OutputTreeWeightVar::SetScaleVariations(std::vector<double>& scaleVar) {
     // I wonder how dangerous this is... Maybe make a pointer out of them
     scaleVariations = scaleVar;
 }
@@ -47,4 +47,3 @@ void OutputTreeWeightVar::SetExperimentalWeightVariations(std::vector<double>& u
     expUp = up;
     expDown = down;
 }
-

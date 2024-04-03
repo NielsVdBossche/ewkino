@@ -125,7 +125,7 @@ class FourTop {
 
         // Main loop functions
         void analyze(std::string method);
-        void analyzeToTree(std::string method);
+        void analyzeToTree(std::string method, std::string uncertaintyflag);
         void testRuns();
         
         std::map<eventClass, int> FillHistogramManager(ChannelManager* mgrAll);

@@ -27,7 +27,7 @@ class OutputTreeWeightVar : public OutputTreeVariables {
 
         // good for simple weights, but 100 pdfs? Might have separate vectors for such things
         void FillTree(EventFourT* ftEvent, double weight);
-        void SetSaleVariations(std::vector<double>& scaleVar);
+        void SetScaleVariations(std::vector<double>& scaleVar);
         void SetExperimentalWeightVariations(std::vector<double>& up, std::vector<double>& down);
 
         OutputTreeWeightVar(TFile* outputfile, std::string& treeName, std::string& outputLevel);
