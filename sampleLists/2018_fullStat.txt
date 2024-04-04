@@ -44,13 +44,14 @@ TTH               ../skims_v6/2018/analysisSamples/ttHJetToNonbb_M125_TuneCP5_13
 
 # TTTT            ../skims_v4/2018/analysisSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root                                                    0.01197
 TTTT              ../skims_v6/2018/analysisSamples/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_UL_GenPart.root                                  0.01337
+TTTT_EFT          ../skims_v7/2018/TTTT_EFT_RunIISummer20UL18MiniAOD_v2_localSubmission_tttt_eft_v1.root     0.01337
 
-TTVV            ../skims_v4/2018/TTHH_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.0006655
-TTVV            ../skims_v4/2018/TTWH_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.001141
-TTVV            ../skims_v4/2018/TTWW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                    0.007003
-TTVV            ../skims_v4/2018/TTZH_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.00113
-TTVV            ../skims_v4/2018/TTZZ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                    0.001386
-#TTVV            ../skims_v4/2018/TTWZ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                    0.002453
+TTHH            ../skims_v4/2018/TTHH_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.0006655
+TTWH            ../skims_v4/2018/TTWH_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.001141
+TTWW            ../skims_v4/2018/TTWW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                    0.01184
+TTZH            ../skims_v4/2018/TTZH_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.00113
+TTZZ            ../skims_v4/2018/TTZZ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                    0.002117
+TTWZ            ../skims_v4/2018/TTWZ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                    0.004157
 
 # TTW             ../skims_v4/2018/analysisSamples/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                0.2353                    # 0.284
 # TTW             ../skims_v4/2018/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root                                 0.4867                    # 0.584
@@ -67,8 +68,8 @@ TTZ               ../skims_v6/2018/analysisSamples/TTZToLLNuNu_M-10_TuneCP5_13Te
 # TTX             ../skims_v4/2018/ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root                    21.585204
 # TTX             ../skims_v4/2018/ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v1_singlelepton_MC_2018_ULv6.root                        21.585204
 THQ             ../skims_v4/2018/THQ_ctcvcp_4f_Hincl_TuneCP5_13TeV_madgraph_pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                     0.07096
-TTT             ../skims_v4/2018/TTTJ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.0007
-TTT             ../skims_v4/2018/TTTW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.0013
+TTTJ             ../skims_v4/2018/TTTJ_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.0007
+TTTW             ../skims_v4/2018/TTTW_TuneCP5_13TeV-madgraph-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v3_singlelepton_MC_2018_ULv6.root                                                    0.0013
 TTX             ../skims_v4/2018/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                       0.07358
 
 # VVV             ../skims_v4/2018/WZG_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6.root                                                     
@@ -107,8 +108,8 @@ ZZ-H            ../skims_v4/2018/VHToNonbb_M125_TuneCP5_13TeV-amcatnloFXFX_madsp
 ZZ-H            ../skims_v4/2018/ZZTo4L_TuneCP5_13TeV_powheg_pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_ULv6_reduced.root                                                    1.256
 
 TWZ             ../skims_v6/2018/TWZToLL_thad_Wlept_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                          0.003004
-# TWZ             ../skims_v6/2018/TWZToLL_thad_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                          0.003004
 TWZ             ../skims_v6/2018/TWZToLL_tlept_Whad_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                          0.003004
-# TWZ             ../skims_v6/2018/TWZToLL_tlept_Whad_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                          0.003004
 TWZ             ../skims_v6/2018/TWZToLL_tlept_Wlept_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                         0.0015
+# TWZ             ../skims_v6/2018/TWZToLL_thad_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                          0.003004
+# TWZ             ../skims_v6/2018/TWZToLL_tlept_Whad_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                          0.003004
 # TWZ             ../skims_v6/2018/TWZToLL_tlept_Wlept_5f_DS_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAOD-106X_upgrade2018_realistic_v11_L1v1-v2_singlelepton_MC_2018_UL_twz.root                         0.0015
