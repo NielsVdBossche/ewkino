@@ -28,7 +28,7 @@ def load_samplelist(filename):
 def jobsubmission_base(timestamp, additional_arguments: list = []):
     ret = ""
     ret += "executable = TreeAnalysis.sh\n"
-    ret += f"arguments = $(Samplelist) $(Method) $(Syst) timestamp={timestamp}"
+    ret += f"arguments = $(Samplelist) $(Method) $(Syst) {timestamp} condorrun"
 
     for arg in additional_arguments:
         ret += f" {arg}"
@@ -37,6 +37,8 @@ def jobsubmission_base(timestamp, additional_arguments: list = []):
     ret += "output = /user/nivanden/condor/output/Analysis_$(Method)_$(ClusterId).$(ProcId).out\n"
     ret += "error = /user/nivanden/condor/error/Analysis_$(Method)_$(ClusterId).$(ProcId).out\n"
     ret += "log = /user/nivanden/condor/logs/Analysis_$(Method)_$(ClusterId).$(ProcId).log\n\n"
+
+    ret += "should_transfer_files = NO\n\n"
 
     ret += "queue 1 Samplelist, Method, Syst from (\n"
     return ret
@@ -146,6 +148,6 @@ if __name__ == "__main__":
     with open("AnalysisJob.sub", 'w') as f:
         f.write(submission_file)
 
-    outputfolder = os.path.join("../Output", timestamp)
+    outputfolder = os.path.join("/pnfs/iihe/cms/store/user/nivanden/AnalysisOutput/ReducedTuples/", timestamp)
     os.makedirs(outputfolder)
     os.system("condor_submit AnalysisJob.sub")

@@ -30,7 +30,7 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
         jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL16APV_V7_MC/Summer19UL16APV_V7_MC_UncertaintySources_AK4PFchs.txt";
     }
     selection = new EventFourTLoose(jecUncertaintyFile);
-
+    bool runoncondor = false;
     if (mode < 2) {
         std::string outputBase = "Output/";
         std::string outputFileName = outputBase + "AnalysisOutput_" + argvString[2] + "_";
@@ -66,6 +66,8 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
             } else if (stringTools::stringContains(it, "inclusiveClasses")) {
                 overarchClasses = true;
                 selection->setOverarchClasses(overarchClasses);
+            } else if (it == "condorrun") {
+                runoncondor = true;
             }
         }
 
@@ -161,11 +163,15 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
 
             outfile->WriteObject(&eventSelectionType, "EventSelectionType");
         } else {
-            outputSubfolder = outputBase + timestampOutputName;
-            if (onlyCR) outputSubfolder += "_CR";
-            // if (infuseNonPrompt) outputSubfolder += "_XNP";
-            // if (leanEventSelection == false) outputSubfolder += "_OldSel";
-            if (testRun) outputSubfolder = outputBase + "test";
+            if (runoncondor) {
+                outputSubfolder = "$TMPDIR";
+            } else {
+                outputSubfolder = outputBase + timestampOutputName;
+                if (onlyCR) outputSubfolder += "_CR";
+                // if (infuseNonPrompt) outputSubfolder += "_XNP";
+                // if (leanEventSelection == false) outputSubfolder += "_OldSel";
+                if (testRun) outputSubfolder = outputBase + "test";
+            }
         }
 
         if (mode == 1) {

@@ -2,6 +2,8 @@
 #define FOURTOP_OUTPUTTREE_WEIGHTVAR
 
 #include "OutputTreeVariables.h"
+#include "../../../Tools/interface/SampleCrossSections.h"
+
 class OutputTreeWeightVar : public OutputTreeVariables {
     private:
         /* data */
@@ -28,6 +30,7 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         // good for simple weights, but 100 pdfs? Might have separate vectors for such things
         void FillTree(EventFourT* ftEvent, double weight);
         void SetScaleVariations(std::vector<double>& scaleVar);
+        void AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs);
         void SetExperimentalWeightVariations(std::vector<double>& up, std::vector<double>& down);
 
         OutputTreeWeightVar(TFile* outputfile, std::string& treeName, std::string& outputLevel);

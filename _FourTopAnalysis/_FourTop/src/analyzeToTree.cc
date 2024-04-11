@@ -341,7 +341,8 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                     } else {
                         qcdvariations = {weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight, weight};
                     }
-                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetScaleVariations(qcdvariations);
+                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->SetScaleVariations(qcdvariations);
+                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->AddPDFVariations(selection, weight, xsecs);
                 }
                 if (uncertaintyExperimentWeight) {
                     // Experimental variations

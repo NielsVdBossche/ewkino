@@ -10,6 +10,7 @@ OutputTreeWeightVar::OutputTreeWeightVar(TFile* outputfile, std::string& treeNam
     GetTree()->Branch("weightVariations",   &weightVariations);
     GetTree()->Branch("eftVariations",      &eftVariations);
     GetTree()->Branch("scaleVariations",    &scaleVariations);
+    GetTree()->Branch("pdfVariations",    &pdfVariations);
     GetTree()->Branch("expUp",              &expUp);
     GetTree()->Branch("expDown",            &expDown);
 
@@ -41,6 +42,20 @@ void OutputTreeWeightVar::FillTree(EventFourT* ftEvent, double weight) {
 void OutputTreeWeightVar::SetScaleVariations(std::vector<double>& scaleVar) {
     // I wonder how dangerous this is... Maybe make a pointer out of them
     scaleVariations = scaleVar;
+}
+
+void OutputTreeWeightVar::AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs) {
+    int max = 102;
+    Event* currentEvent = ftEvent->getEvent();
+    unsigned numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+
+    if (numberOfPdfVariations < max) {
+        max = numberOfPdfVariations;
+    }
+    //if (isSignalSample) {
+    for(int i=1; i<max+1; ++i){
+        pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+    }
 }
 
 void OutputTreeWeightVar::SetExperimentalWeightVariations(std::vector<double>& up, std::vector<double>& down) {
