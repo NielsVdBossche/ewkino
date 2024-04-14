@@ -22,6 +22,7 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         std::vector<double> weightVariations;
         std::vector<double> eftVariations;
         std::vector<double> scaleVariations;
+        std::vector<double> isrfsrVariations;
         std::vector<double> pdfVariations;
 
         std::vector<double> expUp;
@@ -30,6 +31,8 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         // good for simple weights, but 100 pdfs? Might have separate vectors for such things
         void FillTree(EventFourT* ftEvent, double weight);
         void SetScaleVariations(std::vector<double>& scaleVar);
+        void SetISRFSRVariations(std::vector<double>& isrfsrVar);
+
         void AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs);
         void SetExperimentalWeightVariations(std::vector<double>& up, std::vector<double>& down);
 
