@@ -348,6 +348,13 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                     }
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->SetScaleVariations(qcdvariations);
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->AddPDFVariations(selection, weight, xsecs);
+
+                    std::vector<double> isrfsrVariations;
+                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2());
+                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5());
+                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_FSR_2() / xsecs.get()->crossSectionRatio_FSR_2());
+                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_FSR_0p5() / xsecs.get()->crossSectionRatio_FSR_0p5());
+                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->SetISRFSRVariations(isrfsrVariations);
                 }
                 if (uncertaintyExperimentWeight) {
                     // Experimental variations
