@@ -40,6 +40,7 @@ if __name__ == '__main__' :
         
         sample_directories.append( sample_directory )
         sample_sub_directories.append( subdirectory )
+
     
     #output directory for each sample
     sample_names = [ directory.rstrip( os.path.sep ).split( os.path.sep )[-1] + '_' + subdirectory for directory, subdirectory in zip( sample_directories, sample_sub_directories ) ]
@@ -51,10 +52,8 @@ if __name__ == '__main__' :
         sample_output_directories.append( output_directory )
 
     for sample_directory, sub_directory, output_directory in zip( sample_directories, sample_sub_directories, sample_output_directories ):
-    
         #identify locations of files to process for a given sample 
         root_files = list( listFiles( os.path.join( sample_directory, sub_directory ), '.root' ) )
-        
         jobCommands = []
 
         #split_files in lists of files_per_job
@@ -68,5 +67,5 @@ if __name__ == '__main__' :
                 commands.append(skim_command)
 
             jobCommands.append(commands)                    
-        #print(jobCommands)
+        print(jobCommands)
         submitCommandsetsAsCondorCluster(script_name, jobCommands)

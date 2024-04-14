@@ -7,8 +7,8 @@ export X509_USER_PROXY=/user/$USER/x509up_u$(id -u $USER)
 
 cd /user/nivanden/ewkino/_FourTopAnalysis/
 
-echo "$1 $2 $3 $4"
+echo "$@"
 
 ./analysisTreeExec "../sampleLists/$1" $2 $3 "timestamp=$4" $5
-
+echo "Analysiscode done!"
 cp $TMPDIR/*.root /pnfs/iihe/cms/store/user/nivanden/AnalysisOutput/ReducedTuples/$4/

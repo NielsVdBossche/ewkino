@@ -167,6 +167,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                 considerBTagShape = ! testRun;
                 JECSourcesMapping = *a;
                 for (auto var : *a) {
+                    if (stringTools::stringContains(var.first, "Total")) continue;
                     JECSourcesNames.push_back(var.first);
                     JECSourcesNames.push_back(var.first);
                     uncertaintyNames.push_back("Unc_" + var.first + "_Up");
@@ -174,6 +175,10 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                     uncertaintyIDs.push_back(shapeUncId::JEC);
                     uncertaintyIDs.push_back(shapeUncId::JEC);
                     if (var.first == "FlavorQCD") {
+                        JECSourcesNames.push_back(var.first);
+                        JECSourcesNames.push_back(var.first);
+                        JECSourcesNames.push_back(var.first);
+                        JECSourcesNames.push_back(var.first);
                         JECSourcesNames.push_back(var.first);
                         JECSourcesNames.push_back(var.first);
                         uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
@@ -377,6 +382,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                 outputTreeHandler->FillAt(processNb, selection, weight);
             } else {
                 // Here, variations in variables can be considered explicitely. Loop over what is loaded.
+                //std::cout << uncertaintyIDs.size() << std::endl;
                 for (unsigned i=0; i < uncertaintyIDs.size(); i++) {
                     shapeUncId uncID = uncertaintyIDs[i];
 
@@ -387,8 +393,11 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
 
                     // important when dealing with sources and grouped variation -> 1000 by default
                     unsigned variation_number = 1000;
+                    // std::cout << i << std::endl;
+                    // std::cout << uncertaintyNames[i] << std::endl;
                     if (uncID == shapeUncId::JEC && (jec_grouped || jec_sources)) {
                         variation_number = JECSourcesMapping[JECSourcesNames[i]];
+                        // mif (testRun) std::cout << JECSourcesNames[i] << " " << variation_number << std::endl;
                         if (considerBTagShape) {
                             std::string source = JECSourcesNames[i];
                             if (up) source += "Up";

@@ -26,7 +26,7 @@ void OutputTreeHandler::ChangeProcess(unsigned processNumber, std::string& newPr
                 << " is way larger than the current number of stored processes ("
                 << processNames.size() << ")." << std::endl;
         exit(1);
-    } else if (processNumber == processNames.size()+1) {
+    } else if (processNumber == processNames.size()) {
         processNames.push_back(newProcess);
     } else {
         processNames[processNumber] = newProcess;

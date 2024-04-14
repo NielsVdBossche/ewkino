@@ -45,6 +45,7 @@ void OutputTreeWeightVar::SetScaleVariations(std::vector<double>& scaleVar) {
 }
 
 void OutputTreeWeightVar::AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs) {
+    pdfVariations.clear();
     int max = 102;
     Event* currentEvent = ftEvent->getEvent();
     unsigned numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();

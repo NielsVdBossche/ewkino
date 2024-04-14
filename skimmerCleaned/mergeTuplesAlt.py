@@ -7,8 +7,8 @@ import subprocess
 # input: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2/220630_155601_0000_singlelep_0.root
 # output: /pnfs/iihe/cms/store/user/nivanden/SomeFolder/year/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16MiniAOD-106X_mcRun2_asymptotic_v13-v2.root
 
-inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v6/rawSkims/"
-outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v6/"
+inputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v7/rawSkims/"
+outputBase = "/pnfs/iihe/cms/store/user/nivanden/skims_v7/"
 
 skimVersion = []
 outSubdir = ""
@@ -17,7 +17,7 @@ if (sys.argv[1] == '0'):
     skimVersion = ["2016_ULpreVFP", "RunIISummer20UL16MiniAODAPV", "MiniAOD2016preVFP", "2016_ULpreVFP_Nov"]
     outSubdir = "2016PreVFP"
 elif (sys.argv[1] == '1'):
-    skimVersion = ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD-106X", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]
+    skimVersion = ["2016_ULpostVFP", "RunIISummer20UL16MiniAOD-106X", "RunIISummer20UL16MiniAOD_", "MiniAOD2016postVFP", "2016_ULpostVFP_Nov"]
     outSubdir = "2016PostVFP"
 elif (sys.argv[1] == '4'):
     skimVersion = ["Run2016"]
@@ -36,7 +36,7 @@ if (len(sys.argv) >= 3):
     if (sys.argv[2] == "TTTrainingSamples"):
         outSubdir += "/mvaSamples"
 
-processes = []
+processes = ["TTTT_EFT_RunIISummer"]
 
 for dir in os.listdir(inputBase):
     print(dir)
@@ -44,8 +44,8 @@ for dir in os.listdir(inputBase):
     if not any(skimver in dir for skimver in skimVersion):
         continue
 
-    #if not any(process in dir for process in processes):
-    #    continue
+    if not any(process in dir for process in processes):
+        continue
     
     # join path outputbase + folder
     outputDir  = os.path.join(outputBase, outSubdir)
