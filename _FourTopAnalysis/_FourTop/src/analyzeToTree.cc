@@ -141,12 +141,21 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         int numberOfPdfVariations = 0;
         bool hasValidQcds = false;
         bool hasValidPdfs = false;
+        bool hasValidPSs = false;
         bool considerBTagShape = false;
         std::map<std::string, size_t> JECSourcesMapping;
         std::vector<std::string> JECSourcesNames = {};
 
         if (uncertaintyTheoryWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
+            if(numberOfPSVariations>=44) hasValidPSs = true;
+            std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
+            numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+            if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
+            else hasValidQcds = false;
+        
+            if (numberOfPdfVariations>=100) hasValidPdfs = true;
+            else hasValidPdfs = false;
         }
         
         if (st == selectionType::MCPrompt) {
@@ -238,14 +247,14 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             // if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
             // if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
 
-            if (! treeReader->isData() && useUncertainties) {
-                numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
-                if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
-                else hasValidQcds = false;
-            
-                if (numberOfPdfVariations>=100) hasValidPdfs = true;
-                else hasValidPdfs = false;
-            }
+            //if (! treeReader->isData() && useUncertainties) {
+            //    numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+            //    if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
+            //    else hasValidQcds = false;
+            //
+            //    if (numberOfPdfVariations>=100) hasValidPdfs = true;
+            //    else hasValidPdfs = false;
+            //}
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
                 continue;
@@ -348,13 +357,14 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                     }
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->SetScaleVariations(qcdvariations);
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->AddPDFVariations(selection, weight, xsecs);
-
-                    std::vector<double> isrfsrVariations;
-                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2());
-                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5());
-                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_FSR_2() / xsecs.get()->crossSectionRatio_FSR_2());
-                    isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_FSR_0p5() / xsecs.get()->crossSectionRatio_FSR_0p5());
-                    ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->SetISRFSRVariations(isrfsrVariations);
+                    if (hasValidPSs) {
+                        std::vector<double> isrfsrVariations;
+                        isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_ISR_2() / xsecs.get()->crossSectionRatio_ISR_2());
+                        isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_ISR_0p5() / xsecs.get()->crossSectionRatio_ISR_0p5());
+                        isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_FSR_2() / xsecs.get()->crossSectionRatio_FSR_2());
+                        isrfsrVariations.push_back(weight * currentEvent->generatorInfo().relativeWeight_FSR_0p5() / xsecs.get()->crossSectionRatio_FSR_0p5());
+                        ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->SetISRFSRVariations(isrfsrVariations);
+                    }
                 }
                 if (uncertaintyExperimentWeight) {
                     // Experimental variations
