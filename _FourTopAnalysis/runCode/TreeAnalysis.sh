@@ -10,5 +10,6 @@ cd /user/nivanden/ewkino/_FourTopAnalysis/
 echo "$@"
 
 ./analysisTreeExec "../sampleLists/$1" $2 $3 "timestamp=$4" $5
-echo "Analysiscode done!"
+
+echo "Analysis code finished! Now copying files to /pnfs"
 cp $TMPDIR/*.root /pnfs/iihe/cms/store/user/nivanden/AnalysisOutput/ReducedTuples/$4/

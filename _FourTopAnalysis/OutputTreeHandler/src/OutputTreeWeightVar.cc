@@ -58,6 +58,9 @@ void OutputTreeWeightVar::AddPDFVariations(EventFourT* ftEvent, double weight, s
     for(int i=1; i<max+1; ++i){
         pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
     }
+    for (int i=max; i < 102; i++) {
+        pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+    }
 }
 
 void OutputTreeWeightVar::SetISRFSRVariations(std::vector<double>& isrfsrVar) {
