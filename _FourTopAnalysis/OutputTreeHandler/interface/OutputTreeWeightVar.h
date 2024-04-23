@@ -33,7 +33,7 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         void SetScaleVariations(std::vector<double>& scaleVar);
         void SetISRFSRVariations(std::vector<double>& isrfsrVar);
 
-        void AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs);
+        void AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs, bool hasValidPdfs);
         void SetExperimentalWeightVariations(std::vector<double>& up, std::vector<double>& down);
 
         OutputTreeWeightVar(TFile* outputfile, std::string& treeName, std::string& outputLevel);

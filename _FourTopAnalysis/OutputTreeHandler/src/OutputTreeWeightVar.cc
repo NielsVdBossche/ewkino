@@ -45,21 +45,27 @@ void OutputTreeWeightVar::SetScaleVariations(std::vector<double>& scaleVar) {
     scaleVariations = scaleVar;
 }
 
-void OutputTreeWeightVar::AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs) {
+void OutputTreeWeightVar::AddPDFVariations(EventFourT* ftEvent, double weight, std::shared_ptr< SampleCrossSections > xsecs, bool hasValidPdfs) {
     pdfVariations.clear();
-    int max = 102;
-    Event* currentEvent = ftEvent->getEvent();
-    unsigned numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+    int max = 100;
+    if (hasValidPdfs) {
+        Event* currentEvent = ftEvent->getEvent();
+        unsigned numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
 
-    if (numberOfPdfVariations < max) {
-        max = numberOfPdfVariations;
-    }
-    //if (isSignalSample) {
-    for(int i=1; i<max+1; ++i){
-        pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
-    }
-    for (int i=max; i < 102; i++) {
-        pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+        if (numberOfPdfVariations < max) {
+            max = numberOfPdfVariations;
+        }
+        //if (isSignalSample) {
+        for(int i=1; i<max+1; ++i){
+            pdfVariations.push_back(weight * currentEvent->generatorInfo().relativeWeightPdfVar(i) / xsecs.get()->crossSectionRatio_pdfVar(i));
+        }
+        for (int i=max; i < 101; i++) {
+            pdfVariations.push_back(weight);
+        }
+    } else {
+        for (int i=1; i < max+1; i++) {
+            pdfVariations.push_back(weight);
+        }
     }
 }
 

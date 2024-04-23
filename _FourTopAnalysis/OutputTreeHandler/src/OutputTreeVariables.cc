@@ -35,7 +35,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     
     nJets             = ftEvent->numberOfJets();//ftEvent->numberOfJets();
     jetPt             = {}; // only tight jets
-    bTagWP            = {0}; // 0=no, 1=loose, 2=med, 3=tight?
+    bTagWP            = {}; // 0=no, 1=loose, 2=med, 3=tight?
     for (unsigned i=0; i < nJets; i++) {
         Jet* jet = ftEvent->getJet(i);
         jetPt.push_back(jet->pt());

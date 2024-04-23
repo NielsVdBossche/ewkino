@@ -60,6 +60,7 @@ TFile* OutputTreeHandler::InitializeNewSample(const Sample& sample, std::string&
     outputFilename += uniquename + "_";
     
     outputFilename += outputFileTags + "_" + name + ".root";
+    std::cout << std::endl << "Generating outputfile " << outputFilename << std::endl << std::endl;
     // add identifier of sample
     // also in file
     currentFile = new TFile(outputFilename.c_str(), "recreate");
