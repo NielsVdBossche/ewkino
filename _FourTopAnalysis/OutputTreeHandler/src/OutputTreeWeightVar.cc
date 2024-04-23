@@ -10,8 +10,9 @@ OutputTreeWeightVar::OutputTreeWeightVar(TFile* outputfile, std::string& treeNam
     GetTree()->Branch("weightVariations",   &weightVariations);
     GetTree()->Branch("eftVariations",      &eftVariations);
     GetTree()->Branch("scaleVariations",    &scaleVariations);
-    GetTree()->Branch("isrfsrVariations",    &isrfsrVariations);
-    GetTree()->Branch("pdfVariations",    &pdfVariations);
+    GetTree()->Branch("isrfsrVariations",   &isrfsrVariations);
+    GetTree()->Branch("pdfVariations",      &pdfVariations);
+    GetTree()->Branch("otherVariations",    &otherVariations);
     GetTree()->Branch("expUp",              &expUp);
     GetTree()->Branch("expDown",            &expDown);
 
@@ -71,6 +72,10 @@ void OutputTreeWeightVar::AddPDFVariations(EventFourT* ftEvent, double weight, s
 
 void OutputTreeWeightVar::SetISRFSRVariations(std::vector<double>& isrfsrVar) {
     isrfsrVariations = isrfsrVar;
+}
+
+void OutputTreeWeightVar::SetOtherVariations(std::vector<double>& otherVar) {
+    otherVariations = otherVar;
 }
 
 void OutputTreeWeightVar::SetExperimentalWeightVariations(std::vector<double>& up, std::vector<double>& down) {

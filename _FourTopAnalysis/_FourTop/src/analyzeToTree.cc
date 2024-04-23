@@ -121,7 +121,6 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
 
     // tmp for structure purposes 
     bool isNPControl = false;
-    bool splitAdditionalBees = false;
     bool uncertaintyExperimentWeight = true & uncertaintySwitch;
     bool uncertaintyTheoryWeight = true & uncertaintySwitch;
 
@@ -129,7 +128,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         "pileup", "muonIDSyst", "muonIDStat", "electronIDSyst", "electronIDStat", "prefire"
     };
     std::vector<std::string> bTagShapeSystematics;
-
+    std::vector<Sample> sampleVec = treeReader->sampleVector();
     
     if (testRun) std::cout << "Starting sample loop" << std::endl;
     for (unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ) {
@@ -144,6 +143,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         bool hasValidPdfs = false;
         bool hasValidPSs = false;
         bool considerBTagShape = false;
+        bool splitAdditionalBees = false;
         std::map<std::string, size_t> JECSourcesMapping;
         std::vector<std::string> JECSourcesNames = {};
 
@@ -158,6 +158,11 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             if (currentEvent->getGeneratorInfoPtr()->getNEFTWeights() != 0) {
                 hasValidPSs = false;
                 hasValidQcds = false;
+            }
+            std::string currProcName = sampleVec[sampleIndex].processName();
+
+            if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && treeReader->hasPL() && treeReader->hasGenLvl()) {
+                splitAdditionalBees = true;
             }
         }
         
@@ -326,13 +331,6 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                 if (currentEvent->isMC()) weight *= reweighter.totalWeight( *currentEvent );
             }
 
-            if (splitAdditionalBees && st == selectionType::MCPrompt ) {
-                //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
-                if (selection->HasAdditionalBJets()) {
-                    processNb = 1;
-                }
-            }
-
             eventClass nominalClass = selection->getCurrentClass();
             //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
             if (sampleReweighter && selection->leptonsArePrompt() && nominalClass != eventClass::crzz && nominalClass != eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
@@ -375,6 +373,56 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                         isrfsrVariations = {weight, weight, weight, weight};
                     }
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(processNb).get())->SetISRFSRVariations(isrfsrVariations);
+
+                    if (splitAdditionalBees) { // modify if a bit
+                        std::vector<double> otherVar; // = {1., 1.};
+
+                        if (selection->numberOfLeps() == 2) {
+                            if (selection->numberOfJets() <= 2) otherVar.push_back(0.99);//0.92;
+                            else if (selection->numberOfJets() == 3) otherVar.push_back(0.99);//0.95;
+                            else if (selection->numberOfJets() == 4) otherVar.push_back(1.07);//1.03;
+                            else if (selection->numberOfJets() == 5) otherVar.push_back(1.18);//1.20;
+                            else if (selection->numberOfJets() == 6) otherVar.push_back(1.30);//1.42;
+                            else if (selection->numberOfJets() >= 7) otherVar.push_back(1.32);//1.55;
+                        }
+                        if (selection->numberOfLeps() >= 3) {
+                            if (selection->numberOfJets() <= 2) otherVar.push_back(1.1);//0.96;
+                            else if (selection->numberOfJets() == 3) otherVar.push_back(1.17);//1.16;
+                            else if (selection->numberOfJets() == 4) otherVar.push_back(1.22);//1.28;
+                            else if (selection->numberOfJets() == 5) otherVar.push_back(1.28);//1.46;
+                            else if (selection->numberOfJets() == 6) otherVar.push_back(1.22);//1.44;
+                            else if (selection->numberOfJets() >= 7) otherVar.push_back(1.18);//1.44;
+                        }
+
+                        if (splitAdditionalBees && selection->HasAdditionalBJets()) {
+                            otherVar.push_back(0.6);
+                            otherVar.push_back(1.4);
+                        } else if (splitAdditionalBees) {
+                            otherVar.push_back(1.0);
+                            otherVar.push_back(1.0);
+                        }
+                        ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetOtherVariations(otherVar);
+                    } else if (sampleReweighter) {
+                        // check if ZZ or WZ in samplereweighter, otherwise
+                        std::vector<double> otherVar; // = {1., 1.};
+
+                        int njets = selection->numberOfJets();
+                        int njets_max = 7;
+                        if (sampleReweighter->hasReweighter("ZZ")) {
+                            njets_max = 4;
+                        }
+                        for (int i=0; i < 7; i++) {
+                            double varUp = 1.;
+                            double varDown = 1.;
+                            if (njets == i || (i == (njets_max - 1) && selection->numberOfJets() >= (njets_max - 1))) {
+                                varUp = 1. * sampleReweighter->totalWeightUp(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                                varDown = 1. * sampleReweighter->totalWeightDown(*currentEvent, selection->numberOfJets()) / sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+                            }
+                            otherVar.push_back(varUp);
+                            otherVar.push_back(varDown);
+                        }
+                        ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetOtherVariations(otherVar);
+                    }
                 }
                 if (uncertaintyExperimentWeight) {
                     // Experimental variations
