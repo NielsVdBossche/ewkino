@@ -44,12 +44,14 @@ LightLepton::LightLepton(const NanoReader::LightLeptonReader& leptonReader, cons
     _relIso0p3( leptonReader._Lepton_pfRelIso03_all[leptonIndex] ),
     _miniIso( leptonReader._Lepton_miniPFRelIso_all[leptonIndex] ),
     _miniIsoCharged( leptonReader._Lepton_miniPFRelIso_chg[leptonIndex] ),
-    _ptRatio( 1. / (leptonReader._Lepton_jetRelIso[leptonIndex] + 1) ),
+    _ptRatio( leptonReader._Lepton_jetPtRatio[leptonIndex] ),
     _ptRel( leptonReader._Lepton_jetPtRelv2[leptonIndex] ), 
     _closestJetNumberOfChargedDaughters( leptonReader._Lepton_jetNDauCharged[leptonIndex]),
     _jetIdx( leptonReader._Lepton_jetIdx[leptonIndex] ),
     _sip3d( leptonReader._Lepton_sip3d[leptonIndex] ),
-    _isPFCandidate( leptonReader._Lepton_isPFCand[leptonIndex] )
+    _isPFCandidate( leptonReader._Lepton_isPFCand[leptonIndex] ),
+    _leptonMVATOPUL( leptonReader._Lepton_TOPLeptonMVAUL[leptonIndex] ),
+    _closestJetDeepFlavor( leptonReader._Lepton_jetBTagDJ[leptonIndex] )
 {
     if (leptonSelector->isElectronSelector()) {
         _relIso0p4 = 0;  // seems to be not stored in nanoAOD
@@ -67,8 +69,8 @@ LightLepton::LightLepton(const NanoReader::LightLeptonReader& leptonReader, cons
         msg += " jets are present; ignoring closest jet info.";
         std::cerr << msg << std::endl;
     } else if (_jetIdx >= 0) {
-        _closestJetDeepCSV = leptonReader.GetNanoReader()._Jet_bTagDeepB[_jetIdx];
-        _closestJetDeepFlavor = leptonReader.GetNanoReader()._Jet_bTagDeepFlavB[_jetIdx];
+        // _closestJetDeepCSV = leptonReader.GetNanoReader()._Jet_bTagDeepB[_jetIdx];
+        // _closestJetDeepFlavor = leptonReader.GetNanoReader()._Jet_bTagDeepFlavB[_jetIdx];
         _closestJetTrackMultiplicity = leptonReader.GetNanoReader()._Jet_nConstituents[_jetIdx];
         // (note: nConstituents is seen to be very different from trackMultiplicity;
         // keep this variable as a proxy for now, but numerical thresholds will have to be adjusted!)

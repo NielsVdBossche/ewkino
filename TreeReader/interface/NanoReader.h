@@ -58,13 +58,19 @@ class NanoReader : public TreeReader {
                 // other variables
                 Bool_t          _Lepton_isPFCand[nLepton_max];
                 UChar_t         _Lepton_jetNDauCharged[nLepton_max];
+
+                // lepton MVA and related variables from nanoSkimmer:
+                Float_t         _Lepton_TOPLeptonMVAUL[nLepton_max];
+                Float_t         _Lepton_jetPtRatio[nLepton_max];
+                Float_t         _Lepton_jetBTagDJ[nLepton_max];
                 
                 virtual void initTree(TTree* tree, std::string leptonType);
                 virtual void setOutputTree(TTree* tree, std::string leptonType);
 
             private:
                 TBranch *b__Lepton_sip3d, *b__Lepton_pfRelIso03_all, *b__Lepton_miniPFRelIso_all, *b__Lepton_miniPFRelIso_chg, 
-                        *b__Lepton_jetPtRelv2, *b__Lepton_jetRelIso, *b__Lepton_isPFCand, *b__Lepton_jetNDauCharged;
+                        *b__Lepton_jetPtRelv2, *b__Lepton_jetRelIso, *b__Lepton_isPFCand, *b__Lepton_jetNDauCharged,
+                        *b__Lepton_TOPLeptonMVAUL, *b__Lepton_jetPtRatio, *b__Lepton_jetBTagDJ;
         };
 
         static const unsigned nElectron_max = 20;
@@ -118,6 +124,7 @@ class NanoReader : public TreeReader {
         Float_t _GenMET_pt;
         Float_t _GenMET_phi;
         // variables related to electrons
+        Float_t         _Electron_eCorr[nElectron_max];
         Float_t         _Electron_deltaEtaSC[nElectron_max];
         Float_t         _Electron_dEscaleDown[nElectron_max];
         Float_t         _Electron_dEscaleUp[nElectron_max];
@@ -138,6 +145,7 @@ class NanoReader : public TreeReader {
         Bool_t          _Electron_mvaFall17V2noIso_WPL[nElectron_max];
 
         // variables related to muons
+        Float_t         _Muon_corrected_pt[nMuon_max];
         Float_t         _Muon_ptErr[nMuon_max];
         Float_t         _Muon_pfRelIso04_all[nMuon_max];
 	    Float_t         _Muon_segmentComp[nMuon_max];
@@ -258,6 +266,7 @@ class NanoReader : public TreeReader {
         TBranch* b__Electron_hoe;
         TBranch* b__Electron_sieie;
         TBranch* b__Electron_cutBased;
+        TBranch* b__Electron_eCorr;
         TBranch* b__Electron_dEscaleDown;
         TBranch* b__Electron_dEscaleUp;
         TBranch* b__Electron_dEsigmaDown;
@@ -281,9 +290,10 @@ class NanoReader : public TreeReader {
         TBranch* b__Muon_jetPtRelv2;
         TBranch* b__Muon_jetRelIso;
         TBranch* b__Muon_mvaTTH;
-        TBranch* b__Muon_segmentComp;
+        TBranch* b__Muon_corrected_pt;
         TBranch* b__Muon_ptErr;
         TBranch* b__Muon_pfRelIso04_all;
+        TBranch* b__Muon_segmentComp;
         TBranch* b__Muon_looseId;
         TBranch* b__Muon_mediumId;
         TBranch* b__Muon_tightId;

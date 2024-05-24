@@ -70,7 +70,7 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
         _currentTreePtr->SetBranchAddress("GenJet_hadronFlavour",      _GenJet_hadronFlavour,  &b__GenJet_hadronFlavour);
         _currentTreePtr->SetBranchAddress("nGenJet",                  &_nGenJet,               &b__nGenJet);
     }
-    // variables related to electrons
+    // variables only related to electrons
     electronReader = new LightLeptonReader(*this, _currentTreePtr, "Electron");
     _currentTreePtr->SetBranchAddress("Electron_tightCharge",           _Electron_tightCharge,            &b__Electron_tightCharge);
     _currentTreePtr->SetBranchAddress("Electron_convVeto",              _Electron_convVeto,               &b__Electron_convVeto);
@@ -85,17 +85,18 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("Electron_hoe",                   _Electron_hoe,                    &b__Electron_hoe);
     _currentTreePtr->SetBranchAddress("Electron_sieie",                 _Electron_sieie,                  &b__Electron_sieie);
     _currentTreePtr->SetBranchAddress("Electron_cutBased",              _Electron_cutBased,               &b__Electron_cutBased);
+    _currentTreePtr->SetBranchAddress("Electron_eCorr",                 _Electron_eCorr,                  &b__Electron_eCorr);
     _currentTreePtr->SetBranchAddress("Electron_dEscaleDown",           _Electron_dEscaleDown,            &b__Electron_dEscaleDown);
     _currentTreePtr->SetBranchAddress("Electron_dEscaleUp",             _Electron_dEscaleUp,              &b__Electron_dEscaleUp);
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaDown",           _Electron_dEsigmaDown,            &b__Electron_dEsigmaDown);
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaUp",             _Electron_dEsigmaUp,              &b__Electron_dEsigmaUp);
 
-    // variables related to muons
+    // variables only related to muons
     muonReader = new LightLeptonReader(*this, _currentTreePtr, "Muon");
-    _currentTreePtr->SetBranchAddress("Muon_segmentComp",        _Muon_segmentComp,      &b__Muon_segmentComp);
-    _currentTreePtr->SetBranchAddress("Muon_ptErr",              _Muon_ptErr,            &b__Muon_ptErr);
+    _currentTreePtr->SetBranchAddress("Muon_corrected_pt",       _Muon_corrected_pt,     &b__Muon_corrected_pt);
     _currentTreePtr->SetBranchAddress("Muon_ptErr",              _Muon_ptErr,            &b__Muon_ptErr);
     _currentTreePtr->SetBranchAddress("Muon_pfRelIso04_all",     _Muon_pfRelIso04_all,   &b__Muon_pfRelIso04_all);
+    _currentTreePtr->SetBranchAddress("Muon_segmentComp",        _Muon_segmentComp,      &b__Muon_segmentComp);
     _currentTreePtr->SetBranchAddress("Muon_looseId",            _Muon_looseId,          &b__Muon_looseId);
     _currentTreePtr->SetBranchAddress("Muon_mediumId",           _Muon_mediumId,         &b__Muon_mediumId);
     _currentTreePtr->SetBranchAddress("Muon_tightId",            _Muon_tightId,          &b__Muon_tightId);

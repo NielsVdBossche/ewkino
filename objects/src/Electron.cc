@@ -57,6 +57,8 @@ Electron::Electron( const NanoReader& nanoReader, const unsigned electronIndex )
     //make sure also non-cone-corrected pt is set to the corrected value
     _uncorrectedPt = pt();
     _uncorrectedE = energy();
+    // correct energy and momentum of the electrons using Electron_eCorr:
+    setLorentzVector(_uncorrectedPt * nanoReader._Electron_eCorr[electronIndex], eta(), phi(), _uncorrectedE * nanoReader._Electron_eCorr[electronIndex]);
 
     // fill different variables:
     _passChargeConsistency = ( nanoReader._Electron_tightCharge[electronIndex]==2 );
@@ -107,9 +109,9 @@ Electron::Electron( const Electron& rhs ) :
 	_pt_ResUp( rhs._pt_ResUp ),
 	_pt_ResDown( rhs._pt_ResDown ),
 	_e_ScaleUp( rhs._e_ScaleUp ),
-        _e_ScaleDown( rhs._e_ScaleDown ),     
-        _e_ResUp( rhs._e_ResUp ),
-        _e_ResDown( rhs._e_ResDown )
+    _e_ScaleDown( rhs._e_ScaleDown ),     
+    _e_ResUp( rhs._e_ResUp ),
+    _e_ResDown( rhs._e_ResDown )
 	{}
 
 
@@ -183,8 +185,8 @@ std::ostream& Electron::print( std::ostream& os ) const{
 Electron Electron::variedElectron(const double newPt, const double newE) const{
     Electron variedElectron( *this );
     // the variations must be determined relative w.r.t. the non-cone-corrected pt!
-    double relNewPt = newPt/uncorrectedPt();
-    double relNewE = newE/uncorrectedE();    
+    double relNewPt = newPt / uncorrectedPt();
+    double relNewE = newE / uncorrectedE();    
     variedElectron.setLorentzVector( relNewPt*pt(), eta(), phi(), relNewE*energy() );
     return variedElectron;
 }

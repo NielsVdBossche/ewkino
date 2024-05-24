@@ -32,17 +32,13 @@ Muon::Muon( const NanoReader& nanoReader, const unsigned leptonIndex ):
     _isTracker( nanoReader._Muon_isTracker[leptonIndex] ),
     _isStandalone( nanoReader._Muon_isStandalone[leptonIndex] )
 {   
-    //make sure also non-cone-corrected pt is set to the corrected value
-
-    
+    // Roccor applied in nanoSkimming: https://github.com/NielsVdBossche/nanoSkimming/blob/1e690f5b24816ddee5885adcda635a76cf71cb86/condor/condorrun.py#L91-L101    
     _uncorrectedPt = pt();
     _uncorrectedE = energy();
-    
-    setLorentzVector( nanoReader._lPtCorr[ leptonIndex ], eta(), phi(), 
-                nanoReader._lECorr[ leptonIndex ] );
 
-    //roccor?
-    // other corrections?
+    double energy_corr = _uncorrectedE * nanoReader._Muon_corrected_pt[ leptonIndex ] / _uncorrectedPt;
+    setLorentzVector( nanoReader._Muon_corrected_pt[ leptonIndex ], eta(), phi(), 
+                energy_corr);
 
 }
 

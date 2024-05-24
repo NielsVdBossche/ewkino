@@ -37,6 +37,9 @@ NanoReader::LightLeptonReader::LightLeptonReader(NanoReader& nano, TTree* _curre
     _currentTreePtr->SetBranchAddress((leptonType+"_jetRelIso").c_str(),          _Lepton_jetRelIso,        &b__Lepton_jetRelIso);
     _currentTreePtr->SetBranchAddress((leptonType+"_isPFcand").c_str(),           _Lepton_isPFCand,         &b__Lepton_isPFCand);
     _currentTreePtr->SetBranchAddress((leptonType+"_jetNDauCharged").c_str(),     _Lepton_jetNDauCharged,   &b__Lepton_jetNDauCharged);
+    _currentTreePtr->SetBranchAddress((leptonType+"_mvaTOP").c_str(),             _Lepton_TOPLeptonMVAUL,   &b__Lepton_TOPLeptonMVAUL);
+    _currentTreePtr->SetBranchAddress((leptonType+"_jetPtRatio").c_str(),         _Lepton_jetPtRatio,       &b__Lepton_jetPtRatio);
+    _currentTreePtr->SetBranchAddress((leptonType+"_jetBTagDeepFlavor").c_str(),  _Lepton_jetBTagDJ,        &b__Lepton_jetBTagDJ);
 }
 
 void NanoReader::LightLeptonReader::setOutputTree(TTree* tree, std::string leptonType) {
