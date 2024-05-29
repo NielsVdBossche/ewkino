@@ -166,7 +166,8 @@ void FourTop::createMVATrainingSamples() {
 
             anWeight = currentEvent->weight();
             anWeight *= reweighter.totalWeight( *currentEvent );
-            mcWeight = treeReader->_weight;
+            // TODO: fix this if this is ever used
+            mcWeight = ((TreeReader*) treeReader)->_weight;
             mvaWeight = 1. * reweighter.totalWeight( *currentEvent );
             if (mcWeight < 0.) mvaWeight *= -1.;
 

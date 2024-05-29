@@ -16,7 +16,9 @@ Muon::Muon( const TreeReader& treeReader, const unsigned leptonIndex ):
 {
     setLorentzVector( treeReader._lPtCorr[ leptonIndex ], eta(), phi(), 
                 treeReader._lECorr[ leptonIndex ] );
-
+    _isGlobal = true;
+    _isTracker = true;
+    _isStandalone = true;
 }
 
 Muon::Muon( const NanoReader& nanoReader, const unsigned leptonIndex ):

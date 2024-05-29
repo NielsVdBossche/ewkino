@@ -3,6 +3,7 @@
 
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 
 template< typename ObjectType > class PhysicsObjectCollection;
@@ -11,6 +12,7 @@ class GenParticle : public PhysicsObject {
     
     public:
         GenParticle(const TreeReader&, const unsigned);
+        GenParticle(const NanoReader&, const unsigned);
         GenParticle(const GenParticle&);
         GenParticle(GenParticle&&) noexcept;
 

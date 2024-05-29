@@ -48,6 +48,47 @@ LorentzVector::LorentzVector(const double pt, const double eta, const double phi
     if( energy<0 ){ energyValue = momentum(); }
 }
 
+LorentzVector::LorentzVector(const double pt, const double eta, const double phi, const double energy, bool useMassInitilization):
+    transverseMomentum(pt), pseudoRapidity(eta), azimuthalAngle(phi),
+    xMomentum( transverseMomentum*std::cos( azimuthalAngle ) ),
+    yMomentum( transverseMomentum*std::sin( azimuthalAngle ) ),
+    zMomentum( transverseMomentum*std::sinh( pseudoRapidity ) )
+{
+    if (useMassInitilization) {
+        // If useMassInitilization is true, the energy is interpreted as mass to provide minimal changes down the line from here.
+        // Alternative is to use constructor with only three doubles as argument, which will set energy to sqrt(pt^2 + pz^2)
+        double energyValue_sq = energy * energy + momentum() * momentum();
+        if (energyValue_sq < 0) {
+            energyValue = momentum();
+        } else {
+            energyValue = std::sqrt(energyValue_sq);
+        }
+    } else {
+        energyValue = energy;
+    }
+    setZeroValues();    
+    normalizePhi();
+    
+    // extra: if the provided energy is negative,
+    // use total momentum as proxy for energy
+    if( energyValue < 0 ){ energyValue = momentum(); }
+}
+
+LorentzVector::LorentzVector( const double pt, const double eta, const double phi ) :
+    transverseMomentum(pt), pseudoRapidity(eta), azimuthalAngle(phi),
+    xMomentum( transverseMomentum*std::cos( azimuthalAngle ) ),
+    yMomentum( transverseMomentum*std::sin( azimuthalAngle ) ),
+    zMomentum( transverseMomentum*std::sinh( pseudoRapidity ) )
+{
+    double energyValue_sq = momentum() * momentum();
+    if (energyValue_sq < 0) {
+        energyValue = momentum();
+    } else {
+        energyValue = std::sqrt(energyValue_sq);
+    }
+    setZeroValues();
+    normalizePhi();
+}
 
 double LorentzVector::mass() const{
     double m2 = energyValue*energyValue - transverseMomentum*transverseMomentum - zMomentum*zMomentum;

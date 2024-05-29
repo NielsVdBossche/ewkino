@@ -1,5 +1,7 @@
 #include "../interface/LeptonGeneratorInfo.h"
 
+#include "../interface/LorentzVector.h"
+
 bool considerForMatching( int lepPdgId, const NanoReader& treeReader, int genIndex, bool allowPhotons) {
     // decide whether to consider a given generator particle for matching to a given lepton.
     // copied from ntuplizer
@@ -87,6 +89,19 @@ LeptonGeneratorInfo::LeptonGeneratorInfo( const TreeReader& treeReader, const un
     _provenanceCompressed( treeReader._lProvenanceCompressed[leptonIndex] ),
     _provenanceConversion( treeReader._lProvenanceConversion[leptonIndex] ) 
     {}
+
+LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader& leptonReader, const unsigned leptonindex) {
+    // Starting directly from NanoAOD definitions to fix this all.
+    if (leptonReader.isLightLeptonReader()) {
+        _isPrompt = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_isPrompt[leptonindex];
+        _matchPdgId = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_matchPdgId[leptonindex];
+        _momPdgId = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_motherPdgId[leptonindex];
+        _provenanceConversion = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_provenanceConversion[leptonindex];
+    }
+    // use sign of pdgid to extract match charge:
+    _matchCharge = (_matchPdgId >= 0) ? 1 : (_matchPdgId <= 0) ? -1 : 0;
+}
+
 
 LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader& leptonReader, const unsigned leptonIndex, bool isElectron, bool isMuon, bool isTau) {
     int genIdx = leptonReader._Lepton_genPartIdx[leptonIndex];

@@ -39,9 +39,15 @@ JetInfo::JetInfo( const TreeReader& treeReader,
     }
 }
 
-JetInfo::JetInfo( const NanoReader& nanoReader ) {
+JetInfo::JetInfo( const NanoReader& nanoReader,
+		  const bool readAllJECVariations,
+		  const bool readGroupedJECVariations  ) {
     _JECSources = {};
     _JECGrouped = {};
+    if (readAllJECVariations) {
+    }
+    if (readGroupedJECVariations) {
+    }
 }
 
 

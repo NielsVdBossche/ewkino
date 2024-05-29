@@ -261,7 +261,7 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
         HistInfo( "N_Bjets_" + flag, "N_{b}", int(minMaxNBjets.second -  minMaxNBjets.first), minMaxNBjets.first, minMaxNBjets.second),
         HistInfo( "N_MediumBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
         HistInfo( "N_TightBjets_" + flag, "N_{b} (medium WP)", 6, -0.5, 5.5),
-        HistInfo( "HT_" + flag, "H_{T} [GeV]", int(minMaxHT.first - minMaxHT.second) / 50, minMaxHT.first, minMaxHT.second),
+        HistInfo( "HT_" + flag, "H_{T} [GeV]", int(minMaxHT.second - minMaxHT.first) / 50, minMaxHT.first, minMaxHT.second),
         HistInfo( "MET_" + flag, "p_{T}^{miss} [GeV]", 16, 0, 400),
         HistInfo( "LT_" + flag, "L_{T} [GeV]", 20, 0, 500),
         HistInfo( "Nr_of_leps_" + flag, "N_{l}", 6, -0.5, 5.5),        

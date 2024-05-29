@@ -15,8 +15,8 @@ class TriggerInfo{
     public:
 
         //WARNING : turning on 'readIndividualTriggers' and/or 'readIndividualMETFilters' is relatively slow ( takes slightly more time than building the entire event! )
-        TriggerInfo( const TreeReader&, const bool readIndividualTriggers = false, const bool readIndividualMetFilters = false );
-        TriggerInfo( const NanoReader&);
+        TriggerInfo( const TreeReader&, const bool readIndividualTriggers = false, const bool readIndividualMetFilters = false);
+        TriggerInfo( const NanoReader&, const bool readIndividualTriggers = false, const bool readIndividualMetFilters = false);
 
         bool passTriggers_e() const{ return _passTriggers_e; }
         bool passTriggers_m() const{ return _passTriggers_m; }

@@ -29,27 +29,29 @@ Event::Event( const TreeReader& treeReader,
     _samplePtr( treeReader.currentSamplePtr() ),
     _particleLevelInfoPtr( treeReader.hasPL() ? new ParticleLevelInfo(treeReader) : nullptr),
     _genLevelPtr( treeReader.hasGenLvl() ? new GenParticlesTop(treeReader) : nullptr) {
-    //makeSubLeptonCollections();
+    std::cout << "Event constructed from HeavyNeutrino reader" << std::endl;
 }
 
 Event::Event(const NanoReader& nanoReader,
-        const bool readIndividualTriggers, const bool readIndividualMetFilters) :  // make collections of physics objects
+        const bool readIndividualTriggers , const bool readIndividualMetFilters,
+        const bool readAllJECVariations, const bool readGroupedJECVariations) :  // make collections of physics objects
     _leptonCollectionPtr(new LeptonCollection(nanoReader)),
     _jetCollectionPtr(new JetCollection(nanoReader)),
-    _metPtr(new Met(nanoReader)),
+    _metPtr(new Met(nanoReader, readAllJECVariations, readGroupedJECVariations) ),
     // make additional information structures
     _triggerInfoPtr(new TriggerInfo(nanoReader, readIndividualTriggers, readIndividualMetFilters)),
-    _jetInfoPtr( new JetInfo( nanoReader ) ),
+    _jetInfoPtr( new JetInfo( nanoReader, readAllJECVariations, readGroupedJECVariations) ),
     _eventTagsPtr(new EventTags(nanoReader)),
     _generatorInfoPtr(nanoReader.isMC() ? new GeneratorInfo(nanoReader) : nullptr),
     _numberOfVertices( nanoReader._PV_npvs ),
-
     _weight(nanoReader._scaledWeight),
     _genWeight(nanoReader._genWeight),
     _samplePtr(nanoReader.currentSamplePtr()),
     _particleLevelInfoPtr( nanoReader.hasGenLvl() ? new ParticleLevelInfo(nanoReader) : nullptr),
     _genLevelPtr( nanoReader.hasGenLvl() ? new GenParticlesTop(nanoReader) : nullptr)
-{}
+{
+    std::cout << "Event constructed from NanoAOD reader" << std::endl;
+}
 
 Event::~Event(){
     delete _leptonCollectionPtr;

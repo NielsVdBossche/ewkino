@@ -41,6 +41,9 @@ class LightLepton : public Lepton {
         unsigned closestJetNumberOfChargedDaughters() const{ return _closestJetNumberOfChargedDaughters; }
 
         //lepton MVA discriminant
+        double leptonMVAtZq() const{ return _leptonMVAtZq; }
+        double leptonMVAttH() const{ return _leptonMVAttH; }
+	    double leptonMVATOP() const{ return _leptonMVATOP; }
 	    double leptonMVATOPUL() const{ return _leptonMVATOPUL; }
 	    double leptonMVATOPULv2() const{ return _leptonMVATOPULv2; }
 
@@ -75,7 +78,10 @@ class LightLepton : public Lepton {
         double _sip3d = 0;
         bool _isPFCandidate = false;
 
-        //lepton MVA output 
+        //lepton MVA output
+        double _leptonMVAtZq = 0;
+        double _leptonMVAttH = 0;
+	    double _leptonMVATOP = 0;
         double _leptonMVATOPUL = 0;
         double _leptonMVATOPULv2 = 0;
 

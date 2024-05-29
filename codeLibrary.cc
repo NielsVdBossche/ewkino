@@ -52,11 +52,12 @@
 
 
 //include TreeReader code 
+#include "TreeReader/src/BaseReader.cc"
+#include "TreeReader/src/BaseReaderHelpers.cc"
 #include "TreeReader/src/TreeReader.cc"
 #include "TreeReader/src/NanoReader.cc"
 #include "TreeReader/src/LeptonReader.cc"
-#include "TreeReader/src/TriggerReader.cc"
-#include "TreeReader/src/TreeReaderErrors.cc"
+
 
 //include plotting code 
 #include "plotting/drawLumi.cc"

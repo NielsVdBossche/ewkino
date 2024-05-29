@@ -19,7 +19,7 @@ LightLepton::LightLepton( const TreeReader& treeReader, const unsigned leptonInd
     _leptonMVATOPUL( treeReader._leptonMvaTOPUL[leptonIndex] ),
     _leptonMVATOPULv2( treeReader._leptonMvaTOPULv2[leptonIndex] )
 {
-
+    _isPFCandidate = true;
     //catch nan deep CSV values 
     if( std::isnan( _closestJetDeepCSV ) ){
         _closestJetDeepCSV = 0.;
@@ -46,12 +46,12 @@ LightLepton::LightLepton(const NanoReader::LightLeptonReader& leptonReader, cons
     _miniIsoCharged( leptonReader._Lepton_miniPFRelIso_chg[leptonIndex] ),
     _ptRatio( leptonReader._Lepton_jetPtRatio[leptonIndex] ),
     _ptRel( leptonReader._Lepton_jetPtRelv2[leptonIndex] ), 
+    _closestJetDeepFlavor( leptonReader._Lepton_jetBTagDJ[leptonIndex] ),
     _closestJetNumberOfChargedDaughters( leptonReader._Lepton_jetNDauCharged[leptonIndex]),
     _jetIdx( leptonReader._Lepton_jetIdx[leptonIndex] ),
     _sip3d( leptonReader._Lepton_sip3d[leptonIndex] ),
     _isPFCandidate( leptonReader._Lepton_isPFCand[leptonIndex] ),
-    _leptonMVATOPUL( leptonReader._Lepton_TOPLeptonMVAUL[leptonIndex] ),
-    _closestJetDeepFlavor( leptonReader._Lepton_jetBTagDJ[leptonIndex] )
+    _leptonMVATOPUL( leptonReader._Lepton_TOPLeptonMVAUL[leptonIndex] )
 {
     if (leptonSelector->isElectronSelector()) {
         _relIso0p4 = 0;  // seems to be not stored in nanoAOD

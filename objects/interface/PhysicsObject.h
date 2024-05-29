@@ -23,7 +23,13 @@ class PhysicsObject{
 			const bool objectIs2016PreVFP, 
 			const bool objectIs2016PostVFP,
 			const bool objectIs2017,
-			const bool objectIs2018 );
+			const bool objectIs2018);
+        PhysicsObject(LorentzVector lorentzVector, 
+                        const bool objectIs2016,
+                        const bool objectIs2016PreVFP,
+                        const bool objectIs2016PostVFP,
+                        const bool objectIs2017,
+                        const bool objectIs2018);
 
         //define both copy and move constructors and assignment operators 
         PhysicsObject( const PhysicsObject& ) = default;
@@ -64,6 +70,7 @@ class PhysicsObject{
 
         //set the lorentzvector to new values 
         void setLorentzVector( double, double, double, double );
+        void setLorentzVectorWithMass( double, double, double, double );
 
     private:
         LorentzVector vector; 

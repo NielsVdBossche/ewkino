@@ -62,7 +62,7 @@ void FourTop::analyze(std::string method) {
         processes = {""};
         selection->setSelectionType(selectionType::MCPrompt);
         st = selectionType::MCPrompt;
-
+        useUncertainties = ! testRun;
         std::cout << "Running method " << "MCPrompt" << std::endl;
     } else if (method == "ChargeDD") {
         initDdChargeMisID(&chMisCorr);
@@ -158,7 +158,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        bool useSplitJEC = true;
+        bool useSplitJEC = false;
         bool splitAdditionalBees = false;
         unsigned nominalBees = 0;
         
@@ -171,7 +171,10 @@ void FourTop::analyze(std::string method) {
             std::cout << "zg sample " << zgOverlapCheck << std::endl;
             if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
+                // if (testRun) std::cout << "changing primary process to " << currProcName << std::endl;
                 mgrAll->changePrimaryProcess(currProcName);
+                // if (testRun) std::cout << "changed primary process" << std::endl;
+                // TODO: hasPL, hasGenLvl flags! -> always true if MC in Nano
                 if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL() && treeReader->hasGenLvl()) {
                     std::string bbName = currProcName + "bb";
                     mgrAll->changeProcess(1, bbName);
@@ -184,10 +187,12 @@ void FourTop::analyze(std::string method) {
         if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
             //mgrAll->SetPrintAllUncertaintyVariations(true);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
+            // TODO: not compatible with Nano
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
-            std::cout << "finding available PS scale variations...\n";
+            // std::cout << "finding available PS scale variations...\n";
             Event event = treeReader->buildEvent(0, false, false, false, true);
+            // TODO: next line should be fine be test! (get event nb, check if both return same value?)
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
             if(numberOfPSVariations>=44) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
@@ -255,7 +260,9 @@ void FourTop::analyze(std::string method) {
         }
         
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
+        if (testRun) std::cout << "new sample " << uniqueName << std::endl;
         mgrAll->newSample(uniqueName);
+        if (testRun) std::cout << "new sample done" << std::endl;
 
         std::ofstream eventTagsOutput;
         if (printEventTags) {
@@ -271,13 +278,16 @@ void FourTop::analyze(std::string method) {
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true );
+            currentEvent = treeReader->buildEventPtr( entry, false, false, false, useSplitJEC );
 
             // Check triggers here
-            if (! eventPassesTriggers()) continue;
+            if (! eventPassesTriggers()) {
+                std::cerr << "Event does not pass triggers" << std::endl;
+                //continue;
+            }
+
 
             selection->addNewEvent(currentEvent);
-
             // Apply overlap removal & apply triggers
             // if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
             // if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
@@ -355,6 +365,7 @@ void FourTop::analyze(std::string method) {
 
             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                 //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
+                // TODO: matching between PL and Gen lvl -> not checked PL equivalent, so unlikely to work.
                 if (selection->HasAdditionalBJets()) {
                     processNb = 1;
                 }
@@ -371,6 +382,7 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
+            std::cout << nominalClass << std::endl;
             //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
             if (sampleReweighter && selection->leptonsArePrompt() && (nominalClass == eventClass::crwz || nominalClass == eventClass::crzz)) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
 
@@ -383,7 +395,7 @@ void FourTop::analyze(std::string method) {
 
             if (FillRegion(nominalClass, st)) {
                 if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
-
+                if (testRun) std::cout << currentEvent->weight() << std::endl;
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
                 fillVec2D = selection->fillVector2D();
@@ -405,7 +417,7 @@ void FourTop::analyze(std::string method) {
             }
 
             // Systematics
-            if (! useUncertainties)
+            if (! useUncertainties) continue;
             if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt && st != selectionType::NPDD))) continue;
 
             if (testRun) std::cout << "uncertainty time" << std::endl;

@@ -21,7 +21,9 @@ class LorentzVector{
 
     public:
         LorentzVector() = default;
-        LorentzVector( const double pt, const double eta, const double phi, const double energy );
+        LorentzVector( const double pt, const double eta, const double phi, const double energy);
+        LorentzVector( const double pt, const double eta, const double phi, const double mass, bool useMassInitilization);
+        LorentzVector( const double pt, const double eta, const double phi );
         
         double pt() const { return transverseMomentum; }
         double eta() const { return pseudoRapidity; }

@@ -57,16 +57,21 @@ class Met : public PhysicsObject {
     public:
         Met() = default;
         Met( const TreeReader&, bool, bool );
-        Met( const NanoReader&);
+        Met( const NanoReader&, bool, bool);
 
         virtual bool isGood() const override{ return true; }
         bool IsMetVariationsInitialized() const {return _metVariationsInitialized;}
+        bool IsMetJERVariationsInitialized() const {return _metJERVariationsInitialized;}
 
         //met objects varied by respective uncertainties
         Met MetJECDown() const;
         Met MetJECUp() const;
         Met MetUnclusteredDown() const;
         Met MetUnclusteredUp() const;
+        Met MetJER1p93Down() const;
+        Met MetJER1p93Up() const;
+        Met MetJER2p5Down() const;
+        Met MetJER2p5Up() const;
 
 	// met objects varied by split JEC uncertainties
 	Met MetJECDown( const std::string source ) const;
@@ -111,8 +116,20 @@ class Met : public PhysicsObject {
         double _pt_UnclUp = 0;
         double _phi_UnclUp = 0;
 
+        // JER variations eta < 1p93:
+        double _pt_JER1p93Down = 0;
+        double _phi_JER1p93Down = 0;
+        double _pt_JER1p93Up = 0;
+        double _phi_JER1p93Up = 0;
+        // JER Variations 1p93 < eta < 2p5:
+        double _pt_JER2p5Down = 0;
+        double _phi_JER2p5Down = 0;
+        double _pt_JER2p5Up = 0;
+        double _phi_JER2p5Up = 0;
+
         // Control variable, equivalent to checking if we're running on mini or nano
         bool _metVariationsInitialized = false;
+        bool _metJERVariationsInitialized = false;
 
         Met variedMet( const double pt, const double phi ) const;
 	Met variedMetPxPy( const double px, const double py ) const;

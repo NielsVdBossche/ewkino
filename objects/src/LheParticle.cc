@@ -15,6 +15,21 @@ LheParticle::LheParticle(const TreeReader& treeReader, const unsigned lheIndex) 
             _lheMass(treeReader._lheMass[lheIndex]) {
 }
 
+LheParticle::LheParticle(const NanoReader& nanoReader, const unsigned lheIndex) : 
+    PhysicsObject(nanoReader._LHEPart_pt[lheIndex], nanoReader._LHEPart_eta[lheIndex], 
+                nanoReader._LHEPart_phi[lheIndex], -1., 
+                nanoReader.is2016(), 
+                nanoReader.is2016PreVFP(), 
+                nanoReader.is2016PostVFP(), 
+                nanoReader.is2017(), 
+                nanoReader.is2018()),
+            _lheStatus(nanoReader._LHEPart_status[lheIndex]),
+            _lhePdgId(nanoReader._LHEPart_pdgId[lheIndex]),
+            _lheMass(nanoReader._LHEPart_mass[lheIndex]) 
+{
+    setLorentzVectorWithMass(pt(), eta(), phi(), nanoReader._LHEPart_mass[lheIndex]);
+}
+
 LheParticle::~LheParticle() {
 
 }

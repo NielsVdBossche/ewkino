@@ -3,6 +3,7 @@
 
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 
 template< typename ObjectType > class PhysicsObjectCollection;
@@ -12,6 +13,7 @@ class LheParticle : public PhysicsObject {
     
     public:
         LheParticle(const TreeReader&, const unsigned);
+        LheParticle(const NanoReader&, const unsigned);
         LheParticle(const LheParticle&);
         LheParticle(LheParticle&&) noexcept;
 
@@ -27,11 +29,11 @@ class LheParticle : public PhysicsObject {
         double getMass() const {return _lheMass;}
 
     private:
-        int _lheStatus;
-        int _lhePdgId;
-        int _lheMother1;
-        int _lheMother2;
-        double _lheMass;
+        int _lheStatus = 0;
+        int _lhePdgId = 0;
+        int _lheMother1 = 0;
+        int _lheMother2 = 0;
+        double _lheMass = 0.;
 
         virtual LheParticle* clone() const &{ return new LheParticle( *this ); }
         virtual LheParticle* clone() &&{ return new LheParticle( std::move(*this) ); }

@@ -39,8 +39,10 @@ class Event {
 		const bool readAllJECVariations = false,
 		const bool readGroupedJECVariations = false );
         Event( const NanoReader&, 
-		const bool readIndividualTriggers = false, 
-		const bool readIndividualMetFilters = false);
+        const bool readIndividualTriggers = false, 
+        const bool readIndividualMetFilters = false,
+        const bool readAllJECVariations = false,
+        const bool readGroupedJECVariations = false);
         Event( const Event& );
         Event( Event&& ) noexcept;
 
