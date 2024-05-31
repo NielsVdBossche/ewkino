@@ -53,6 +53,7 @@ void HistogramContainer::newSample(std::string& uniqueSampleName) {
     oneDims = new std::vector<std::shared_ptr<TH1D>>(oneDimInfo->size());
 
     for( size_t dist = 0; dist < oneDimInfo->size(); ++dist ){
+        // std::cout << oneDimInfo->at(dist).name() + "_" + uniqueSampleName << std::endl; 
         oneDims->at(dist) = oneDimInfo->at(dist).makeHist( oneDimInfo->at(dist).name() + "_" + uniqueSampleName);
     }
     if (twoDimInfo) {

@@ -8,11 +8,13 @@
 //include other parts of code 
 #include "Lepton.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 class LightLepton : public Lepton {
     
     public: 
         LightLepton( const TreeReader&, const unsigned, LeptonSelector* ); 
+        LightLepton( const NanoReader::LightLeptonReader&, const unsigned, LeptonSelector* ); 
         LightLepton( const LightLepton& ) = delete;
         LightLepton( LightLepton&& ) = delete;
 
@@ -25,6 +27,10 @@ class LightLepton : public Lepton {
         double miniIso() const{ return _miniIso; }
         double miniIsoCharged() const{ return _miniIsoCharged; }
         double miniIsoNeutral() const{ return _miniIso - _miniIsoCharged; }
+        
+        // other properties
+        bool isPFCandidate() const{ return _isPFCandidate; }
+        double sip3d() const{ return _sip3d; }
 
         //properties of the jet closest to the lepton
         double ptRatio() const{ return _ptRatio; }
@@ -32,6 +38,7 @@ class LightLepton : public Lepton {
         double closestJetDeepCSV() const{ return _closestJetDeepCSV; }
         double closestJetDeepFlavor() const{ return _closestJetDeepFlavor; }
         unsigned closestJetTrackMultiplicity() const{ return _closestJetTrackMultiplicity; }
+        unsigned closestJetNumberOfChargedDaughters() const{ return _closestJetNumberOfChargedDaughters; }
 
         //lepton MVA discriminant
         double leptonMVAtZq() const{ return _leptonMVAtZq; }
@@ -39,7 +46,6 @@ class LightLepton : public Lepton {
 	    double leptonMVATOP() const{ return _leptonMVATOP; }
 	    double leptonMVATOPUL() const{ return _leptonMVATOPUL; }
 	    double leptonMVATOPULv2() const{ return _leptonMVATOPULv2; }
-
 
         //check lepton type
         virtual bool isLightLepton() const override{ return true; }
@@ -65,13 +71,19 @@ class LightLepton : public Lepton {
         double _closestJetDeepCSV = 0;
         double _closestJetDeepFlavor = 0;
         unsigned _closestJetTrackMultiplicity = 0;
+        unsigned _closestJetNumberOfChargedDaughters = 0;
+        int _jetIdx = -1;
 
-        //lepton MVA output 
+        // other properties
+        double _sip3d = 0;
+        bool _isPFCandidate = false;
+
+        //lepton MVA output
         double _leptonMVAtZq = 0;
         double _leptonMVAttH = 0;
 	    double _leptonMVATOP = 0;
-	    double _leptonMVATOPUL = 0;
-	    double _leptonMVATOPULv2 = 0;
+        double _leptonMVATOPUL = 0;
+        double _leptonMVATOPULv2 = 0;
 
     protected: 
 

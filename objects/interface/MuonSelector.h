@@ -56,6 +56,10 @@ class MuonSelector : public LeptonSelector {
         virtual bool is2017() const override{ return muonPtr->is2017(); }
 	virtual bool is2018() const override{ return muonPtr->is2018(); }
 
+        virtual bool isElectronSelector() const override {return false;}
+        virtual bool isMuonSelector() const override {return true;}
+        virtual bool isTauSelector() const override {return false;}
+
         virtual LeptonSelector* clone() const & override{ return new MuonSelector(*this); }
         virtual LeptonSelector* clone() && override{ return new MuonSelector( std::move( *this ) ); }
 };

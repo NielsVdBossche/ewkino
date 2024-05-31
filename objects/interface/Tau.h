@@ -13,6 +13,7 @@ class Tau : public Lepton{
 
     public:
         Tau( const TreeReader&, const unsigned );
+        Tau( const NanoReader&, const unsigned );
         Tau( const Tau& );
         Tau( Tau&& ) noexcept;
 
@@ -65,43 +66,43 @@ class Tau : public Lepton{
         virtual std::ostream& print( std::ostream& os = std::cout ) const override;
 
     private:
-        unsigned _decayMode;
-        bool _passDecayModeFinding;
-        bool _passDecayModeFindingNew;
+        unsigned _decayMode = 0;
+        bool _passDecayModeFinding = false;
+        bool _passDecayModeFindingNew = false;
 
-        bool _passMuonVetoLoose;
-        bool _passMuonVetoTight;
-        bool _passEleVetoVLoose;
-        bool _passEleVetoLoose;
-        bool _passEleVetoMedium;
-        bool _passEleVetoTight;
-        bool _passEleVetoVTight;
+        bool _passMuonVetoLoose = false;
+        bool _passMuonVetoTight = false;
+        bool _passEleVetoVLoose = false;
+        bool _passEleVetoLoose = false;
+        bool _passEleVetoMedium = false;
+        bool _passEleVetoTight = false;
+        bool _passEleVetoVTight = false;
 
-        bool _passVLooseMVAOld2015;
-        bool _passLooseMVAOld2015;
-        bool _passMediumMVAOld2015;
-        bool _passTightMVAOld2015;
-        bool _passVTightMVAOld2015;
+        bool _passVLooseMVAOld2015 = false;
+        bool _passLooseMVAOld2015 = false;
+        bool _passMediumMVAOld2015 = false;
+        bool _passTightMVAOld2015 = false;
+        bool _passVTightMVAOld2015 = false;
 
-        bool _passVLooseMVANew2015;
-        bool _passLooseMVANew2015;
-        bool _passMediumMVANew2015;
-        bool _passTightMVANew2015;
-        bool _passVTightMVANew2015;
+        bool _passVLooseMVANew2015 = false;
+        bool _passLooseMVANew2015 = false;
+        bool _passMediumMVANew2015 = false;
+        bool _passTightMVANew2015 = false;
+        bool _passVTightMVANew2015 = false;
 
-        bool _passVVLooseMVAOld2017;
-        bool _passVLooseMVAOld2017;
-        bool _passLooseMVAOld2017;
-        bool _passMediumMVAOld2017;
-        bool _passTightMVAOld2017;
-        bool _passVTightMVAOld2017;
-        bool _passVVTightMVAOld2017;
+        bool _passVVLooseMVAOld2017 = false;
+        bool _passVLooseMVAOld2017 = false;
+        bool _passLooseMVAOld2017 = false;
+        bool _passMediumMVAOld2017 = false;
+        bool _passTightMVAOld2017 = false;
+        bool _passVTightMVAOld2017 = false;
+        bool _passVVTightMVAOld2017 = false;
 
-        bool _passVLooseMVANew2017;
-        bool _passLooseMVANew2017;
-        bool _passMediumMVANew2017;
-        bool _passTightMVANew2017;
-        bool _passVTightMVANew2017;
+        bool _passVLooseMVANew2017 = false;
+        bool _passLooseMVANew2017 = false;
+        bool _passMediumMVANew2017 = false;
+        bool _passTightMVANew2017 = false;
+        bool _passVTightMVANew2017 = false;
         
         virtual Tau* clone() const & override{ return new Tau( *this ); }
         virtual Tau* clone() && override{ return new Tau( std::move( *this ) ); }   

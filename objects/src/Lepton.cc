@@ -16,12 +16,28 @@ Lepton::Lepton( const TreeReader& treeReader, const unsigned leptonIndex, Lepton
     _charge( treeReader._lCharge[leptonIndex] ),
     _dxy( treeReader._dxy[leptonIndex] ),
     _dz( treeReader._dz[leptonIndex] ), 
-    _sip3d( treeReader._3dIPSig[leptonIndex] ),
     generatorInfo( treeReader.isMC() ? new LeptonGeneratorInfo( treeReader, leptonIndex ) : nullptr ),
     selector( leptonSelector ),
     _uncorrectedPt( pt() ),
     _uncorrectedE( energy() )
     {}
+
+Lepton::Lepton( const NanoReader::LeptonReader& leptonReader, const unsigned leptonIndex, LeptonSelector* leptonSelector) :
+    PhysicsObject( leptonReader._Lepton_pt[leptonIndex], leptonReader._Lepton_eta[leptonIndex],
+            leptonReader._Lepton_phi[leptonIndex], -1., // energy is not stored in nanoAOD, pass -1 to allow lorentzvector to init with energy = momentum
+            leptonReader.GetNanoReader().is2016(),
+            leptonReader.GetNanoReader().is2016PreVFP(),
+            leptonReader.GetNanoReader().is2016PostVFP(),
+            leptonReader.GetNanoReader().is2017(),
+            leptonReader.GetNanoReader().is2018()),
+    _charge(leptonReader._Lepton_charge[leptonIndex]),
+    _dxy( leptonReader._Lepton_dxy[leptonIndex] ),
+    _dz( leptonReader._Lepton_dz[leptonIndex] ), 
+    generatorInfo( leptonReader.GetNanoReader().isMC() ? new LeptonGeneratorInfo( leptonReader, leptonIndex ) : nullptr ),
+    selector( leptonSelector ),
+    _uncorrectedPt( pt() ),
+    _uncorrectedE( energy() )
+{}
 
 
 //Lepton has value-like behavior 
@@ -30,7 +46,6 @@ Lepton::Lepton( const Lepton& rhs, LeptonSelector* leptonSelector ) :
     _charge( rhs._charge ),
     _dxy( rhs._dxy ),
     _dz( rhs._dz ),
-    _sip3d( rhs._sip3d ),
     generatorInfo( new LeptonGeneratorInfo( *(rhs.generatorInfo) ) ),
 
     //WARNING: selector remains uninitialized, and has to be dynamically allocated in derived classes. Final derived copy constructur MUST CREATE A NEW SELECTOR
@@ -48,7 +63,6 @@ Lepton::Lepton( Lepton&& rhs, LeptonSelector* leptonSelector ) noexcept :
     _charge( rhs._charge ),
     _dxy( rhs._dxy ),
     _dz( rhs._dz ),
-    _sip3d( rhs._sip3d ),
     generatorInfo( rhs.generatorInfo ),
 
     //WARNING: selector remains uninitialized, and has to be dynamically allocated in derived classes. Final derived copy constructur MUST CREATE A NEW SELECTOR
@@ -75,7 +89,6 @@ void Lepton::copyNonPointerAttributes( const Lepton& rhs ){
     _charge = rhs._charge;
     _dxy = rhs._dxy;
     _dz = rhs._dz;
-    _sip3d = rhs._sip3d;
 
     //make sure to copy "isConeCorrected" so a cone-correction can not be re-applied even after copying a lepton
     isConeCorrected = rhs.isConeCorrected;
@@ -135,6 +148,11 @@ bool Lepton::checkGeneratorInfo() const{
 }
 
 
+bool Lepton::hasGenMatch() const{
+    if( checkGeneratorInfo() ){ return generatorInfo->hasGenMatch(); }
+    else{ return false; }
+}
+
 bool Lepton::isPrompt() const{
     if( checkGeneratorInfo() ){
         return generatorInfo->isPrompt();
@@ -164,6 +182,8 @@ int Lepton::matchPdgId() const{
 
 int Lepton::matchCharge() const{
     if( checkGeneratorInfo() ){
+        //std::cout << "matchCharge() called: " << generatorInfo->matchCharge() << std::endl;
+        //std::cout << "match pdgid = " << matchPdgId() << std::endl;
         return generatorInfo->matchCharge();
     } else {
         return 0;
@@ -230,6 +250,6 @@ bool oppositeSignSameFlavor( const Lepton& lhs, const Lepton& rhs ){
 
 std::ostream& Lepton::print( std::ostream& os) const{
     PhysicsObject::print( os );
-    os << " / charge = " << ( _charge > 0 ? "+" : "-" ) << " / dxy = " << _dxy << " / dz = " << _dz << " / sip3d = " << _sip3d << " / uncorrectedPt = " << _uncorrectedPt;
+    os << " / charge = " << ( _charge > 0 ? "+" : "-" ) << " / dxy = " << _dxy << " / dz = " << _dz <<  " / uncorrectedPt = " << _uncorrectedPt;
     return os;
 }

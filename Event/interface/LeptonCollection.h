@@ -6,6 +6,7 @@
 //include other parts of code 
 #include "../../objects/interface/Lepton.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 #include "PhysicsObjectCollection.h"
 #include "MuonCollection.h"
 #include "ElectronCollection.h"
@@ -18,6 +19,7 @@ class LeptonCollection : public PhysicsObjectCollection< Lepton > {
     
     public:
         LeptonCollection( const TreeReader& );
+        LeptonCollection( const NanoReader& );
         LeptonCollection() = default;
         
         MuonCollection muonCollection() const;

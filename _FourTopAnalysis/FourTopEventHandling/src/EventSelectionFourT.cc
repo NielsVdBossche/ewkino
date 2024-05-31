@@ -13,7 +13,7 @@
 bool selectLeptonsLooseMVA(const Lepton& lepton) {
     if (! lepton.isLightLepton()) return true;
     const LightLepton& el = (LightLepton&) lepton;
-    return (el.leptonMVATOP() > 0.);
+    return (el.leptonMVATOPUL() > 0.);
 }
 
 EventFourT::EventFourT(std::string uncertaintyFile) {
@@ -125,7 +125,7 @@ bool EventFourT::passBaselineEventSelection() {
 
 bool EventFourT::passLeptonSelection() {
     // place here the different set of requirements for leptons (e.g. all tight, all FO, prompt or not prompt, depending on the selection criteria)
-
+    //std::cout << "lepton selection" << std::endl;
     if (selType == MCAll) {
         // normal tight lepton selection, no prompt or charge requirements
         if (relevantRegion == eventClass::ttbar || relevantRegion == eventClass::dy) {
@@ -141,12 +141,14 @@ bool EventFourT::passLeptonSelection() {
         if (foLeps->size() != tightLeps->size()) return false;
         event->selectTightLeptons();
     } else if (selType == MCPrompt) {
+        //std::cout << tightLeps->size() << std::endl;
         // tight and prompt and no charge misID
         // or also FO and prompt with negative weight?
         if (tightLeps->size() < 2) return false;
         if (tightLeps->size() == 2 && tightLeps->hasOSPair()) return false;
-
+        //std::cout << "checking fo leptons: " << foLeps->size() << std::endl;
         if (foLeps->size() != tightLeps->size()) return false;
+        //std::cout << "checking promptness "<< std::endl;
         if (! leptonsArePrompt()) return false;
         event->selectTightLeptons();
 
@@ -272,8 +274,9 @@ bool EventFourT::passSingleZBosonVeto() {
 
 bool EventFourT::passLeanSelection() {
     if ((**mediumLeps)[0].pt() < 25 || (**mediumLeps)[1].pt() < 20) return false;
-
+    std::cout << nJets  << std::endl;
     if (nJets < 2) return false;
+    std::cout << nLooseB  << std::endl;
 
     if (nLooseB < 1) return false;
 
@@ -291,6 +294,7 @@ bool EventFourT::leptonsArePrompt() {
 
 bool EventFourT::leptonsAreNotChargeFlip() {
     for( const auto& leptonPtr : **mediumLeps ){
+        std::cout << leptonPtr->isChargeFlip() << std::endl;
         if(leptonPtr->isChargeFlip()) return false;
     }
     return true;

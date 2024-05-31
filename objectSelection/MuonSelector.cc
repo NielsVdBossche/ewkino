@@ -45,6 +45,11 @@ bool MuonSelector::isLooseBase() const{
     if( muonPtr->sip3d() >= 8 ) return false;
     if( muonPtr->miniIso() >= 0.4 ) return false;
     if( !muonPtr->isMediumPOGMuon() ) return false;
+
+    // Additional cuts needed to work with NanoAOD and have good matching with heavyNeutrino:
+    if (! muonPtr->isPFCandidate() ) return false;
+    if (! (muonPtr->isGlobal() || muonPtr->isTracker()) ) return false;
+
     return true;
 }
 

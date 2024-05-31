@@ -62,7 +62,7 @@ void FourTop::analyze(std::string method) {
         processes = {""};
         selection->setSelectionType(selectionType::MCPrompt);
         st = selectionType::MCPrompt;
-
+        // useUncertainties = ! testRun;
         std::cout << "Running method " << "MCPrompt" << std::endl;
     } else if (method == "ChargeDD") {
         initDdChargeMisID(&chMisCorr);
@@ -158,7 +158,7 @@ void FourTop::analyze(std::string method) {
         bool hasValidPSs = false;
         bool hasValidPdfs = false;
         bool considerBTagShape = false;
-        bool useSplitJEC = true;
+        bool useSplitJEC = false;
         bool splitAdditionalBees = false;
         unsigned nominalBees = 0;
         
@@ -171,7 +171,10 @@ void FourTop::analyze(std::string method) {
             std::cout << "zg sample " << zgOverlapCheck << std::endl;
             if ((st == selectionType::MCAll && !isNPControl) || st == selectionType::MCPrompt || st == selectionType::MCNoNP) {
                 std::string currProcName = sampleVec[sampleIndex].processName();
+                // if (testRun) std::cout << "changing primary process to " << currProcName << std::endl;
                 mgrAll->changePrimaryProcess(currProcName);
+                // if (testRun) std::cout << "changed primary process" << std::endl;
+                // TODO: hasPL, hasGenLvl flags! -> always true if MC in Nano
                 if ((currProcName == "TTZ" || currProcName == "TTW" || currProcName == "TTH") && st == selectionType::MCPrompt && treeReader->hasPL() && treeReader->hasGenLvl()) {
                     std::string bbName = currProcName + "bb";
                     mgrAll->changeProcess(1, bbName);
@@ -184,10 +187,12 @@ void FourTop::analyze(std::string method) {
         if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
             //mgrAll->SetPrintAllUncertaintyVariations(true);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
+            // TODO: not compatible with Nano
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
 
-            std::cout << "finding available PS scale variations...\n";
+            // std::cout << "finding available PS scale variations...\n";
             Event event = treeReader->buildEvent(0, false, false, false, true);
+            // TODO: next line should be fine be test! (get event nb, check if both return same value?)
             numberOfPSVariations = event.generatorInfo().numberOfPsWeights();
             if(numberOfPSVariations>=44) hasValidPSs = true;
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
@@ -255,7 +260,9 @@ void FourTop::analyze(std::string method) {
         }
         
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
+        if (testRun) std::cout << "new sample " << uniqueName << std::endl;
         mgrAll->newSample(uniqueName);
+        if (testRun) std::cout << "new sample done" << std::endl;
 
         std::ofstream eventTagsOutput;
         if (printEventTags) {
@@ -264,20 +271,48 @@ void FourTop::analyze(std::string method) {
         }
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (testRun && entry > 1000) break;
+            if (testRun && entry > 481) break;
             //if (entry > 10000) break;
-            // std::cout << entry << std::endl;
+            //if (testRun) std::cout << entry << std::endl;
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
             delete currentEvent;
 
             // Initialize event
-            currentEvent = treeReader->buildEventPtr( entry, false, false, false, true );
-
+            currentEvent = treeReader->buildEventPtr( entry, false, false, false, useSplitJEC );
+            if (currentEvent->numberOfTightLeptons() == 2 & testRun) {
+                std::cout << entry << std::endl;
+                std::cout << currentEvent->eventNumber() << std::endl;
+                std::cout << "has 2 tight leptons" << std::endl;
+                std::cout << "lepton 1 flav: " << currentEvent->TightLeptonCollection()[0].isElectron() << currentEvent->TightLeptonCollection()[0].isMuon() << std::endl;
+                std::cout << "lepton 2 flav: " << currentEvent->TightLeptonCollection()[1].isElectron() << currentEvent->TightLeptonCollection()[1].isMuon() << std::endl;
+                std::cout << "lepton 1 charge: " << currentEvent->TightLeptonCollection()[0].charge() << std::endl;
+                std::cout << "lepton 2 charge: " << currentEvent->TightLeptonCollection()[1].charge() << std::endl;
+                std::cout << "lepton 1 pt: " << currentEvent->TightLeptonCollection()[0].pt() << std::endl;
+                std::cout << "lepton 2 pt: " << currentEvent->TightLeptonCollection()[1].pt() << std::endl;
+            } else if (testRun) {
+                continue;
+            }
             // Check triggers here
-            if (! eventPassesTriggers()) continue;
+            if (! eventPassesTriggers()) {
+                // std::cout << currentEvent->triggerInfo().passTriggers_e() 
+                // << currentEvent->triggerInfo().passTriggers_ee() 
+                // << currentEvent->triggerInfo().passTriggers_eee() 
+                // << currentEvent->triggerInfo().passTriggers_m() 
+                // << currentEvent->triggerInfo().passTriggers_mm() 
+                // << currentEvent->triggerInfo().passTriggers_mmm() 
+                // << currentEvent->triggerInfo().passTriggers_em() 
+                // << currentEvent->triggerInfo().passTriggers_et() 
+                // << currentEvent->triggerInfo().passTriggers_mt() 
+                // << currentEvent->triggerInfo().passTriggers_eem() 
+                // << currentEvent->triggerInfo().passTriggers_emm() 
+                // << currentEvent->triggerInfo().passTriggers_FR() 
+                // << currentEvent->triggerInfo().passTriggers_FR_iso() << std::endl;
+                // if (testRun) std::cerr << "Event does not pass triggers" << std::endl;
+                continue;
+            }
+
 
             selection->addNewEvent(currentEvent);
-
             // Apply overlap removal & apply triggers
             // if (! currentEvent->passTTGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
             // if (! currentEvent->passZGOverlap(ttgOverlapCheck)) continue; // TTG overlap, double check "working points"
@@ -292,6 +327,7 @@ void FourTop::analyze(std::string method) {
             }
             // Remove mass resonances
             if (! selection->passLowMassVeto()) {
+                if (testRun) std::cout << "fail low mass veto" << std::endl;
                 continue;
             }
 
@@ -302,15 +338,17 @@ void FourTop::analyze(std::string method) {
             selection->classifyEvent();
             unsigned processNb = 0;
             if (testRun) std::cout << "process nb " << processNb << std::endl;
-
+            if (testRun) std::cout << selection->getCurrentClass() << std::endl;
             double weight = currentEvent->weight();
             if( currentEvent->isMC() && (unsigned(st) <= selectionType::MCNoNP)) {
                 weight *= reweighter.totalWeight( *currentEvent );
 
                 if (st == selectionType::MCPrompt) {
+                    //std::cout << "prompt check" << std::endl;
                     if (! selection->leptonsArePrompt()) continue;
+                    //std::cout << "charge flip check" << std::endl;
                     if (! selection->leptonsAreNotChargeFlip() && selection->numberOfLeps() == 2) continue;
-
+                    //std::cout << "success" << std::endl;
                 } else if (st == selectionType::MCNoChargeMisID)  {
                     if (! selection->leptonsAreNotChargeFlip()) continue;
                     if (! selection->leptonsArePrompt()) processNb = 1;
@@ -355,6 +393,7 @@ void FourTop::analyze(std::string method) {
 
             if (splitAdditionalBees && st == selectionType::MCPrompt ) {
                 //if (currentEvent->GetPLInfoPtr()->GetParticleLevelBees() > nominalBees) processNb = 1;
+                // TODO: matching between PL and Gen lvl -> not checked PL equivalent, so unlikely to work.
                 if (selection->HasAdditionalBJets()) {
                     processNb = 1;
                 }
@@ -371,6 +410,7 @@ void FourTop::analyze(std::string method) {
             // replace with functions in eventHandling?
 
             eventClass nominalClass = selection->getCurrentClass();
+            std::cout << nominalClass << std::endl;
             //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
             if (sampleReweighter && selection->leptonsArePrompt() && (nominalClass == eventClass::crwz || nominalClass == eventClass::crzz)) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
 
@@ -383,7 +423,7 @@ void FourTop::analyze(std::string method) {
 
             if (FillRegion(nominalClass, st)) {
                 if (testRun) std::cout << "is fill in " << nominalClass << std::endl;
-
+                if (testRun) std::cout << currentEvent->weight() << std::endl;
                 fillVec = selection->fillVector();
                 singleEntries = selection->singleFillEntries();
                 fillVec2D = selection->fillVector2D();
@@ -405,7 +445,7 @@ void FourTop::analyze(std::string method) {
             }
 
             // Systematics
-            if (! useUncertainties)
+            if (! useUncertainties) continue;
             if ((currentEvent->isData() && st != selectionType::NPDD) || (processNb > 0 && (st != selectionType::MCPrompt && st != selectionType::NPDD))) continue;
 
             if (testRun) std::cout << "uncertainty time" << std::endl;
@@ -955,13 +995,15 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("ee");
         else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("mm");
         else subClasses.push_back("em");
-
+        //std::cout << "is dl " << std::endl;
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
-            subClasses.push_back("pureSig");
+            if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("pureSig_ee");
+            else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("pureSig_mm");
+            else subClasses.push_back("pureSig_em");
         } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) {
-            subClasses.push_back("pureTTV");
-            //if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("TTVmm");
-            //else subClasses.push_back("TTVemee");
+            if (selection->getLepton(0)->isElectron() && selection->getLepton(1)->isElectron()) subClasses.push_back("pureTTV_ee");
+            else if (selection->getLepton(0)->isMuon() && selection->getLepton(1)->isMuon()) subClasses.push_back("pureTTV_mm");
+            else subClasses.push_back("pureTTV_em");
         } else if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
 
         if (bdtOutput && currClass == eventClass::ssdl && (selection->GetDLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
@@ -991,13 +1033,16 @@ std::vector<std::string> FourTop::GetSubClasses(eventClass currClass) {
         } else {
             subClasses.push_back("noOSSF");
         }
+
+        //std::cout << "is trilep " << std::endl;
+
         if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) subClasses.push_back("pureSig");
         else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTW) subClasses.push_back("pureTTV");
         else if (bdtOutput && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTBar) subClasses.push_back("pureTTB");
 
         if (bdtOutput && currClass == eventClass::trilep && (selection->GetMLMVA()->getClassAndScore().begin()->first) % 3 == MVAClasses::TTTT) {
             double score;
-            for (auto it : selection->GetDLMVA()->getClassAndScore()) {
+            for (auto it : selection->GetMLMVA()->getClassAndScore()) {
                 if (it.first > 3) continue;
                 score = it.second;
                 break;
@@ -1134,7 +1179,7 @@ std::map<eventClass, int> FourTop::FillHistogramManager(ChannelManager* mgrAll) 
             {trilep, ""},
             {fourlep, ""}};
 
-    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig", "pureTTV", "pureTTB"};
+    std::vector<std::string> dlSubChannels = {"++", "--", "ee", "em", "mm", "pureSig_mm", "pureSig_ee", "pureSig_em", "pureTTV_mm", "pureTTV_ee", "pureTTV_em", "pureTTB"};
     std::vector<std::string> croSubChannels = {"++", "--", "ee", "em", "mm"};
     std::vector<std::string> crwSubChannels = {"ee", "em", "mm"};
     //std::vector<std::string> crwSubChannels = {"++", "--", "ee", "em", "mm"};

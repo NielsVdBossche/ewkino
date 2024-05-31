@@ -13,6 +13,7 @@
 #include "../../../Tools/interface/SampleCrossSections.h"
 #include "../../../Tools/interface/analysisTools.h"
 #include "../../../TreeReader/interface/TreeReader.h"
+#include "../../../TreeReader/interface/NanoReader.h"
 #include "../../../Event/interface/Event.h"
 
 #include "../../histogramSetups/histogramSetup.h"
@@ -33,7 +34,7 @@
 
 class FourTop {
     private:
-        TreeReader* treeReader;
+        BaseReader* treeReader;
 
         // Is this used?
         //std::vector<Sample>* sampleVec;

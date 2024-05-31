@@ -4,15 +4,20 @@
 /*
 Class that collects the generator level information for a given reconstructed lepton
 */
+#include <bitset>
 
 //include other parts of code 
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 class LeptonGeneratorInfo{
     
     public:
         LeptonGeneratorInfo( const TreeReader&, const unsigned ); 
+        LeptonGeneratorInfo( const NanoReader::LeptonReader&, const unsigned );
+        LeptonGeneratorInfo( const NanoReader::LeptonReader&, const unsigned, bool, bool, bool ); 
 
+        bool hasGenMatch() const{ return _hasGenMatch; }
         bool isPrompt() const{ return _isPrompt; }
         int matchPdgId() const{ return _matchPdgId; }
         int matchCharge() const{ return _matchCharge; }
@@ -22,9 +27,13 @@ class LeptonGeneratorInfo{
         unsigned provenanceConversion() const{ return _provenanceConversion; }
 
     private:
-        bool _isPrompt;
-        int _matchPdgId, _matchCharge, _momPdgId;
-        unsigned _provenance, _provenanceCompressed, _provenanceConversion;
-
+        bool _isPrompt = false;
+        bool _hasGenMatch = false;
+        int _matchPdgId = 0;
+        int _matchCharge = 0;
+        int _momPdgId = 0;
+        unsigned _provenance = 0;
+        unsigned _provenanceCompressed = 0;
+        unsigned _provenanceConversion = 99;
 }; 
 #endif 

@@ -1,12 +1,15 @@
 #ifndef PARTICLELEVELINFO_H
 #define PARTICLELEVELINFO_H
 
-#include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
+// Mainly to check for additional b-jets.
+// Not true particle level if nanoAOD is used, rather using GenJets
 
 class ParticleLevelInfo {
     public:
         ParticleLevelInfo(const TreeReader&);
+        ParticleLevelInfo(const NanoReader&);
 
         ~ParticleLevelInfo() = default;
 

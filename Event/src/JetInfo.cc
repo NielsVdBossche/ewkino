@@ -1,5 +1,6 @@
 #include "../interface/JetInfo.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 // include c++ library classes
 #include <iostream>
 #include <stdexcept>
@@ -37,6 +38,18 @@ JetInfo::JetInfo( const TreeReader& treeReader,
         }
     }
 }
+
+JetInfo::JetInfo( const NanoReader& nanoReader,
+		  const bool readAllJECVariations,
+		  const bool readGroupedJECVariations  ) {
+    _JECSources = {};
+    _JECGrouped = {};
+    if (readAllJECVariations) {
+    }
+    if (readGroupedJECVariations) {
+    }
+}
+
 
 bool JetInfo::hasJECVariation( const std::string& jecName ) const{
     bool isInAllVariations = ( std::find(_JECSources.begin(),_JECSources.end(),
