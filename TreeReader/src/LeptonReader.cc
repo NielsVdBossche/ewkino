@@ -14,7 +14,7 @@ NanoReader::LeptonReader::LeptonReader(NanoReader& nano, TTree* _currentTreePtr,
     _currentTreePtr->SetBranchAddress((leptonType+"_dz").c_str(),                 _Lepton_dz,               &b__Lepton_dz);
     _currentTreePtr->SetBranchAddress((leptonType+"_jetIdx").c_str(),             _Lepton_jetIdx,           &b__Lepton_jetIdx);
 
-    if (nanoReader.containsGenParticles()) {
+    if (nanoReader.containsGeneratorInfo()) {
         _currentTreePtr->SetBranchAddress((leptonType+"_genPartFlav").c_str(),        _Lepton_genPartFlav,      &b__Lepton_genPartFlav);
         _currentTreePtr->SetBranchAddress((leptonType+"_genPartIdx").c_str(),         _Lepton_genPartIdx,       &b__Lepton_genPartIdx);
     }
@@ -30,7 +30,7 @@ void NanoReader::LeptonReader::setOutputTree(TTree* tree, std::string leptonType
     tree->Branch((leptonType+"_dz").c_str(),                 _Lepton_dz,               (leptonType+"_dz[n"+leptonType+"]/F").c_str());
     tree->Branch((leptonType+"_jetIdx").c_str(),             _Lepton_jetIdx,           (leptonType+"_jetIdx[n"+leptonType+"]/I").c_str());
 
-    if (nanoReader.containsGenParticles()) {
+    if (nanoReader.containsGeneratorInfo()) {
         tree->Branch((leptonType+"_genPartFlav").c_str(),        _Lepton_genPartFlav,      (leptonType+"_genPartFlav[n"+leptonType+"]/I").c_str());
         tree->Branch((leptonType+"_genPartIdx").c_str(),         _Lepton_genPartIdx,       (leptonType+"_genPartIdx[n"+leptonType+"]/I").c_str());
     }
@@ -51,7 +51,7 @@ NanoReader::LightLeptonReader::LightLeptonReader(NanoReader& nano, TTree* _curre
     _currentTreePtr->SetBranchAddress((leptonType+"_jetPtRatio").c_str(),         _Lepton_jetPtRatio,       &b__Lepton_jetPtRatio);
     _currentTreePtr->SetBranchAddress((leptonType+"_jetBTagDeepFlavor").c_str(),  _Lepton_jetBTagDJ,        &b__Lepton_jetBTagDJ);
 
-    if (GetNanoReader().containsGenParticles()) {
+    if (GetNanoReader().containsGeneratorInfo()) {
         _currentTreePtr->SetBranchAddress((leptonType+"_isPrompt").c_str(),             _Lepton_isPrompt,             &b__Lepton_isPrompt);
         _currentTreePtr->SetBranchAddress((leptonType+"_isChargeFlip").c_str(),         _Lepton_isChargeFlip,         &b__Lepton_isChargeFlip);
         _currentTreePtr->SetBranchAddress((leptonType+"_matchPdgId").c_str(),           _Lepton_matchPdgId,           &b__Lepton_matchPdgId);

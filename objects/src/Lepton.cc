@@ -37,7 +37,6 @@ Lepton::Lepton( const NanoReader::LeptonReader& leptonReader, const unsigned lep
     selector( leptonSelector ),
     _uncorrectedPt( pt() ),
     _uncorrectedE( energy() )
-
 {}
 
 
@@ -183,6 +182,8 @@ int Lepton::matchPdgId() const{
 
 int Lepton::matchCharge() const{
     if( checkGeneratorInfo() ){
+        //std::cout << "matchCharge() called: " << generatorInfo->matchCharge() << std::endl;
+        //std::cout << "match pdgid = " << matchPdgId() << std::endl;
         return generatorInfo->matchCharge();
     } else {
         return 0;

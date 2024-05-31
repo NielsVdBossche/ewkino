@@ -29,7 +29,7 @@ Event::Event( const TreeReader& treeReader,
     _samplePtr( treeReader.currentSamplePtr() ),
     _particleLevelInfoPtr( treeReader.hasPL() ? new ParticleLevelInfo(treeReader) : nullptr),
     _genLevelPtr( treeReader.hasGenLvl() ? new GenParticlesTop(treeReader) : nullptr) {
-    std::cout << "Event constructed from HeavyNeutrino reader" << std::endl;
+    // std::cout << "Event constructed from HeavyNeutrino reader" << std::endl;
 }
 
 Event::Event(const NanoReader& nanoReader,
@@ -50,7 +50,7 @@ Event::Event(const NanoReader& nanoReader,
     _particleLevelInfoPtr( nanoReader.hasGenLvl() ? new ParticleLevelInfo(nanoReader) : nullptr),
     _genLevelPtr( nanoReader.hasGenLvl() ? new GenParticlesTop(nanoReader) : nullptr)
 {
-    std::cout << "Event constructed from NanoAOD reader" << std::endl;
+    // std::cout << "Event constructed from NanoAOD reader" << std::endl;
 }
 
 Event::~Event(){

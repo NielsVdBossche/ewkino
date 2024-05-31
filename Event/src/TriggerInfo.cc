@@ -82,7 +82,7 @@ TriggerInfo::TriggerInfo(const NanoReader& nanoReader, const bool readIndividual
     // Do not use the flag: Flag_METFilters (this also includes some filters 
     // that are deprecated and can lead to a loss in efficiency), instead use 
     // the individual flags for the different recommended filters."
-    _passMetFilters = false;
+    _passMetFilters = true;
     _passMetFilters = _passMetFilters & nanoReader._Flag_goodVertices;
     _passMetFilters = _passMetFilters & nanoReader._Flag_globalSuperTightHalo2016Filter;
     _passMetFilters = _passMetFilters & nanoReader._Flag_HBHENoiseFilter;

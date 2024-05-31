@@ -20,7 +20,6 @@ class Event;
 
 std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
     TTree* treePtr, const std::vector<std::string> nameIdentifiers, const std::string& antiIdentifier = "");
-bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind );
 
 template <typename T>
 void setMapBranchAddresses(TTree* treePtr, std::map<std::string, T>& variableMap, std::map<std::string, TBranch*> branchMap);
@@ -29,7 +28,7 @@ class TreeReader : public BaseReader {
     public :
 
         //Constructor
-        TreeReader() = default;
+        TreeReader();
         TreeReader( const std::string&, const std::string& ); 
 
         //Declare leaf types
@@ -352,22 +351,6 @@ class TreeReader : public BaseReader {
         //always reset triggers instead of rare case of combining primary datasets!
         virtual void initTree( const bool resetTriggersAndFilters = true) override;
         virtual void setOutputTree( TTree* ) override;
-
-        //initialize the current sample directly from a root file
-        //always reset triggers instead of rare case of combining primary datasets
-	// to prevent invalidating addresses set by setOutputTree
-        // void initSampleFromFile( const std::string& pathToFile,
-	// 			 const bool is2016, 
-	// 			 const bool is2016PreVFP, 
-	// 			 const bool is2016PostVFP,
-	// 			 const bool is2017, const bool is2018, 
-	// 			 const bool resetTriggersAndFilters = true );
-        // void initSampleFromFile( const std::string& pathToFile, 
-	// 			 const bool resetTriggersAndFilters = true );
-// 
-        // //Get entry from Tree, should not be used except for test purposes
-        // void GetEntry(const Sample&, long unsigned );
-        // void GetEntry(long unsigned );
 
         //Build event (this will implicitly use GetEntry )
         //Use these functions in analysis code 

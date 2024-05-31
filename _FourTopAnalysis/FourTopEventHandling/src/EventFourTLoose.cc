@@ -2,8 +2,11 @@
 
 void EventFourTLoose::classifyEvent() {
     SetEventClass(eventClass::fail);
+    //std::cout << "start classifyEvent" << std::endl;
+
     //if (! passLowMassVeto()) return;
     if (! passPhotonOverlapRemoval()) return;
+    //std::cout << "photon overlap removal passed" << std::endl;
     if (numberOfLeps() == 2 && getMediumLepCol()->hasOSPair() && (GetRelRegion() == eventClass::ttbar || GetRelRegion() == eventClass::dy)) {
         if (getMediumLepCol()->hasOSSFPair()) {
             if (numberOfJets() < 2) return;
@@ -20,6 +23,7 @@ void EventFourTLoose::classifyEvent() {
         }
     }
     if (! passLeanSelection()) {
+        //std::cout << "does not pass lean sel" << std::endl;
         if (numberOfLeps() == 4 && getMediumLepCol()->sumCharges() == 0) {
             if (getMediumLepCol()->at(0)->pt() < 25 || getMediumLepCol()->at(1)->pt() < 20) return;
             //if (numberOfLooseBJets() != 0) return;

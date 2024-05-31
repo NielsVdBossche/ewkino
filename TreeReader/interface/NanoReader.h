@@ -273,11 +273,10 @@ class NanoReader : public BaseReader {
         Bool_t          _Flag_EcalDeadCellTriggerPrimitiveFilter;
 
         // methods
-        virtual bool containsGeneratorInfo() const override {return isMC();};
-        virtual bool containsLheInfo() const override {return isMC();};
-        virtual bool hasPL() const override {return isMC();};
-        virtual bool hasGenLvl() const override {return isMC();};
-        bool containsGenParticles() const {return isMC();};
+        virtual bool containsGeneratorInfo() const;
+        virtual bool containsLheInfo() const;
+        virtual bool hasPL() const;
+        virtual bool hasGenLvl() const;
 
         const LightLeptonReader& GetElectronReader() const {return *electronReader;}
         const LightLeptonReader& GetMuonReader() const {return *muonReader;}

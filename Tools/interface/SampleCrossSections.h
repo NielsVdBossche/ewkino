@@ -12,7 +12,7 @@ class SampleCrossSections{
         SampleCrossSections() = default;
 		SampleCrossSections( const Sample& );
 
-		void initializeAsNanoAOD(const Sample&, TTree* runsTree);
+		void initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree);
 		void initializeAsMiniAOD(const Sample&);
 
         size_type numberOfLheVariations() const{ return lheCrossSectionRatios.size(); }

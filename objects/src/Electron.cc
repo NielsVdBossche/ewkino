@@ -54,11 +54,11 @@ Electron::Electron( const NanoReader& nanoReader, const unsigned electronIndex )
     _inverseEMinusInverseP( nanoReader._Electron_eInvMinusPInv[electronIndex] ),
     _sigmaIEtaEta( nanoReader._Electron_sieie[electronIndex] )
 {
+    // correct energy and momentum of the electrons using Electron_eCorr:
+    setLorentzVector(pt() * nanoReader._Electron_eCorr[electronIndex], eta(), phi(), energy() * nanoReader._Electron_eCorr[electronIndex]);
     //make sure also non-cone-corrected pt is set to the corrected value
     _uncorrectedPt = pt();
     _uncorrectedE = energy();
-    // correct energy and momentum of the electrons using Electron_eCorr:
-    setLorentzVector(_uncorrectedPt * nanoReader._Electron_eCorr[electronIndex], eta(), phi(), _uncorrectedE * nanoReader._Electron_eCorr[electronIndex]);
 
     // fill different variables:
     _passChargeConsistency = ( nanoReader._Electron_tightCharge[electronIndex]==2 );

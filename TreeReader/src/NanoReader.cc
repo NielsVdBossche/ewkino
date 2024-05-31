@@ -4,41 +4,12 @@
 #include "../../Event/interface/Event.h"
 #include "../../constants/luminosities.h"
 
-NanoReader::NanoReader(const std::string& sampleListFile, const std::string& sampleDirectory) {
-    readSamples(sampleListFile, sampleDirectory);
+NanoReader::NanoReader(const std::string& sampleListFile, const std::string& sampleDirectory) :
+    BaseReader(sampleListFile, sampleDirectory)
+{   
     // _sourcesJEC_Ids = new std::map<std::string, size_t>();
     // _groupedJEC_Ids = new std::map<std::string, size_t>();
 }
-
-// bool NanoReader::containsGeneratorInfo() const {
-//     // note: only checking genWeight branch,
-//     // this does in principle not guarantee that e.g. LHEPdfWeight are present.
-//     return treeHasBranchWithName(_currentTreePtr, "genWeight");
-// }
-
-// bool NanoReader::containsGenParticles() const {
-//     return treeHasBranchWithName(_currentTreePtr, "nGenPart");
-// }
-
-// void NanoReader::initSample( const Sample& samp ){
-//     std::cout << "Init sample in nanoreader" << std::endl;
-//     _currentSamplePtr = std::make_shared< Sample >( samp );
-//     _currentFilePtr = samp.filePtr();
-//     _currentTreePtr = (TTree*) _currentFilePtr->Get("Events");
-//     checkCurrentTree();
-//     initTree();
-//     if (! samp.isData()) {
-// 
-//         // event weights set with lumi depending on sample's era 
-//         double dataLumi;
-//         // if( is2016() ){ dataLumi = lumi::lumi2016; } 
-//         if( is2016PreVFP() ){ dataLumi = lumi::lumi2016PreVFP; }
-//         else if( is2016PostVFP() ){ dataLumi = lumi::lumi2016PostVFP; }
-//         else if( is2017() ){ dataLumi = lumi::lumi2017; } 
-//         else { dataLumi = lumi::lumi2018; }
-//         scale = samp.xSec() * dataLumi*1000 / tmp_nominalSumOfWeights;
-//     }
-// }
 
 double NanoReader::getSumSimulatedEventWeights() {
     TTree* runsTree = (TTree*) _currentFilePtr->Get("Runs");
@@ -93,14 +64,30 @@ Event* NanoReader::buildEventPtr( long unsigned entry,
                     readAllJECVariations, readGroupedJECVariations );
 }
 
+bool NanoReader::containsGeneratorInfo() const {
+    return treeHasBranchWithName( _currentTreePtr, "GenPart" );
+}
 
+bool NanoReader::containsLheInfo() const {
+    return containsGeneratorInfo();
+}
+
+bool NanoReader::hasPL() const {
+    return containsGeneratorInfo();
+}
+
+bool NanoReader::hasGenLvl() const {
+    return containsGeneratorInfo();
+}
 
 void NanoReader::initTree(const bool resetTriggersAndFilters) {
     checkCurrentTree();
+    std::cout << "deleting existing readers" << std::endl;
     if (electronReader) delete electronReader;
     if (muonReader) delete muonReader;
     if (tauReader) delete tauReader;
 
+    std::cout << "Setting branches" << std::endl;
     _currentTreePtr->SetMakeClass(1);
 
     // set branch addresses of all variables
@@ -129,7 +116,7 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
         _currentTreePtr->SetBranchAddress("PSWeight",            _PSWeight,        &b__PSWeight);
     }
     // gen particles
-    if (containsGenParticles()) {
+    if (containsGeneratorInfo()) {
         _currentTreePtr->SetBranchAddress("nGenPart",                  &_nGenPart,                  &b__nGenPart);
         _currentTreePtr->SetBranchAddress("GenPart_pt",                _GenPart_pt,                 &b__GenPart_pt);
         _currentTreePtr->SetBranchAddress("GenPart_eta",               _GenPart_eta,                &b__GenPart_eta);
@@ -285,6 +272,8 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("Flag_ecalBadCalibFilter",                   &_Flag_ecalBadCalibFilter,                  &b__Flag_ecalBadCalibFilter);
     // 2016 only:
     _currentTreePtr->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter",   &_Flag_EcalDeadCellTriggerPrimitiveFilter,  &b__Flag_EcalDeadCellTriggerPrimitiveFilter);
+
+    std::cout << "Done setting branches" << std::endl;
 }
 
 void NanoReader::setOutputTree(TTree* outputTree) {
@@ -311,7 +300,7 @@ void NanoReader::setOutputTree(TTree* outputTree) {
         outputTree->Branch("PSWeight", _PSWeight);
     }
 
-    if (containsGenParticles()) {
+    if (containsGeneratorInfo()) {
         outputTree->Branch("nGenPart", &_nGenPart);
         outputTree->Branch("GenPart_pt", _GenPart_pt);
         outputTree->Branch("GenPart_eta", _GenPart_eta);

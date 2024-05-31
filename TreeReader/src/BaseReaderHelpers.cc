@@ -1,6 +1,7 @@
 #include "../interface/BaseReader.h"
 
 #include "../../constants/luminosities.h"
+#include "../../Tools/interface/stringTools.h"
 
 // Implementation of many small functions in BaseReader that act as helpers or error checks.
 // Small helper functions
@@ -181,4 +182,15 @@ void BaseReader::checkEraOrthogonality() const{
     if(bothFalse){
         std::cerr << "Error: both is2016 and is2017 flags are returning FALSE for current sample! Sample has to be either one." << std::endl;
     }
+}
+
+bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind ){
+    TObjArray* branch_list = treePtr->GetListOfBranches();
+    for( const auto& branchPtr : *branch_list ){
+	std::string branchName = branchPtr->GetName();
+	    if( stringTools::stringContains( branchName, nameToFind ) ){
+		return true;
+	    }
+    }
+    return false;
 }

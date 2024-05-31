@@ -154,7 +154,7 @@ void BaseReader::initSampleFromFile(const std::string& pathToFile,
     if( !systemTools::fileExists( pathToFile ) ){
         throw std::invalid_argument( "File '" + pathToFile + "' does not exist." );
     }
-    _currentFilePtr = std::shared_ptr< TFile >( new TFile( pathToFile.c_str() ) );
+    _currentFilePtr = std::make_shared< TFile >( pathToFile.c_str(), "read");
 
     // check year
     if( !(is2016 || is2016PreVFP || is2016PostVFP || is2017 || is2018 ) ){
@@ -171,7 +171,6 @@ void BaseReader::initSampleFromFile(const std::string& pathToFile,
     // implicitly called above when opening a new TFile."
     _currentTreePtr = getTreePtr();
     checkCurrentTree();
-
     // make a new sample, and make sure the pointer remains valid
     // old comment from Willem:
     // "new is no option here since this would also require a destructor for the class, 

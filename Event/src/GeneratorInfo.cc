@@ -115,7 +115,7 @@ double GeneratorInfo::relativeWeightPdfVar( const unsigned pdfIndex ) const{
     if (miniAODSetup) {
         return retrieveWeight( _lheWeights, pdfIndex, 9, std::min( std::max( _numberOfLheWeights, unsigned(9) ) - 9, unsigned(103) ), "pdf" );
     } else {
-        return retrieveWeight( _LHEPdfWeights, pdfIndex, 0, std::min( _numberOfLheWeights, unsigned(103) ), "pdf" );
+        return retrieveWeight( _LHEPdfWeights, pdfIndex, 0, std::min( _numberOfLHEPdfWeights, unsigned(103) ), "pdf" );
     }
 }
 

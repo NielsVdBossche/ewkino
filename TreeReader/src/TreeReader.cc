@@ -14,6 +14,10 @@
 #include "../../constants/luminosities.h"
 
 // constructor //
+TreeReader::TreeReader() : BaseReader() {
+    _sourcesJEC_Ids = new std::map<std::string, size_t>();
+    _groupedJEC_Ids = new std::map<std::string, size_t>();
+}
 
 TreeReader::TreeReader( const std::string& sampleListFile, const std::string& sampleDirectory ) :
     BaseReader( sampleListFile, sampleDirectory )
@@ -192,20 +196,7 @@ void TreeReader::initializeJecSourcesGroupedMaps(TTree* treePtr) {
     _corrMETy_JECGroupedDown = std::vector<double>(_corrMETy_JECGroupedDown_Ids.size());
 }
 
-// functions to find if a tree has branches with certain types of info //
-
-bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind ){
-    TObjArray* branch_list = treePtr->GetListOfBranches();
-    for( const auto& branchPtr : *branch_list ){
-	std::string branchName = branchPtr->GetName();
-	    if( stringTools::stringContains( branchName, nameToFind ) ){
-		return true;
-	    }
-    }
-    return false;
-}
-
-
+// functions to find if a tree has branches with certain types of info 
 bool TreeReader::containsGeneratorInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_gen_" );
 }
@@ -232,53 +223,6 @@ bool TreeReader::containsTriggerInfo( const std::string& triggerPath ) const{
 }
 
 
-
-// void TreeReader::initSample( const Sample& samp ){ 
-// 
-//     //update current sample
-//     // old comment from Willem:
-//     // "I wonder if the extra copy can be avoided here, 
-//     // its however hard if we want to keep the functionality of reading the sample vector, 
-//     // and also having the function initSampleFromFile. 
-//     // It's not clear how we can make a new sample in one of them 
-//     // and refer to an existing one in the other. 
-//     // It can be done with a static Sample in 'initSampleFromFile', 
-//     // but this makes the entire TreeReader class unthreadsafe, 
-//     // so no parallel sample processing in one process can be done"
-//     _currentSamplePtr = std::make_shared< Sample >( samp );
-//     _currentFilePtr = samp.filePtr();
-// 
-//     // old comment from Willem:
-//     // "Warning: this pointer is overwritten, but it is not a memory leak. 
-//     // ROOT is dirty and deletes the previous tree upon closure of the TFile it belongs to.
-//     // The previous TFile is closed by the std::shared_ptr destructor, 
-//     // implicitly called above when opening a new TFile."
-//     _currentTreePtr = (TTree*) _currentFilePtr->Get( "blackJackAndHookers/blackJackAndHookersTree" );
-//     checkCurrentTree();
-//     initTree();
-//     if( !samp.isData() ){
-// 
-//         //read sum of simulated event weights
-//         TH1D* hCounter = new TH1D( "hCounter", "Events counter", 1, 0, 1 );
-//         _currentFilePtr->cd( "blackJackAndHookers" );
-//         hCounter->Read( "hCounter" ); 
-//         double sumSimulatedEventWeights = hCounter->GetBinContent(1);
-//         delete hCounter;
-// 
-//         //event weights set with lumi depending on sample's era 
-//         double dataLumi;
-//         //if( is2016() ){ dataLumi = lumi::lumi2016; } 
-//         if( is2016PreVFP() ){ dataLumi = lumi::lumi2016PreVFP; }
-//         else if( is2016PostVFP() ){ dataLumi = lumi::lumi2016PostVFP; }
-//         else if( is2017() ){ dataLumi = lumi::lumi2017; } 
-//         else { dataLumi = lumi::lumi2018; }
-//         scale = samp.xSec()*dataLumi*1000 / sumSimulatedEventWeights;
-//     }
-// 
-//     //check whether current sample is a SUSY sample
-//     _isSusy = containsSusyMassInfo();
-// }
-
 double TreeReader::getSumSimulatedEventWeights() {
     //read sum of simulated event weights
     TH1D* hCounter = new TH1D( "hCounter", "Events counter", 1, 0, 1 );
@@ -292,93 +236,6 @@ double TreeReader::getSumSimulatedEventWeights() {
 TTree* TreeReader::getTreePtr() {
     return (TTree*) _currentFilePtr->Get( "blackJackAndHookers/blackJackAndHookersTree" );
 }
-
-
-//initialize the current Sample directly from a root file, this is used when skimming
-// void TreeReader::initSampleFromFile( const std::string& pathToFile, 
-// 				     const bool is2016, 
-// 				     const bool is2016PreVFP,
-// 				     const bool is2016PostVFP,
-// 				     const bool is2017, 
-// 				     const bool is2018, 
-// 				     const bool resetTriggersAndFilters ){
-// 
-//     // check if file exists 
-//     if( !systemTools::fileExists( pathToFile ) ){
-//         throw std::invalid_argument( "File '" + pathToFile + "' does not exist." );
-//     }
-// 
-//     _currentFilePtr = std::shared_ptr< TFile >( new TFile( pathToFile.c_str() ) );
-// 
-//     // check year
-//     if( !(is2016 || is2016PreVFP || is2016PostVFP || is2017 || is2018 ) ){
-// 	std::string msg = "ERROR in TreeReader::initSampleFromFile:";
-// 	msg += " no valid year was given for sample ";
-// 	msg += pathToFile;
-// 	throw std::runtime_error(msg);
-//     }
-// 
-//     // old comment from Willem:
-//     // "Warning: this pointer is overwritten, but it is not a memory leak. 
-//     // ROOT is dirty and deletes the previous tree upon closure of the TFile it belongs to.
-//     // The previous TFile is closed by the std::shared_ptr destructor, 
-//     // implicitly called above when opening a new TFile."
-//     _currentTreePtr = (TTree*) _currentFilePtr->Get( "blackJackAndHookers/blackJackAndHookersTree" );
-//     checkCurrentTree();
-// 
-//     // make a new sample, and make sure the pointer remains valid
-//     // old comment from Willem:
-//     // "new is no option here since this would also require a destructor for the class, 
-//     // which does not work for the other initSample case"
-//     _currentSamplePtr = std::make_shared< Sample >( pathToFile, is2016, is2016PreVFP,
-// 			    is2016PostVFP, is2017, is2018, isData() );
-// 
-//     //initialize tree
-//     if (_groupedJEC_Ids == nullptr) {
-//         _sourcesJEC_Ids = new std::map<std::string, size_t>();
-//         _groupedJEC_Ids = new std::map<std::string, size_t>();
-//     }
-//     initTree( resetTriggersAndFilters );
-// 
-//     //check whether current sample is a SUSY sample
-//     _isSusy = containsSusyMassInfo();
-// 
-//     //set scale so weights don't become 0 when building the event
-//     scale = 1.;
-// }
-// 
-// 
-// //automatically determine whether sample is 2017 or 2018 from file name 
-// void TreeReader::initSampleFromFile( const std::string& pathToFile, 
-// 				     const bool resetTriggersAndFilters ){
-//     bool is2016 = analysisTools::fileIs2016( pathToFile );
-//     bool is2016PreVFP = analysisTools::fileIs2016PreVFP( pathToFile );
-//     bool is2016PostVFP = analysisTools::fileIs2016PostVFP( pathToFile );
-//     bool is2017 = analysisTools::fileIs2017( pathToFile );
-//     bool is2018 = analysisTools::fileIs2018( pathToFile );
-//     initSampleFromFile( pathToFile, is2016, is2016PreVFP, is2016PostVFP, is2017, is2018, 
-// 			resetTriggersAndFilters );
-// }
-
-
-//void TreeReader::GetEntry( const Sample& samp, long unsigned entry ){
-//    checkCurrentTree();
-//
-//    _currentTreePtr->GetEntry( entry );
-//
-//    //Set up correct event weight
-//    if( !samp.isData() ){
-//        _scaledWeight = _weight * scale;
-//    } else{
-//        _scaledWeight = 1;
-//    }
-//}
-//
-////use the currently initialized sample when running in serial
-//void TreeReader::GetEntry( long unsigned entry ){
-//    GetEntry( *_currentSamplePtr, entry );
-//}
-
 
 Event TreeReader::buildEvent( const Sample& samp, long unsigned entry, 
 	const bool readIndividualTriggers, const bool readIndividualMetFilters,

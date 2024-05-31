@@ -99,7 +99,8 @@ LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader& lepton
         _provenanceConversion = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_provenanceConversion[leptonindex];
     }
     // use sign of pdgid to extract match charge:
-    _matchCharge = (_matchPdgId >= 0) ? 1 : (_matchPdgId <= 0) ? -1 : 0;
+    _matchCharge = (_matchPdgId > 0) ? -1 : (_matchPdgId < 0) ? 1 : 0;
+    if (std::abs(_matchPdgId) > 16) _matchCharge = 0;
 }
 
 

@@ -15,6 +15,7 @@
 
 // Class: BaseReader
 // Contains basic functionality that can be shared between mini and nano AOD.
+bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind );
 
 class Event;
 
