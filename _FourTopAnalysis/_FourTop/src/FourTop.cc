@@ -14,8 +14,12 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
     // prepare details of analysis in separate functions
     
     // First setting are samples to work through
-    treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    // treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
+    // treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
+    if (stringTools::stringContains(argvString[1], "nano")) {
+        treeReader = new NanoReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/nanoTransition/ewkino/TestFiles/");
+    } else {
+        treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
+    }
 
     Sample samp = treeReader->sampleVector()[0];
 

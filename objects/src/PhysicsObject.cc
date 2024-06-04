@@ -7,10 +7,31 @@ PhysicsObject::PhysicsObject( double transverseMomentum, double pseudoRapidity,
 				const bool objectIs2016PreVFP,
 				const bool objectIs2016PostVFP,
 				const bool objectIs2017,
-				const bool objectIs2018 ) :
+				const bool objectIs2018) :
     vector( LorentzVector( transverseMomentum, pseudoRapidity, azimuthalAngle, energy ) )
 {
     // check if at least one era boolean is true
+    if( !(objectIs2016 || objectIs2016PreVFP || objectIs2016PostVFP 
+	|| objectIs2017 || objectIs2018) ){
+	std::string msg = "ERROR in PhysicsObject constructor: no valid data taking year was found.";
+	throw std::runtime_error( msg );
+    }
+    is2016Object = objectIs2016;
+    is2016PreVFPObject = objectIs2016PreVFP;
+    is2016PostVFPObject = objectIs2016PostVFP;
+    is2017Object = objectIs2017;
+    is2018Object = objectIs2018;
+}
+
+PhysicsObject::PhysicsObject(LorentzVector lorentzVector, 
+                const bool objectIs2016,
+                const bool objectIs2016PreVFP,
+                const bool objectIs2016PostVFP,
+                const bool objectIs2017,
+                const bool objectIs2018) :
+    vector(lorentzVector)
+{
+        // check if at least one era boolean is true
     if( !(objectIs2016 || objectIs2016PreVFP || objectIs2016PostVFP 
 	|| objectIs2017 || objectIs2018) ){
 	std::string msg = "ERROR in PhysicsObject constructor: no valid data taking year was found.";
@@ -30,6 +51,13 @@ void PhysicsObject::setLorentzVector( double transverseMomentum, double pseudoRa
 		is2016Object, is2016PreVFPObject, is2016PostVFPObject, is2017Object, is2018Object );
 }
 
+void PhysicsObject::setLorentzVectorWithMass( double transverseMomentum, double pseudoRapidity, double azimuthalAngle, double mass) {
+    // TODO: why is this not done in above function?
+    vector = LorentzVector( transverseMomentum, pseudoRapidity, azimuthalAngle, mass, true );
+    // *this = PhysicsObject(vector, 
+	// 	is2016Object, is2016PreVFPObject, is2016PostVFPObject, is2017Object, is2018Object );
+}
+
 
 PhysicsObject PhysicsObject::operator-() const{
     PhysicsObject neg = *this;
@@ -45,7 +73,9 @@ PhysicsObject& PhysicsObject::operator+=( const PhysicsObject& rhs ){
 
     
 PhysicsObject& PhysicsObject::operator-=( const PhysicsObject& rhs ){
-    *this -= rhs;
+    // g++ 13.2.x complains about infinite recursion here for some reason if it
+    // is kept as *this -= rhs;
+    *this = *this - rhs;
     return *this;
 }
 

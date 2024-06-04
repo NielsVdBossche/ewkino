@@ -121,8 +121,10 @@ Sample::Sample( const std::string& pathToFile,
     _isNewPhysicsSignal( isNewPhysicsSignal )
 {
     std::pair< std::string, std::string > directoryAndFileName = stringTools::splitDirectoryFileName( pathToFile );
+
     _directory = directoryAndFileName.first;
     _fileName = directoryAndFileName.second;
+
     _uniqueName = stringTools::formatDirectoryName( _directory ) + _fileName;
 }
 

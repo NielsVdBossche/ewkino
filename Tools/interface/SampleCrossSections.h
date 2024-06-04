@@ -8,9 +8,12 @@ class SampleCrossSections{
 
 	public:
 		using size_type = std::vector< double >::size_type;
-
+		// TODO: also use Nano: Check if Runs tree exists..
         SampleCrossSections() = default;
 		SampleCrossSections( const Sample& );
+
+		void initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree);
+		void initializeAsMiniAOD(const Sample&);
 
         size_type numberOfLheVariations() const{ return lheCrossSectionRatios.size(); }
 		double crossSectionRatio_pdfVar( const size_type ) const;
@@ -44,6 +47,7 @@ class SampleCrossSections{
 	private:
 		std::vector< double > lheCrossSectionRatios;
         std::vector< double > psCrossSectionRatios;
+		double nominalSumOfWeights;
 
         double crossSectionRatio_lheVar( const size_type ) const;
 };

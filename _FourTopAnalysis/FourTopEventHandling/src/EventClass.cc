@@ -4,7 +4,9 @@
 
 void EventFourT::classifyEvent() {
     currentClass = eventClass::fail;
+    //std::cout << "start classifyEvent" << std::endl;
     if (! passBaselineEventSelection()) return;
+    //std::cout << "passed baseline" << std::endl;
     if (! passLowMassVeto()) return;
     if (! passZBosonVeto()) {
         currentClass = eventClass::crz3L;
@@ -12,10 +14,11 @@ void EventFourT::classifyEvent() {
     }
 
     if (! passFullEventSelection()) {
+        //std::cout << "failed full event selection" << std::endl;
         currentClass = eventClass::cro;
         return;
     }
-
+    //std::cout << numberOfLeps() << " " << numberOfJets() << " " << numberOfMediumBJets() << std::endl;
     if (numberOfLeps() == 2 && numberOfJets() < 6 && numberOfMediumBJets() == 2) {
         currentClass = eventClass::crw;
         return;

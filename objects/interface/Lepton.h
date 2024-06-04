@@ -8,6 +8,7 @@
 //include other parts of code 
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 #include "LeptonGeneratorInfo.h"
 #include "LeptonSelector.h"
 
@@ -22,6 +23,7 @@ class Lepton : public PhysicsObject {
     
     public: 
         Lepton( const TreeReader&, const unsigned, LeptonSelector* ); 
+        Lepton( const NanoReader::LeptonReader&, const unsigned, LeptonSelector* ); 
 
         //copying of lepton will only be allowed if appropriate selector is provided by derived class
         Lepton( const Lepton& ) = delete;
@@ -35,10 +37,10 @@ class Lepton : public PhysicsObject {
         //get reconstructed lepton attributes 
         double dxy() const{ return _dxy; }
         double dz() const{ return _dz; }
-        double sip3d() const{ return _sip3d; }
         int charge() const{ return _charge; }
 
         //access generator-level attributes
+        bool hasGenMatch() const;
         bool isPrompt() const;
         int matchPdgId() const;
         int matchCharge() const;
@@ -80,7 +82,6 @@ class Lepton : public PhysicsObject {
         //lepton impact parameter variables 
         double _dxy = 0;
         double _dz = 0;
-        double _sip3d = 0;
 
         //lepton generator information
         LeptonGeneratorInfo* generatorInfo = nullptr;

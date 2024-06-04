@@ -15,7 +15,9 @@ Met::Met( const TreeReader& treeReader,
     _pt_UnclDown( treeReader._met_UnclDown ),
     _phi_UnclDown( treeReader._metPhi_UnclDown ),
     _pt_UnclUp( treeReader._met_UnclUp ),
-    _phi_UnclUp( treeReader._metPhi_UnclUp ) {
+    _phi_UnclUp( treeReader._metPhi_UnclUp ),
+    _metVariationsInitialized(true) 
+{
     
     if (readAllJECVariations) {
         _pxy_JECSourcesUp = std::vector<std::pair<double,double> >(_JECSources->size());
@@ -45,6 +47,38 @@ Met::Met( const TreeReader& treeReader,
     }
 }
 
+Met::Met(const NanoReader& nanoReader, const bool readAllJECVariations, const bool readGroupedJECVariations) :
+    PhysicsObject( nanoReader._MET_T1Smear_pt, 0., nanoReader._MET_T1Smear_phi, nanoReader._MET_T1Smear_pt,
+		    nanoReader.is2016(), nanoReader.is2016PreVFP(), nanoReader.is2016PostVFP(),
+		    nanoReader.is2017(), nanoReader.is2018() ),
+    _pt_JECDown(nanoReader._MET_T1Smear_pt_jesTotalDown),
+    _phi_JECDown(nanoReader._MET_T1Smear_phi_jesTotalDown),
+    _pt_JECUp(nanoReader._MET_T1Smear_pt_jesTotalUp),
+    _phi_JECUp(nanoReader._MET_T1Smear_phi_jesTotalUp),
+    _pt_UnclDown(nanoReader._MET_T1Smear_pt_unclustEnDown),
+    _phi_UnclDown(nanoReader._MET_T1Smear_phi_unclustEnDown),
+    _pt_UnclUp(nanoReader._MET_T1Smear_pt_unclustEnUp),
+    _phi_UnclUp(nanoReader._MET_T1Smear_phi_unclustEnUp),
+    _pt_JER1p93Down(nanoReader._MET_T1Smear_pt_jer0Down),
+    _phi_JER1p93Down(nanoReader._MET_T1Smear_phi_jer0Down),
+    _pt_JER1p93Up(nanoReader._MET_T1Smear_pt_jer0Up),
+    _phi_JER1p93Up(nanoReader._MET_T1Smear_phi_jer0Up),
+    _pt_JER2p5Down(nanoReader._MET_T1Smear_pt_jer1Down),
+    _phi_JER2p5Down(nanoReader._MET_T1Smear_phi_jer1Down),
+    _pt_JER2p5Up(nanoReader._MET_T1Smear_pt_jer1Up),
+    _phi_JER2p5Up(nanoReader._MET_T1Smear_phi_jer1Up),
+    _metVariationsInitialized(true),
+    _metJERVariationsInitialized(true)
+{
+    // Smeared MET should be read. 
+    // TODO: not yet supported:
+    if (readAllJECVariations) {
+
+    }
+    if (readGroupedJECVariations) {
+
+    }
+}
 
 Met Met::variedMet( const double pt, const double phi ) const{
     Met variedMet( *this );
@@ -75,6 +109,39 @@ Met Met::MetUnclusteredDown() const{
 Met Met::MetUnclusteredUp() const{
     return variedMet( _pt_UnclUp, _phi_UnclUp );
 }
+
+Met Met::MetJER1p93Down() const {
+    if (! IsMetJERVariationsInitialized()) {
+        std::cerr << "Warning: MET JER Variations are not initialized. Returning nominal MET." << std::endl;
+        return *this;
+    }
+    return variedMet(_pt_JER1p93Down, _phi_JER1p93Down);
+}
+
+Met Met::MetJER1p93Up() const {
+    if (! IsMetJERVariationsInitialized()) {
+        std::cerr << "Warning: MET JER Variations are not initialized. Returning nominal MET." << std::endl;
+        return *this;
+    }
+    return variedMet(_pt_JER1p93Up, _phi_JER1p93Up);
+}
+
+Met Met::MetJER2p5Down() const {
+    if (! IsMetJERVariationsInitialized()) {
+        std::cerr << "Warning: MET JER Variations are not initialized. Returning nominal MET." << std::endl;
+        return *this;
+    }
+    return variedMet(_pt_JER2p5Down, _phi_JER2p5Down);
+}
+
+Met Met::MetJER2p5Up() const {
+    if (! IsMetJERVariationsInitialized()) {
+        std::cerr << "Warning: MET JER Variations are not initialized. Returning nominal MET." << std::endl;
+        return *this;
+    }
+    return variedMet(_pt_JER2p5Up, _phi_JER2p5Up);
+}
+
 
 Met Met::MetJECDown( const std::string source ) const{
     // note: this function checks both all and grouped variations,

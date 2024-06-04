@@ -4,6 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#include <bitset>
 
 //include other parts of framework
 #include "../interface/JetSelector.h"
@@ -79,6 +80,70 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     }
 }
 
+Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex) :
+        // TODO: work with mass for fourvector intialization. Maybe put true/false in physobj constructor
+        PhysicsObject(
+                nanoReader._Jet_pt_nom[jetIndex],
+                nanoReader._Jet_eta[jetIndex],
+                nanoReader._Jet_phi[jetIndex],
+                -1.,
+                nanoReader.is2016(),
+                nanoReader.is2016PreVFP(),
+                nanoReader.is2016PostVFP(),
+                nanoReader.is2017(),
+                nanoReader.is2018()),
+        _deepCSV(nanoReader._Jet_bTagDeepB[jetIndex]),
+        _deepFlavor(nanoReader._Jet_bTagDeepFlavB[jetIndex]),
+        // JEC:
+        _pt_JECDown(nanoReader._Jet_pt_jesTotalDown[jetIndex]),
+        _pt_JECUp(nanoReader._Jet_pt_jesTotalUp[jetIndex]),
+        // _mass_JECDown(nanoReader._Jet_mass_jesTotalDown[jetIndex]),
+        // _mass_JECUp(nanoReader._Jet_mass_jesTotalUp[jetIndex]),
+        // JERs:
+        _pt_JER_1p93_Down(nanoReader._Jet_pt_jer0Down[jetIndex]),
+        _pt_JER_1p93_Up(nanoReader._Jet_pt_jer0Up[jetIndex]),
+        _pt_JER_1p93_To_2p5_Down(nanoReader._Jet_pt_jer1Down[jetIndex]),
+        _pt_JER_1p93_To_2p5_Up(nanoReader._Jet_pt_jer1Down[jetIndex]),
+        // Make sure ignoring mass variations works, if not, add it in!
+        // _mass_JER_1p93_Down(nanoReader._Jet_mass_jer0Down[jetIndex]),
+        // _mass_JER_1p93_Up(nanoReader._Jet_mass_jer0Up[jetIndex]),
+        // _mass_JER_1p93_To_2p5_Down(nanoReader._Jet_mass_jer1Down[jetIndex]),
+        // _mass_JER_1p93_To_2p5_Up(nanoReader._Jet_mass_jer1Up[jetIndex]),
+        _jetJERIndividualVariationsInitialized(true),
+        selector(new JetSelector(this))
+{
+    setLorentzVectorWithMass(pt(), eta(), phi(), nanoReader._Jet_mass_nom[jetIndex]);
+    // set jet hadron flavor, but only for simulation
+    if (nanoReader.containsGeneratorInfo()) {
+        _hadronFlavor = nanoReader._Jet_hadronFlavor[jetIndex];
+    }
+
+    // set jet ID
+    std::bitset<3> jetIdBits = std::bitset<3>(nanoReader._Jet_jetId[jetIndex]);
+    // TODO: haven't tested this, but it should work. If all events dissappear from high njet regions, this is the culprit.
+    _isTight = jetIdBits[1];
+    _isTightLeptonVeto = jetIdBits[2];
+
+    // catch potential invalid values of deepCSV and deepFlavor
+    if (std::isnan(_deepCSV)) {
+        _deepCSV = 0.;
+    } else if (_deepCSV < 0) {
+        _deepCSV = 0.;
+    }
+    if (std::isnan(_deepFlavor)) {
+        _deepFlavor = 0.;
+    } else if (_deepFlavor < 0) {
+        _deepFlavor = 0.;
+    }
+
+    // check that _hadronFlavor has a known value
+    if (!((_hadronFlavor == 0) || (_hadronFlavor == 4) || (_hadronFlavor == 5))) {
+        std::string msg = "ERROR in Jet constructor:";
+        msg += " jet hadronFlavor is " + std::to_string(_hadronFlavor);
+        msg += " while it should be 0, 4 or 5.";
+        throw std::runtime_error(msg);
+    }
+}
 
 Jet::Jet( const Jet& rhs ) : 
     PhysicsObject( rhs ),
@@ -187,15 +252,26 @@ Jet Jet::JetJECUp() const{
 
 
 Jet Jet::JetJERDown() const{
+    if (jetJERIndividualVariationsInitialized()) {
+        if (absEta() <= 1.93) return variedJet( _pt_JER_1p93_Down );
+        if (absEta() > 1.93 && absEta() <= 2.5) return variedJet( _pt_JER_1p93_To_2p5_Down );
+    }
     return variedJet( _pt_JERDown );
 }
 
 
 Jet Jet::JetJERUp() const{
+    if (jetJERIndividualVariationsInitialized()) {
+        if (absEta() <= 1.93) return variedJet( _pt_JER_1p93_Up );
+        if (absEta() > 1.93 && absEta() <= 2.5) return variedJet( _pt_JER_1p93_To_2p5_Up );
+    }
     return variedJet( _pt_JERUp );
 }
 
 Jet Jet::JetJER_1p93_Down() const {
+    if (jetJERIndividualVariationsInitialized()) {
+        return variedJet( _pt_JER_1p93_Down );
+    }
     double newPt = pt();
     if (absEta() <= 1.93) newPt = _pt_JERDown;
 
@@ -203,6 +279,9 @@ Jet Jet::JetJER_1p93_Down() const {
 }
 
 Jet Jet::JetJER_1p93_Up() const {
+    if (jetJERIndividualVariationsInitialized()) {
+        return variedJet( _pt_JER_1p93_Up );
+    }
     double newPt = pt();
     if (absEta() <= 1.93) newPt = _pt_JERUp;
 
@@ -210,6 +289,9 @@ Jet Jet::JetJER_1p93_Up() const {
 }
 
 Jet Jet::JetJER_1p93_To_2p5_Down() const {
+    if (jetJERIndividualVariationsInitialized()) {
+        return variedJet( _pt_JER_1p93_To_2p5_Down );
+    }
     double newPt = pt();
     if (absEta() > 1.93 && absEta() <= 2.5) newPt = _pt_JERDown;
 
@@ -217,6 +299,9 @@ Jet Jet::JetJER_1p93_To_2p5_Down() const {
 }
 
 Jet Jet::JetJER_1p93_To_2p5_Up() const {
+    if (jetJERIndividualVariationsInitialized()) {
+        return variedJet( _pt_JER_1p93_To_2p5_Up );
+    }
     double newPt = pt();
     if (absEta() > 1.93 && absEta() <= 2.5) newPt = _pt_JERUp;
     

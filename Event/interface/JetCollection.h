@@ -24,6 +24,7 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection( const TreeReader&, 
 			const bool readAllJECVariations = false,
 			const bool readGroupedJECVariations = false );
+        JetCollection( const NanoReader& );
 
         //make jet collection with b-tagged jets 
         JetCollection looseBTagCollection() const;

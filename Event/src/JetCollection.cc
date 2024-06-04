@@ -13,6 +13,11 @@ JetCollection::JetCollection( const TreeReader& treeReader,
     }
 }
 
+JetCollection::JetCollection( const NanoReader& nanoReader) {
+    for( unsigned j = 0; j < nanoReader._nJet; ++j ){
+        this->push_back( Jet( nanoReader, j) ); 
+    }
+}
 
 void JetCollection::selectGoodJets(){
     selectObjects( &Jet::isGood );

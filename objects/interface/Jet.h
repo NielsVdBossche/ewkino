@@ -4,12 +4,14 @@
 //include other parts of code 
 #include "PhysicsObject.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 #include "../../Tools/interface/stringTools.h"
 #if JECONRUNTIME
 #include "../../CMSSW_imports/interface/JECWrapper.h"
 #endif
-//#include "JetSelector.h"
 
+// TODO: 
+// - JECs implementation -> add boolean to see if initialized and work based on that?
 
 template< typename objectType > class PhysicsObjectCollection;
 class JetSelector;
@@ -21,6 +23,7 @@ class Jet : public PhysicsObject{
     public:
         Jet( const TreeReader&, const unsigned,
 		const bool readAllJECVariations, const bool readGroupedJECVariations);
+        Jet( const NanoReader&, const unsigned);
 
         Jet( const Jet& );
         Jet( Jet&& ) noexcept;
@@ -53,6 +56,7 @@ class Jet : public PhysicsObject{
         Jet JetJERDown() const;
         Jet JetJERUp() const;
 
+        bool jetJERIndividualVariationsInitialized() const {return _jetJERIndividualVariationsInitialized;};
         Jet JetJER_1p93_Down() const;
         Jet JetJER_1p93_Up() const;
         Jet JetJER_1p93_To_2p5_Down() const;
@@ -92,6 +96,16 @@ class Jet : public PhysicsObject{
         double _pt_JECUp = 0;
         double _pt_JERDown = 0;
         double _pt_JERUp = 0;
+        
+        // JER split in eta:
+        // eta < 1.93
+        double _pt_JER_1p93_Down = 0;
+        double _pt_JER_1p93_Up = 0;
+        // 1.93 < eta < 2.5
+        double _pt_JER_1p93_To_2p5_Down = 0;
+        double _pt_JER_1p93_To_2p5_Up = 0;
+        bool _jetJERIndividualVariationsInitialized = false;
+
 
         std::vector< double > _pt_JECSourcesUp;
         std::vector< double > _pt_JECSourcesDown;

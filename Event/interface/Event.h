@@ -11,13 +11,13 @@
 #include "TriggerInfo.h"
 #include "JetInfo.h"
 #include "EventTags.h"
-#include "SusyMassInfo.h"
 #include "ParticleLevelInfo.h"
 #include "GenParticlesTop.h"
 #include "../../objects/interface/Met.h"
 #include "../../objects/interface/PhysicsObject.h"
 
 class TreeReader;
+class NanoReader;
 class MuonCollection;
 class ElectronCollection;
 class TauCollection;
@@ -38,6 +38,11 @@ class Event {
 		const bool readIndividualMetFilters = false,
 		const bool readAllJECVariations = false,
 		const bool readGroupedJECVariations = false );
+        Event( const NanoReader&, 
+        const bool readIndividualTriggers = false, 
+        const bool readIndividualMetFilters = false,
+        const bool readAllJECVariations = false,
+        const bool readGroupedJECVariations = false);
         Event( const Event& );
         Event( Event&& ) noexcept;
 
@@ -54,7 +59,6 @@ class Event {
 	    JetInfo& jetInfo() const{ return *_jetInfoPtr; }
         EventTags& eventTags() const{ return *_eventTagsPtr; }
         GeneratorInfo& generatorInfo() const;
-        SusyMassInfo& susyMassInfo() const;
 
         LeptonCollection* getLeptonCollectionPtr() const{ return _leptonCollectionPtr; }
         JetCollection* getJetCollectionPtr() const{ return _jetCollectionPtr; }
@@ -121,7 +125,6 @@ class Event {
         LeptonCollection::size_type numberOfElectrons() const{ return _leptonCollectionPtr->numberOfElectrons(); }
         LeptonCollection::size_type numberOfTaus() const{ return _leptonCollectionPtr->numberOfTaus(); }
         LeptonCollection::size_type numberOfLightLeptons() const{ return _leptonCollectionPtr->numberOfLightLeptons(); }
-        void makeSubLeptonCollections();
 
         //remove taus from the lepton collection
         void removeTaus(){ _leptonCollectionPtr->removeTaus(); }
@@ -256,9 +259,9 @@ class Event {
 	    JetInfo* _jetInfoPtr = nullptr;
         EventTags* _eventTagsPtr = nullptr;
         GeneratorInfo* _generatorInfoPtr = nullptr;
-        SusyMassInfo* _susyMassInfoPtr = nullptr;
         unsigned _numberOfVertices = 0;
         double _weight = 1;
+        double _genWeight = 1.;
         const Sample* _samplePtr = nullptr;
         ParticleLevelInfo* _particleLevelInfoPtr = nullptr;
         GenParticlesTop* _genLevelPtr = nullptr;
@@ -285,16 +288,11 @@ class Event {
         bool hasGeneratorInfo() const{ return ( _generatorInfoPtr != nullptr ); }
         void checkGeneratorInfo() const;
 
-        //check the presence of susy information
-        bool hasSusyMassInfo() const{ return ( _susyMassInfoPtr != nullptr ); }
-        void checkSusyMassInfo() const;
-
         // check particle level info
         bool hasPLInfo() const {return (_particleLevelInfoPtr != nullptr); }
         bool hasGenLevelInfo() const {return (_genLevelPtr != nullptr); }
 
-	Event variedLeptonCollectionEvent(
-                    LeptonCollection (LeptonCollection::*variedCollection)() const ) const;
+        Event variedLeptonCollectionEvent( LeptonCollection (LeptonCollection::*variedCollection)() const ) const;
 };
 
 #endif

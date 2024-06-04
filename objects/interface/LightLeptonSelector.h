@@ -9,7 +9,7 @@ class LightLepton;
 class LightLeptonSelector : public LeptonSelector {
 
     public: 
-        LightLepton( const LightLepton& ) : lightLeptonPtr( &LightLepton ) {}
+        LightLepton( const LightLepton* const llPtr ) : lightLeptonPtr( llPtr ) {};
         
         virtual bool isLoose() const override;
         virtual bool isLooseV2() const override;
@@ -17,7 +17,7 @@ class LightLeptonSelector : public LeptonSelector {
         virtual bool isTight() const override;
 
     private:
-        LightLepton* lightLeptonPtr;
+        const LightLepton* const lightLeptonPtr;
 
 };
 

@@ -15,6 +15,7 @@ class EventTags{
 
     public:
         EventTags( const TreeReader& );
+        EventTags( const NanoReader& );
         EventTags( const long unsigned, const long unsigned, const long unsigned );
         EventTags( const std::initializer_list< long unsigned>& );
 

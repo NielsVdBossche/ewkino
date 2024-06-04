@@ -1,6 +1,8 @@
 #ifndef TreeReader_H
 #define TreeReader_H
 
+#include "BaseReader.h"
+
 //include ROOT classes
 #include "TROOT.h"
 #include "TChain.h"
@@ -16,13 +18,17 @@
 
 class Event;
 
+std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
+    TTree* treePtr, const std::vector<std::string> nameIdentifiers, const std::string& antiIdentifier = "");
 
-class TreeReader {
+template <typename T>
+void setMapBranchAddresses(TTree* treePtr, std::map<std::string, T>& variableMap, std::map<std::string, TBranch*> branchMap);
 
+class TreeReader : public BaseReader {
     public :
 
         //Constructor
-        TreeReader() = default;
+        TreeReader();
         TreeReader( const std::string&, const std::string& ); 
 
         //Declare leaf types
@@ -350,78 +356,47 @@ class TreeReader {
         double   _pl_jetE[pl_nJet_max];
         unsigned _pl_jetHadronFlavor[pl_nJet_max];
 
-        //weight including cross section scaling 
-        double          _scaledWeight;
-
         //set up tree for reading and writing
         //always reset triggers instead of rare case of combining primary datasets!
-        void initTree( const bool resetTriggersAndFilters = true);
-        void setOutputTree( TTree* );
-        void setLeanOutputTree( TTree* );
-
-
-        //initialize the next sample
-        void initSample();
-        void initSample(const Sample&);  
-
-        //read sample list from text file
-        void readSamples2016PreVFP(const std::string&, const std::string&);
-        void readSamples2016PostVFP(const std::string&, const std::string&);
-        void readSamples2016(const std::string&, const std::string&); // TODO: make sure not necessary anymore
-        void readSamples2017(const std::string&, const std::string&);
-        void readSamples2018(const std::string&, const std::string&);
-        void readSamples(const std::string& list, const std::string& directory);
-
-        //initialize the current sample directly from a root file
-        //always reset triggers instead of rare case of combining primary datasets
-	// to prevent invalidating addresses set by setOutputTree
-        void initSampleFromFile( const std::string& pathToFile,
-				 const bool is2016, 
-				 const bool is2016PreVFP, 
-				 const bool is2016PostVFP,
-				 const bool is2017, const bool is2018, 
-				 const bool resetTriggersAndFilters = true );
-        void initSampleFromFile( const std::string& pathToFile, 
-				 const bool resetTriggersAndFilters = true );
-
-        //Get entry from Tree, should not be used except for test purposes
-        void GetEntry(const Sample&, long unsigned );
-        void GetEntry(long unsigned );
-        TTree* GetTree() {return _currentTreePtr;}
+        virtual void initTree( const bool resetTriggersAndFilters = true) override;
+        virtual void setOutputTree( TTree* ) override;
 
         //Build event (this will implicitly use GetEntry )
         //Use these functions in analysis code 
-        Event buildEvent( const Sample&, long unsigned, 
+        virtual Event buildEvent( const Sample&, long unsigned, 
 			    const bool readIndividualTriggers = false, 
 			    const bool readIndividualMetFilters = false,
 			    const bool readAllJECVariations = false,
-			    const bool readGroupedJECVariations = false );
+			    const bool readGroupedJECVariations = false ) override;
 
-        Event* buildEventPtr( const Sample&, long unsigned, 
+        virtual Event* buildEventPtr( const Sample&, long unsigned, 
 			    const bool readIndividualTriggers = false, 
 			    const bool readIndividualMetFilters = false,
 			    const bool readAllJECVariations = false,
-			    const bool readGroupedJECVariations = false );
+			    const bool readGroupedJECVariations = false ) override;
 
-        Event buildEvent( long unsigned, 
+        virtual Event buildEvent( long unsigned, 
 			    const bool readIndividualTriggers = false, 
 			    const bool readIndividualMetFilters = false,
 			    const bool readAllJECVariations = false, 
-                            const bool readGroupedJECVariations = false );
+                            const bool readGroupedJECVariations = false ) override;
 
-        Event* buildEventPtr( long unsigned, 
+        virtual Event* buildEventPtr( long unsigned, 
                             const bool readIndividualTriggers = false, 
 			    const bool readIndividualMetFilters = false,
 			    const bool readAllJECVariations = false, 
-                            const bool readGroupedJECVariations = false );
+                            const bool readGroupedJECVariations = false ) override;
         
 
         //check whether generator info is present in current tree
-        bool containsGeneratorInfo() const;
+        virtual bool containsGeneratorInfo() const;
+        virtual bool containsLheInfo() const;
         bool containsFullGeneratorInfo() const;
         bool containsParticleLevelInfo() const;
         bool containsLheInfo() const;
         bool containsEFTInfo() const;
+        virtual bool hasPL() const { return _hasPLInfo;}
+        virtual bool hasGenLvl() const { return _hasGenLevelInfo;}
         
         //check whether SUSY mass info is present in the current sample
 	// ( this is the case for SUSY signal scans )
@@ -430,91 +405,20 @@ class TreeReader {
         //check whether a particular trigger is present 
         bool containsTriggerInfo( const std::string& triggerPath ) const;
 
-        //check which year the current sample belongs to
-        bool is2016() const;
-	bool is2016PreVFP() const;
-	bool is2016PostVFP() const;
-        bool is2017() const;
-        bool is2018() const;
-
-        //check whether the current sample is data or MC, and or signal
-        bool isData() const;
-        bool isMC() const;
-        bool isSMSignal() const;
-        bool isNewPhysicsSignal() const;
-        bool isSusy() const{ return _isSusy; }
-        bool hasPL() const { return _hasPLInfo;}
-        bool hasGenLvl() const { return _hasGenLevelInfo;}
-        bool hasEFT() const { return _hasEFTInfo;}
-
-        //access number of samples and current sample
-        const Sample& currentSample() const{ return *_currentSamplePtr; }
-        const Sample* currentSamplePtr() const{ return _currentSamplePtr.get(); }
-        std::vector< Sample >::size_type numberOfSamples() const{ return samples.size(); }
-        std::vector< Sample > sampleVector() const{ return samples; }
-        void removeBSMSignalSamples();
-        void keepOnlySignalsWithName( const std::string& );
-
-        //access current file and tree 
-        std::shared_ptr< TFile > currentFilePtr(){ return _currentFilePtr; }
-
-        //get object from current file 
-        TObject* getFromCurrentFile( const std::string& name ) const;
-
-        //Get list of histograms stored in current file
-        std::vector< std::shared_ptr< TH1 > > getHistogramsFromCurrentFile() const;
-
-        double getIntLumi() const;
-        unsigned long numberOfEntries() const;
-
-    private:
-
-        //list of samples to loop over 
-        std::vector< Sample > samples;
-        std::vector<Sample> samples2016PreVFP;
-        std::vector<Sample> samples2016PostVFP;
-        std::vector< Sample > samples2016;
-        std::vector< Sample > samples2017;
-        std::vector< Sample > samples2018;
-
-        //current sample
-        std::shared_ptr< const Sample > _currentSamplePtr;
-
-        //TFile associated to current sample
-        std::shared_ptr< TFile > _currentFilePtr;
-
-        //TTree associated to current sample 
-        TTree* _currentTreePtr = nullptr;
-
-        //cache whether current sample is SUSY to avoid having to check the branch names for each event
-        bool _isSusy = false;
-        
+    protected:
         // same for PL info
         bool _hasPLInfo = false;
         bool _hasGenLevelInfo = false;
         bool _hasEFTInfo = false;
 
-        //check whether current sample is initialized, throw an error if it is not 
-        void checkCurrentSample() const;
-
-        //check whether current Tree is initialized, throw an error if it is not 
-        void checkCurrentTree() const;
-
-        //check whether current File is initialized, throw an error if it is not
-        void checkCurrentFile() const;
-
         //current index in samples vector
         int currentSampleIndex = -1;
 
-        //luminosity scaling
-        double scale = 0;
-
-        //some safety-checks for errors 
-        void checkSampleEraConsistency() const; //make sure a sample is not is2016() AND 2017() 
-        void checkEraOrthogonality() const; //make sure no sample from the wrong era is being used (i.e. no 2016 sample in the list of 2017 samples) 
-
         //general function to read a list of samples
-        void readSamples(const std::string&, const std::string&, std::vector<Sample>&);
+        // Methods from baseclass that need to be overridden:
+        virtual double getSumSimulatedEventWeights() override;
+        virtual TTree* getTreePtr() override;
+        virtual double getWeight() override {return _weight;};
 
         //initialize triggerMap
         void initializeTriggerMap( TTree* );

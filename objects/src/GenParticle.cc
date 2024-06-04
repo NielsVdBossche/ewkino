@@ -8,12 +8,30 @@ GenParticle::GenParticle(const TreeReader& treeReader, const unsigned genIndex) 
     _genIsPromptFinalState(treeReader._gen_isPromptFinalState[genIndex]),
     _genIsDirectPromptTauDecayProductFinalState(treeReader._gen_isDirectPromptTauDecayProductFinalState[genIndex]),
     _genIsLastCopy(treeReader._gen_isLastCopy[genIndex]),
-    _genIndex(treeReader._gen_index[genIndex])
+    _genIndex(genIndex)
 { 
     //// initialize array of daughter indices -> Can we exchange these for pointers?
     
 }
 
+GenParticle::GenParticle(const NanoReader& nanoReader, const unsigned genIndex) :
+    PhysicsObject(nanoReader._GenPart_pt[genIndex], nanoReader._GenPart_eta[genIndex], nanoReader._GenPart_phi[genIndex], nanoReader._GenPart_energy[genIndex], nanoReader.is2016(), nanoReader.is2016PreVFP(), nanoReader.is2016PostVFP(), nanoReader.is2017(), nanoReader.is2018()),
+    _genPdgID(nanoReader._GenPart_pdgId[genIndex]),
+    _genStatus(nanoReader._GenPart_status[genIndex]),
+    _genIndex(genIndex)
+{ 
+    //// initialize array of daughter indices -> Can we exchange these for pointers?
+    // TODO: fix PhysicsObject -> lorentzvector from mass instead of energy
+    // get charge from sign of pdgId
+    _genCharge = _genPdgID > 0 ? 1 : -1;
+    // next few lines: use bits to check.
+    // bit 0 == 1: isPromptFinalState
+    _genIsPromptFinalState = _genStatus & 1;
+    // bit 5
+    _genIsDirectPromptTauDecayProductFinalState = _genStatus & (1 << 5);
+    // bit 13
+    _genIsLastCopy = _genStatus & (1 << 13);
+}
 
 void GenParticle::ClearCopies() {
     // recursive 

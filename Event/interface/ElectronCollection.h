@@ -5,6 +5,7 @@
 #include "PhysicsObjectCollection.h"
 #include "../../objects/interface/Electron.h"
 #include "../../TreeReader/interface/TreeReader.h"
+#include "../../TreeReader/interface/NanoReader.h"
 
 class LeptonCollection;
 
@@ -14,6 +15,7 @@ class ElectronCollection : public PhysicsObjectCollection< Electron > {
 
     public:
         ElectronCollection( const TreeReader& );
+        ElectronCollection( const NanoReader& );
     
 	// make varied Electron collections
 	ElectronCollection electronScaleUpCollection() const;

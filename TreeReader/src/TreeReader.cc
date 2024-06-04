@@ -14,120 +14,23 @@
 #include "../../constants/luminosities.h"
 
 // constructor //
-
-TreeReader::TreeReader( const std::string& sampleListFile, const std::string& sampleDirectory ){
-    readSamples( sampleListFile, sampleDirectory );
-
+TreeReader::TreeReader() : BaseReader() {
     _sourcesJEC_Ids = new std::map<std::string, size_t>();
     _groupedJEC_Ids = new std::map<std::string, size_t>();
 }
 
-
-// functions for sample reading //
-
-void TreeReader::readSamples( const std::string& list, 
-			      const std::string& directory, 
-			      std::vector<Sample>& sampleVector ){
-
-    //clean current sample list 
-    sampleVector.clear();
-
-    //read list of samples from file
-    sampleVector = readSampleList(list, directory);
-
-    //print sample information
-    for(auto& sample : sampleVector){
-        std::cout << "sample: " << sample << std::endl;
-    }
+TreeReader::TreeReader( const std::string& sampleListFile, const std::string& sampleDirectory ) :
+    BaseReader( sampleListFile, sampleDirectory )
+{
+    _sourcesJEC_Ids = new std::map<std::string, size_t>();
+    _groupedJEC_Ids = new std::map<std::string, size_t>();
 }
-
-
-void TreeReader::readSamples( const std::string& list, const std::string& directory ){
-    readSamples( list, directory, this->samples );
-}
-
-void TreeReader::readSamples2016PreVFP( const std::string& list, const std::string& directory ){
-    std::cout << "########################################" << std::endl;
-    std::cout << "         2016 PreVFP samples            " << std::endl;
-    std::cout << "########################################" << std::endl;
-
-    readSamples( list, directory, this->samples2016PreVFP );
-
-    //add the 2016 samples to the total sample list 
-    this->samples.insert( samples.end(), samples2016PreVFP.begin(), samples2016PreVFP.end() );
-
-    //check for errors
-    checkSampleEraConsistency();
-}
-
-void TreeReader::readSamples2016PostVFP( const std::string& list, const std::string& directory ){
-    std::cout << "########################################" << std::endl;
-    std::cout << "         2016 PostVFP samples           " << std::endl;
-    std::cout << "########################################" << std::endl;
-
-    readSamples( list, directory, this->samples2016PostVFP );
-
-    //add the 2016 samples to the total sample list 
-    this->samples.insert( samples.end(), samples2016PostVFP.begin(), samples2016PostVFP.end() );
-
-    //check for errors
-    checkSampleEraConsistency();
-}
-
-void TreeReader::readSamples2016( const std::string& list, const std::string& directory ){
-    // note: not yet updated to UL files, use with caution
-    std::cout << "########################################" << std::endl;
-    std::cout << "         2016 samples                   " << std::endl;
-    std::cout << "########################################" << std::endl;
-
-    readSamples( list, directory, this->samples2016 );
-
-    //add the 2016 samples to the total sample list 
-    this->samples.insert( samples.end(), samples2016.begin(), samples2016.end() );
-
-    //check for errors
-    checkSampleEraConsistency();
-}
-
-
-void TreeReader::readSamples2017( const std::string& list, const std::string& directory ){
-    // note: not yet updated to UL files, use with caution
-    std::cout << "########################################" << std::endl;
-    std::cout << "         2017 samples                   " << std::endl;
-    std::cout << "########################################" << std::endl;
-
-    readSamples( list, directory, this->samples2017 );
-
-    //add the 2017 samples to the total sample list
-    this->samples.insert( samples.end(), samples2017.begin(), samples2017.end() );
-
-    //check for errors 
-    checkSampleEraConsistency();
-}
-
-
-void TreeReader::readSamples2018( const std::string& list, const std::string& directory ){
-    // note: not yet updated to UL files, use with caution
-    std::cout << "########################################" << std::endl;
-    std::cout << "         2018 samples                   " << std::endl;
-    std::cout << "########################################" << std::endl;
-
-    readSamples( list, directory, this->samples2018 );
-
-    //add the 2018 samples to the total sample list
-    this->samples.insert( samples.end(), samples2018.begin(), samples2018.end() );
-
-    //check for errors 
-    checkSampleEraConsistency();
-}
-
 
 // functions for initializing maps of branches rather than hard-coded names //
-
 std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
     TTree* treePtr,
     const std::vector<std::string> nameIdentifiers,
-    const std::string& antiIdentifier = "") {
+    const std::string& antiIdentifier) {
     // build a map of branches from a given tree
     // all branches whose name contains nameIdentifier and not antiIdentifier will be added
     // the return type is a pair of two objects:
@@ -293,20 +196,7 @@ void TreeReader::initializeJecSourcesGroupedMaps(TTree* treePtr) {
     _corrMETy_JECGroupedDown = std::vector<double>(_corrMETy_JECGroupedDown_Ids.size());
 }
 
-// functions to find if a tree has branches with certain types of info //
-
-bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind ){
-    TObjArray* branch_list = treePtr->GetListOfBranches();
-    for( const auto& branchPtr : *branch_list ){
-	std::string branchName = branchPtr->GetName();
-	    if( stringTools::stringContains( branchName, nameToFind ) ){
-		return true;
-	    }
-    }
-    return false;
-}
-
-
+// functions to find if a tree has branches with certain types of info 
 bool TreeReader::containsGeneratorInfo() const{
     return treeHasBranchWithName( _currentTreePtr, "_gen_" );
 }
@@ -337,221 +227,19 @@ bool TreeReader::containsTriggerInfo( const std::string& triggerPath ) const{
 }
 
 
-bool TreeReader::isData() const{
-    if( _currentSamplePtr ) return _currentSamplePtr->isData();
-    else return !containsGeneratorInfo();
+double TreeReader::getSumSimulatedEventWeights() {
+    //read sum of simulated event weights
+    TH1D* hCounter = new TH1D( "hCounter", "Events counter", 1, 0, 1 );
+    _currentFilePtr->cd( "blackJackAndHookers" );
+    hCounter->Read( "hCounter" ); 
+    double sumSimulatedEventWeights = hCounter->GetBinContent(1);
+    delete hCounter;
+    return sumSimulatedEventWeights;
 }
 
-
-bool TreeReader::isMC() const{
-    return !isData();
+TTree* TreeReader::getTreePtr() {
+    return (TTree*) _currentFilePtr->Get( "blackJackAndHookers/blackJackAndHookersTree" );
 }
-
-
-void TreeReader::checkCurrentSample() const{
-    if( !_currentSamplePtr ){
-        throw std::domain_error( "pointer to current Sample is nullptr." );
-    }
-}
-
-
-void TreeReader::checkCurrentTree() const{
-    if( !_currentTreePtr ){
-        throw std::domain_error( "pointer to current TTree is nullptr." );
-    }
-}
-
-
-void TreeReader::checkCurrentFile() const{
-    if( !_currentFilePtr ){
-	throw std::domain_error( "pointer to current TFile is nullptr." );
-    }
-}
-
-bool TreeReader::is2016PreVFP() const{
-    checkCurrentSample();
-    return _currentSamplePtr->is2016PreVFP();
-}
-
-bool TreeReader::is2016PostVFP() const{
-    checkCurrentSample();
-    return _currentSamplePtr->is2016PostVFP();
-}
-
-bool TreeReader::is2016() const{
-    checkCurrentSample();
-    return _currentSamplePtr->is2016PreVFP() || _currentSamplePtr->is2016PostVFP() || _currentSamplePtr->is2016();
-}
-
-bool TreeReader::is2017() const{
-    checkCurrentSample();
-    return _currentSamplePtr->is2017();
-}
-
-
-bool TreeReader::is2018() const{
-    checkCurrentSample();
-    return _currentSamplePtr->is2018();
-}
-
-
-bool TreeReader::isSMSignal() const{
-    checkCurrentSample();
-    return _currentSamplePtr->isSMSignal();
-}
-
-
-bool TreeReader::isNewPhysicsSignal() const{
-    checkCurrentSample();
-    return _currentSamplePtr->isNewPhysicsSignal();
-}
-
-
-long unsigned TreeReader::numberOfEntries() const{
-    checkCurrentTree();
-    return _currentTreePtr->GetEntries();
-}
-
-
-void TreeReader::initSample( const Sample& samp ){ 
-
-    //update current sample
-    // old comment from Willem:
-    // "I wonder if the extra copy can be avoided here, 
-    // its however hard if we want to keep the functionality of reading the sample vector, 
-    // and also having the function initSampleFromFile. 
-    // It's not clear how we can make a new sample in one of them 
-    // and refer to an existing one in the other. 
-    // It can be done with a static Sample in 'initSampleFromFile', 
-    // but this makes the entire TreeReader class unthreadsafe, 
-    // so no parallel sample processing in one process can be done"
-    _currentSamplePtr = std::make_shared< Sample >( samp );
-    _currentFilePtr = samp.filePtr();
-
-    // old comment from Willem:
-    // "Warning: this pointer is overwritten, but it is not a memory leak. 
-    // ROOT is dirty and deletes the previous tree upon closure of the TFile it belongs to.
-    // The previous TFile is closed by the std::shared_ptr destructor, 
-    // implicitly called above when opening a new TFile."
-    _currentTreePtr = (TTree*) _currentFilePtr->Get( "blackJackAndHookers/blackJackAndHookersTree" );
-    checkCurrentTree();
-    initTree();
-    if( !samp.isData() ){
-
-        //read sum of simulated event weights
-        TH1D* hCounter = new TH1D( "hCounter", "Events counter", 1, 0, 1 );
-        _currentFilePtr->cd( "blackJackAndHookers" );
-        hCounter->Read( "hCounter" ); 
-        double sumSimulatedEventWeights = hCounter->GetBinContent(1);
-        delete hCounter;
-
-        //event weights set with lumi depending on sample's era 
-        double dataLumi;
-        //if( is2016() ){ dataLumi = lumi::lumi2016; } 
-        if( is2016PreVFP() ){ dataLumi = lumi::lumi2016PreVFP; }
-        else if( is2016PostVFP() ){ dataLumi = lumi::lumi2016PostVFP; }
-        else if( is2017() ){ dataLumi = lumi::lumi2017; } 
-        else { dataLumi = lumi::lumi2018; }
-        scale = samp.xSec()*dataLumi*1000 / sumSimulatedEventWeights;
-    }
-
-    //check whether current sample is a SUSY sample
-    _isSusy = containsSusyMassInfo();
-}
-
-
-//initialize the next sample in the list
-void TreeReader::initSample(){
-    initSample( samples[ ++currentSampleIndex ] );
-}
-
-
-//initialize the current Sample directly from a root file, this is used when skimming
-void TreeReader::initSampleFromFile( const std::string& pathToFile, 
-				     const bool is2016, 
-				     const bool is2016PreVFP,
-				     const bool is2016PostVFP,
-				     const bool is2017, 
-				     const bool is2018, 
-				     const bool resetTriggersAndFilters ){
-
-    // check if file exists 
-    if( !systemTools::fileExists( pathToFile ) ){
-        throw std::invalid_argument( "File '" + pathToFile + "' does not exist." );
-    }
-
-    _currentFilePtr = std::shared_ptr< TFile >( new TFile( pathToFile.c_str() ) );
-
-    // check year
-    if( !(is2016 || is2016PreVFP || is2016PostVFP || is2017 || is2018 ) ){
-	std::string msg = "ERROR in TreeReader::initSampleFromFile:";
-	msg += " no valid year was given for sample ";
-	msg += pathToFile;
-	throw std::runtime_error(msg);
-    }
-
-    // old comment from Willem:
-    // "Warning: this pointer is overwritten, but it is not a memory leak. 
-    // ROOT is dirty and deletes the previous tree upon closure of the TFile it belongs to.
-    // The previous TFile is closed by the std::shared_ptr destructor, 
-    // implicitly called above when opening a new TFile."
-    _currentTreePtr = (TTree*) _currentFilePtr->Get( "blackJackAndHookers/blackJackAndHookersTree" );
-    checkCurrentTree();
-
-    // make a new sample, and make sure the pointer remains valid
-    // old comment from Willem:
-    // "new is no option here since this would also require a destructor for the class, 
-    // which does not work for the other initSample case"
-    _currentSamplePtr = std::make_shared< Sample >( pathToFile, is2016, is2016PreVFP,
-			    is2016PostVFP, is2017, is2018, isData() );
-
-    //initialize tree
-    if (_groupedJEC_Ids == nullptr) {
-        _sourcesJEC_Ids = new std::map<std::string, size_t>();
-        _groupedJEC_Ids = new std::map<std::string, size_t>();
-    }
-    initTree( resetTriggersAndFilters );
-
-    //check whether current sample is a SUSY sample
-    _isSusy = containsSusyMassInfo();
-
-    //set scale so weights don't become 0 when building the event
-    scale = 1.;
-}
-
-
-//automatically determine whether sample is 2017 or 2018 from file name 
-void TreeReader::initSampleFromFile( const std::string& pathToFile, 
-				     const bool resetTriggersAndFilters ){
-    bool is2016 = analysisTools::fileIs2016( pathToFile );
-    bool is2016PreVFP = analysisTools::fileIs2016PreVFP( pathToFile );
-    bool is2016PostVFP = analysisTools::fileIs2016PostVFP( pathToFile );
-    bool is2017 = analysisTools::fileIs2017( pathToFile );
-    bool is2018 = analysisTools::fileIs2018( pathToFile );
-    initSampleFromFile( pathToFile, is2016, is2016PreVFP, is2016PostVFP, is2017, is2018, 
-			resetTriggersAndFilters );
-}
-
-
-void TreeReader::GetEntry( const Sample& samp, long unsigned entry ){
-    checkCurrentTree();
-
-    _currentTreePtr->GetEntry( entry );
-
-    //Set up correct event weight
-    if( !samp.isData() ){
-        _scaledWeight = _weight*scale;
-    } else{
-        _scaledWeight = 1;
-    }
-}
-
-
-//use the currently initialized sample when running in serial
-void TreeReader::GetEntry( long unsigned entry ){
-    GetEntry( *_currentSamplePtr, entry );
-}
-
 
 Event TreeReader::buildEvent( const Sample& samp, long unsigned entry, 
 	const bool readIndividualTriggers, const bool readIndividualMetFilters,
@@ -585,11 +273,12 @@ Event* TreeReader::buildEventPtr( long unsigned entry,
 			readAllJECVariations, readGroupedJECVariations );
 }
 
-template< typename T > void setMapBranchAddresses( TTree* treePtr, 
-	std::map< std::string, T >& variableMap, 
-	std::map< std::string, TBranch* > branchMap ){
-    for( const auto& variable : variableMap ){
-        treePtr->SetBranchAddress( variable.first.c_str(), &variableMap[ variable.first ], &branchMap[ variable.first ] );
+template <typename T>
+void setMapBranchAddresses(TTree* treePtr,
+                           std::map<std::string, T>& variableMap,
+                           std::map<std::string, TBranch*> branchMap) {
+    for (const auto& variable : variableMap) {
+        treePtr->SetBranchAddress(variable.first.c_str(), &variableMap[variable.first], &branchMap[variable.first]);
     }
 }
 
@@ -628,7 +317,6 @@ template< typename T> void setMapOutputBranchesWithVectors( TTree* treePtr,
 
 
 void TreeReader::initTree( const bool resetTriggersAndFilters ){
-
     // Set branch addresses and branch pointers
     checkCurrentTree();
     _hasPLInfo = false;
@@ -1244,235 +932,4 @@ void TreeReader::setOutputTree( TTree* outputTree ){
     setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETx_JECGroupedDown, "/D", "_corrMETx_", "_JECGroupedDown" );
     setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedUp, "/D", "_corrMETy_", "_JECGroupedUp" );
     setMapOutputBranchesWithVectors( outputTree, *_groupedJEC_Ids, _corrMETy_JECGroupedDown, "/D", "_corrMETy_", "_JECGroupedDown" );
-}
-
-void TreeReader::setLeanOutputTree( TTree* outputTree ){
-    outputTree->Branch("_runNb",                        &_runNb,                        "_runNb/l");
-    outputTree->Branch("_lumiBlock",                    &_lumiBlock,                    "_lumiBlock/l");
-    outputTree->Branch("_eventNb",                      &_eventNb,                      "_eventNb/l");
-    outputTree->Branch("_nVertex",                      &_nVertex,                      "_nVertex/i");
-    outputTree->Branch("_met",                          &_met,                          "_met/D");
-    outputTree->Branch("_metPhi",                       &_metPhi,                       "_metPhi/D");
-    outputTree->Branch("_passTrigger_e", &_passTrigger_e, "_passTrigger_e/O");
-    outputTree->Branch("_passTrigger_ee", &_passTrigger_ee, "_passTrigger_ee/O");
-    outputTree->Branch("_passTrigger_eee", &_passTrigger_eee, "_passTrigger_eee/O");
-    outputTree->Branch("_passTrigger_em", &_passTrigger_em, "_passTrigger_em/O");
-    outputTree->Branch("_passTrigger_m", &_passTrigger_m, "_passTrigger_m/O");
-    outputTree->Branch("_passTrigger_eem", &_passTrigger_eem, "_passTrigger_eem/O");
-    outputTree->Branch("_passTrigger_mm", &_passTrigger_mm, "_passTrigger_mm/O");
-    outputTree->Branch("_passTrigger_emm", &_passTrigger_emm, "_passTrigger_emm/O");
-    outputTree->Branch("_passTrigger_mmm", &_passTrigger_mmm, "_passTrigger_mmm/O");
-    outputTree->Branch("_passTrigger_et", &_passTrigger_et, "_passTrigger_et/O");
-    outputTree->Branch("_passTrigger_mt", &_passTrigger_mt, "_passTrigger_mt/O");
-    outputTree->Branch("_passTrigger_FR", &_passTrigger_FR, "_passTrigger_FR/O");
-    outputTree->Branch("_passTrigger_FR_iso", &_passTrigger_FR_iso, "_passTrigger_FR_iso/O");
-    outputTree->Branch("_passMETFilters", &_passMETFilters, "_passMETFilters/O");
-    outputTree->Branch("_nL",                           &_nL,                           "_nL/i");
-    outputTree->Branch("_nMu",                          &_nMu,                          "_nMu/i");
-    outputTree->Branch("_nEle",                         &_nEle,                         "_nEle/i");
-    outputTree->Branch("_nLight",                       &_nLight,                       "_nLight/i");
-    outputTree->Branch("_nTau",                         &_nTau,                         "_nTau/i");
-    outputTree->Branch("_lPt",                          &_lPt,                          "_lPt[_nL]/D");
-    outputTree->Branch("_lPtCorr",                      &_lPtCorr,                      "_lPtCorr[_nLight]/D");
-    outputTree->Branch("_lEta",                         &_lEta,                         "_lEta[_nL]/D");
-    outputTree->Branch("_lEtaSC",                       &_lEtaSC,                       "_lEtaSC[_nLight]/D");
-    outputTree->Branch("_lPhi",                         &_lPhi,                         "_lPhi[_nL]/D");
-    outputTree->Branch("_lE",                           &_lE,                           "_lE[_nL]/D");
-    outputTree->Branch("_lECorr",                       &_lECorr,                       "_lECorr[_nLight]/D");
-    outputTree->Branch("_lFlavor",                      &_lFlavor,                      "_lFlavor[_nL]/i");
-    outputTree->Branch("_lCharge",                      &_lCharge,                      "_lCharge[_nL]/I");
-    outputTree->Branch("_dxy",                          &_dxy,                          "_dxy[_nL]/D");
-    outputTree->Branch("_dz",                           &_dz,                           "_dz[_nL]/D");
-    outputTree->Branch("_3dIP",                         &_3dIP,                         "_3dIP[_nL]/D");
-    outputTree->Branch("_3dIPSig",                      &_3dIPSig,                      "_3dIPSig[_nL]/D");
-    outputTree->Branch("_lElectronSummer16MvaGP",       &_lElectronSummer16MvaGP,       "_lElectronSummer16MvaGP[_nLight]/F");
-    outputTree->Branch("_lElectronSummer16MvaHZZ",      &_lElectronSummer16MvaHZZ,      "_lElectronSummer16MvaHZZ[_nLight]/F");
-    outputTree->Branch("_lElectronMvaFall17Iso",        &_lElectronMvaFall17Iso,        "_lElectronMvaFall17Iso[_nLight]/F");
-    outputTree->Branch("_lElectronMvaFall17NoIso",      &_lElectronMvaFall17NoIso,      "_lElectronMvaFall17NoIso[_nLight]/F");
-    outputTree->Branch("_lElectronPassMVAFall17NoIsoWPLoose", &_lElectronPassMVAFall17NoIsoWPLoose, "_lElectronPassMVAFall17NoIsoWPLoose[_nLight]/O");
-    outputTree->Branch("_lElectronPassMVAFall17NoIsoWP90", &_lElectronPassMVAFall17NoIsoWP90, "_lElectronPassMVAFall17NoIsoWP90[_nLight]/O");
-    outputTree->Branch("_lElectronPassMVAFall17NoIsoWP80", &_lElectronPassMVAFall17NoIsoWP80, "_lElectronPassMVAFall17NoIsoWP80[_nLight]/O");
-    outputTree->Branch("_lElectronPassEmu",             &_lElectronPassEmu,             "_lElectronPassEmu[_nLight]/O");
-    outputTree->Branch("_lElectronPassConvVeto",        &_lElectronPassConvVeto,        "_lElectronPassConvVeto[_nLight]/O");
-    outputTree->Branch("_lElectronChargeConst",         &_lElectronChargeConst,         "_lElectronChargeConst[_nLight]/O");
-    outputTree->Branch("_lElectronMissingHits",         &_lElectronMissingHits,         "_lElectronMissingHits[_nLight]/i");
-    outputTree->Branch("_lElectronEInvMinusPInv",       &_lElectronEInvMinusPInv,       "_lElectronEInvMinusPInv[_nLight]/D");
-    outputTree->Branch("_lElectronHOverE",              &_lElectronHOverE,              "_lElectronHOverE[_nLight]/D");
-    outputTree->Branch("_lElectronSigmaIetaIeta",       &_lElectronSigmaIetaIeta,       "_lElectronSigmaIetaIeta[_nLight]/D");
-    outputTree->Branch("_leptonMvaTOP",                 &_leptonMvaTOP,                 "_leptonMvaTOP[_nLight]/D");
-    outputTree->Branch("_leptonMvaTOPUL",               &_leptonMvaTOPUL,               "_leptonMvaTOPUL[_nLight]/D");
-    outputTree->Branch("_leptonMvaTOPv2UL",             &_leptonMvaTOPULv2,             "_leptonMvaTOPv2UL[_nLight]/D");
-    outputTree->Branch("_lPOGVeto",                     &_lPOGVeto,                     "_lPOGVeto[_nL]/O");
-    outputTree->Branch("_lPOGLoose",                    &_lPOGLoose,                    "_lPOGLoose[_nL]/O");
-    outputTree->Branch("_lPOGMedium",                   &_lPOGMedium,                   "_lPOGMedium[_nL]/O");
-    outputTree->Branch("_lPOGTight",                    &_lPOGTight,                    "_lPOGTight[_nL]/O");
-    outputTree->Branch("_relIso",                       &_relIso,                       "_relIso[_nLight]/D");
-    outputTree->Branch("_relIso0p4",                    &_relIso0p4,                    "_relIso0p4[_nLight]/D");
-    outputTree->Branch("_relIso0p4MuDeltaBeta",         &_relIso0p4MuDeltaBeta,         "_relIso0p4MuDeltaBeta[_nMu]/D");
-    outputTree->Branch("_miniIso",                      &_miniIso,                      "_miniIso[_nLight]/D");
-    outputTree->Branch("_miniIsoCharged",               &_miniIsoCharged,               "_miniIsoCharged[_nLight]/D");
-    outputTree->Branch("_ptRel",                        &_ptRel,                        "_ptRel[_nLight]/D");
-    outputTree->Branch("_ptRatio",                      &_ptRatio,                      "_ptRatio[_nLight]/D");
-	outputTree->Branch("_closestJetDeepFlavor_b",       &_closestJetDeepFlavor_b,       "_closestJetDeepFlavor_b[_nLight]/D");
-    outputTree->Branch("_closestJetDeepFlavor_bb",      &_closestJetDeepFlavor_bb,      "_closestJetDeepFlavor_bb[_nLight]/D");
-    outputTree->Branch("_closestJetDeepFlavor_lepb",    &_closestJetDeepFlavor_lepb,    "_closestJetDeepFlavor_lepb[_nLight]/D");
-    outputTree->Branch("_selectedTrackMult",            &_selectedTrackMult,            "_selectedTrackMult[_nLight]/i");
-    outputTree->Branch("_lMuonSegComp",                 &_lMuonSegComp,                 "_lMuonSegComp[_nMu]/D");
-    outputTree->Branch("_lMuonTrackPt",                 &_lMuonTrackPt,                 "_lMuonTrackPt[_nMu]/D");
-    outputTree->Branch("_lMuonTrackPtErr",              &_lMuonTrackPtErr,              "_lMuonTrackPtErr[_nMu]/D");
-    outputTree->Branch("_nJets",                     &_nJets,                    "_nJets/i");
-    outputTree->Branch("_jetPt",                     &_jetPt,                    "_jetPt[_nJets]/D");
-    outputTree->Branch("_jetSmearedPt",              &_jetSmearedPt,             "_jetSmearedPt[_nJets]/D");
-    outputTree->Branch("_jetEta",                    &_jetEta,                   "_jetEta[_nJets]/D");
-    outputTree->Branch("_jetPhi",                    &_jetPhi,                   "_jetPhi[_nJets]/D");
-    outputTree->Branch("_jetE",                      &_jetE,                     "_jetE[_nJets]/D");
-    outputTree->Branch("_jetPt_Uncorrected",         &_jetPt_Uncorrected,        "_jetPt_Uncorrected[_nJets]/D");
-    outputTree->Branch("_jetPt_L1",                  &_jetPt_L1,                 "_jetPt_L1[_nJets]/D");
-    outputTree->Branch("_jetPt_L2",                  &_jetPt_L2,                 "_jetPt_L2[_nJets]/D");
-    outputTree->Branch("_jetPt_L3",                  &_jetPt_L3,                 "_jetPt_L3[_nJets]/D");
-    outputTree->Branch("_jetCsvV2",                  &_jetCsvV2,                 "_jetCsvV2[_nJets]/D");
-	outputTree->Branch("_jetDeepFlavor_b",           &_jetDeepFlavor_b,          "_jetDeepFlavor_b[_nJets]/D");
-    outputTree->Branch("_jetDeepFlavor_bb",          &_jetDeepFlavor_bb,         "_jetDeepFlavor_bb[_nJets]/D");
-    outputTree->Branch("_jetDeepFlavor_lepb",        &_jetDeepFlavor_lepb,       "_jetDeepFlavor_lepb[_nJets]/D");
-    outputTree->Branch("_jetHadronFlavor",           &_jetHadronFlavor,          "_jetHadronFlavor[_nJets]/i");
-    outputTree->Branch("_jetIsTight",                &_jetIsTight,               "_jetIsTight[_nJets]/O");
-    outputTree->Branch("_jetIsTightLepVeto",         &_jetIsTightLepVeto,        "_jetIsTightLepVeto[_nJets]/O");
-    outputTree->Branch("_jetNeutralHadronFraction",  &_jetNeutralHadronFraction, "_jetNeutralHadronFraction[_nJets]/D");
-    outputTree->Branch("_jetChargedHadronFraction",  &_jetChargedHadronFraction, "_jetChargedHadronFraction[_nJets]/D");
-    outputTree->Branch("_jetNeutralEmFraction",      &_jetNeutralEmFraction,     "_jetNeutralEmFraction[_nJets]/D");
-    outputTree->Branch("_jetChargedEmFraction",      &_jetChargedEmFraction,     "_jetChargedEmFraction[_nJets]/D");
-    outputTree->Branch("_jetHFHadronFraction",       &_jetHFHadronFraction,      "_jetHFHadronFraction[_nJets]/D");
-    outputTree->Branch("_jetHFEmFraction",           &_jetHFEmFraction,          "_jetHFEmFraction[_nJets]/D");
-
-
-    if( containsGeneratorInfo() ){
-        outputTree->Branch("_nLheWeights",               &_nLheWeights,               "_nLheWeights/i");
-        outputTree->Branch("_lheWeight",                 &_lheWeight,                 "_lheWeight[_nLheWeights]/D");
-        outputTree->Branch("_weight",                    &_weight,                    "_weight/D");
-        outputTree->Branch("_nPsWeights",                &_nPsWeights,                "_nPsWeights/i");
-        outputTree->Branch("_psWeight",                  &_psWeight,                  "_psWeight[_nPsWeights]/D");
-        outputTree->Branch("_nTrueInt",                  &_nTrueInt,                  "_nTrueInt/F");
-        outputTree->Branch("_lheHTIncoming",             &_lheHTIncoming,             "_lheHTIncoming/D");
-        outputTree->Branch("_lIsPrompt",                 &_lIsPrompt,                 "_lIsPrompt[_nL]/O");
-        outputTree->Branch("_lMatchPdgId",               &_lMatchPdgId,               "_lMatchPdgId[_nL]/I");
-        outputTree->Branch("_lMatchCharge",              &_lMatchCharge,              "_lMatchCharge[_nL]/I");
-        outputTree->Branch("_lMomPdgId",                 &_lMomPdgId,                 "_lMomPdgId[_nL]/I");
-        outputTree->Branch("_lProvenance",               &_lProvenance,               "_lProvenance[_nL]/i");
-        outputTree->Branch("_lProvenanceCompressed",     &_lProvenanceCompressed,     "_lProvenanceCompressed[_nL]/i");
-        outputTree->Branch("_lProvenanceConversion",     &_lProvenanceConversion,     "_lProvenanceConversion[_nL]/i");
-        outputTree->Branch("_gen_met",                   &_gen_met,                   "_gen_met/D");
-        outputTree->Branch("_gen_metPhi",                &_gen_metPhi,                "_gen_metPhi/D");
-        outputTree->Branch("_gen_nL",                    &_gen_nL,                    "_gen_nL/i");
-        outputTree->Branch("_gen_lPt",                   &_gen_lPt,                   "_gen_lPt[_gen_nL]/D");
-        outputTree->Branch("_gen_lEta",                  &_gen_lEta,                  "_gen_lEta[_gen_nL]/D");
-        outputTree->Branch("_gen_lPhi",                  &_gen_lPhi,                  "_gen_lPhi[_gen_nL]/D");
-        outputTree->Branch("_gen_lE",                    &_gen_lE,                    "_gen_lE[_gen_nL]/D");
-        outputTree->Branch("_gen_lFlavor",               &_gen_lFlavor,               "_gen_lFlavor[_gen_nL]/i");
-        outputTree->Branch("_gen_lCharge",               &_gen_lCharge,               "_gen_lCharge[_gen_nL]/I");
-        outputTree->Branch("_gen_lMomPdg",               &_gen_lMomPdg,               "_gen_lMomPdg[_gen_nL]/I");
-        outputTree->Branch("_gen_lIsPrompt",             &_gen_lIsPrompt,             "_gen_lIsPrompt[_gen_nL]/O");
-        outputTree->Branch("_ttgEventType",              &_ttgEventType,              "_ttgEventType/i");
-        outputTree->Branch("_zgEventType",               &_zgEventType,               "_zgEventType/i");
-    }
-    
-    if (containsLheInfo()) {
-        outputTree->Branch("_nLheTau",                   &_nLheTau,                   "_nLheTau/i");
-        outputTree->Branch("_nLheParticles",             &_nLheParticles,             "_nLheParticles/i");
-        outputTree->Branch("_lheStatus",                 &_lheStatus,                 "_lheStatus[_nLheParticles]/I");
-        outputTree->Branch("_lhePdgId",                  &_lhePdgId,                  "_lhePdgId[_nLheParticles]/I");
-        outputTree->Branch("_lheMother1",                &_lheMother1,                "_lheMother1[_nLheParticles]/I");
-        outputTree->Branch("_lheMother2",                &_lheMother2,                "_lheMother2[_nLheParticles]/I");
-        outputTree->Branch("_lhePt",                     &_lhePt,                     "_lhePt[_nLheParticles]/F");
-        outputTree->Branch("_lheEta",                    &_lheEta,                    "_lheEta[_nLheParticles]/F");
-        outputTree->Branch("_lhePhi",                    &_lhePhi,                    "_lhePhi[_nLheParticles]/F");
-        outputTree->Branch("_lheE",                      &_lheE,                      "_lheE[_nLheParticles]/F");
-        outputTree->Branch("_lheMass",                   &_lheMass,                   "_lheMass[_nLheParticles]/F");
-    }
-}
-
-
-//get object from current file 
-TObject* TreeReader::getFromCurrentFile( const std::string& name ) const{
-    checkCurrentFile();
-    return _currentFilePtr->Get( name.c_str() );
-}
-
-
-//Get list of histograms stored in current file
-std::vector< std::shared_ptr< TH1 > > TreeReader::getHistogramsFromCurrentFile() const{
-
-    checkCurrentFile();
-
-    //vector containing all histograms in current file
-    std::vector< std::shared_ptr< TH1 > > histogramVector;
-
-    //loop over keys in blackJackAndHookers directory
-    // old comment from Willem:
-    // "this directory gets implicitly deleted by root when the current root file gets deleted. 
-    // This can NOT be a shared_ptr since this directory will also make the root file inaccessible 
-    // upon deletion (DIRTY ROOT!!!)"
-    TDirectory* dir = (TDirectory*) _currentFilePtr->Get("blackJackAndHookers");
-    // old comment from Willem:
-    // "this is not a memory leak since this object will implicitly be deleted 
-    // when 'dir' gets deleted (DIRTY ROOT!!!)"
-    TList* keyList = dir->GetListOfKeys();
-
-    for( const auto objectPtr : *keyList ){
-
-	//try if a dynamic_cast to a histogram works to check if object is histogram
-	TH1* histPtr = dynamic_cast< TH1* >( dir->Get( objectPtr->GetName() ) );
-	if( histPtr ){
-            //make sure histograms don't get deleted by root upon deletion of TDirectory above
-            histPtr->SetDirectory( gROOT );
-	    histogramVector.emplace_back( histPtr );
-	}
-    }
-    return histogramVector;
-}
-
-
-void TreeReader::removeBSMSignalSamples(){
-    // remove some samples from the SampleVector of this TreeReader
-    // WARNING: the SampleVector is modified in-place.
-    // WARNING: might be analysis-specific (for ewkino), check isNewPhysicsSignal()
-    for( auto it = samples.begin(); it != samples.end(); ){
-        if( it->isNewPhysicsSignal() ){
-            it = samples.erase( it );
-        } else ++it;
-    }
-}
-
-
-void TreeReader::keepOnlySignalsWithName( const std::string& signalName ){
-    // remove some samples from the SampleVector of this TreeReader
-    // WARNING: the SampleVector is modified in-place.
-    // WARNING: might be analysis-specific (for ewkino), check isNewPhysicsSignal()
-    for( auto it = samples.begin(); it != samples.end(); ){
-        if( it->isNewPhysicsSignal() && it->processName() != signalName ){
-            it = samples.erase( it );
-        } else ++it;
-    }
-}
-
-double TreeReader::getIntLumi() const {
-    bool y2016Pre = false;
-    bool y2016Post = false;
-    bool y2017 = false;
-    bool y2018 = false;
-    for (auto& samp : samples) {
-        if (! samp.isMC()) continue;
-
-        if (samp.is2016PostVFP()) {
-            y2016Post = true;
-        } else if (samp.is2017()) {
-            y2017 = true;
-        } else if (samp.is2018()) {
-            y2018 = true;
-        } else {
-            y2016Pre = true;
-        }
-
-    }
-
-    return y2016Pre * lumi::lumi2016PreVFP + y2016Post * lumi::lumi2016PostVFP + y2017 * lumi::lumi2017 + y2018 * lumi::lumi2018;
 }

@@ -14,6 +14,10 @@ class JetInfo{
 	JetInfo( const TreeReader&, 
 		 const bool readAllJECVariations = false, 
 		 const bool readGroupedJECVariations = false );
+	JetInfo( const NanoReader&, 
+		 const bool readAllJECVariations = false, 
+		 const bool readGroupedJECVariations = false);
+	
 	std::vector< std::string > allJECVariations(){ return _JECSources; }
 	std::vector< std::string > groupedJECVariations(){ return _JECGrouped; }
 
@@ -29,8 +33,8 @@ class JetInfo{
 	std::vector< std::string > _JECSources;
 	std::vector< std::string > _JECGrouped;
 
-    std::map< std::string, size_t >* _groupedJEC_Ids;
-    std::map< std::string, size_t >* _sourcesJEC_Ids;
+    std::map< std::string, size_t >* _groupedJEC_Ids = nullptr;
+    std::map< std::string, size_t >* _sourcesJEC_Ids = nullptr;
 };
 
 #endif

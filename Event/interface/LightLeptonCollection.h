@@ -14,6 +14,7 @@ class LightLeptonCollection : public PhysicsObjectCollection< LightLepton > {
 
     public:
         LightLeptonCollection( const TreeReader& );
+        LightLeptonCollection( const NanoReader& );
 
     private:
         LightLeptonCollection( const std::vector< std::shared_ptr< LightLepton > >& lightLeptonVector ) : PhysicsObjectCollection< LightLepton >( lightLeptonVector ) {}
