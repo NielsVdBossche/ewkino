@@ -57,6 +57,15 @@ class TreeReader : public BaseReader {
         Double_t        _psWeight[46];
         Float_t         _nTrueInt;
         Double_t        _lheHTIncoming;
+
+        // EFT reinterpretation
+        static const unsigned dynscale_n_max = 38;
+        static const unsigned eft_n_max = 37;
+        UInt_t          _nDynScaleWeights;
+        Double_t        _dynScaleWeight[ dynscale_n_max ];
+        UInt_t          _nEFTWeights;
+        Double_t        _eftWeight[ eft_n_max ];
+
 	// generator variables
         Double_t        _gen_met;
         Double_t        _gen_metPhi;
@@ -384,6 +393,8 @@ class TreeReader : public BaseReader {
         virtual bool containsLheInfo() const;
         bool containsFullGeneratorInfo() const;
         bool containsParticleLevelInfo() const;
+        bool containsLheInfo() const;
+        bool containsEFTInfo() const;
         virtual bool hasPL() const { return _hasPLInfo;}
         virtual bool hasGenLvl() const { return _hasGenLevelInfo;}
         
@@ -398,6 +409,7 @@ class TreeReader : public BaseReader {
         // same for PL info
         bool _hasPLInfo = false;
         bool _hasGenLevelInfo = false;
+        bool _hasEFTInfo = false;
 
         //current index in samples vector
         int currentSampleIndex = -1;
@@ -431,6 +443,10 @@ class TreeReader : public BaseReader {
         TBranch        *b__lheWeight;   
         TBranch        *b__nTrueInt;   
         TBranch        *b__lheHTIncoming;
+        TBranch        *b__nDynScaleWeights;
+        TBranch        *b__dynScaleWeight;
+        TBranch        *b__nEFTWeights;
+        TBranch        *b__eftWeight;
         TBranch        *b__gen_met;   
         TBranch        *b__gen_metPhi;   
         TBranch        *b__gen_nL;   

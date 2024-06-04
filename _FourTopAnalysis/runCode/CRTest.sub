@@ -1,9 +1,0 @@
-universe    =   vanilla
-executable  =   Analysis.sh
-arguments   =   testDataFixes.txt Obs
-
-log         =   /user/nivanden/condor/logs/analysis_year_Test_$(ClusterId)_$(Process).log
-error       =   /user/nivanden/condor/error/analysis_year_Test_$(ClusterId)_$(Process).err
-output      =   /user/nivanden/condor/output/analysis_year_Test_$(ClusterId)_$(Process).out
-
-queue 1

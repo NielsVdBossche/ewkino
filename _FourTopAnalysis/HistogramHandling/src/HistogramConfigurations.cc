@@ -209,32 +209,32 @@ std::vector<HistInfo>* HistogramConfig::getMinimalHists(const eventClass evClass
 
     std::pair<double, double> minMaxNjets = {-0.5, 6.5};
     std::pair<double, double> minMaxNBjets = {-0.5, 4.5};
-    std::pair<double, double> minMaxHT = {0, 800};
+    std::pair<double, double> minMaxHT = {0, 900};
     std::pair<double, double> minMaxNMu = {-0.5, 5.5};
     if (evClass == eventClass::crw) {
         minMaxNjets = {3.5,5.5};
         minMaxNBjets = {1.5,2.5};
-        minMaxHT = {200,1000};
+        minMaxHT = {200,1100};
         minMaxNMu = {-0.5, 2.5};
     } else if (evClass == eventClass::cro) {
         minMaxNjets = {1.5,6.5};
         minMaxNBjets = {0.5,4.5};
-        minMaxHT = {250,1050};
+        minMaxHT = {250,1150};
         minMaxNMu = {-0.5, 2.5};
     } else if (evClass == eventClass::crz3L) {
         minMaxNjets = {1.5, 8.5};
         minMaxNBjets = {0.5, 6.5};
-        minMaxHT = {200, 1000};
+        minMaxHT = {200, 1100};
         minMaxNMu = {-0.5, 3.5};
     } else if (evClass == eventClass::cro3L) {
         minMaxNjets = {1.5, 6.5};
         minMaxNBjets = {0.5, 3.5};
-        minMaxHT = {200, 1000};
+        minMaxHT = {200, 1100};
         minMaxNMu = {-0.5, 3.5};
     } else if (evClass == eventClass::crz4L) {
         minMaxNjets = {1.5, 8.5};
         minMaxNBjets = {0.5, 4.5};
-        minMaxHT = {0, 1000};
+        minMaxHT = {0, 900};
         minMaxNMu = {-0.5, 4.5};
     } else if (evClass == eventClass::ttbar) {
         minMaxNjets = {2.5, 10.5};

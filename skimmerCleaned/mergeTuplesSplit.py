@@ -42,7 +42,7 @@ if (len(sys.argv) >= 3):
     if (sys.argv[2] == "TTTrainingSamples"):
         outSubdir += "/mvaSamples"
 
-processes = ["WZJJ"]
+processes = ["TWZ"]
 fraction = 1. # if not 1 -> not all samples will be used
 commands = []
 

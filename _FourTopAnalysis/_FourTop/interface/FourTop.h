@@ -26,6 +26,7 @@
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
 #include "../../HistogramHandling/interface/ChannelManager.h"
 
+#include "../../OutputTreeHandler/interface/OutputTree.h"
 
 #include "../../../weights/interface/CombinedReweighter.h"
 #include "../../../weights/interface/ConcreteReweighterFactory.h"
@@ -59,7 +60,16 @@ class FourTop {
         std::string yearString = "Combi";
         std::string searchRegion = "All";
         // IO-management
-        TFile* outfile;
+        TFile* outfile = nullptr;
+        std::string outputSubfolder;
+        // metadata
+        std::string outputFileTags;
+        std::string branchString;
+        std::string commithash;
+        std::string timestampExport;
+        std::string anTypeStr = "";
+        TH1F* intLuminosityMC;
+
 
         Event* currentEvent = nullptr;
         EventFourT* selection;
@@ -95,9 +105,13 @@ class FourTop {
         TH2D* FakeRatesElectron = nullptr;
         TH2D* FakeRatesMuon = nullptr;
 
+        // Matrix of EFT
+        std::vector<std::vector<double>>* inverted_matrix;
+        std::map<int, std::vector<int>>* combinations;
+        std::vector<std::vector<double>>* param_points;
     public:
         // Loading settings for analysis, preparing trees, ...
-        FourTop(std::string outputName, std::vector<std::string>& argvString, int mode = 0);
+        FourTop(std::vector<std::string>& argvString, int mode = 0, bool produceFile = true);
         ~FourTop();
 
         // Prepare
@@ -112,6 +126,7 @@ class FourTop {
 
         // Main loop functions
         void analyze(std::string method);
+        void analyzeToTree(std::string method, std::string uncertaintyflag);
         void testRuns();
         
         std::map<eventClass, int> FillHistogramManager(ChannelManager* mgrAll);
@@ -138,6 +153,15 @@ class FourTop {
         CombinedSampleReweighter* createSampleReweighter(std::string dir);
 
         std::vector<std::pair<int, double>> FillNpNmDistributions(eventClass currentClass, std::map<eventClass,int>& offsets);
+
+        // matrix calculation + inversion for storage
+        // 
+        void generateMatrix();
+        std::vector<double> transformWeights(unsigned nWeights, double* eftWeights);
+        double calcEntry(unsigned nWeights, double* eftWeights, std::vector<int>& combination);
+
+        void WriteMetadata(TFile* file);
+        std::string GetOutputfileTags() {return outputFileTags;};
 };
 
 

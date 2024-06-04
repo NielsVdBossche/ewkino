@@ -55,3 +55,14 @@ ugent2016-master/*
 
 *.pyc
 *.h5
+
+# skimmer stuff
+skimmer/skimmer*.sh
+cjob*.sh
+cjob*.sub
+skimmerCleaned/skimmer*.sh
+skimmerCleaned/skimmer*.sub
+skimmerCleaned/merger*.sub
+skimmerCleaned/merger*.sh
+stacker*sh
+stacker*sub

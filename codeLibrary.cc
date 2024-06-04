@@ -59,10 +59,6 @@
 #include "TreeReader/src/LeptonReader.cc"
 
 
-//include plotting code 
-#include "plotting/drawLumi.cc"
-#include "plotting/tdrStyle.cc"
-#include "plotting/plotCode.cc"
 
 //include Reweighter code 
 #include "weights/bTagSFCode/BTagCalibrationStandalone.cc"

@@ -36,6 +36,18 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     _numberOfScaleVariations = std::min( treeReader._nLheWeights, unsigned(9) );
     _firstPdfIndex = 9;
     _numberOfPdfVariations = std::min( std::max( treeReader._nLheWeights, unsigned(9) ) - 9, unsigned(103)); 
+
+    if (treeReader.hasEFT()) {
+        // add weights, matrix should go in other part of code since this is per event
+        _nDynScaleWeights = treeReader._nDynScaleWeights;
+        for (unsigned i=0; i < _nDynScaleWeights; i++) {
+            _dynScaleWeight[i] = treeReader._dynScaleWeight[i];
+        }
+        _nEFTWeights = treeReader._nEFTWeights;
+        for (unsigned i=0; i < _nDynScaleWeights; i++) {
+            _eftWeight[i] = treeReader._eftWeight[i];
+        }
+    }
 }
 
 GeneratorInfo::GeneratorInfo(const NanoReader& nanoReader) : 

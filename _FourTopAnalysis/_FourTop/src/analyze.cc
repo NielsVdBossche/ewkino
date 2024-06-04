@@ -13,6 +13,7 @@ void FourTop::analyze(std::string method) {
     std::shared_ptr< SampleCrossSections > xsecs;
     std::vector<std::string> processes = {"", "nonPrompt", "ChargeMisID"};
 
+    //useUncertainties = false;
     useNpNmDistributions = false;
     bool isNPControl = false;
     double chMisCorr = 0.;
@@ -122,6 +123,21 @@ void FourTop::analyze(std::string method) {
         std::cout << "Running method " << "MCAll" << std::endl;
     }
 
+    if (true) {
+        std::cout << "EFT stuff found" << std::endl;
+        generateMatrix();
+
+        processes = {"nom", "cQQ8", "cQQ1", "cQt1", "ctt", "cQt8", "ctHRe", "ctHIm", 
+                        "cQQ8_cQQ8", "cQQ8_cQQ1", "cQQ8_cQt1", "cQQ8_ctt", "cQQ8_cQt8", "cQQ8_ctHRe", 
+                        "cQQ8_ctHIm", "cQQ1_cQQ1", "cQQ1_cQt1", "cQQ1_ctt", "cQQ1_cQt8", "cQQ1_ctHRe", 
+                        "cQQ1_ctHIm", "cQt1_cQt1", "cQt1_ctt", "cQt1_cQt8", "cQt1_ctHRe", "cQt1_ctHIm", 
+                        "ctt_ctt", "ctt_cQt8", "ctt_ctHRe", "ctt_ctHIm", "cQt8_cQt8", "cQt8_ctHRe", 
+                        "cQt8_ctHIm", "ctHRe_ctHRe", "ctHRe_ctHIm", "ctHIm_ctHIm"};
+        useUncertainties = false;
+        //mgrAll->addSubUncertainties(shapeUncId::eft, eftVariables);
+    }
+    
+
     mgrAll->initHistogramStacks(processes, useUncertainties);
 
     if (st == selectionType::NPDD) {
@@ -143,6 +159,15 @@ void FourTop::analyze(std::string method) {
     std::vector<std::string> wzSFRegions;
     std::vector<std::string> zzSFRegions;
     std::vector<std::string> ttVJetsRegions;
+    std::vector<std::string> eftVariables;
+
+
+
+
+    // Rather than histogram manager, set up output tree here based on chosen settings
+    // sstd::shared_ptr<OutputTree> outputTree;
+    // s// if else: choose which tree to construct. Allow multiple? depending on the settings
+    // soutputTree = std::make_shared<OutputTree>();
 
     for( unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ){
         treeReader->initSample();
@@ -184,6 +209,9 @@ void FourTop::analyze(std::string method) {
             }
         }
 
+
+        // TODO: similar to following code: add variations that we will save in the following steps
+        // 
         if (useUncertainties && ! treeReader->isData() && st != selectionType::NPDD) {
             //mgrAll->SetPrintAllUncertaintyVariations(true);
             // MC ONLY (could be changed to MCAll and MCLim options only, but comes down to the same thing)
@@ -258,7 +286,19 @@ void FourTop::analyze(std::string method) {
                 mgrAll->addSubUncertainties(shapeUncId::ttvNJetsUnc, ttVJetsRegions);
             }
         }
-        
+//        if (treeReader->hasEFT()) {
+//            generateMatrix();
+//
+//            eftVariables = {"nom", "cQQ8", "cQQ1", "cQt1", "ctt", "cQt8", "ctHRe", "ctHIm", 
+//                            "cQQ8_cQQ8", "cQQ8_cQQ1", "cQQ8_cQt1", "cQQ8_ctt", "cQQ8_cQt8", "cQQ8_ctHRe", 
+//                            "cQQ8_ctHIm", "cQQ1_cQQ1", "cQQ1_cQt1", "cQQ1_ctt", "cQQ1_cQt8", "cQQ1_ctHRe", 
+//                            "cQQ1_ctHIm", "cQt1_cQt1", "cQt1_ctt", "cQt1_cQt8", "cQt1_ctHRe", "cQt1_ctHIm", 
+//                            "ctt_ctt", "ctt_cQt8", "ctt_ctHRe", "ctt_ctHIm", "cQt8_cQt8", "cQt8_ctHRe", 
+//                            "cQt8_ctHIm", "ctHRe_ctHRe", "ctHRe_ctHIm", "ctHIm_ctHIm"};
+//
+//            mgrAll->addSubUncertainties(shapeUncId::eft, eftVariables);
+//        }
+//        
         std::string uniqueName = sampleVec[sampleIndex].uniqueName();
         if (testRun) std::cout << "new sample " << uniqueName << std::endl;
         mgrAll->newSample(uniqueName);
@@ -412,7 +452,7 @@ void FourTop::analyze(std::string method) {
             eventClass nominalClass = selection->getCurrentClass();
             std::cout << nominalClass << std::endl;
             //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
-            if (sampleReweighter && selection->leptonsArePrompt() && (nominalClass == eventClass::crwz || nominalClass == eventClass::crzz)) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+            if (sampleReweighter && selection->leptonsArePrompt() && nominalClass != eventClass::crzz && nominalClass != eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
 
             // make a bool for filling checks. 
             // 
@@ -442,7 +482,22 @@ void FourTop::analyze(std::string method) {
                         mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, processNb, singleEntriesNpNm, -1. * weight);
                     }
                 }
+
+                if (treeReader->hasEFT()) {
+                    // loop over processes and add all weights
+                    std::vector<double> weightVar = transformWeights(currentEvent->generatorInfo().getNEFTWeights(), currentEvent->generatorInfo().getEFTWeights());
+
+                    for (unsigned i = 1; i<processes.size(); i++) {
+                        mgrAll->at(nominalClass)->fillAllHistograms(subChannels, i, fillVec, weightVar[i-1]);
+                        mgrAll->at(nominalClass)->fillAll2DHistograms(subChannels, i, fillVec2D, weightVar[i-1]);
+                        mgrAll->at(nominalClass)->fillAllSingleHistograms(subChannels, i, singleEntries, weightVar[i-1]);
+                    }
+                }
+
+                // Filling step: fill nominal variables here or apply correct variation and fill variables
+                // I think ideally we don't want to use the old way anymore... Maybe separate loop to keep it simple?
             }
+
 
             // Systematics
             if (! useUncertainties) continue;
@@ -690,6 +745,13 @@ void FourTop::analyze(std::string method) {
                         //if (testRun) std::cout << "done fill" << std::endl;
 
                     }
+                } else if (uncID == eft && treeReader->hasEFT()) {
+                    std::vector<double> weightVar = transformWeights(currentEvent->generatorInfo().getNEFTWeights(), currentEvent->generatorInfo().getEFTWeights());
+                    //for (unsigned eftID = 0; eftID < weightVar.size(); eftID++) {
+                    //        uncWrapper->fillAllSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec, weightVar[eftID], 0.);
+                    //        uncWrapper->fillAllSingleSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], singleEntries, weightVar[eftID], 0.);
+                    //        uncWrapper->fillAll2DSubUncertainty(subChannels, shapeUncId(uncID), processNb, eftVariables[eftID], fillVec2D, weightVar[eftID], 0.);
+                    //}
                 } else if (uncID == ttvNJetsUnc) {
                     for (int i=0; i < 2; i++) {
                         weightUp = 1.;
@@ -697,32 +759,32 @@ void FourTop::analyze(std::string method) {
                         if (i == 0) {
                             if (selection->numberOfLeps() == 2) {
                                 if (selection->numberOfJets() <= 2) {
-                                    weightUp = 0.92;
+                                    weightUp = 0.99;//0.92;
                                 } else if (selection->numberOfJets() == 3) {
-                                    weightUp = 0.95;
+                                    weightUp = 0.99;//0.95;
                                 } else if (selection->numberOfJets() == 4) {
-                                    weightUp = 1.03;
+                                    weightUp = 1.07;//1.03;
                                 } else if (selection->numberOfJets() == 5) {
-                                    weightUp = 1.20;
+                                    weightUp = 1.18;//1.20;
                                 } else if (selection->numberOfJets() == 6) {
-                                    weightUp = 1.42;
+                                    weightUp = 1.30;//1.42;
                                 } else if (selection->numberOfJets() >= 7) {
-                                    weightUp = 1.55;
+                                    weightUp = 1.32;//1.55;
                                 } 
                             }
                             if (selection->numberOfLeps() >= 3) {
                                 if (selection->numberOfJets() <= 2) {
-                                    weightUp = 0.96;
+                                    weightUp = 1.1;//0.96;
                                 } else if (selection->numberOfJets() == 3) {
-                                    weightUp = 1.16;
+                                    weightUp = 1.17;//1.16;
                                 } else if (selection->numberOfJets() == 4) {
-                                    weightUp = 1.28;
+                                    weightUp = 1.22;//1.28;
                                 } else if (selection->numberOfJets() == 5) {
-                                    weightUp = 1.46;
+                                    weightUp = 1.28;//1.46;
                                 } else if (selection->numberOfJets() == 6) {
-                                    weightUp = 1.44;
+                                    weightUp = 1.22;//1.44;
                                 } else if (selection->numberOfJets() >= 7) {
-                                    weightUp = 1.44;
+                                    weightUp = 1.18;//1.44;
                                 } 
                             }
                             weightDown = 1.;
@@ -759,8 +821,7 @@ void FourTop::analyze(std::string method) {
                     }
                     std::string empty = "";
 
-                    upClass = selection->classifyUncertainty
-                    (shapeUncId(uncID), true, 1000);
+                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000);
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
@@ -943,12 +1004,13 @@ void FourTop::analyze(std::string method) {
         //gDirectory->mkdir("analytics");
         //gDirectory->cd("analytics");
         if (useUncertainties) {
-            std::cout << "writing uncertainties" << std::endl;
+            //std::cout << "writing uncertainties" << std::endl;
 
             outfile->cd();
             outfile->cd("Uncertainties");
 
             mgrAll->writeUncertaintyHistograms(outdir);
+            //std::cout << "done writing uncertainties" << std::endl;
         }
 
         if (printEventTags) {
@@ -957,13 +1019,17 @@ void FourTop::analyze(std::string method) {
 
         if (splitAdditionalBees) {
             std::string anotherName = "somethingbb";
+            std::cout << "change proc 1" << std::endl;
 
             mgrAll->changeProcess(1, anotherName);
         }
 
     }
+    // std::cout << "change proc " << std::endl;
     std::string anotherName = "something";
     mgrAll->changePrimaryProcess(anotherName); // workaround so that we would print histograms of last process
+    // std::cout << "Done " << std::endl;
+
     //delete mgrAll;
     outfile->Close();
 

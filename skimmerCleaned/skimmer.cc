@@ -37,6 +37,10 @@ void skimFile( const std::string& pathToFile, const std::string& outputDirectory
         return;
     }
 
+    if (treeReader.GetTree()->GetEntries() == 0) {
+        std::cout << "File " << pathToFile << " does not contain any events. Is this expected?" << std::endl;
+        std::cerr << "File " << pathToFile << " does not contain any events. Is this expected?" << std::endl;
+    }
     //make output ROOT file
     //make file names unique by modifying the full path, but shorten slightly to avoid errors with too long file names for the OS
     std::string outputFileName = cleanOutputName(pathToFile);
