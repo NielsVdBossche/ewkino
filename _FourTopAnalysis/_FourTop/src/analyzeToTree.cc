@@ -376,7 +376,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
 
                     if (splitAdditionalBees) { // modify if a bit
                         std::vector<double> otherVar; // = {1., 1.};
-
+                        if (testRun) std::cout << "additional bs" << std::endl;
                         if (selection->numberOfLeps() == 2) {
                             if (selection->numberOfJets() <= 2) otherVar.push_back(0.99);//0.92;
                             else if (selection->numberOfJets() == 3) otherVar.push_back(0.99);//0.95;
@@ -403,6 +403,8 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                         }
                         ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetOtherVariations(otherVar);
                     } else if (sampleReweighter) {
+                        if (testRun) std::cout << "sample reweight" << std::endl;
+
                         // check if ZZ or WZ in samplereweighter, otherwise
                         std::vector<double> otherVar; // = {1., 1.};
 

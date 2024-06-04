@@ -34,13 +34,13 @@ def jobsubmission_base(timestamp, additional_arguments: list = []):
         ret += f" {arg}"
     ret += "\n\n"
 
-    ret += "output = /user/nivanden/condor/output/Analysis_$(Method)_$(ClusterId).$(ProcId).out\n"
-    ret += "error = /user/nivanden/condor/error/Analysis_$(Method)_$(ClusterId).$(ProcId).out\n"
-    ret += "log = /user/nivanden/condor/logs/Analysis_$(Method)_$(ClusterId).$(ProcId).log\n\n"
+    ret += "output = /user/nivanden/condor/output/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
+    ret += "error = /user/nivanden/condor/error/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
+    ret += "log = /user/nivanden/condor/logs/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).log\n\n"
 
     ret += "should_transfer_files = NO\n\n"
 
-    ret += "queue 1 Samplelist, Method, Syst from (\n"
+    ret += "queue 1 SLShort, Samplelist, Method, Syst from (\n"
     return ret
 
 
@@ -74,13 +74,14 @@ def parse_arguments():
 def provide_dataruns(data_samples):
     ret = []
     for sample in data_samples:
-        line = f"\tTmpLists/{sample} Obs nominal"
+        line = f"\t{sample} TmpLists/{sample} Obs nominal"
         ret.append(line)
     return ret
 
 
 def provide_runs(samplelist, method, syst):
-    ret = [f"\tTmpLists/{sample} {method} {syst}" for sample in samplelist]
+    sl_short = lambda sample: "_".join(sample.split("/")[-1].split(".txt")[0].split("_fullStat_"))
+    ret = [f"\t{sl_short(sample)} TmpLists/{sample} {method} {syst}" for sample in samplelist]
     return ret
 
 
@@ -133,7 +134,8 @@ if __name__ == "__main__":
         for syst in systs:
             if syst != "nominal" and method != "MCPrompt":
                 continue
-            run_entries.extend(provide_runs(mc_samplelist, method, syst))
+            if method != "ChargeDD":
+                run_entries.extend(provide_runs(mc_samplelist, method, syst))
             if method == "nonPromptDD" or method == "ChargeDD":
                 run_entries.extend(provide_runs(data_samplelist, method, syst))
 
