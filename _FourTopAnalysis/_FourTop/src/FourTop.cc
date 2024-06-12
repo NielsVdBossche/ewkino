@@ -15,24 +15,7 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
     
     // First setting are samples to work through
     // treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
-    if (stringTools::stringContains(argvString[1], "nano")) {
-        treeReader = new NanoReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/nanoTransition/ewkino/TestFiles/");
-    } else {
-        treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
-    }
-
-    Sample samp = treeReader->sampleVector()[0];
-
-    std::string jecUncertaintyFile;
-    if (samp.is2018()) {
-        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL18_V5_MC/Summer19UL18_V5_MC_UncertaintySources_AK4PFchs.txt";
-    } else if (samp.is2017()) {
-        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL17_V5_MC/Summer19UL17_V5_MC_UncertaintySources_AK4PFchs.txt";
-    } else if (samp.is2016PostVFP()) {
-        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL16_V7_MC/Summer19UL16_V7_MC_UncertaintySources_AK4PFchs.txt";
-    } else {
-        jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL16APV_V7_MC/Summer19UL16APV_V7_MC_UncertaintySources_AK4PFchs.txt";
-    }
+    std::string jecUncertaintyFile = "JECUncertaintyInputs/Summer19UL18_V5_MC/Summer19UL18_V5_MC_UncertaintySources_AK4PFchs.txt";
     selection = new EventFourTLoose(jecUncertaintyFile);
     bool runoncondor = false;
     if (mode < 2) {
@@ -72,8 +55,21 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
                 selection->setOverarchClasses(overarchClasses);
             } else if (it == "condorrun") {
                 runoncondor = true;
+            } else if (stringTools::stringContains(it, "NanoAOD")) {
+                nanoAOD = true;
             }
         }
+
+        // Make treereader
+        if (nanoAOD) {
+            // treeReader = new NanoReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/nanoTransition/ewkino/TestFiles/");
+            treeReader = new NanoReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
+        } else {
+            // treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
+            treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
+        }
+
+        Sample samp = treeReader->sampleVector()[0];
 
         std::string strippedSampleList = "";
 
@@ -182,6 +178,8 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
             createMVAHandlers();
         }
     } else {
+        treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
+
         Sample samp = treeReader->sampleVector()[0];
 
         if (samp.is2018()) {
@@ -420,8 +418,15 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
     // make a TreeReader
     std::string inputFilePath = samp.filePath();
     std::cout << "making TreeReader..." << std::endl;
-    TreeReader tempTree;
-    tempTree.initSampleFromFile( inputFilePath );
+    BaseReader* tempTree;
+    if (nanoAOD) {
+        std::cout << "Sample is Nano!" << std::endl;
+        tempTree = new NanoReader();
+    } else {
+        tempTree = new TreeReader();
+    }
+    std::cout << "init sample" << std::endl;
+    tempTree->initSampleFromFile( inputFilePath );
 
     // initialize the output map
     std::vector<std::map<std::string, std::shared_ptr<TH1D>>> averageOfWeightsMap;
@@ -485,15 +490,15 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
 
     // loop over events
-    long unsigned availableEntries = tempTree.numberOfEntries();
+    long unsigned availableEntries = tempTree->numberOfEntries();
 
     std::cout << "starting event loop for " << availableEntries << " events..." << std::endl;
 
     for (long unsigned entry = 0; entry < availableEntries; ++entry) {
         //if (entry>1000) break;
         Event event;
-        if (jec) event = tempTree.buildEvent(entry, false, false, false, true);
-        else event = tempTree.buildEvent(entry);
+        if (jec) event = tempTree->buildEvent(entry, false, false, false, true);
+        else event = tempTree->buildEvent(entry);
 
         // do basic selection
         event.removeTaus();

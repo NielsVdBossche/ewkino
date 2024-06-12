@@ -407,6 +407,7 @@ Jet Jet::JetJECSourcesUp( const unsigned source_id ) const{
 }
 
 Jet Jet::HEMIssue() const {
+    // NanoAOD contains these calculated variations already. Up == nominal, down == hem issue
     if (! is2018()) return variedJet(pt());
     if (! isTight() || pt() < 15.) return variedJet(pt());
     double newPt = 0.;

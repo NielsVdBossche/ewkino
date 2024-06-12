@@ -274,9 +274,9 @@ bool EventFourT::passSingleZBosonVeto() {
 
 bool EventFourT::passLeanSelection() {
     if ((**mediumLeps)[0].pt() < 25 || (**mediumLeps)[1].pt() < 20) return false;
-    std::cout << nJets  << std::endl;
+    //std::cout << nJets  << std::endl;
     if (nJets < 2) return false;
-    std::cout << nLooseB  << std::endl;
+    //std::cout << nLooseB  << std::endl;
 
     if (nLooseB < 1) return false;
 
@@ -294,7 +294,7 @@ bool EventFourT::leptonsArePrompt() {
 
 bool EventFourT::leptonsAreNotChargeFlip() {
     for( const auto& leptonPtr : **mediumLeps ){
-        std::cout << leptonPtr->isChargeFlip() << std::endl;
+        //std::cout << leptonPtr->isChargeFlip() << std::endl;
         if(leptonPtr->isChargeFlip()) return false;
     }
     return true;

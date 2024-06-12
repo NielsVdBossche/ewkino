@@ -321,6 +321,7 @@ void TreeReader::initTree( const bool resetTriggersAndFilters ){
     checkCurrentTree();
     _hasPLInfo = false;
     _hasGenLevelInfo = false;
+    _hasEFTInfo = false;
 
     _currentTreePtr->SetMakeClass(1);
 

@@ -66,8 +66,11 @@ class BaseReader {
         // Helpers that should be overridden in derived classes:
         virtual bool containsGeneratorInfo() const = 0;
         virtual bool containsLheInfo() const = 0;
-        virtual bool hasPL() const = 0;
-        virtual bool hasGenLvl() const = 0;
+        virtual bool containsEFTInfo() const = 0;
+        bool hasPL() const { return _hasPLInfo;};
+        bool hasEFT() const {return _hasEFTInfo;};
+        bool hasGenLvl() const {return _hasGenLevelInfo;};
+
 
         // Generic helpers:
         bool isData() const;
@@ -141,6 +144,10 @@ class BaseReader {
 
         //cache whether current sample is SUSY to avoid having to check the branch names for each event
         bool _isSusy = false;
+        // same for PL info
+        bool _hasPLInfo = false;
+        bool _hasGenLevelInfo = false;
+        bool _hasEFTInfo = false;
 
         //current index in samples vector
         int currentSampleIndex = -1;

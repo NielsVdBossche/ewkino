@@ -1,0 +1,1 @@
+TTTT_BSM     ../skims_v8/2018/TTTT_13TeV_LO_TopPhilicPseudoScalarSinglet_M0p4_C3p0em01_231214_161057_Run2SIM_UL2018NanoAOD_231222_130607.root      0.001101

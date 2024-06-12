@@ -77,8 +77,6 @@ class GeneratorInfo{
         bool miniAODSetup = true;
 
         // nanoAOD LHE Weights
-        unsigned _numberOfLHEPdfWeights = 0;
-        unsigned _numberOfLHEScaleWeights = 0;
         static constexpr unsigned maxNumberOfLHEPdfWeights = 103;
         static constexpr unsigned maxNumberOfLHEScaleWeights = 9;
         double _LHEPdfWeights[maxNumberOfLHEPdfWeights];

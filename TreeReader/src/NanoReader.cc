@@ -18,10 +18,14 @@ double NanoReader::getSumSimulatedEventWeights() {
         exit(1);
     }
     Double_t tmp_nominalSumOfWeights;
+    double nominalSumOfWeights = 0.0;
     // runsTree->SetBranchStatus("*", 0);
     runsTree->SetBranchAddress("genEventSumw",  &tmp_nominalSumOfWeights);
-    runsTree->GetEntry(0);
-    return tmp_nominalSumOfWeights;
+    for (int i = 0; i < runsTree->GetEntries(); i++) {
+        runsTree->GetEntry(i);
+        nominalSumOfWeights += tmp_nominalSumOfWeights;
+    }
+    return nominalSumOfWeights;
 }
 
 TTree* NanoReader::getTreePtr() {
@@ -80,8 +84,17 @@ bool NanoReader::hasGenLvl() const {
     return containsGeneratorInfo();
 }
 
+bool NanoReader::containsEFTInfo() const {
+    return treeHasBranchWithName( _currentTreePtr, "LHEReweightingWeight" );
+}
+
+
 void NanoReader::initTree(const bool resetTriggersAndFilters) {
     checkCurrentTree();
+    _hasPLInfo = false;
+    _hasGenLevelInfo = false;
+    _hasEFTInfo = false;
+
     std::cout << "deleting existing readers" << std::endl;
     if (electronReader) delete electronReader;
     if (muonReader) delete muonReader;
@@ -105,8 +118,15 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
         _currentTreePtr->SetBranchAddress("L1PreFiringWeight_Dn",   &_L1PreFiringWeight_Dn,   &b__L1PreFiringWeight_Dn);
     }
 
+    if (containsEFTInfo()) {
+        _hasEFTInfo = true;
+        _currentTreePtr->SetBranchAddress("nLHEReweightingWeight", &_nLHEReweightingWeight, &b__nLHEReweightingWeight);
+        _currentTreePtr->SetBranchAddress("LHEReweightingWeight",   _LHEReweightingWeight,  &b__LHEReweightingWeight);
+    }
+
     // generator info
     if (containsGeneratorInfo()) {
+        _hasGenLevelInfo = true;
         _currentTreePtr->SetBranchAddress("genWeight",          &_genWeight,       &b__genWeight);
         _currentTreePtr->SetBranchAddress("nLHEPdfWeight",      &_nLHEPdfWeight,   &b__nLHEPdfWeight);
         _currentTreePtr->SetBranchAddress("LHEPdfWeight",        _LHEPdfWeight,    &b__LHEPdfWeight);

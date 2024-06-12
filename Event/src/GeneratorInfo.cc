@@ -36,7 +36,6 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
     _numberOfScaleVariations = std::min( treeReader._nLheWeights, unsigned(9) );
     _firstPdfIndex = 9;
     _numberOfPdfVariations = std::min( std::max( treeReader._nLheWeights, unsigned(9) ) - 9, unsigned(103)); 
-
     if (treeReader.hasEFT()) {
         // add weights, matrix should go in other part of code since this is per event
         _nDynScaleWeights = treeReader._nDynScaleWeights;
@@ -44,7 +43,7 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
             _dynScaleWeight[i] = treeReader._dynScaleWeight[i];
         }
         _nEFTWeights = treeReader._nEFTWeights;
-        for (unsigned i=0; i < _nDynScaleWeights; i++) {
+        for (unsigned i=0; i < _nEFTWeights; i++) {
             _eftWeight[i] = treeReader._eftWeight[i];
         }
     }
@@ -52,36 +51,36 @@ GeneratorInfo::GeneratorInfo( const TreeReader& treeReader ) :
 
 GeneratorInfo::GeneratorInfo(const NanoReader& nanoReader) : 
     miniAODSetup(false),
-    _numberOfLHEPdfWeights(nanoReader._nLHEPdfWeight),
-    _numberOfLHEScaleWeights(nanoReader._nLHEScaleWeight),
     _numberOfPsWeights(nanoReader._nPSWeight),
     _prefireWeight(nanoReader._L1PreFiringWeight_Nom),
     _prefireWeightDown(nanoReader._L1PreFiringWeight_Dn),
     _prefireWeightUp(nanoReader._L1PreFiringWeight_Up),
     _numberOfTrueInteractions(nanoReader._Pileup_nTrueInt),
+    _numberOfScaleVariations(nanoReader._nLHEScaleWeight),
+    _numberOfPdfVariations(nanoReader._nLHEPdfWeight),
     _genMetPtr(new GenMet(nanoReader))
 {
     // fill pdf weights
-    if (_numberOfLHEPdfWeights > maxNumberOfLHEPdfWeights) {
+    if (_numberOfPdfVariations > maxNumberOfLHEPdfWeights) {
         std::string message = "ERROR in GeneratorInfo::GeneratorInfo:";
-        message.append(" _numberOfLHEPdfWeights is " + std::to_string(_numberOfLHEPdfWeights));
+        message.append(" _numberOfLHEPdfWeights is " + std::to_string(_numberOfPdfVariations));
         message.append(" which is larger than " + std::to_string(maxNumberOfLHEPdfWeights));
         message.append(" (the maximum array size of _LHEPdfWeights).");
         throw std::out_of_range(message);
     }
-    for (unsigned i = 0; i < _numberOfLHEPdfWeights; ++i) {
+    for (unsigned i = 0; i < _numberOfPdfVariations; ++i) {
         _LHEPdfWeights[i] = nanoReader._LHEPdfWeight[i];
     }
 
     // fill scale weights
-    if (_numberOfLHEScaleWeights > maxNumberOfLHEScaleWeights) {
+    if (_numberOfScaleVariations > maxNumberOfLHEScaleWeights) {
         std::string message = "ERROR in GeneratorInfo::GeneratorInfo:";
-        message.append(" _numberOfLHEScaleWeights is " + std::to_string(_numberOfLHEScaleWeights));
+        message.append(" _numberOfLHEScaleWeights is " + std::to_string(_numberOfScaleVariations));
         message.append(" which is larger than " + std::to_string(maxNumberOfLHEScaleWeights));
         message.append(" (the maximum array size of _LHEScaleWeights).");
         throw std::out_of_range(message);
     }
-    for (unsigned i = 0; i < _numberOfLHEScaleWeights; ++i) {
+    for (unsigned i = 0; i < _numberOfScaleVariations; ++i) {
         _LHEScaleWeights[i] = nanoReader._LHEScaleWeight[i];
     }
 
@@ -108,6 +107,17 @@ GeneratorInfo::GeneratorInfo(const NanoReader& nanoReader) :
     for (unsigned i = _numberOfPsWeights; i < maxNumberOfPsWeightsNano; ++i) {
         _psWeights[i] = 0.;
     }
+    //std::cout << "Checking if eft is available in treeReader" << std::endl;
+
+    if (nanoReader.hasEFT() && nanoReader._nLHEReweightingWeight > 0) {
+        //std::cout << "EFT is available in treeReader" << std::endl;
+        std::cout << nanoReader._nLHEReweightingWeight << std::endl;
+        // add weights, matrix should go in other part of code since this is per event
+        _nEFTWeights = nanoReader._nLHEReweightingWeight;
+        for (unsigned i=0; i < _nEFTWeights; i++) {
+            _eftWeight[i] = nanoReader._LHEReweightingWeight[i];
+        }
+    }
 }
 
 GeneratorInfo::~GeneratorInfo() {
@@ -127,7 +137,7 @@ double GeneratorInfo::relativeWeightPdfVar( const unsigned pdfIndex ) const{
     if (miniAODSetup) {
         return retrieveWeight( _lheWeights, pdfIndex, 9, std::min( std::max( _numberOfLheWeights, unsigned(9) ) - 9, unsigned(103) ), "pdf" );
     } else {
-        return retrieveWeight( _LHEPdfWeights, pdfIndex, 0, std::min( _numberOfLHEPdfWeights, unsigned(103) ), "pdf" );
+        return retrieveWeight( _LHEPdfWeights, pdfIndex, 0, std::min( _numberOfPdfVariations, unsigned(103) ), "pdf" );
     }
 }
 

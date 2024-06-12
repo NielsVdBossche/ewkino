@@ -391,12 +391,9 @@ class TreeReader : public BaseReader {
         //check whether generator info is present in current tree
         virtual bool containsGeneratorInfo() const;
         virtual bool containsLheInfo() const;
+        virtual bool containsEFTInfo() const;
         bool containsFullGeneratorInfo() const;
         bool containsParticleLevelInfo() const;
-        bool containsLheInfo() const;
-        bool containsEFTInfo() const;
-        virtual bool hasPL() const { return _hasPLInfo;}
-        virtual bool hasGenLvl() const { return _hasGenLevelInfo;}
         
         //check whether SUSY mass info is present in the current sample
 	// ( this is the case for SUSY signal scans )
@@ -406,11 +403,6 @@ class TreeReader : public BaseReader {
         bool containsTriggerInfo( const std::string& triggerPath ) const;
 
     protected:
-        // same for PL info
-        bool _hasPLInfo = false;
-        bool _hasGenLevelInfo = false;
-        bool _hasEFTInfo = false;
-
         //current index in samples vector
         int currentSampleIndex = -1;
 

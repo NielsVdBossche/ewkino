@@ -61,24 +61,27 @@ void SampleCrossSections::initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree
     runsTree->SetBranchAddress("LHEScaleSumw",   tmp_LHEScaleSumw);
     runsTree->SetBranchAddress("nLHEPdfSumw",   &tmp_nLHEPdfSumw);
     runsTree->SetBranchAddress("LHEPdfSumw",     tmp_LHEPdfSumw);
-    runsTree->GetEntry(0);
-    // Sum of weights equivalent:
-    nominalSumOfWeights = tmp_nominalSumOfWeights;
+    lheCrossSectionRatios = std::vector<double>(111, 0.);
+    nominalSumOfWeights = 0.;
+    for (unsigned i = 0; i < runsTree->GetEntries(); i++) {
+        runsTree->GetEntry(i);
+        // Sum of weights equivalent:
+        nominalSumOfWeights += tmp_nominalSumOfWeights;
 
-    // LHE Variations:
-    lheCrossSectionRatios = std::vector<double>(111, 1.);
-    lheCrossSectionRatios[1] = tmp_LHEScaleSumw[5];
-    lheCrossSectionRatios[2] = tmp_LHEScaleSumw[3];
-    lheCrossSectionRatios[3] = tmp_LHEScaleSumw[7];
-    lheCrossSectionRatios[4] = tmp_LHEScaleSumw[8];
-    lheCrossSectionRatios[5] = tmp_LHEScaleSumw[6];
-    lheCrossSectionRatios[6] = tmp_LHEScaleSumw[1];
-    lheCrossSectionRatios[7] = tmp_LHEScaleSumw[2];
-    lheCrossSectionRatios[8] = tmp_LHEScaleSumw[0];
+        // LHE Variations:
+        lheCrossSectionRatios[1] += tmp_LHEScaleSumw[5];
+        lheCrossSectionRatios[2] += tmp_LHEScaleSumw[3];
+        lheCrossSectionRatios[3] += tmp_LHEScaleSumw[7];
+        lheCrossSectionRatios[4] += tmp_LHEScaleSumw[8];
+        lheCrossSectionRatios[5] += tmp_LHEScaleSumw[6];
+        lheCrossSectionRatios[6] += tmp_LHEScaleSumw[1];
+        lheCrossSectionRatios[7] += tmp_LHEScaleSumw[2];
+        lheCrossSectionRatios[8] += tmp_LHEScaleSumw[0];
 
-    // PDF variations: just vary it all
-    for (unsigned i = 9; i < lheCrossSectionRatios.size(); i++){
-        lheCrossSectionRatios[i] = tmp_LHEPdfSumw[i-9];
+        // PDF variations: just vary it all
+        for (unsigned i = 9; i < lheCrossSectionRatios.size(); i++){
+            lheCrossSectionRatios[i] += tmp_LHEPdfSumw[i-9];
+        }
     }
 }
 

@@ -136,7 +136,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         std::cout << "init sample" << std::endl;
         
         currentEvent = treeReader->buildEventPtr(0, false, false, jec_sources, jec_grouped);
-
+        std::cout << "event built." << std::endl;
         int numberOfPSVariations = 0;
         int numberOfPdfVariations = 0;
         bool hasValidQcds = false;
@@ -219,8 +219,9 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         }
         // prepare run
         TFile* newOutputFile = outputTreeHandler->InitializeNewSample(treeReader->currentSample(), outputFileTags, method, outputfile_suffix);
+        std::cout << "file made. Writing metadata...";
         WriteMetadata(newOutputFile);
-
+        std::cout << "Done!" << std::endl;
         if (uncertaintyExperimentWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             considerBTagShape = ! testRun;
             if (sampleIndex == 0 && considerBTagShape) {
@@ -230,10 +231,12 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             std::vector<std::string> expUncertaintiesAll = expUncertaintiesSimple;
             expUncertaintiesAll.push_back("ElectronReco");
             expUncertaintiesAll.insert(expUncertaintiesAll.end(), bTagShapeSystematics.begin(), bTagShapeSystematics.end());
+            std::cout << "writing exp weight naming... ";
             outputTreeHandler->WriteExpWeightNaming(expUncertaintiesAll);
+            std::cout << "Done!" << std::endl;
         }
 
-        if (testRun) std::cout << "Starting event loop" << std::endl;
+        std::cout << "Starting event loop" << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             if (testRun && entry > 1000) {
@@ -257,12 +260,15 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
 
             if (! treeReader->isData() && useUncertainties) {
                 numberOfPdfVariations = currentEvent->generatorInfo().numberOfPdfVariations();
+                if (testRun) std::cout << "Number of scale variations: " << currentEvent->generatorInfo().numberOfScaleVariations() << std::endl;
+                if (testRun) std::cout << "Number of eft variations: " << currentEvent->generatorInfo().getNEFTWeights() << std::endl;
                 if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
                 else hasValidQcds = false;
             
                 if (numberOfPdfVariations>=100) hasValidPdfs = true;
                 else hasValidPdfs = false;
-                if (currentEvent->getGeneratorInfoPtr()->getNEFTWeights() != 0) {
+                if (currentEvent->getGeneratorInfoPtr()->getNEFTWeights() > 0) {
+                    if (testRun) std::cout << "has eft variations stuff" << std::endl;
                     hasValidPSs = false;
                     hasValidQcds = false;
                     hasValidPdfs = false;
@@ -334,6 +340,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             eventClass nominalClass = selection->getCurrentClass();
             //if (sampleReweighter && selection->leptonsArePrompt()) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
             if (sampleReweighter && selection->leptonsArePrompt() && nominalClass != eventClass::crzz && nominalClass != eventClass::crwz) weight *= sampleReweighter->totalWeight(*currentEvent, selection->numberOfJets());
+            if (testRun) std::cout << "current class " << nominalClass << std::endl;
             
 
             if (FillRegion(nominalClass, st) && nominal_run) {

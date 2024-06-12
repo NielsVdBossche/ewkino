@@ -51,7 +51,8 @@ class FourTop {
         bool useUncertainties = true;
         bool useNpNmDistributions = false;
         bool overarchClasses = false;
-
+        bool nanoAOD = false;
+        
         std::string plotString = "Minimal";
         eventClass considerRegion = eventClass::fail;
         selectionType st = selectionType::MCAll;

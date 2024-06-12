@@ -98,6 +98,7 @@ class NanoReader : public BaseReader {
         static const unsigned nGenJet_max = 30;
         static const unsigned nLHEPdfWeight_max = 103;
         static const unsigned nLHEScaleWeight_max = 9;
+        static const unsigned nLHEReweightingWeight_max = 100;
         static const unsigned nPSWeight_max = 4;
         // note: variable types can be found here:
         // https://cms-nanoaod-integration.web.cern.ch/autoDoc/
@@ -116,6 +117,9 @@ class NanoReader : public BaseReader {
         Float_t _L1PreFiringWeight_Nom;
         Float_t _L1PreFiringWeight_Up;
         Float_t _L1PreFiringWeight_Dn;
+
+        UInt_t  _nLHEReweightingWeight;
+        Float_t _LHEReweightingWeight[nLHEReweightingWeight_max];
         // Pileup
         Float_t _Pileup_nTrueInt;
         Int_t _PV_npvs;
@@ -277,6 +281,7 @@ class NanoReader : public BaseReader {
         virtual bool containsLheInfo() const;
         virtual bool hasPL() const;
         virtual bool hasGenLvl() const;
+        virtual bool containsEFTInfo() const;
 
         const LightLeptonReader& GetElectronReader() const {return *electronReader;}
         const LightLeptonReader& GetMuonReader() const {return *muonReader;}
@@ -328,6 +333,8 @@ class NanoReader : public BaseReader {
         TBranch* b__LHEScaleWeight;
         TBranch* b__nPSWeight;
         TBranch* b__PSWeight;
+        TBranch* b__nLHEReweightingWeight;
+        TBranch* b__LHEReweightingWeight;
         TBranch* b__L1PreFiringWeight_Nom;
         TBranch* b__L1PreFiringWeight_Up;
         TBranch* b__L1PreFiringWeight_Dn;

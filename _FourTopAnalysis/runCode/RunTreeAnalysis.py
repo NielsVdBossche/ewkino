@@ -28,19 +28,25 @@ def load_samplelist(filename):
 def jobsubmission_base(timestamp, additional_arguments: list = []):
     ret = ""
     ret += "executable = TreeAnalysis.sh\n"
-    ret += f"arguments = $(Samplelist) $(Method) $(Syst) {timestamp} condorrun"
+    ret += f"arguments = $(Samplelist) $(Method) $(Syst) {timestamp} condorrun $(MiniOrNano)"
 
     for arg in additional_arguments:
         ret += f" {arg}"
     ret += "\n\n"
 
-    ret += "output = /user/nivanden/condor/output/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
-    ret += "error = /user/nivanden/condor/error/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
-    ret += "log = /user/nivanden/condor/logs/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).log\n\n"
+    if not os.path.exists(f"/user/{os.getenv('USER')}/condor"):
+        os.makedirs(f"/user/{os.getenv('USER')}/condor")
+        os.makedirs(f"/user/{os.getenv('USER')}/condor/output")
+        os.makedirs(f"/user/{os.getenv('USER')}/condor/error")
+        os.makedirs(f"/user/{os.getenv('USER')}/condor/logs")
+
+    ret += f"output = /user/{os.getenv('USER')}/condor/output/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
+    ret += f"error = /user/{os.getenv('USER')}/condor/error/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
+    ret += f"log = /user/{os.getenv('USER')}/condor/logs/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).log\n\n"
 
     ret += "should_transfer_files = NO\n\n"
 
-    ret += "queue 1 SLShort, Samplelist, Method, Syst from (\n"
+    ret += "queue 1 SLShort, Samplelist, Method, Syst, MiniOrNano from (\n"
     return ret
 
 
@@ -65,6 +71,10 @@ def parse_arguments():
                         help="Switch to swap between full analysis run with JECs, JERs, ... or only the nominal run")
     parser.add_argument('--data', dest="data", action='store_true',
                         help="Switch to turn on the processing of the data.")
+    parser.add_argument('--bsm', dest="bsm", action='store_true',
+                        help="Switch to turn on the processing of the BSM samples.")
+    parser.add_argument('--onlybsm', dest="onlybsm", action='store_true',
+                        help="Switch to only process BSM samples.")
     # Parse arguments
     args = parser.parse_args()
     
@@ -74,14 +84,14 @@ def parse_arguments():
 def provide_dataruns(data_samples):
     ret = []
     for sample in data_samples:
-        line = f"\t{sample} TmpLists/{sample} Obs nominal"
+        line = f"\t{sample} TmpLists/{sample} Obs nominal MiniAOD"
         ret.append(line)
     return ret
 
 
-def provide_runs(samplelist, method, syst):
+def provide_runs(samplelist, method, syst, miniOrNano="MiniAOD"):
     sl_short = lambda sample: "_".join(sample.split("/")[-1].split(".txt")[0].split("_fullStat_"))
-    ret = [f"\t{sl_short(sample)} TmpLists/{sample} {method} {syst}" for sample in samplelist]
+    ret = [f"\t{sl_short(sample)} TmpLists/{sample} {method} {syst} {miniOrNano}" for sample in samplelist]
     return ret
 
 
@@ -109,6 +119,7 @@ if __name__ == "__main__":
 
     mc_samplelist = []
     data_samplelist = []
+    bsm_samplelist = []
     if args.samplelist:
         print("SL")
         if "Data" in args.samplelist:
@@ -117,6 +128,7 @@ if __name__ == "__main__":
             mc_samplelist.append(args.samplelist)
     else:
         mc_samplelist = load_samplelist("mc_samples.txt")
+        bsm_samplelist = load_samplelist("bsm_mc_samples.txt")
         if "nonPromptDD" in methods or "ChargeDD" in methods or args.data:
             data_samplelist = load_samplelist("data_samples.txt")
 
@@ -129,14 +141,18 @@ if __name__ == "__main__":
 
     mc_samplelist = filter_samplelist(mc_samplelist, sample_filters)
     data_samplelist = filter_samplelist(data_samplelist, sample_filters)
+    bsm_samplelist = filter_samplelist(bsm_samplelist, sample_filters)
 
     for method in methods:
         for syst in systs:
             if syst != "nominal" and method != "MCPrompt":
                 continue
             if method != "ChargeDD":
-                run_entries.extend(provide_runs(mc_samplelist, method, syst))
-            if method == "nonPromptDD" or method == "ChargeDD":
+                if not args.onlybsm:
+                    run_entries.extend(provide_runs(mc_samplelist, method, syst))
+                if args.bsm or args.onlybsm:
+                    run_entries.extend(provide_runs(bsm_samplelist, method, syst, miniOrNano="NanoAOD"))
+            if (method == "nonPromptDD" or method == "ChargeDD") and not args.onlybsm:
                 run_entries.extend(provide_runs(data_samplelist, method, syst))
 
     if args.data:
@@ -150,6 +166,6 @@ if __name__ == "__main__":
     with open("AnalysisJob.sub", 'w') as f:
         f.write(submission_file)
 
-    outputfolder = os.path.join("/pnfs/iihe/cms/store/user/nivanden/AnalysisOutput/ReducedTuples/", timestamp)
+    outputfolder = os.path.join(f"/pnfs/iihe/cms/store/user/{os.getenv('USER')}/AnalysisOutput/ReducedTuples/", timestamp)
     os.makedirs(outputfolder)
     os.system("condor_submit AnalysisJob.sub")

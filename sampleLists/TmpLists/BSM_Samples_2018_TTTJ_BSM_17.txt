@@ -1,0 +1,1 @@
+TTTJ_BSM     ../skims_v8/2018/TTTJ_13TeV_LO_TopPhilicVectorOctet_M0p4_C3p0e00_231219_143745_Run2SIM_UL2018NanoAOD_240126_115659.root               0.04493

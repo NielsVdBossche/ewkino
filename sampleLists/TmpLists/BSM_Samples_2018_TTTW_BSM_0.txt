@@ -1,0 +1,1 @@
+TTTW_BSM     ../skims_v8/2018/TTTW_13TeV_LO_TopPhilicPseudoScalarOctet_M0p4_C1p0e00_231219_143743_Run2SIM_UL2018NanoAOD_231227_152416.root         0.2057
