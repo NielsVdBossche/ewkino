@@ -16,7 +16,8 @@ MVAHandler_4T::~MVAHandler_4T() {
 void MVAHandler_4T::initReader() {
     reader = new TMVA::Reader("!Color:!Silent");
 
-    std::string weightFilePath = "../MVATraining/VeryEpicLoader/weights/";
+    // std::string weightFilePath = "../MVATraining/VeryEpicLoader/weights/";
+    std::string weightFilePath = "ANWeights/BDTs/";
     if (currentConfig == Binary_DL) {
         weightFilePath += "FourTopClassification_UL_2022-10-14_11-51__BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml";
     } else if (currentConfig == Binary_ML) {
