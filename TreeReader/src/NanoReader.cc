@@ -14,7 +14,7 @@ NanoReader::NanoReader(const std::string& sampleListFile, const std::string& sam
 double NanoReader::getSumSimulatedEventWeights() {
     TTree* runsTree = (TTree*) _currentFilePtr->Get("Runs");
     if( runsTree == nullptr ){
-        throw std::invalid_argument( "Runs tree is not present in file '" + _currentSamplePtr->fileName() + "', can not properly normalize a MC sample without this." );
+        throw std::invalid_argument( "Runs tree is not present in file '" + currentSample().fileName() + "', can not properly normalize a MC sample without this." );
         exit(1);
     }
     Double_t tmp_nominalSumOfWeights;
@@ -63,7 +63,15 @@ Event* NanoReader::buildEventPtr( long unsigned entry,
     const bool readIndividualTriggers, const bool readIndividualMetFilters,
     const bool readAllJECVariations, const bool readGroupedJECVariations)
 {
+    std::cout << "Building event ptr" << std::endl;
+    std::cout << muonReader << std::endl;
+    muonReader->GetNanoReader();
     GetEntry( entry );
+    std::cout << muonReader << std::endl;
+    std::cout << hasEFT() << std::endl;
+    electronReader->GetNanoReader();
+    muonReader->GetNanoReader();
+
     return new Event( *this, readIndividualTriggers, readIndividualMetFilters,
                     readAllJECVariations, readGroupedJECVariations );
 }
@@ -166,7 +174,7 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
         _currentTreePtr->SetBranchAddress("LHEPart_pdgId",             _LHEPart_pdgId,         &b__LHEPart_pdgId);
     }
     // variables only related to electrons
-    electronReader = new LightLeptonReader(*this, _currentTreePtr, "Electron");
+    electronReader = new LightLeptonReader(this, _currentTreePtr, "Electron");
     _currentTreePtr->SetBranchAddress("Electron_tightCharge",           _Electron_tightCharge,            &b__Electron_tightCharge);
     _currentTreePtr->SetBranchAddress("Electron_convVeto",              _Electron_convVeto,               &b__Electron_convVeto);
     _currentTreePtr->SetBranchAddress("Electron_lostHits",              _Electron_lostHits,               &b__Electron_lostHits);
@@ -187,7 +195,7 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaUp",             _Electron_dEsigmaUp,              &b__Electron_dEsigmaUp);
 
     // variables only related to muons
-    muonReader = new LightLeptonReader(*this, _currentTreePtr, "Muon");
+    muonReader = new LightLeptonReader(this, _currentTreePtr, "Muon");
     // does this branch work in data?
     _currentTreePtr->SetBranchAddress("Muon_corrected_pt",       _Muon_corrected_pt,     &b__Muon_corrected_pt);
     _currentTreePtr->SetBranchAddress("Muon_ptErr",              _Muon_ptErr,            &b__Muon_ptErr);
@@ -201,7 +209,7 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("Muon_isStandalone",    _Muon_isStandalone,    &b__Muon_isStandalone);
 
     // variables related to taus
-    tauReader = new LeptonReader(*this, _currentTreePtr, "Tau");
+    tauReader = new LeptonReader(this, _currentTreePtr, "Tau");
 
     // variables related to jets
     _currentTreePtr->SetBranchAddress("nJet",               &_nJet,               &b__nJet);

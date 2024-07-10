@@ -1,6 +1,6 @@
 #include "../interface/NanoReader.h"
 
-NanoReader::LeptonReader::LeptonReader(NanoReader& nano, TTree* _currentTreePtr, std::string leptonType) :
+NanoReader::LeptonReader::LeptonReader(NanoReader* nano, TTree* _currentTreePtr, std::string leptonType) :
     nanoReader(nano)
 {
     // LeptonType: Electron, Muon or Tau
@@ -14,7 +14,7 @@ NanoReader::LeptonReader::LeptonReader(NanoReader& nano, TTree* _currentTreePtr,
     _currentTreePtr->SetBranchAddress((leptonType+"_dz").c_str(),                 _Lepton_dz,               &b__Lepton_dz);
     _currentTreePtr->SetBranchAddress((leptonType+"_jetIdx").c_str(),             _Lepton_jetIdx,           &b__Lepton_jetIdx);
 
-    if (nanoReader.containsGeneratorInfo()) {
+    if (nanoReader->containsGeneratorInfo()) {
         _currentTreePtr->SetBranchAddress((leptonType+"_genPartFlav").c_str(),        _Lepton_genPartFlav,      &b__Lepton_genPartFlav);
         _currentTreePtr->SetBranchAddress((leptonType+"_genPartIdx").c_str(),         _Lepton_genPartIdx,       &b__Lepton_genPartIdx);
     }
@@ -30,13 +30,13 @@ void NanoReader::LeptonReader::setOutputTree(TTree* tree, std::string leptonType
     tree->Branch((leptonType+"_dz").c_str(),                 _Lepton_dz,               (leptonType+"_dz[n"+leptonType+"]/F").c_str());
     tree->Branch((leptonType+"_jetIdx").c_str(),             _Lepton_jetIdx,           (leptonType+"_jetIdx[n"+leptonType+"]/I").c_str());
 
-    if (nanoReader.containsGeneratorInfo()) {
+    if (nanoReader->containsGeneratorInfo()) {
         tree->Branch((leptonType+"_genPartFlav").c_str(),        _Lepton_genPartFlav,      (leptonType+"_genPartFlav[n"+leptonType+"]/I").c_str());
         tree->Branch((leptonType+"_genPartIdx").c_str(),         _Lepton_genPartIdx,       (leptonType+"_genPartIdx[n"+leptonType+"]/I").c_str());
     }
 }
 
-NanoReader::LightLeptonReader::LightLeptonReader(NanoReader& nano, TTree* _currentTreePtr, std::string leptonType) :
+NanoReader::LightLeptonReader::LightLeptonReader(NanoReader* nano, TTree* _currentTreePtr, std::string leptonType) :
     LeptonReader(nano, _currentTreePtr, leptonType)
 {
     _currentTreePtr->SetBranchAddress((leptonType+"_sip3d").c_str(),              _Lepton_sip3d,            &b__Lepton_sip3d);

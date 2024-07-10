@@ -23,7 +23,7 @@ class Lepton : public PhysicsObject {
     
     public: 
         Lepton( const TreeReader&, const unsigned, LeptonSelector* ); 
-        Lepton( const NanoReader::LeptonReader&, const unsigned, LeptonSelector* ); 
+        Lepton( const NanoReader::LeptonReader*, const unsigned, LeptonSelector* ); 
 
         //copying of lepton will only be allowed if appropriate selector is provided by derived class
         Lepton( const Lepton& ) = delete;

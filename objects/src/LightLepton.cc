@@ -39,39 +39,39 @@ LightLepton::LightLepton( const TreeReader& treeReader, const unsigned leptonInd
     }
 }
 
-LightLepton::LightLepton(const NanoReader::LightLeptonReader& leptonReader, const unsigned leptonIndex, LeptonSelector* leptonSelector) : 
+LightLepton::LightLepton(const NanoReader::LightLeptonReader* leptonReader, const unsigned leptonIndex, LeptonSelector* leptonSelector) : 
     Lepton(leptonReader, leptonIndex, leptonSelector),
-    _relIso0p3( leptonReader._Lepton_pfRelIso03_all[leptonIndex] ),
-    _miniIso( leptonReader._Lepton_miniPFRelIso_all[leptonIndex] ),
-    _miniIsoCharged( leptonReader._Lepton_miniPFRelIso_chg[leptonIndex] ),
-    _ptRatio( leptonReader._Lepton_jetPtRatio[leptonIndex] ),
-    _ptRel( leptonReader._Lepton_jetPtRelv2[leptonIndex] ), 
-    _closestJetDeepFlavor( leptonReader._Lepton_jetBTagDJ[leptonIndex] ),
-    _closestJetNumberOfChargedDaughters( leptonReader._Lepton_jetNDauCharged[leptonIndex]),
-    _jetIdx( leptonReader._Lepton_jetIdx[leptonIndex] ),
-    _sip3d( leptonReader._Lepton_sip3d[leptonIndex] ),
-    _isPFCandidate( leptonReader._Lepton_isPFCand[leptonIndex] ),
-    _leptonMVATOPUL( leptonReader._Lepton_TOPLeptonMVAUL[leptonIndex] )
+    _relIso0p3( leptonReader->_Lepton_pfRelIso03_all[leptonIndex] ),
+    _miniIso( leptonReader->_Lepton_miniPFRelIso_all[leptonIndex] ),
+    _miniIsoCharged( leptonReader->_Lepton_miniPFRelIso_chg[leptonIndex] ),
+    _ptRatio( leptonReader->_Lepton_jetPtRatio[leptonIndex] ),
+    _ptRel( leptonReader->_Lepton_jetPtRelv2[leptonIndex] ), 
+    _closestJetDeepFlavor( leptonReader->_Lepton_jetBTagDJ[leptonIndex] ),
+    _closestJetNumberOfChargedDaughters( leptonReader->_Lepton_jetNDauCharged[leptonIndex]),
+    _jetIdx( leptonReader->_Lepton_jetIdx[leptonIndex] ),
+    _sip3d( leptonReader->_Lepton_sip3d[leptonIndex] ),
+    _isPFCandidate( leptonReader->_Lepton_isPFCand[leptonIndex] ),
+    _leptonMVATOPUL( leptonReader->_Lepton_TOPLeptonMVAUL[leptonIndex] )
 {
     if (leptonSelector->isElectronSelector()) {
         _relIso0p4 = 0;  // seems to be not stored in nanoAOD
     } else if (leptonSelector->isMuonSelector()) {
-        _relIso0p4 = leptonReader.GetNanoReader()._Muon_pfRelIso04_all[leptonIndex];
+        _relIso0p4 = leptonReader->GetNanoReader()._Muon_pfRelIso04_all[leptonIndex];
     } else {
         std::cerr << "Lightlepton constructor handed non-light selector" << std::endl;
         throw 1;
     }
 
-    if (_jetIdx >= (int)leptonReader.GetNanoReader()._nJet) {
+    if (_jetIdx >= (int)leptonReader->GetNanoReader()._nJet) {
         std::string msg = "WARNING in LightLepton constructor:";
         msg += " index of closest jet is " + std::to_string(_jetIdx);
-        msg += " while only " + std::to_string(leptonReader.GetNanoReader()._nJet);
+        msg += " while only " + std::to_string(leptonReader->GetNanoReader()._nJet);
         msg += " jets are present; ignoring closest jet info.";
         std::cerr << msg << std::endl;
     } else if (_jetIdx >= 0) {
-        // _closestJetDeepCSV = leptonReader.GetNanoReader()._Jet_bTagDeepB[_jetIdx];
-        // _closestJetDeepFlavor = leptonReader.GetNanoReader()._Jet_bTagDeepFlavB[_jetIdx];
-        _closestJetTrackMultiplicity = leptonReader.GetNanoReader()._Jet_nConstituents[_jetIdx];
+        // _closestJetDeepCSV = leptonReader->GetNanoReader()._Jet_bTagDeepB[_jetIdx];
+        // _closestJetDeepFlavor = leptonReader->GetNanoReader()._Jet_bTagDeepFlavB[_jetIdx];
+        _closestJetTrackMultiplicity = leptonReader->GetNanoReader()._Jet_nConstituents[_jetIdx];
         // (note: nConstituents is seen to be very different from trackMultiplicity;
         // keep this variable as a proxy for now, but numerical thresholds will have to be adjusted!)
     }

@@ -14,8 +14,8 @@ class LeptonGeneratorInfo{
     
     public:
         LeptonGeneratorInfo( const TreeReader&, const unsigned ); 
-        LeptonGeneratorInfo( const NanoReader::LeptonReader&, const unsigned );
-        LeptonGeneratorInfo( const NanoReader::LeptonReader&, const unsigned, bool, bool, bool ); 
+        LeptonGeneratorInfo( const NanoReader::LeptonReader*, const unsigned );
+        LeptonGeneratorInfo( const NanoReader::LeptonReader*, const unsigned, bool, bool, bool ); 
 
         bool hasGenMatch() const{ return _hasGenMatch; }
         bool isPrompt() const{ return _isPrompt; }

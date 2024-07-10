@@ -16,7 +16,7 @@ class NanoReader : public BaseReader {
         
         class LeptonReader {
             public:
-                LeptonReader(NanoReader&, TTree*, std::string);
+                LeptonReader(NanoReader*, TTree*, std::string);
                 virtual ~LeptonReader() = default;
                 virtual bool isLightLeptonReader() const {return false;}
 
@@ -40,9 +40,15 @@ class NanoReader : public BaseReader {
 
                 virtual void setOutputTree(TTree* tree, std::string leptonType);
 
-                const NanoReader& GetNanoReader() const {return nanoReader;}
+                const NanoReader GetNanoReader() const {
+                    std::cout << "Getting nanoreader" << std::endl;
+                    std::cout << nanoReader << std::endl;
+                    std::cout << nanoReader->hasEFT() << std::endl;
+                    std::cout << nanoReader->currentSamplePtr() << std::endl;
+                    return *nanoReader;
+                }
             private:
-                NanoReader& nanoReader;
+                NanoReader* nanoReader;
 
                 TBranch *b__nLepton, *b__Lepton_pt, *b__Lepton_eta, *b__Lepton_phi, *b__Lepton_mass, *b__Lepton_charge, 
                         *b__Lepton_dxy, *b__Lepton_dz, *b__Lepton_jetIdx, *b__Lepton_genPartFlav, *b__Lepton_genPartIdx;
@@ -50,7 +56,7 @@ class NanoReader : public BaseReader {
 
         class LightLeptonReader : public LeptonReader {
             public:
-                LightLeptonReader(NanoReader&, TTree*, std::string);
+                LightLeptonReader(NanoReader*, TTree*, std::string);
                 virtual ~LightLeptonReader() = default;
                 virtual bool isLightLeptonReader() const {return true;}
 
@@ -283,9 +289,9 @@ class NanoReader : public BaseReader {
         virtual bool hasGenLvl() const;
         virtual bool containsEFTInfo() const;
 
-        const LightLeptonReader& GetElectronReader() const {return *electronReader;}
-        const LightLeptonReader& GetMuonReader() const {return *muonReader;}
-        const LeptonReader& GetTauReader() const {return *tauReader;}
+        const LightLeptonReader* GetElectronReader() const {return electronReader;}
+        const LightLeptonReader* GetMuonReader() const {return muonReader;}
+        const LeptonReader* GetTauReader() const {return tauReader;}
 
         // Event building overrides:
         virtual Event buildEvent( const Sample&, long unsigned, 
@@ -315,7 +321,11 @@ class NanoReader : public BaseReader {
     protected:
         virtual double getSumSimulatedEventWeights() override;
         virtual TTree* getTreePtr() override;
-        virtual double getWeight() override {return _genWeight;};
+        virtual double getWeight() override {
+            std::cout << "get weight" << std::endl;
+            muonReader->GetNanoReader();
+            return _genWeight;
+        };
 
     private:
         LightLeptonReader*  electronReader = nullptr;

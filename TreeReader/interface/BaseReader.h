@@ -134,7 +134,6 @@ class BaseReader {
         std::vector<Sample> samples2018;
 
         //current sample
-        std::shared_ptr< const Sample > _currentSamplePtr;
 
         //TFile associated to current sample
         std::shared_ptr< TFile > _currentFilePtr;
@@ -173,6 +172,7 @@ class BaseReader {
         virtual TTree* getTreePtr() = 0;
         virtual double getWeight() = 0;
     private:
+        std::shared_ptr< const Sample > _currentSamplePtr;
 };
 
 

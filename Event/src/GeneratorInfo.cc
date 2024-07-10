@@ -111,7 +111,7 @@ GeneratorInfo::GeneratorInfo(const NanoReader& nanoReader) :
 
     if (nanoReader.hasEFT() && nanoReader._nLHEReweightingWeight > 0) {
         //std::cout << "EFT is available in treeReader" << std::endl;
-        std::cout << nanoReader._nLHEReweightingWeight << std::endl;
+        // std::cout << nanoReader._nLHEReweightingWeight << std::endl;
         // add weights, matrix should go in other part of code since this is per event
         _nEFTWeights = nanoReader._nLHEReweightingWeight;
         for (unsigned i=0; i < _nEFTWeights; i++) {

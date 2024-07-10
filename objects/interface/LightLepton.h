@@ -14,7 +14,7 @@ class LightLepton : public Lepton {
     
     public: 
         LightLepton( const TreeReader&, const unsigned, LeptonSelector* ); 
-        LightLepton( const NanoReader::LightLeptonReader&, const unsigned, LeptonSelector* ); 
+        LightLepton( const NanoReader::LightLeptonReader*, const unsigned, LeptonSelector* ); 
         LightLepton( const LightLepton& ) = delete;
         LightLepton( LightLepton&& ) = delete;
 

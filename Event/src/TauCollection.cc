@@ -8,7 +8,7 @@ TauCollection::TauCollection( const TreeReader& treeReader ){
 }
 
 TauCollection::TauCollection( const NanoReader& nanoReader ){
-    for( unsigned t = 0; t < nanoReader.GetTauReader()._nLepton; ++t){
+    for( unsigned t = 0; t < nanoReader.GetTauReader()->_nLepton; ++t){
         push_back( Tau( nanoReader, t ) );
     }
 }

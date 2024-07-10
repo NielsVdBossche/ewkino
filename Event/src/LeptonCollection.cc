@@ -30,17 +30,17 @@ LeptonCollection::LeptonCollection( const TreeReader& treeReader ){
 
 LeptonCollection::LeptonCollection( const NanoReader& nanoReader ) {
     //add muons to lepton collection
-    for( unsigned m = 0; m < nanoReader.GetMuonReader()._nLepton; ++m){
+    for( unsigned m = 0; m < nanoReader.GetMuonReader()->_nLepton; ++m){
         push_back( Muon( nanoReader, m ) );
     }
 
     //add electrons to lepton collection
-    for( unsigned e = 0; e < nanoReader.GetElectronReader()._nLepton; ++ e){
+    for( unsigned e = 0; e < nanoReader.GetElectronReader()->_nLepton; ++ e){
         push_back( Electron( nanoReader, e ) );
     } 
 
     //add taus to lepton collection
-    for( unsigned t = 0; t < nanoReader.GetTauReader()._nLepton; ++t){
+    for( unsigned t = 0; t < nanoReader.GetTauReader()->_nLepton; ++t){
         push_back( Tau( nanoReader, t ) );
     }
 }

@@ -12,3 +12,14 @@ LightLeptonCollection::LightLeptonCollection( const TreeReader& treeReader ){
         push_back( Electron( treeReader, e ) );
     }
 }
+
+
+LightLeptonCollection::LightLeptonCollection( const NanoReader& nanoReader ){
+    std::cout << "AAAAA" << std::endl;
+    ///for( unsigned m = 0; m < nanoReader._nMu; ++m ){
+    ///    push_back( Muon( nanoReader, m ) );
+    ///}
+    ///for( unsigned e = nanoReader._nMu; e < nanoReader._nLight; ++e ){
+    ///    push_back( Electron( nanoReader, e ) );
+    ///}
+}

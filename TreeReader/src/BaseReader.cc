@@ -214,5 +214,9 @@ void BaseReader::GetEntry( const Sample& samp, long unsigned entry ){
 
 //use the currently initialized sample when running in serial
 void BaseReader::GetEntry(long unsigned entry) {
+    std::cout << "Get Entry" << std::endl;
+    std::cout << _currentSamplePtr << std::endl;
     GetEntry( *_currentSamplePtr, entry );
+    std::cout << _currentSamplePtr << std::endl;
+
 }

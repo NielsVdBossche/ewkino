@@ -8,7 +8,7 @@ ElectronCollection::ElectronCollection( const TreeReader& treeReader ){
 }
 
 ElectronCollection::ElectronCollection( const NanoReader& nanoReader ){
-    for( unsigned e = 0; e < nanoReader.GetElectronReader()._nLepton; ++ e){
+    for( unsigned e = 0; e < nanoReader.GetElectronReader()->_nLepton; ++ e){
         push_back( Electron( nanoReader, e ) );
     }
 }

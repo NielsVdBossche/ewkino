@@ -25,7 +25,7 @@ bool considerForMatching( int lepPdgId, const NanoReader& treeReader, int genInd
     return (genStatus == 1);
 }
 
-int findGeometricMatch( const NanoReader::LeptonReader& leptonReader, bool isElectron, bool isMuon, bool isTau, 
+int findGeometricMatch( const NanoReader::LeptonReader* leptonReader, bool isElectron, bool isMuon, bool isTau, 
                         const unsigned leptonIndex, bool allowPhotons = false) {
     // find a geometric gen match for a given lepton,
     // in case the builtin matching does not point to a valid index
@@ -35,27 +35,27 @@ int findGeometricMatch( const NanoReader::LeptonReader& leptonReader, bool isEle
     int absPdgToMatch = 0;
     if (isElectron) {
         lepvec = LorentzVector(
-            leptonReader._Lepton_pt[leptonIndex],
-            leptonReader._Lepton_eta[leptonIndex],
-            leptonReader._Lepton_phi[leptonIndex],
+            leptonReader->_Lepton_pt[leptonIndex],
+            leptonReader->_Lepton_eta[leptonIndex],
+            leptonReader->_Lepton_phi[leptonIndex],
             0.);
         absPdgToMatch = 11;
     } else if (isMuon) {
         lepvec = LorentzVector(
-            leptonReader._Lepton_pt[leptonIndex],
-            leptonReader._Lepton_eta[leptonIndex],
-            leptonReader._Lepton_phi[leptonIndex],
+            leptonReader->_Lepton_pt[leptonIndex],
+            leptonReader->_Lepton_eta[leptonIndex],
+            leptonReader->_Lepton_phi[leptonIndex],
             0.);
         absPdgToMatch = 13;
     } else if (isTau) {
         lepvec = LorentzVector(
-            leptonReader._Lepton_pt[leptonIndex],
-            leptonReader._Lepton_eta[leptonIndex],
-            leptonReader._Lepton_phi[leptonIndex],
+            leptonReader->_Lepton_pt[leptonIndex],
+            leptonReader->_Lepton_eta[leptonIndex],
+            leptonReader->_Lepton_phi[leptonIndex],
             0.);
         absPdgToMatch = 15;
     }
-    const NanoReader& nanoReader = leptonReader.GetNanoReader();
+    const NanoReader& nanoReader = leptonReader->GetNanoReader();
     int matchIndex = -1;
     double minDeltaR = 99.;
     for (unsigned int genIndex = 0; genIndex < nanoReader._nGenPart; genIndex++) {
@@ -90,9 +90,9 @@ LeptonGeneratorInfo::LeptonGeneratorInfo( const TreeReader& treeReader, const un
     _provenanceConversion( treeReader._lProvenanceConversion[leptonIndex] ) 
     {}
 
-LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader& leptonReader, const unsigned leptonindex) {
+LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader* leptonReader, const unsigned leptonindex) {
     // Starting directly from NanoAOD definitions to fix this all.
-    if (leptonReader.isLightLeptonReader()) {
+    if (leptonReader->isLightLeptonReader()) {
         _isPrompt = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_isPrompt[leptonindex];
         _matchPdgId = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_matchPdgId[leptonindex];
         _momPdgId = ((NanoReader::LightLeptonReader&) leptonReader)._Lepton_motherPdgId[leptonindex];
@@ -104,9 +104,9 @@ LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader& lepton
 }
 
 
-LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader& leptonReader, const unsigned leptonIndex, bool isElectron, bool isMuon, bool isTau) {
-    int genIdx = leptonReader._Lepton_genPartIdx[leptonIndex];
-    int recoPdgId = leptonReader._Lepton_genPartFlav[leptonIndex];
+LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader* leptonReader, const unsigned leptonIndex, bool isElectron, bool isMuon, bool isTau) {
+    int genIdx = leptonReader->_Lepton_genPartIdx[leptonIndex];
+    int recoPdgId = leptonReader->_Lepton_genPartFlav[leptonIndex];
 
     if (isElectron) {
         recoPdgId *= (-11);
@@ -119,7 +119,7 @@ LeptonGeneratorInfo::LeptonGeneratorInfo( const NanoReader::LeptonReader& lepton
         throw std::invalid_argument(msg);
     }
 
-    const NanoReader& nanoReader = leptonReader.GetNanoReader();
+    const NanoReader& nanoReader = leptonReader->GetNanoReader();
     // safety check on index of gen particle
     if (genIdx >= (int)nanoReader._nGenPart) {
         std::string msg = "WARNING in LeptonGeneratorConstructor constructor:";

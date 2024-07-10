@@ -8,7 +8,7 @@ MuonCollection::MuonCollection( const TreeReader& treeReader ){
 }
 
 MuonCollection::MuonCollection( const NanoReader& nanoReader ){
-    for( unsigned m = 0; m < nanoReader.GetMuonReader()._nLepton; ++m){
+    for( unsigned m = 0; m < nanoReader.GetMuonReader()->_nLepton; ++m){
         push_back( Muon( nanoReader, m ) );
     }
 }

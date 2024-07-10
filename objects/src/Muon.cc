@@ -34,6 +34,7 @@ Muon::Muon( const NanoReader& nanoReader, const unsigned leptonIndex ):
     _isTracker( nanoReader._Muon_isTracker[leptonIndex] ),
     _isStandalone( nanoReader._Muon_isStandalone[leptonIndex] )
 {   
+    std::cout << leptonIndex << std::endl;
     double energy_corr = energy() * nanoReader._Muon_corrected_pt[ leptonIndex ] / pt();
     setLorentzVector( nanoReader._Muon_corrected_pt[ leptonIndex ], eta(), phi(), 
                 energy_corr);

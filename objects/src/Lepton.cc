@@ -22,18 +22,18 @@ Lepton::Lepton( const TreeReader& treeReader, const unsigned leptonIndex, Lepton
     _uncorrectedE( energy() )
     {}
 
-Lepton::Lepton( const NanoReader::LeptonReader& leptonReader, const unsigned leptonIndex, LeptonSelector* leptonSelector) :
-    PhysicsObject( leptonReader._Lepton_pt[leptonIndex], leptonReader._Lepton_eta[leptonIndex],
-            leptonReader._Lepton_phi[leptonIndex], -1., // energy is not stored in nanoAOD, pass -1 to allow lorentzvector to init with energy = momentum
-            leptonReader.GetNanoReader().is2016(),
-            leptonReader.GetNanoReader().is2016PreVFP(),
-            leptonReader.GetNanoReader().is2016PostVFP(),
-            leptonReader.GetNanoReader().is2017(),
-            leptonReader.GetNanoReader().is2018()),
-    _charge(leptonReader._Lepton_charge[leptonIndex]),
-    _dxy( leptonReader._Lepton_dxy[leptonIndex] ),
-    _dz( leptonReader._Lepton_dz[leptonIndex] ), 
-    generatorInfo( leptonReader.GetNanoReader().isMC() ? new LeptonGeneratorInfo( leptonReader, leptonIndex ) : nullptr ),
+Lepton::Lepton( const NanoReader::LeptonReader* leptonReader, const unsigned leptonIndex, LeptonSelector* leptonSelector) :
+    PhysicsObject( leptonReader->_Lepton_pt[leptonIndex], leptonReader->_Lepton_eta[leptonIndex],
+            leptonReader->_Lepton_phi[leptonIndex], -1., // energy is not stored in nanoAOD, pass -1 to allow lorentzvector to init with energy = momentum
+            leptonReader->GetNanoReader().is2016(),
+            leptonReader->GetNanoReader().is2016PreVFP(),
+            leptonReader->GetNanoReader().is2016PostVFP(),
+            leptonReader->GetNanoReader().is2017(),
+            leptonReader->GetNanoReader().is2018()),
+    _charge(leptonReader->_Lepton_charge[leptonIndex]),
+    _dxy( leptonReader->_Lepton_dxy[leptonIndex] ),
+    _dz( leptonReader->_Lepton_dz[leptonIndex] ), 
+    generatorInfo( leptonReader->GetNanoReader().isMC() ? new LeptonGeneratorInfo( leptonReader, leptonIndex ) : nullptr ),
     selector( leptonSelector ),
     _uncorrectedPt( pt() ),
     _uncorrectedE( energy() )

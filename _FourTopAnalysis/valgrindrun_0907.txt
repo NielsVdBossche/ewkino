@@ -1,0 +1,707 @@
+==39291== Memcheck, a memory error detector
+==39291== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==39291== Using Valgrind-3.17.0 and LibVEX; rerun with -h for copyright info
+==39291== Command: ./analysisTreeExec ../sampleLists/test_bsmsample.txt MCPrompt nominal NanoAOD TestCode
+==39291== 
+consider line
+sample: TTTW_BSM	TTTW_13TeV_LO_TopPhilicVectorSinglet_M0p8_C1p0e00_240621_123623_Run2SIM_UL2018NanoAOD_240621_144625.root	0.013	MC	2018
+year string is: 2018
+Output/AnalysisOutput_MCPrompt_2024-07-10_11-48_test_bsmsample.root
+                         : Booking "BDTCurr" of type "BDT" from ANWeights/BDTs/FourTopClassification_UL_2023-01-02_15-29__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml.
+                         : Reading weight file: ANWeights/BDTs/FourTopClassification_UL_2023-01-02_15-29__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml
+==39291== 
+==39291== Process terminating with default action of signal 2 (SIGINT)
+==39291==    at 0x40348F0: __strncpy_sse2_unaligned (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/external/valgrind/3.17.0-cc798bb086888e3df1cae9920139b307/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39291==    by 0x871B874: TXMLEngine::ReadNode(void*, TXMLInputStream*, int&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x871BE0A: TXMLEngine::ReadNode(void*, TXMLInputStream*, int&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x871BE0A: TXMLEngine::ReadNode(void*, TXMLInputStream*, int&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x871BE0A: TXMLEngine::ReadNode(void*, TXMLInputStream*, int&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x871BE0A: TXMLEngine::ReadNode(void*, TXMLInputStream*, int&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x871BE0A: TXMLEngine::ReadNode(void*, TXMLInputStream*, int&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x871C49F: TXMLEngine::ParseStream(TXMLInputStream*) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x871C8FB: TXMLEngine::ParseFile(char const*, int) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libXMLIO.so)
+==39291==    by 0x6F68661: TMVA::MethodBase::ReadStateFromFile() (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libTMVA.so)
+==39291==    by 0x70AA322: TMVA::Reader::BookMVA(TMVA::Types::EMVA, TString const&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libTMVA.so)
+==39291==    by 0x70AC3CE: TMVA::Reader::BookMVA(TString const&, TString const&) (in /cvmfs/cms.cern.ch/slc7_amd64_gcc12/lcg/root/6.26.11-9631c813ba7e5cd5be390fa1ded44151/lib/libTMVA.so)
+==39291==    by 0x6B3D11: MVAHandler_4T::initReader() (MVAHandler.cc:183)
+==39291==    by 0x6B299B: MVAHandler_4T::MVAHandler_4T(MVAConfigs, EventFourT*, bool) (MVAHandler.cc:9)
+==39291==    by 0x662411: FourTop::createMVAHandlers() (FourTop.cc:211)
+==39291==    by 0x66180C: FourTop::FourTop(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, int, bool) (FourTop.cc:178)
+==39291==    by 0x59CFB0: main (analyzeCodeToTTree.cc:23)
+==39291== 
+==39291== HEAP SUMMARY:
+==39291==     in use at exit: 35,343,187 bytes in 902,528 blocks
+==39291==   total heap usage: 2,450,349 allocs, 1,547,821 frees, 87,976,995 bytes allocated
+==39291== 
+==39291== LEAK SUMMARY:
+==39291==    definitely lost: 0 bytes in 0 blocks
+==39291==    indirectly lost: 0 bytes in 0 blocks
+==39291==      possibly lost: 0 bytes in 0 blocks
+==39291==    still reachable: 35,343,187 bytes in 902,528 blocks
+==39291==         suppressed: 0 bytes in 0 blocks
+==39291== Rerun with --leak-check=full to see details of leaked memory
+==39291== 
+==39291== For lists of detected and suppressed errors, rerun with: -s
+==39291== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 99 from 12)
+consider line
+sample: TTTW_BSM	TTTW_13TeV_LO_TopPhilicVectorSinglet_M0p8_C1p0e00_240621_123623_Run2SIM_UL2018NanoAOD_240621_144625.root	0.013	MC	2018
+year string is: 2018
+Output/AnalysisOutput_MCPrompt_2024-07-10_11-49_test_bsmsample.root
+                         : Booking "BDTCurr" of type "BDT" from ANWeights/BDTs/FourTopClassification_UL_2023-01-02_15-29__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml.
+                         : Reading weight file: ANWeights/BDTs/FourTopClassification_UL_2023-01-02_15-29__VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1.weights.xml
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "TTV"
+                         : Booked classifier "VariableSelectionDL_BDT_VAR_DLG_B_2000_4_20_0.1_1_1" of type: "BDT"
+                         : Booking "BDTCurr" of type "BDT" from ANWeights/BDTs/FourTopClassification_UL_2023-01-02_15-29__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml.
+                         : Reading weight file: ANWeights/BDTs/FourTopClassification_UL_2023-01-02_15-29__VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6.weights.xml
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "TTV"
+                         : Booked classifier "VariableSelectionML_BDT_VAR_MLG_B_1500_4_20_0.08_1_0.6" of type: "BDT"
+ANALYZING SR + CR
+initializing
+building reweighter
+bTag SF file: reshaping_deepJet_106XUL18_NEW.csv
+Setting selection typ
+Running method MCPrompt
+Starting sample loop
+deleting existing readers
+Setting branches
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Done setting branches
+lumi determined to be: 59.83 with sum of sim weights 92178
+init sample
+Building event ptr
+0xd5f3350
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Get Entry
+0x16bfe230
+get weight
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+0x16bfe230
+0xd5f3350
+1
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+0
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+1
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+event built.
+Sample TTTW_13TeV_LO_TopPhilicVectorSinglet_M0p8_C1p0e00_240621_123623_Run2SIM_UL2018NanoAOD_240621_144625.root - hasValidPSs: 0
+
+Generating outputfile Output/test/Tree_TTTW_13TeV_LO_TopPhilicVectorSinglet_M0p8_C1p0e00_240621_123623_Run2SIM_UL2018NanoAOD_240621_144625_MCPrompt_2018_base.root
+
+init tree
+file made. Writing metadata...Done!
+writing exp weight naming... Done!
+Starting event loop
+Building event ptr
+0xd5f3350
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Get Entry
+0x16bfe230
+get weight
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+0x16bfe230
+0xd5f3350
+1
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+0
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+1
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+2
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+3
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+635
+Number of scale variations: 8
+Number of eft variations: 13
+has eft variations stuff
+Building event ptr
+0xd5f3350
+Getting nanoreader
+0xab1d180
+1
+0x16bfe230
+Get Entry
+0x16bfe230
+get weight
+Getting nanoreader
+0x100000001
