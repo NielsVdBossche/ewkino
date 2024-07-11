@@ -55,7 +55,7 @@ NanoReader::LightLeptonReader::LightLeptonReader(NanoReader* nano, TTree* _curre
         _currentTreePtr->SetBranchAddress((leptonType+"_isPrompt").c_str(),             _Lepton_isPrompt,             &b__Lepton_isPrompt);
         _currentTreePtr->SetBranchAddress((leptonType+"_isChargeFlip").c_str(),         _Lepton_isChargeFlip,         &b__Lepton_isChargeFlip);
         _currentTreePtr->SetBranchAddress((leptonType+"_matchPdgId").c_str(),           _Lepton_matchPdgId,           &b__Lepton_matchPdgId);
-        _currentTreePtr->SetBranchAddress((leptonType+"_motherPdgId").c_str(),             _Lepton_motherPdgId,          &b__Lepton_momPdgId);
+        _currentTreePtr->SetBranchAddress((leptonType+"_motherPdgId").c_str(),          _Lepton_motherPdgId,          &b__Lepton_momPdgId);
         _currentTreePtr->SetBranchAddress((leptonType+"_provenanceConversion").c_str(), _Lepton_provenanceConversion, &b__Lepton_provenanceConversion);
     }
 }

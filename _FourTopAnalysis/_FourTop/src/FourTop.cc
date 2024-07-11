@@ -62,8 +62,8 @@ FourTop::FourTop(std::vector<std::string>& argvString, int mode, bool produceFil
 
         // Make treereader
         if (nanoAOD) {
-            // treeReader = new NanoReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/nanoTransition/ewkino/TestFiles/");
-            treeReader = new NanoReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
+            treeReader = new NanoReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
+            // treeReader = new NanoReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");
         } else {
             // treeReader = new TreeReader(argvString[1], "/home/njovdnbo/Documents/ewkino_dev/analysis/ewkino/TestFiles/");
             treeReader = new TreeReader(argvString[1], "/pnfs/iihe/cms/store/user/nivanden/skims/");

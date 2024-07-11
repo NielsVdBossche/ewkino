@@ -10,7 +10,7 @@ class NanoReader : public BaseReader {
 
         // Tree manipulation
         void initTree(const bool resetTriggersAndFilters = true) override;
-        void initSample(const Sample& samp);
+        // void initSample(const Sample& samp);
         void setOutputTree(TTree* ) override;
 
         
@@ -20,7 +20,7 @@ class NanoReader : public BaseReader {
                 virtual ~LeptonReader() = default;
                 virtual bool isLightLeptonReader() const {return false;}
 
-                static const unsigned nLepton_max = 20;
+                static const unsigned nLepton_max = 40;
 
                 // universal for LorentzVector
                 UInt_t          _nLepton;
@@ -95,9 +95,9 @@ class NanoReader : public BaseReader {
                         *b__Lepton_isPrompt, *b__Lepton_isChargeFlip, *b__Lepton_matchPdgId, *b__Lepton_momPdgId, *b__Lepton_provenanceConversion;
         };
 
-        static const unsigned nElectron_max = 20;
-        static const unsigned nMuon_max = 20;
-        static const unsigned nTau_max = 20;
+        static const unsigned nElectron_max = 40;
+        static const unsigned nMuon_max = 40;
+        static const unsigned nTau_max = 40;
         static const unsigned nJet_max = 60;
         static const unsigned nGenPart_max = 150; // NOTE: might be too low
         static const unsigned nLHEPart_max = 10;
