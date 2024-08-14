@@ -93,7 +93,7 @@ class NanoReader : public BaseReader {
         static const unsigned nMuon_max = 40;
         static const unsigned nTau_max = 40;
         static const unsigned nJet_max = 60;
-        static const unsigned nGenPart_max = 150; // NOTE: might be too low
+        static const unsigned nGenPart_max = 200; // NOTE: might be too low
         static const unsigned nLHEPart_max = 10;
         static const unsigned nGenJet_max = 30;
         static const unsigned nLHEPdfWeight_max = 103;
