@@ -10,39 +10,43 @@ Met::Met( const TreeReader& treeReader,
     _phi_JECDown( treeReader._metPhi_JECDown ),
     _pt_JECUp( treeReader._met_JECUp ),
     _phi_JECUp( treeReader._metPhi_JECUp ),
-    _JECSources(treeReader._sourcesJEC_Ids ),
-    _JECGrouped(treeReader._groupedJEC_Ids ),
     _pt_UnclDown( treeReader._met_UnclDown ),
     _phi_UnclDown( treeReader._metPhi_UnclDown ),
     _pt_UnclUp( treeReader._met_UnclUp ),
     _phi_UnclUp( treeReader._metPhi_UnclUp ),
     _metVariationsInitialized(true) 
 {
-    
+    isNano = false;
     if (readAllJECVariations) {
-        _pxy_JECSourcesUp = std::vector<std::pair<double,double> >(_JECSources->size());
-        _pxy_JECSourcesDown = std::vector<std::pair<double,double> >(_JECSources->size());
-        for (const auto& elMap : *_JECSources) {
-            _pxy_JECSourcesUp[elMap.second] = std::make_pair(
-                                               treeReader._corrMETx_JECSourcesUp[elMap.second],
-                                               treeReader._corrMETy_JECSourcesUp[elMap.second]);
-
-            _pxy_JECSourcesDown[elMap.second] = std::make_pair(
-                                    treeReader._corrMETx_JECSourcesDown[elMap.second],
-                                    treeReader._corrMETy_JECSourcesDown[elMap.second]);
+        for( const auto& mapEl: treeReader._corrMETx_JECSourcesUp ){
+                std::string key = mapEl.first;
+                key = stringTools::removeOccurencesOf(key,"_corrMETx_");
+                key = stringTools::removeOccurencesOf(key,"_JECSourcesUp");
+                _JECSources.push_back( key ); // assume they are the same for Up/Down and x/y!
+            }
+        for( const std::string& key: _JECSources ){
+            _pxy_JECSourcesUp.insert( {key, std::make_pair( 
+            treeReader._corrMETx_JECSourcesUp.at("_corrMETx_"+key+"_JECSourcesUp"), 
+            treeReader._corrMETy_JECSourcesUp.at("_corrMETy_"+key+"_JECSourcesUp"))} );
+            _pxy_JECSourcesDown.insert( {key, std::make_pair( 
+                    treeReader._corrMETx_JECSourcesDown.at("_corrMETx_"+key+"_JECSourcesDown"),   
+                    treeReader._corrMETy_JECSourcesDown.at("_corrMETy_"+key+"_JECSourcesDown"))} );
         }
     }
     if (readGroupedJECVariations) {
-        _pxy_JECGroupedUp = std::vector<std::pair<double,double> >(_JECGrouped->size());
-        _pxy_JECGroupedDown = std::vector<std::pair<double,double> >(_JECGrouped->size());
-
-        for (const auto& elMap : *_JECGrouped) {
-            _pxy_JECGroupedUp[elMap.second] = std::make_pair(
-                                               treeReader._corrMETx_JECGroupedUp[elMap.second],
-                                               treeReader._corrMETy_JECGroupedUp[elMap.second]);
-            _pxy_JECGroupedDown[elMap.second] = std::make_pair(
-                                                 treeReader._corrMETx_JECGroupedDown[elMap.second],
-                                                 treeReader._corrMETy_JECGroupedDown[elMap.second]);
+        for( const auto& mapEl: treeReader._corrMETx_JECGroupedUp ){
+            std::string key = mapEl.first;
+            key = stringTools::removeOccurencesOf(key,"_corrMETx_");
+            key = stringTools::removeOccurencesOf(key,"_JECGroupedUp");
+            _JECGrouped.push_back( key ); // assume they are the same for Up/Down and x/y!
+        }
+        for( const std::string& key: _JECGrouped ){
+            _pxy_JECGroupedUp.insert( {key, std::make_pair( 
+                treeReader._corrMETx_JECGroupedUp.at("_corrMETx_"+key+"_JECGroupedUp"),  
+                treeReader._corrMETy_JECGroupedUp.at("_corrMETy_"+key+"_JECGroupedUp"))} );
+            _pxy_JECGroupedDown.insert( {key, std::make_pair(  
+                treeReader._corrMETx_JECGroupedDown.at("_corrMETx_"+key+"_JECGroupedDown"),   
+                treeReader._corrMETy_JECGroupedDown.at("_corrMETy_"+key+"_JECGroupedDown"))} );
         }
     }
 }
@@ -70,13 +74,25 @@ Met::Met(const NanoReader& nanoReader, const bool readAllJECVariations, const bo
     _metVariationsInitialized(true),
     _metJERVariationsInitialized(true)
 {
+    isNano = true;
     // Smeared MET should be read. 
     // TODO: not yet supported:
     if (readAllJECVariations) {
 
     }
     if (readGroupedJECVariations) {
-
+        for( const auto& mapEl: nanoReader._MET_T1Smear_pt_jesSourcesUp ){
+            std::string key = mapEl.first;
+            _JECGrouped.push_back( key );
+            _pt_phi_JECGroupedUp.insert({key, std::make_pair(
+                nanoReader._MET_T1Smear_pt_jesSourcesUp.at(key),
+                nanoReader._MET_T1Smear_phi_jesSourcesUp.at(key)
+            )});
+            _pt_phi_JECGroupedDown.insert({key, std::make_pair(
+                nanoReader._MET_T1Smear_pt_jesSourcesDown.at(key),
+                nanoReader._MET_T1Smear_phi_jesSourcesDown.at(key)
+            )});
+        }
     }
 }
 
@@ -143,51 +159,104 @@ Met Met::MetJER2p5Up() const {
 }
 
 
-Met Met::MetJECDown( const std::string source ) const{
+Met Met::MetJECDown( const std::string& variation ) const{
     // note: this function checks both all and grouped variations,
     // need to check if there is no overlap in names between them!
-    std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    for(auto test: *_JECSources ){
-        if(source==test.first) newpxy = this->_pxy_JECSourcesDown[test.second];
+    if (isNano) {
+        std::pair< double, double > new_pt_phi = std::make_pair( 0,0 );
+        try {
+            new_pt_phi = _pt_phi_JECGroupedDown.at(variation);
+        } catch(const std::exception& e) {
+            std::cerr << "Met::MetJECDown NANO Variation " << variation << " not found in JEC sources or grouped variations." << '\n';
+            std::cerr << e.what() << '\n';
+        }
+        return variedMet( new_pt_phi.first, new_pt_phi.second );
+    } else {
+        std::pair< double, double > newpxy = std::make_pair( 0,0 );
+        try {
+            newpxy = _pxy_JECGroupedDown.at(variation);
+        } catch(const std::exception& e) {
+            try {
+                newpxy = _pxy_JECSourcesDown.at(variation);
+            } catch(const std::exception& e) {
+                std::cerr << "Met::MetJECDown Variation " << variation << " not found in JEC sources or grouped variations." << '\n';
+                std::cerr << e.what() << '\n';
+            }
+        }
+        return variedMetPxPy( newpxy.first, newpxy.second );
     }
-    for( auto test: *_JECGrouped ){
-        if(source==test.first) newpxy = this->_pxy_JECGroupedDown[test.second];
-    }
-    return variedMetPxPy( newpxy.first, newpxy.second );
 }
 
-Met Met::MetJECUp( const std::string source ) const{
+Met Met::MetJECUp( const std::string& variation ) const{
     // note: this function checks both all and grouped variations,
     // need to check if there is no overlap in names between them!
-    std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    for(auto test: *_JECSources ){
-        if(source==test.first) newpxy = this->_pxy_JECSourcesUp[test.second];
+    if (isNano) {
+        std::pair< double, double > new_pt_phi = std::make_pair( 0,0 );
+        try {
+            new_pt_phi = _pt_phi_JECGroupedUp.at(variation);
+        } catch(const std::exception& e) {
+            std::cerr << "Met::MetJECUp NANO Variation " << variation << " not found in JEC sources or grouped variations." << '\n';
+            std::cerr << e.what() << '\n';
+        }
+        return variedMet( new_pt_phi.first, new_pt_phi.second );
+    } else {
+        std::pair< double, double > newpxy = std::make_pair( 0,0 );
+        try {
+            newpxy = _pxy_JECGroupedDown.at(variation);
+        } catch(const std::exception& e) {
+            try {
+                newpxy = _pxy_JECSourcesDown.at(variation);
+            } catch(const std::exception& e) {
+                std::cerr << "Met::MetJECUp Variation " << variation << " not found in JEC sources or grouped variations." << '\n';
+                std::cerr << e.what() << '\n';
+            }
+        }
+        return variedMetPxPy( newpxy.first, newpxy.second );
     }
-    for( auto test: *_JECGrouped ){
-        if(source==test.first) newpxy = this->_pxy_JECGroupedUp[test.second];
-    }
-    return variedMetPxPy( newpxy.first, newpxy.second );
 }
 
 
-Met Met::MetJECGroupedDown( const unsigned source) const {
+Met Met::MetJECGroupedDown(const std::string& variation) const {
+    if (isNano) {
+        std::pair< double, double > new_pt_phi = std::make_pair( 0,0 );
+        new_pt_phi = _pt_phi_JECGroupedDown.at(variation);
+        return variedMet( new_pt_phi.first, new_pt_phi.second );
+    } else {
+        std::pair< double, double > newpxy = std::make_pair( 0,0 );
+        newpxy = _pxy_JECGroupedDown.at(variation);
+        return variedMetPxPy( newpxy.first, newpxy.second );
+    }
+}
+
+Met Met::MetJECGroupedUp(const std::string& variation) const {
+    if (isNano) {
+        std::pair< double, double > new_pt_phi = std::make_pair( 0,0 );
+        new_pt_phi = _pt_phi_JECGroupedUp.at(variation);
+        return variedMet( new_pt_phi.first, new_pt_phi.second );
+    } else {
+        std::pair< double, double > newpxy = std::make_pair( 0,0 );
+        newpxy = _pxy_JECGroupedUp.at(variation);
+        return variedMetPxPy( newpxy.first, newpxy.second );
+    }
+}
+
+Met Met::MetJECSourcesDown(const std::string& variation) const {
+    if (isNano) {
+        std::cerr << "JEC SOURCES NOT YET IMPLEMENTED" << std::endl;
+        exit(1);
+    }
     std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    newpxy = _pxy_JECGroupedDown[source];
+    newpxy = _pxy_JECSourcesDown.at(variation);
     return variedMetPxPy( newpxy.first, newpxy.second );
 }
-Met Met::MetJECGroupedUp( const unsigned source) const {
+
+Met Met::MetJECSourcesUp(const std::string& variation) const {
+    if (isNano) {
+        std::cerr << "JEC SOURCES NOT YET IMPLEMENTED" << std::endl;
+        exit(1);
+    }
     std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    newpxy = _pxy_JECGroupedUp[source];
-    return variedMetPxPy( newpxy.first, newpxy.second );
-}
-Met Met::MetJECSourcesDown( const unsigned source) const {
-    std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    newpxy = _pxy_JECSourcesDown[source];
-    return variedMetPxPy( newpxy.first, newpxy.second );
-}
-Met Met::MetJECSourcesUp( const unsigned source) const {
-    std::pair< double, double > newpxy = std::make_pair( 0,0 );
-    newpxy = _pxy_JECSourcesUp[source];
+    newpxy = _pxy_JECSourcesUp.at(variation);
     return variedMetPxPy( newpxy.first, newpxy.second );
 }
 
@@ -281,7 +350,7 @@ std::ostream& Met::print( std::ostream& os ) const{
     return os;
 }
 
-Met Met::getVariedMet(JetCollection& nomJets, unsigned variationSource, unsigned flavor, bool up) const {
+Met Met::getVariedMet(JetCollection& nomJets, const std::string& variation, unsigned flavor, bool up) const {
     // rough approach
     // generate lorentzvector corresponding to met
     LorentzVector ret = LorentzVector(pt(), eta(), phi(), energy());
@@ -291,8 +360,8 @@ Met Met::getVariedMet(JetCollection& nomJets, unsigned variationSource, unsigned
         if (jetPtr->hadronFlavor() != flavor) continue;
         
         std::shared_ptr<Jet> varJet;
-        if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECGroupedUp( variationSource ));
-        else varJet = std::make_shared< Jet >(jetPtr->JetJECGroupedDown( variationSource ));
+        if (up) varJet = std::make_shared< Jet >(jetPtr->JetJECUp( variation ));
+        else varJet = std::make_shared< Jet >(jetPtr->JetJECDown( variation ));
 
         double ptdiff = ptNom - varJet->pt();
 

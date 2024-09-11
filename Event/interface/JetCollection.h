@@ -24,7 +24,9 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection( const TreeReader&, 
 			const bool readAllJECVariations = false,
 			const bool readGroupedJECVariations = false );
-        JetCollection( const NanoReader& );
+        JetCollection( const NanoReader&, 
+			const bool useAllJECVariations = false,
+			const bool readGroupedJECVariations = false  );
 
         //make jet collection with b-tagged jets 
         JetCollection looseBTagCollection() const;
@@ -42,20 +44,20 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection JER_1p93_To_2p5_DownCollection() const;
         JetCollection JER_1p93_To_2p5_UpCollection() const;
 
-	    JetCollection JECUpCollection( std::string source ) const;
-	    JetCollection JECDownCollection( std::string source ) const;
-        JetCollection JECGroupedUpCollection( unsigned source ) const;
-        JetCollection JECGroupedDownCollection( unsigned source ) const;
-	    JetCollection getVariedJetCollection( const std::string& variation ) const;
-        JetCollection getVariedJetCollection( unsigned source, bool isUp, bool isGrouped) const;
+	    JetCollection JECUpCollection( const std::string& variation ) const;
+	    JetCollection JECGroupedUpCollection( const std::string& variation ) const;
+	    JetCollection JECDownCollection( const std::string& variation ) const;
+	    JetCollection JECGroupedDownCollection( const std::string& variation ) const;
+	    JetCollection getVariedJetCollection(const std::string& variation ) const;
+        JetCollection getVariedJetCollection(const std::string& variation, bool isGrouped, bool isUp) const;
         #if JECONRUNTIME
         JetCollection JECCustomCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const;
         JetCollection JECCustomGoodCollection(std::shared_ptr<JECWrapper> jecwrapper, unsigned id, bool isUp) const;
         #endif
 
-        JetCollection JECGroupedFlavorQCD(unsigned sourceID, unsigned flavor, bool up) const;
-        JetCollection JECUpGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const;
-        JetCollection JECDownGroupedFlavorQCD(unsigned sourceID, unsigned flavor) const;
+        JetCollection JECGroupedFlavorQCD(const std::string& sourceID, unsigned flavor, bool up) const;
+        JetCollection JECUpGroupedFlavorQCD(const std::string& sourceID, unsigned flavor) const;
+        JetCollection JECDownGroupedFlavorQCD(const std::string& sourceID, unsigned flavor) const;
 
         JetCollection JECGroupedFlavorQCD(unsigned flavor, bool up) const;
         JetCollection JECUpGroupedFlavorQCD(unsigned flavor) const;
@@ -101,10 +103,8 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
     
         //build JetCollection of varied Jets
         JetCollection buildVariedCollection( Jet (Jet::*variedJet)() const ) const;
-	    JetCollection buildVariedCollection( Jet (Jet::*variedJet)(std::string) const, std::string ) const;
-	    JetCollection buildVariedCollection( Jet (Jet::*variedJet)(const unsigned) const, unsigned variationArg ) const;
-        JetCollection buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(const unsigned) const, unsigned, unsigned ) const;
-        JetCollection buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(std::string) const, std::string, unsigned ) const;
+	    JetCollection buildVariedCollection( Jet (Jet::*variedJet)(const std::string&) const, const std::string& ) const;
+        JetCollection buildVariedCollection_FlavorSet( Jet (Jet::*variedJet)(const std::string&) const, const std::string&, unsigned ) const;
 
 
         //number of b-taged jets with variation

@@ -532,26 +532,29 @@ double ReweighterBTagShape::weightNoNorm(const Event &event) const
 }
 
 double ReweighterBTagShape::weightJecVar(const Event &event,
-                                         const std::string &jecVariation, bool grouped, const unsigned var ) const
+                                         const std::string &jecVariation, bool grouped, bool isUp ) const
 {
+    // TODO: remove const unsigned var.
     // same as weight but with propagation of jec variations
     // jecvar is expected to be of the form e.g. AbsoluteScaleUp or AbsoluteScaleDown
     // special case JECUp and JECDown (for single variations) are also allowed
     std::string jecVar = stringTools::removeOccurencesOf(jecVariation, "JEC");
     std::string varName;
+    std::string varNameForJetCollection;
     std::string jesVarName;
-    bool isup = true;
     //std::cout << "preprocess" << std::endl;
-    if (stringTools::stringEndsWith(jecVar, "Up"))
+    if (isUp)
     {
         varName = "jes" + jecVar.substr(0, jecVar.size() - 2);
+        varNameForJetCollection = jecVar.substr(0, jecVar.size() - 2);
         jesVarName = "up_" + varName;
     }
-    else if (stringTools::stringEndsWith(jecVar, "Down"))
+    else
     {
         varName = "jes" + jecVar.substr(0, jecVar.size() - 4);
+        varNameForJetCollection = jecVar.substr(0, jecVar.size() - 4);
         jesVarName = "down_" + varName;
-        isup = false;
+
     }
     if (!hasVariation(varName))
     {
@@ -567,11 +570,10 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
     double weight = 1.;
     //std::cout << "getting collection" << std::endl;
 
-    for (const auto &jetPtr : event.getJetCollectionPtr()->getVariedJetCollection(var, isup, grouped))
+    for (const auto &jetPtr : event.getJetCollectionPtr()->getVariedJetCollection(varNameForJetCollection, grouped, isUp))
     {   
         //std::cout << "loop";
-
-        if (isup)
+        if (isUp)
             weight *= this->weightUp(*jetPtr, varName);
         else
             weight *= this->weightDown(*jetPtr, varName);
@@ -582,7 +584,7 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
 }
 
 double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
-                                         const std::string &jecVariation, unsigned flavor) const
+                                         const std::string &jecVariation, unsigned flavor, bool isUp) const
 {
     // same as weight but with propagation of jec variations
     // jecvar is expected to be of the form e.g. AbsoluteScaleUp or AbsoluteScaleDown
@@ -590,17 +592,15 @@ double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
     std::string jecVar = stringTools::removeOccurencesOf(jecVariation, "JEC");
     std::string varName;
     std::string jesVarName;
-    bool isup = true;
-    if (stringTools::stringEndsWith(jecVar, "Up"))
+    if (isUp)
     {
         varName = "jes" + jecVar.substr(0, jecVar.size() - 2);
         jesVarName = "up_" + varName + "_" + std::to_string(flavor);
     }
-    else if (stringTools::stringEndsWith(jecVar, "Down"))
+    else
     {
         varName = "jes" + jecVar.substr(0, jecVar.size() - 4);
         jesVarName = "down_" + varName + "_" + std::to_string(flavor);
-        isup = false;
     }
     //std::cout << jecVariation << " " << flavor << std::endl;
     if (!hasVariation(varName))
@@ -613,10 +613,10 @@ double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
         //throw std::invalid_argument(msg);
     }
     double weight = 1.;
-    for (const auto &jetPtr : event.jetCollection().JECGroupedFlavorQCD(flavor, isup))
+    for (const auto &jetPtr : event.jetCollection().JECGroupedFlavorQCD(flavor, isUp))
     {   
         if (jetPtr->hadronFlavor() == flavor) {
-            if (isup)
+            if (isUp)
                 weight *= this->weightUp(*jetPtr, varName);
             else
                 weight *= this->weightDown(*jetPtr, varName);

@@ -10,7 +10,7 @@ class NanoReader : public BaseReader {
 
         // Tree manipulation
         void initTree(const bool resetTriggersAndFilters = true) override;
-        void initSample(const Sample& samp);
+        // void initSample(const Sample& samp);
         void setOutputTree(TTree* ) override;
 
         
@@ -220,6 +220,7 @@ class NanoReader : public BaseReader {
         Float_t         _Jet_mass_jer0Up[nJet_max];
         Float_t         _Jet_mass_jer1Down[nJet_max];
         Float_t         _Jet_mass_jer1Up[nJet_max];
+
         // MET JER smearing:
         Float_t         _MET_T1Smear_pt_jer0Down;
         Float_t         _MET_T1Smear_phi_jer0Down;
@@ -244,6 +245,23 @@ class NanoReader : public BaseReader {
         Float_t         _MET_T1Smear_pt_jesTotalDown;
         Float_t         _MET_T1Smear_phi_jesTotalDown;
 
+        // Individual JES Variations:
+        std::map<std::string, Float_t[nJet_max]> _Jet_pt_jesSourcesUp;
+        std::map<std::string, Float_t[nJet_max]> _Jet_pt_jesSourcesDown;
+        std::map<std::string, Float_t[nJet_max]> _Jet_mass_jesSourcesUp;
+        std::map<std::string, Float_t[nJet_max]> _Jet_mass_jesSourcesDown;
+        std::map<std::string, Float_t>           _MET_T1Smear_pt_jesSourcesUp;
+        std::map<std::string, Float_t>           _MET_T1Smear_pt_jesSourcesDown;
+        std::map<std::string, Float_t>           _MET_T1Smear_phi_jesSourcesUp;
+        std::map<std::string, Float_t>           _MET_T1Smear_phi_jesSourcesDown;
+        std::map<std::string, std::string>      _Jet_pt_jesSourcesUpNames;
+        std::map<std::string, std::string>      _Jet_pt_jesSourcesDownNames;
+        std::map<std::string, std::string>      _Jet_mass_jesSourcesUpNames;
+        std::map<std::string, std::string>      _Jet_mass_jesSourcesDownNames;
+        std::map<std::string, std::string>      _MET_T1Smear_pt_jesSourcesUpNames;
+        std::map<std::string, std::string>      _MET_T1Smear_pt_jesSourcesDownNames;
+        std::map<std::string, std::string>      _MET_T1Smear_phi_jesSourcesUpNames;
+        std::map<std::string, std::string>      _MET_T1Smear_phi_jesSourcesDownNames;
 
         // Trigger variables:
         Bool_t          _HLT_trigger_e;
@@ -316,6 +334,8 @@ class NanoReader : public BaseReader {
         virtual double getSumSimulatedEventWeights() override;
         virtual TTree* getTreePtr() override;
         virtual double getWeight() override {return _genWeight;};
+
+        void initializeJESVariations( TTree* );
 
     private:
         LightLeptonReader*  electronReader = nullptr;
@@ -509,6 +529,15 @@ class NanoReader : public BaseReader {
         TBranch* b__Flag_eeBadScFilter;
         TBranch* b__Flag_ecalBadCalibFilter;
         TBranch* b__Flag_EcalDeadCellTriggerPrimitiveFilter;
+
+        std::map< std::string, TBranch* > b__jet_pt_jesSourcesDown;
+        std::map< std::string, TBranch* > b__jet_pt_jesSourcesUp;
+        std::map< std::string, TBranch* > b__jet_mass_jesSourcesDown;
+        std::map< std::string, TBranch* > b__jet_mass_jesSourcesUp;
+        std::map< std::string, TBranch* > b__met_pt_jesSourcesDown;
+        std::map< std::string, TBranch* > b__met_pt_jesSourcesUp;
+        std::map< std::string, TBranch* > b__met_phi_jesSourcesDown;
+        std::map< std::string, TBranch* > b__met_phi_jesSourcesUp;
 };
 
 #endif

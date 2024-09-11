@@ -19,6 +19,6 @@ void OutputTree::AddEntry() {
 }
 
 void OutputTree::SaveToFile(TFile* file) {
-    std::cout << tree->GetEntries() << std::endl;
+    //std::cout << tree->GetEntries() << std::endl;
     file->Write(tree->GetName(), TObject::kOverwrite);
 }

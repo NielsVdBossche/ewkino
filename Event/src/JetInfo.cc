@@ -25,15 +25,16 @@ JetInfo::JetInfo( const TreeReader& treeReader,
     _JECSources = std::vector<std::string>();
     _JECGrouped = std::vector<std::string>();
     if (readAllJECVariations) {
-        _sourcesJEC_Ids = treeReader._sourcesJEC_Ids;
-
-        for (auto mapEl : *_sourcesJEC_Ids) {
+        for (auto mapEl : treeReader._jetSmearedPt_JECSourcesUp) {
+            // note: in principle only checking one branch should be enough
+            // as up/down and pt/smearedPt are supposed to contain the same variations
             _JECSources.push_back(cleanJECVariationName(mapEl.first));
         }
     }
     if (readGroupedJECVariations) {
-        _groupedJEC_Ids = treeReader._groupedJEC_Ids;
-        for (auto mapEl : *_groupedJEC_Ids) {
+        for (auto mapEl : treeReader._jetSmearedPt_JECGroupedUp) {
+            // note: in principle only checking one branch should be enough
+            // as up/down and pt/smearedPt are supposed to contain the same variations
             _JECGrouped.push_back(cleanJECVariationName(mapEl.first));
         }
     }
@@ -45,8 +46,15 @@ JetInfo::JetInfo( const NanoReader& nanoReader,
     _JECSources = {};
     _JECGrouped = {};
     if (readAllJECVariations) {
+        // Should not init anything here, inidividual sources not stored in NanoReader
+        // but do read from NanoReader to get the JEC sources
     }
     if (readGroupedJECVariations) {
+        for (auto mapEl : nanoReader._Jet_pt_jesSourcesUp) {
+            // note: in principle only checking one branch should be enough
+            // as up/down and pt/smearedPt are supposed to contain the same variations
+            _JECGrouped.push_back(mapEl.first);
+        }
     }
 }
 

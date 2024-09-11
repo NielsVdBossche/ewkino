@@ -335,7 +335,7 @@ bool EventFourT::HasAdditionalBJets() {
     return false;
 }
 
-eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned variation, unsigned flavor) {
+eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, const std::string& variation, unsigned flavor) {
     //if JER
 
     delete jets;
@@ -369,7 +369,7 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned vari
             eventMet = event->met().MetVariation(event->jetCollection(), &Jet::JetJER_1p93_To_2p5_Down);
             met = eventMet.pt();
         }
-    } else if (id == shapeUncId::JEC && variation == 1000) {
+    } else if (id == shapeUncId::JEC && variation == "SingleSource") {
         if (up) {
             jets = new JetCollection(event->getJetCollectionPtr()->JECUpCollection());
             jets->selectGoodJets();
@@ -383,7 +383,7 @@ eventClass EventFourT::classifyUncertainty(shapeUncId id, bool up, unsigned vari
             eventMet = event->met().MetJECDown();
             met = eventMet.pt();
         }
-    } else if (id == shapeUncId::JEC && variation != 1000) {
+    } else if (id == shapeUncId::JEC && variation != "SingleSource") {
         //std::cout << "in if" << std::endl; 
         if (up) {
             #if JECWRAPPER

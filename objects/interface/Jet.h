@@ -23,7 +23,8 @@ class Jet : public PhysicsObject{
     public:
         Jet( const TreeReader&, const unsigned,
 		const bool readAllJECVariations, const bool readGroupedJECVariations);
-        Jet( const NanoReader&, const unsigned);
+        Jet( const NanoReader&, const unsigned,
+		const bool useAllJECVariations, const bool readGroupedJECVariations);
 
         Jet( const Jet& );
         Jet( Jet&& ) noexcept;
@@ -63,12 +64,12 @@ class Jet : public PhysicsObject{
         Jet JetJER_1p93_To_2p5_Up() const;
 
         // create new Jet with JEC varied within uncertainties, split per source
-        Jet JetJECUp( const std::string source ) const;
-        Jet JetJECDown( const std::string source ) const;
-        Jet JetJECGroupedDown( const unsigned source_id ) const;
-        Jet JetJECGroupedUp( const unsigned source_id ) const;
-        Jet JetJECSourcesDown( const unsigned source_id ) const;
-        Jet JetJECSourcesUp( const unsigned source_id ) const;
+        Jet JetJECUp( const std::string& variation ) const;
+        Jet JetJECDown( const std::string& variation ) const;
+        Jet JetJECGroupedDown( const std::string& variation ) const;
+        Jet JetJECGroupedUp( const std::string& variation ) const;
+        Jet JetJECSourcesDown( const std::string& variation ) const;
+        Jet JetJECSourcesUp( const std::string& variation ) const;
         #if JECONRUNTIME
         Jet JetJECUp(JetCorrectionUncertainty* jetCorrUnc);
         Jet JetJECDown(JetCorrectionUncertainty* jetCorrUnc);
@@ -107,13 +108,13 @@ class Jet : public PhysicsObject{
         bool _jetJERIndividualVariationsInitialized = false;
 
 
-        std::vector< double > _pt_JECSourcesUp;
-        std::vector< double > _pt_JECSourcesDown;
-        std::vector< double > _pt_JECGroupedUp;
-        std::vector< double > _pt_JECGroupedDown;
+        std::map< std::string, double > _pt_JECSourcesUp;
+        std::map< std::string, double > _pt_JECSourcesDown;
+        std::map< std::string, double > _pt_JECGroupedUp;
+        std::map< std::string, double > _pt_JECGroupedDown;
 
-        std::map<std::string, size_t >* _JECSources_Ids = nullptr;
-        std::map<std::string, size_t >* _JECGrouped_Ids = nullptr;
+        // std::map<std::string, size_t >* _JECSources_Ids = nullptr;
+        // std::map<std::string, size_t >* _JECGrouped_Ids = nullptr;
 
         //jet selector 
         JetSelector* selector;

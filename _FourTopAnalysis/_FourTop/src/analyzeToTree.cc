@@ -129,7 +129,9 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
     };
     std::vector<std::string> bTagShapeSystematics;
     std::vector<Sample> sampleVec = treeReader->sampleVector();
-    
+
+    treeReader->setReadGroupedJECVariations(jec_grouped);
+    treeReader->setReadSourcesJECVariations(jec_sources);
     if (testRun) std::cout << "Starting sample loop" << std::endl;
     for (unsigned sampleIndex = 0; sampleIndex < treeReader->numberOfSamples(); ++sampleIndex ) {
         treeReader->initSample();
@@ -144,8 +146,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         bool hasValidPSs = false;
         bool considerBTagShape = false;
         bool splitAdditionalBees = false;
-        std::map<std::string, size_t> JECSourcesMapping;
-        std::vector<std::string> JECSourcesNames = {};
+        std::vector<std::string> AvailableJECSources = {};
 
         if (uncertaintyTheoryWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
@@ -172,44 +173,44 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
 
             // need to change processes for the uncertainties
             JetInfo info = currentEvent->jetInfo();
-            std::map< std::string, size_t >* a = nullptr;
+            std::vector<std::string> a;
             if (jec_grouped) {
                 // get names
-                a = info.groupedJECVariationsMap();
+                a = info.groupedJECVariations();
             } else if (jec_sources) {
-                a = info.allJECVariationsMap();
+                a = info.allJECVariations();
             }
 
-            if (a != nullptr) {
+            if (a.size() > 0) {
                 considerBTagShape = ! testRun;
-                JECSourcesMapping = *a;
-                for (auto var : *a) {
-                    if (stringTools::stringContains(var.first, "Total")) continue;
-                    JECSourcesNames.push_back(var.first);
-                    JECSourcesNames.push_back(var.first);
-                    uncertaintyNames.push_back("Unc_" + var.first + "_Up");
-                    uncertaintyNames.push_back("Unc_" + var.first + "_Down");
+                // JECSourcesMapping = a;
+                for (auto var : a) {
+                    if (stringTools::stringContains(var, "Total")) continue;
+                    AvailableJECSources.push_back(var);
+                    AvailableJECSources.push_back(var);
+                    uncertaintyNames.push_back("Unc_" + var + "_Up");
+                    uncertaintyNames.push_back("Unc_" + var + "_Down");
                     uncertaintyIDs.push_back(shapeUncId::JEC);
                     uncertaintyIDs.push_back(shapeUncId::JEC);
-                    if (var.first == "FlavorQCD") {
-                        JECSourcesNames.push_back(var.first);
-                        JECSourcesNames.push_back(var.first);
-                        JECSourcesNames.push_back(var.first);
-                        JECSourcesNames.push_back(var.first);
-                        JECSourcesNames.push_back(var.first);
-                        JECSourcesNames.push_back(var.first);
+                    if (var == "FlavorQCD") {
+                        AvailableJECSources.push_back(var);
+                        AvailableJECSources.push_back(var);
+                        AvailableJECSources.push_back(var);
+                        AvailableJECSources.push_back(var);
+                        AvailableJECSources.push_back(var);
+                        AvailableJECSources.push_back(var);
                         uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
                         uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
                         uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
                         uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
                         uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
                         uncertaintyIDs.push_back(shapeUncId::JECFlavorQCD);
-                        uncertaintyNames.push_back("Unc_" + var.first + "_light" + "_Up");
-                        uncertaintyNames.push_back("Unc_" + var.first + "_light" + "_Down");
-                        uncertaintyNames.push_back("Unc_" + var.first + "_charm" + "_Up");
-                        uncertaintyNames.push_back("Unc_" + var.first + "_charm" + "_Down");
-                        uncertaintyNames.push_back("Unc_" + var.first + "_bottom" + "_Up");
-                        uncertaintyNames.push_back("Unc_" + var.first + "_bottom" + "_Down");
+                        uncertaintyNames.push_back("Unc_" + var + "_light" + "_Up");
+                        uncertaintyNames.push_back("Unc_" + var + "_light" + "_Down");
+                        uncertaintyNames.push_back("Unc_" + var + "_charm" + "_Up");
+                        uncertaintyNames.push_back("Unc_" + var + "_charm" + "_Down");
+                        uncertaintyNames.push_back("Unc_" + var + "_bottom" + "_Up");
+                        uncertaintyNames.push_back("Unc_" + var + "_bottom" + "_Down");
                     }
                 }
             }
@@ -476,17 +477,17 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                     double var_weight = 1.;
 
                     // important when dealing with sources and grouped variation -> 1000 by default
-                    unsigned variation_number = 1000;
+                    std::string jecVariation = "SingleSource";
                     // std::cout << i << std::endl;
                     // std::cout << uncertaintyNames[i] << std::endl;
                     if (uncID == shapeUncId::JEC && (jec_grouped || jec_sources)) {
-                        variation_number = JECSourcesMapping[JECSourcesNames[i]];
+                        jecVariation = AvailableJECSources[i];
                         // mif (testRun) std::cout << JECSourcesNames[i] << " " << variation_number << std::endl;
                         if (considerBTagShape) {
-                            std::string source = JECSourcesNames[i];
+                            std::string source = AvailableJECSources[i];
                             if (up) source += "Up";
                             else source += "Down";
-                            var_weight = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, source, true, variation_number) 
+                            var_weight = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, source, true, up) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
                     }
@@ -500,11 +501,12 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                             std::string source = "FlavorQCD";
                             if (up) source += "Up";
                             else source += "Down";
-                            var_weight = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, source, flavor) 
+                            var_weight = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, source, flavor, up) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
                     }
-                    eventClass currentClass = selection->classifyUncertainty(shapeUncId(uncID), up, variation_number, flavor);
+                    // TODO: make sure JECSourcesNames contains SingleSource when doing single jec variation....
+                    eventClass currentClass = selection->classifyUncertainty(shapeUncId(uncID), up, jecVariation, flavor);
                     if (FillRegion(currentClass, st)) {
                         // do filling sequence
                         selection->scoreCurrentEvent();

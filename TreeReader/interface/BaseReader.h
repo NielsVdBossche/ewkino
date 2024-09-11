@@ -16,6 +16,12 @@
 // Class: BaseReader
 // Contains basic functionality that can be shared between mini and nano AOD.
 bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind );
+std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap( TTree* treePtr, 
+                              const std::vector<std::string> nameIdentifiers, const std::string& antiIdentifier="");
+template <typename T>
+void setMapBranchAddresses(TTree* treePtr, std::map<std::string, T>& variableMap, std::map<std::string, TBranch*> branchMap);
+template <typename T>
+void setMapBranchAddressesWithNameMap(TTree* treePtr, std::map<std::string, T>& variableMap, std::map<std::string, TBranch*> branchMap, std::map<std::string, std::string> nameMap);
 
 class Event;
 
@@ -71,6 +77,11 @@ class BaseReader {
         bool hasEFT() const {return _hasEFTInfo;};
         bool hasGenLvl() const {return _hasGenLevelInfo;};
 
+        // Getters and setters for configuration booleans
+        bool getReadSourcesJECVariations() const { return _readSourcesJECVariations; }
+        bool getReadGroupedJECVariations() const { return _readGroupedJECVariations; }
+        void setReadSourcesJECVariations( const bool readSourcesJECVariations ) { _readSourcesJECVariations = readSourcesJECVariations; }
+        void setReadGroupedJECVariations( const bool readGroupedJECVariations ) { _readGroupedJECVariations = readGroupedJECVariations; }
 
         // Generic helpers:
         bool isData() const;
@@ -148,6 +159,10 @@ class BaseReader {
         bool _hasPLInfo = false;
         bool _hasGenLevelInfo = false;
         bool _hasEFTInfo = false;
+
+        // Booleans for configuration details:
+        bool _readGroupedJECVariations = false;
+        bool _readSourcesJECVariations = false;
 
         //current index in samples vector
         int currentSampleIndex = -1;

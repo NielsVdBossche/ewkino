@@ -194,3 +194,53 @@ bool treeHasBranchWithName( TTree* treePtr, const std::string& nameToFind ){
     }
     return false;
 }
+
+// functions for initializing maps of branches rather than hard-coded names //
+std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
+    TTree* treePtr,
+    const std::vector<std::string> nameIdentifiers,
+    const std::string& antiIdentifier) {
+    // build a map of branches from a given tree
+    // all branches whose name contains nameIdentifier and not antiIdentifier will be added
+    // the return type is a pair of two objects:
+    // - map of branch name to boolean
+    //   (e.g. usable for triggers)
+    //   (values are set to false everywhere)
+    // - map of branch name to branch pointer
+    //   (e.g. usable for many branches with similar names)
+    //   (branch pointers are set to nullptr everywhere)
+    std::map<std::string, bool> decisionMap;
+    std::map<std::string, TBranch*> branchMap;
+    TObjArray* branch_list = treePtr->GetListOfBranches();
+    for (const auto& branchPtr : *branch_list) {
+        std::string branchName = branchPtr->GetName();
+        bool select = true;
+        for (std::string nameIdentifier : nameIdentifiers) {
+            if (!stringTools::stringContains(branchName, nameIdentifier)) select = false;
+        }
+        if (!select) continue;
+        if (antiIdentifier != "" && stringTools::stringContains(branchName, antiIdentifier)) continue;
+        decisionMap[branchName] = false;
+        branchMap[branchName] = nullptr;
+    }
+    return {decisionMap, branchMap};
+}
+
+template <typename T>
+void setMapBranchAddresses(TTree* treePtr,
+                           std::map<std::string, T>& variableMap,
+                           std::map<std::string, TBranch*> branchMap) {
+    for (const auto& variable : variableMap) {
+        treePtr->SetBranchAddress(variable.first.c_str(), &variableMap[variable.first], &branchMap[variable.first]);
+    }
+}
+
+template <typename T>
+void setMapBranchAddressesWithNameMap(TTree* treePtr,
+                           std::map<std::string, T>& variableMap,
+                           std::map<std::string, TBranch*> branchMap,
+                           std::map<std::string, std::string> nameMap) {
+    for (const auto& variable : nameMap) {
+        treePtr->SetBranchAddress(variable.first.c_str(), &variableMap[variable.second], &branchMap[variable.first]);
+    }
+}

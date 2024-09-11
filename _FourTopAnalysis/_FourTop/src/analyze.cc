@@ -153,7 +153,7 @@ void FourTop::analyze(std::string method) {
 
     std::vector<Sample> sampleVec = treeReader->sampleVector();
     std::vector<std::string> bTagShapeSystematics;
-    std::map< std::string, size_t > JECSourcesGrouped;
+    std::vector<std::string> JECSourcesGrouped;
     std::vector<std::string> JECQCDComponents;
     std::vector<unsigned> JECQCDComponents_flavor;
     std::vector<std::string> wzSFRegions;
@@ -257,17 +257,12 @@ void FourTop::analyze(std::string method) {
                 #else
 
                 JetInfo info = currentEvent->jetInfo();
-                std::map< std::string, size_t >* a = info.groupedJECVariationsMap();
-                std::vector<std::string> inter;
+                // TODO: rewind
+                std::vector<std::string> availableJECGroupedVariations = currentEvent->jetInfo().groupedJECVariations(); // info.groupedJECVariationsMap();
 
-                for (auto var : *a) {
-                    inter.push_back(var.first);
-                }
+                JECSourcesGrouped = availableJECGroupedVariations;
 
-                JECSourcesGrouped = *a;
-
-
-                mgrAll->addSubUncertainties(shapeUncId::JEC, inter);
+                mgrAll->addSubUncertainties(shapeUncId::JEC, availableJECGroupedVariations);
                 std::cout << "added variations" << std::endl;
 
                 JECQCDComponents = {"light", "charm", "bottom"};
@@ -821,13 +816,13 @@ void FourTop::analyze(std::string method) {
                     }
                     std::string empty = "";
 
-                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000);
+                    upClass = selection->classifyUncertainty(shapeUncId(uncID), true, "SingleSource");
                     fillVecUp = selection->fillVector();
                     singleEntriesUp = selection->singleFillEntries();
                     fillVec2DUp = selection->fillVector2D();
                     if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
 
-                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000);
+                    downClass = selection->classifyUncertainty(shapeUncId(uncID), false, "SingleSource");
                     fillVecDown = selection->fillVector();
                     singleEntriesDown = selection->singleFillEntries();
                     fillVec2DDown = selection->fillVector2D();
@@ -855,8 +850,8 @@ void FourTop::analyze(std::string method) {
                     for (auto jecSource : JECSourcesGrouped) {
                         //std::cout << "start? " << std::endl;
 
-                        if (stringTools::stringContains(jecSource.first, "Total")) continue;
-                        std::string jecSourceStr = jecSource.first;
+                        if (stringTools::stringContains(jecSource, "Total")) continue;
+                        std::string jecSourceStr = jecSource;
                         if (considerBTagShape) {
                             #if JECWRAPPER
                             weightUp = 1.;
@@ -865,16 +860,16 @@ void FourTop::analyze(std::string method) {
                             std::string sourceUp = jecSourceStr + "Up";
                             std::string sourceDown = jecSourceStr + "Down";
 
-                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp, true, jecSource.second) 
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceUp, true, true) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
-                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown, true, jecSource.second) 
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar( *currentEvent, sourceDown, true, false) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                             #endif
                         }
                         //std::cout << "classify? " << std::endl;
 
 
-                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource.second);
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, jecSource);
                         //std::cout << "classify unc " << std::endl;
 
                         fillVecUp = selection->fillVector();
@@ -890,7 +885,7 @@ void FourTop::analyze(std::string method) {
                         //std::cout << "first done? " << std::endl;
 
 
-                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource.second);
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, jecSource);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();
@@ -933,19 +928,19 @@ void FourTop::analyze(std::string method) {
                             std::string sourceUp = "FlavorQCDUp";
                             std::string sourceDown = "FlavorQCDDown";
                             
-                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor) 
+                            weightUp = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceUp, flavor, true) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
-                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor) 
+                            weightDown = dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"] )->weightJecVar_FlavorFilter( *currentEvent, sourceDown, flavor, false) 
                                                 / reweighter["bTag_shape"]->weight( *currentEvent );
                         }
 
-                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, 1000, flavor);
+                        upClass = selection->classifyUncertainty(shapeUncId(uncID), true, "SingleSource", flavor);
                         fillVecUp = selection->fillVector();
                         singleEntriesUp = selection->singleFillEntries();
                         fillVec2DUp = selection->fillVector2D();
                         if (useNpNmDistributions) singleEntriesNpNmUp = FillNpNmDistributions(upClass, offsets);
 
-                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, 1000, flavor);
+                        downClass = selection->classifyUncertainty(shapeUncId(uncID), false, "SingleSource", flavor);
                         fillVecDown = selection->fillVector();
                         singleEntriesDown = selection->singleFillEntries();
                         fillVec2DDown = selection->fillVector2D();

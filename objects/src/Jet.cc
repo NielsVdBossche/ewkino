@@ -38,24 +38,36 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     _pt_JERDown( treeReader._jetSmearedPt_JERDown[jetIndex] ),
     _pt_JERUp( treeReader._jetSmearedPt_JERUp[jetIndex] ),
 
-    _JECSources_Ids(readAllJECVariations ? treeReader._sourcesJEC_Ids : nullptr),
-    _JECGrouped_Ids(readGroupedJECVariations ? treeReader._groupedJEC_Ids : nullptr),
+    // _JECSources_Ids(readAllJECVariations ? treeReader._sourcesJEC_Ids : nullptr),
+    // _JECGrouped_Ids(readGroupedJECVariations ? treeReader._groupedJEC_Ids : nullptr),
     selector( new JetSelector( this ) )
 {
     if (readAllJECVariations) {
         for (const auto& mapEl : treeReader._jetSmearedPt_JECSourcesUp) {
-            _pt_JECSourcesUp.push_back(mapEl[jetIndex]);
+            std::string key = mapEl.first;
+            key = stringTools::removeOccurencesOf(key, "_jetSmearedPt_");
+            key = stringTools::removeOccurencesOf(key, "_JECSourcesUp");
+            _pt_JECSourcesUp.insert({key, mapEl.second[jetIndex]});
         }
         for (const auto& mapEl : treeReader._jetSmearedPt_JECSourcesDown) {
-            _pt_JECSourcesDown.push_back(mapEl[jetIndex]);
+            std::string key = mapEl.first;
+            key = stringTools::removeOccurencesOf(key, "_jetSmearedPt_");
+            key = stringTools::removeOccurencesOf(key, "_JECSourcesDown");
+            _pt_JECSourcesDown.insert({key, mapEl.second[jetIndex]});
         }
     }
     if (readGroupedJECVariations) {
         for (const auto& mapEl : treeReader._jetSmearedPt_JECGroupedUp) {
-            _pt_JECGroupedUp.push_back(mapEl[jetIndex]);
+            std::string key = mapEl.first;
+            key = stringTools::removeOccurencesOf(key, "_jetSmearedPt_");
+            key = stringTools::removeOccurencesOf(key, "_JECGroupedUp");
+            _pt_JECGroupedUp.insert({key, mapEl.second[jetIndex]});
         }
         for (const auto& mapEl : treeReader._jetSmearedPt_JECGroupedDown) {
-            _pt_JECGroupedDown.push_back(mapEl[jetIndex]);
+            std::string key = mapEl.first;
+            key = stringTools::removeOccurencesOf(key, "_jetSmearedPt_");
+            key = stringTools::removeOccurencesOf(key, "_JECGroupedDown");
+            _pt_JECGroupedDown.insert({key, mapEl.second[jetIndex]});
         }
     }
 
@@ -80,7 +92,7 @@ Jet::Jet( const TreeReader& treeReader, const unsigned jetIndex,
     }
 }
 
-Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex) :
+Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex, const bool useAllJECVariations, const bool readGroupedJECVariations) :
         // TODO: work with mass for fourvector intialization. Maybe put true/false in physobj constructor
         PhysicsObject(
                 nanoReader._Jet_pt_nom[jetIndex],
@@ -113,6 +125,21 @@ Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex) :
         selector(new JetSelector(this))
 {
     setLorentzVectorWithMass(pt(), eta(), phi(), nanoReader._Jet_mass_nom[jetIndex]);
+    if (useAllJECVariations) {
+        // get correction stuff from nanoreader, calc corrections and store it here.
+    }
+    if (readGroupedJECVariations) {
+        // reading from nanoreader:
+        for (const auto& mapEl : nanoReader._Jet_pt_jesSourcesUp) {
+            std::string key = mapEl.first;
+            _pt_JECGroupedUp.insert({key, mapEl.second[jetIndex]});
+        }
+        for (const auto& mapEl : nanoReader._Jet_pt_jesSourcesDown) {
+            std::string key = mapEl.first;
+            _pt_JECGroupedDown.insert({key, mapEl.second[jetIndex]});
+        }
+    }
+
     // set jet hadron flavor, but only for simulation
     if (nanoReader.containsGeneratorInfo()) {
         _hadronFlavor = nanoReader._Jet_hadronFlavor[jetIndex];
@@ -160,8 +187,6 @@ Jet::Jet( const Jet& rhs ) :
     _pt_JECSourcesDown( rhs._pt_JECSourcesDown ),
     _pt_JECGroupedUp( rhs._pt_JECGroupedUp ),
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
-    _JECSources_Ids(rhs._JECSources_Ids),
-    _JECGrouped_Ids(rhs._JECGrouped_Ids),
     selector( new JetSelector( this ) )
     {}
 
@@ -181,8 +206,6 @@ Jet::Jet( Jet&& rhs ) noexcept :
     _pt_JECSourcesDown( rhs._pt_JECSourcesDown ),
     _pt_JECGroupedUp( rhs._pt_JECGroupedUp ),
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
-    _JECSources_Ids(rhs._JECSources_Ids),
-    _JECGrouped_Ids(rhs._JECGrouped_Ids),
     selector( new JetSelector( this ) )
     {}
 
@@ -308,43 +331,34 @@ Jet Jet::JetJER_1p93_To_2p5_Up() const {
     return variedJet( newPt );
 }
 
-Jet Jet::JetJECUp( const std::string source ) const {
+Jet Jet::JetJECUp( const std::string& variation ) const {
     double newpt = 0.;
-    if (_JECGrouped_Ids && _JECGrouped_Ids->size() > 0) {
-        for (auto& mapEl : *_JECGrouped_Ids) {
-            if (source == mapEl.first) {
-                newpt = _pt_JECGroupedUp[mapEl.second];
-                return variedJet(newpt);
-            }
-        }
-    }
-    if (_JECSources_Ids && _JECSources_Ids->size() > 0) {
-        for (auto& mapEl : *_JECSources_Ids) {
-            if (source == mapEl.first) {
-                newpt = _pt_JECSourcesUp[mapEl.second];
-                return variedJet(newpt);
-            }
+    try {
+        newpt = _pt_JECGroupedUp.at(variation);
+    } catch(const std::exception& e) {
+        try {
+            newpt = _pt_JECSourcesUp.at(variation);
+        } catch(const std::exception& e) {
+            std::cerr << "Jet::JetJECUp Variation " << variation << " not found in JEC sources or grouped variations." << '\n';
+            std::cerr << e.what() << '\n';
+            exit(1);
         }
     }
 
     return variedJet(newpt);
 }
-Jet Jet::JetJECDown( const std::string source ) const {
+
+Jet Jet::JetJECDown( const std::string& variation ) const {
     double newpt = 0.;
-    if (_JECGrouped_Ids) {
-        for (auto& mapEl : *_JECGrouped_Ids) {
-            if (source == mapEl.first) {
-                newpt = _pt_JECGroupedDown[mapEl.second];
-                return variedJet(newpt);
-            }
-        }
-    }
-    if (_JECSources_Ids) {
-        for (auto& mapEl : *_JECSources_Ids) {
-            if (source == mapEl.first) {
-                newpt = _pt_JECSourcesDown[mapEl.second];
-                return variedJet(newpt);
-            }
+    try {
+        newpt = _pt_JECGroupedDown.at(variation);
+    } catch(const std::exception& e) {
+        try {
+            newpt = _pt_JECSourcesDown.at(variation);
+        } catch(const std::exception& e) {
+            std::cerr << "Jet::JetJECDown Variation " << variation << " not found in JEC sources or grouped variations." << '\n';
+            std::cerr << e.what() << '\n';
+            exit(1);
         }
     }
     return variedJet(newpt);
@@ -376,33 +390,25 @@ Jet Jet::JetJECDown(JetCorrectionUncertainty* jetCorrUnc) {
 
 #endif
 
-Jet Jet::JetJECGroupedDown( const unsigned source_id ) const{
-    // note: this function checks both all and grouped variations,
-    // need to check if there is no overlap in names between them!
-    double newpt = _pt_JECGroupedDown[source_id];
+Jet Jet::JetJECGroupedDown(const std::string& variation) const {
+    double newpt = _pt_JECGroupedDown.at(variation);
     return variedJet( newpt );
 }
 
 
-Jet Jet::JetJECGroupedUp( const unsigned source_id ) const{
-    // note: this function checks both all and grouped variations,
-    // need to check if there is no overlap in names between them!
-    double newpt = _pt_JECGroupedUp[source_id];
+Jet Jet::JetJECGroupedUp(const std::string& variation) const {
+    double newpt = _pt_JECGroupedUp.at(variation);
     return variedJet( newpt );
 }
 
-Jet Jet::JetJECSourcesDown( const unsigned source_id ) const{
-    // note: this function checks both all and grouped variations,
-    // need to check if there is no overlap in names between them!
-    double newpt = _pt_JECSourcesUp[source_id];
+Jet Jet::JetJECSourcesDown(const std::string& variation) const {
+    double newpt = _pt_JECSourcesUp.at(variation);
     return variedJet( newpt );
 }
 
 
-Jet Jet::JetJECSourcesUp( const unsigned source_id ) const{
-    // note: this function checks both all and grouped variations,
-    // need to check if there is no overlap in names between them!
-    double newpt = _pt_JECSourcesDown[source_id];
+Jet Jet::JetJECSourcesUp(const std::string& variation) const {
+    double newpt = _pt_JECSourcesDown.at(variation);
     return variedJet( newpt );
 }
 

@@ -88,6 +88,83 @@ bool NanoReader::containsEFTInfo() const {
     return treeHasBranchWithName( _currentTreePtr, "LHEReweightingWeight" );
 }
 
+void NanoReader::initializeJESVariations( TTree* treePtr ) {
+    // initialize jetPt branches
+    b__jet_pt_jesSourcesUp = buildBranchMap(treePtr, {"Jet_pt_", "jes", "Up"}).second;
+    for (auto mapEl : b__jet_pt_jesSourcesUp) { // cleaning should happen here?
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"Jet_pt_", "jes", "Up"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _Jet_pt_jesSourcesUpNames[mapEl.first] = branchName;        
+        _Jet_pt_jesSourcesUp[branchName];
+    }
+    b__jet_pt_jesSourcesDown = buildBranchMap(treePtr, {"Jet_pt_", "jes", "Down"}).second;
+    for (auto mapEl : b__jet_pt_jesSourcesDown) {
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"Jet_pt_", "jes", "Down"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _Jet_pt_jesSourcesDownNames[mapEl.first] = branchName;
+        _Jet_pt_jesSourcesDown[branchName];
+    }
+    b__jet_mass_jesSourcesUp = buildBranchMap(treePtr, {"Jet_mass_", "jes", "Up"}).second;
+    for (auto mapEl : b__jet_mass_jesSourcesUp) {
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"Jet_mass_", "jes", "Up"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _Jet_mass_jesSourcesUpNames[mapEl.first] = branchName;
+        _Jet_mass_jesSourcesUp[branchName];
+    }
+    b__jet_mass_jesSourcesDown = buildBranchMap(treePtr, {"Jet_mass_", "jes", "Down"}).second;
+    for (auto mapEl : b__jet_mass_jesSourcesDown) {
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"Jet_mass_", "jes", "Down"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _Jet_mass_jesSourcesDownNames[mapEl.first] = branchName;
+        _Jet_mass_jesSourcesDown[branchName];
+    }
+
+    // initialize met branches
+    b__met_pt_jesSourcesUp = buildBranchMap(treePtr, {"MET_T1Smear_pt_", "jes", "Up"}).second;
+    for (auto mapEl : b__met_pt_jesSourcesUp) {
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"MET_T1Smear_pt_", "jes", "Up"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _MET_T1Smear_pt_jesSourcesUpNames[mapEl.first] = branchName;
+        _MET_T1Smear_pt_jesSourcesUp[branchName];
+    }
+    b__met_pt_jesSourcesDown = buildBranchMap(treePtr, {"MET_T1Smear_pt_", "jes", "Down"}).second;
+    for (auto mapEl : b__met_pt_jesSourcesDown) {
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"MET_T1Smear_pt_", "jes", "Down"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _MET_T1Smear_pt_jesSourcesDownNames[mapEl.first] = branchName;
+        _MET_T1Smear_pt_jesSourcesDown[branchName];
+    }
+    b__met_phi_jesSourcesUp = buildBranchMap(treePtr, {"MET_T1Smear_phi_", "jes", "Up"}).second;
+    for (auto mapEl : b__met_phi_jesSourcesUp) {
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"MET_T1Smear_phi_", "jes", "Up"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _MET_T1Smear_phi_jesSourcesUpNames[mapEl.first] = branchName;
+        _MET_T1Smear_phi_jesSourcesUp[branchName];
+    }
+    b__met_phi_jesSourcesDown = buildBranchMap(treePtr, {"MET_T1Smear_phi_", "jes", "Down"}).second;
+    for (auto mapEl : b__met_phi_jesSourcesDown) {
+        std::string branchName = mapEl.first;
+        for (std::string nameIdentifier : {"MET_T1Smear_phi_", "jes", "Down"}) {
+            branchName = stringTools::removeOccurencesOf(branchName, nameIdentifier);
+        }
+        _MET_T1Smear_phi_jesSourcesDownNames[mapEl.first] = branchName;
+        _MET_T1Smear_phi_jesSourcesDown[branchName];
+    }
+}
 
 void NanoReader::initTree(const bool resetTriggersAndFilters) {
     checkCurrentTree();
@@ -292,6 +369,18 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("Flag_ecalBadCalibFilter",                   &_Flag_ecalBadCalibFilter,                  &b__Flag_ecalBadCalibFilter);
     // 2016 only:
     _currentTreePtr->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter",   &_Flag_EcalDeadCellTriggerPrimitiveFilter,  &b__Flag_EcalDeadCellTriggerPrimitiveFilter);
+
+    if (getReadGroupedJECVariations()) {
+        initializeJESVariations(_currentTreePtr);
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _Jet_pt_jesSourcesUp,             b__jet_pt_jesSourcesUp, _Jet_pt_jesSourcesUpNames );
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _Jet_pt_jesSourcesDown,           b__jet_pt_jesSourcesDown, _Jet_pt_jesSourcesDownNames );
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _Jet_mass_jesSourcesUp,           b__jet_mass_jesSourcesUp, _Jet_mass_jesSourcesUpNames );
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _Jet_mass_jesSourcesDown,         b__jet_mass_jesSourcesDown, _Jet_mass_jesSourcesDownNames );
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _MET_T1Smear_pt_jesSourcesUp,     b__met_pt_jesSourcesUp, _MET_T1Smear_pt_jesSourcesUpNames );
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _MET_T1Smear_pt_jesSourcesDown,   b__met_pt_jesSourcesDown, _MET_T1Smear_pt_jesSourcesDownNames );
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _MET_T1Smear_phi_jesSourcesUp,    b__met_phi_jesSourcesUp, _MET_T1Smear_phi_jesSourcesUpNames );
+        setMapBranchAddressesWithNameMap( _currentTreePtr, _MET_T1Smear_phi_jesSourcesDown,  b__met_phi_jesSourcesDown, _MET_T1Smear_phi_jesSourcesDownNames );
+    }
 
     std::cout << "Done setting branches" << std::endl;
 }

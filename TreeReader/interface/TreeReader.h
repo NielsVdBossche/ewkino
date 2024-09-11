@@ -15,14 +15,7 @@
 //include other parts of code
 #include "../../Tools/interface/Sample.h"
 
-
 class Event;
-
-std::pair<std::map<std::string, bool>, std::map<std::string, TBranch*> > buildBranchMap(
-    TTree* treePtr, const std::vector<std::string> nameIdentifiers, const std::string& antiIdentifier = "");
-
-template <typename T>
-void setMapBranchAddresses(TTree* treePtr, std::map<std::string, T>& variableMap, std::map<std::string, TBranch*> branchMap);
 
 class TreeReader : public BaseReader {
     public :
@@ -264,27 +257,14 @@ class TreeReader : public BaseReader {
         Double_t        _jetHFHadronFraction[nJets_max];
         Double_t        _jetHFEmFraction[nJets_max];
 
-        std::vector< Double_t[nJets_max] > _jetPt_JECGroupedDown;
-        std::vector< Double_t[nJets_max] > _jetPt_JECGroupedUp;
-        std::vector< Double_t[nJets_max] > _jetPt_JECSourcesDown;
-        std::vector< Double_t[nJets_max] > _jetPt_JECSourcesUp;
-        std::vector< Double_t[nJets_max] > _jetSmearedPt_JECGroupedDown;
-        std::vector< Double_t[nJets_max] > _jetSmearedPt_JECGroupedUp;
-        std::vector< Double_t[nJets_max] > _jetSmearedPt_JECSourcesDown;
-        std::vector< Double_t[nJets_max] > _jetSmearedPt_JECSourcesUp;
-
-        std::map< std::string, size_t >* _groupedJEC_Ids = nullptr;
-        std::map< std::string, size_t >* _sourcesJEC_Ids = nullptr;
-        
-        std::map< std::string, size_t > _jetPt_JECGroupedUp_Ids;
-        std::map< std::string, size_t > _jetPt_JECGroupedDown_Ids;
-        std::map< std::string, size_t > _jetSmearedPt_JECGroupedUp_Ids;
-        std::map< std::string, size_t > _jetSmearedPt_JECGroupedDown_Ids;
-        std::map< std::string, size_t > _jetPt_JECSourcesUp_Ids;
-        std::map< std::string, size_t > _jetPt_JECSourcesDown_Ids;
-        std::map< std::string, size_t > _jetSmearedPt_JECSourcesUp_Ids;
-        std::map< std::string, size_t > _jetSmearedPt_JECSourcesDown_Ids;
-
+        std::map< std::string, Double_t[nJets_max] > _jetPt_JECGroupedDown;
+        std::map< std::string, Double_t[nJets_max] > _jetPt_JECGroupedUp;
+        std::map< std::string, Double_t[nJets_max] > _jetPt_JECSourcesDown;
+        std::map< std::string, Double_t[nJets_max] > _jetPt_JECSourcesUp;
+        std::map< std::string, Double_t[nJets_max] > _jetSmearedPt_JECGroupedDown;
+        std::map< std::string, Double_t[nJets_max] > _jetSmearedPt_JECGroupedUp;
+        std::map< std::string, Double_t[nJets_max] > _jetSmearedPt_JECSourcesDown;
+        std::map< std::string, Double_t[nJets_max] > _jetSmearedPt_JECSourcesUp;
 
         // variables related to missing transverse energy
 	Double_t        _met;
@@ -298,23 +278,15 @@ class TreeReader : public BaseReader {
         Double_t        _metPhi_UnclDown;
         Double_t        _metPhi_UnclUp;       
         Double_t        _metSignificance;
-	std::vector< Double_t > _corrMETx_JECGroupedDown;
-        std::vector< Double_t > _corrMETx_JECGroupedUp;
-        std::vector< Double_t > _corrMETx_JECSourcesDown;
-        std::vector< Double_t > _corrMETx_JECSourcesUp;
-	std::vector< Double_t > _corrMETy_JECGroupedDown;
-        std::vector< Double_t > _corrMETy_JECGroupedUp;
-        std::vector< Double_t > _corrMETy_JECSourcesDown;
-        std::vector< Double_t > _corrMETy_JECSourcesUp;
+        std::map< std::string, Double_t > _corrMETx_JECGroupedDown;
+        std::map< std::string, Double_t > _corrMETx_JECGroupedUp;
+        std::map< std::string, Double_t > _corrMETx_JECSourcesDown;
+        std::map< std::string, Double_t > _corrMETx_JECSourcesUp;
+        std::map< std::string, Double_t > _corrMETy_JECGroupedDown;
+        std::map< std::string, Double_t > _corrMETy_JECGroupedUp;
+        std::map< std::string, Double_t > _corrMETy_JECSourcesDown;
+        std::map< std::string, Double_t > _corrMETy_JECSourcesUp;
 
-        std::map< std::string, size_t > _corrMETx_JECSourcesUp_Ids;
-        std::map< std::string, size_t > _corrMETx_JECSourcesDown_Ids;
-        std::map< std::string, size_t > _corrMETy_JECSourcesUp_Ids;
-        std::map< std::string, size_t > _corrMETy_JECSourcesDown_Ids;
-        std::map< std::string, size_t > _corrMETx_JECGroupedUp_Ids;
-        std::map< std::string, size_t > _corrMETx_JECGroupedDown_Ids;
-        std::map< std::string, size_t > _corrMETy_JECGroupedUp_Ids;
-	std::map< std::string, size_t > _corrMETy_JECGroupedDown_Ids;
 	// analysis specific variables: ewkino
         Double_t        _mChi1;
         Double_t        _mChi2;

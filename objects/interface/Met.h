@@ -72,19 +72,19 @@ class Met : public PhysicsObject {
         Met MetJER1p93Up() const;
         Met MetJER2p5Down() const;
         Met MetJER2p5Up() const;
+        Met MetJECDown( const std::string& variation ) const;
+        Met MetJECUp( const std::string& variation) const;
 
 	// met objects varied by split JEC uncertainties
-	Met MetJECDown( const std::string source ) const;
-	Met MetJECUp( const std::string source) const;
 
-        Met MetJECGroupedDown( const unsigned ) const;
-	Met MetJECGroupedUp( const unsigned) const;
-        Met MetJECSourcesDown( const unsigned ) const;
-        Met MetJECSourcesUp( const unsigned) const;
+        Met MetJECGroupedDown( const std::string& variation ) const;
+	Met MetJECGroupedUp( const std::string& variation) const;
+        Met MetJECSourcesDown( const std::string& variation ) const;
+        Met MetJECSourcesUp( const std::string& variation) const;
         Met MetVariation(JetCollection& nominalJets, Jet (Jet::*jetVariation)() const) const;
 
 	Met getVariedMet( const std::string& variation ) const;
-        Met getVariedMet(JetCollection& nomJets, unsigned variationSource, unsigned flavor, bool up) const;
+        Met getVariedMet(JetCollection& nomJets, const std::string& variation, unsigned flavor, bool up) const;
         Met HEMIssue(JetCollection&) const;
         //maximum variations of met pT
         double maxPtAnyVariation() const;
@@ -96,20 +96,25 @@ class Met : public PhysicsObject {
 
         Met ApplyPhiModulation(int runnb, std::string year, bool isMC, int npv, bool isUL = true);
     private:
+        // control var:
+        bool isNano = false;
         //JEC uncertainties
         double _pt_JECDown = 0;
         double _phi_JECDown = 0;
         double _pt_JECUp = 0;
         double _phi_JECUp = 0;
 
-	std::map< std::string, size_t >* _JECSources = nullptr;
-	std::vector<std::pair<double,double> > _pxy_JECSourcesUp;
-	std::vector<std::pair<double,double> > _pxy_JECSourcesDown;
+        std::vector< std::string > _JECSources;
+        std::map< std::string, std::pair<double,double> > _pxy_JECSourcesUp;
+        std::map< std::string, std::pair<double,double> > _pxy_JECSourcesDown;
 
-	std::map< std::string, size_t >* _JECGrouped = nullptr;
-        std::vector< std::pair<double,double> > _pxy_JECGroupedUp;
-        std::vector< std::pair<double,double> > _pxy_JECGroupedDown;
+        std::vector< std::string > _JECGrouped;
+        std::map< std::string, std::pair<double,double> > _pxy_JECGroupedUp;
+        std::map< std::string, std::pair<double,double> > _pxy_JECGroupedDown;
 
+        std::map< std::string, std::pair<double,double> > _pt_phi_JECGroupedUp;
+        std::map< std::string, std::pair<double,double> > _pt_phi_JECGroupedDown;
+        
         //unclustered energy uncertainties
         double _pt_UnclDown = 0;
         double _phi_UnclDown = 0;

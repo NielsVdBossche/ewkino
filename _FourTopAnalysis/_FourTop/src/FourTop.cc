@@ -426,6 +426,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
         tempTree = new TreeReader();
     }
     std::cout << "init sample" << std::endl;
+    tempTree->setReadGroupedJECVariations(true);
     tempTree->initSampleFromFile( inputFilePath );
 
     // initialize the output map
@@ -547,21 +548,22 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
             double btagreweight;
             if (jec && ! flavorQCD_Vars) {
-                std::string varname;
+                // std::string varname;
                 if (stringTools::stringEndsWith(jecVarForSelection[i], "Up")) {
-                    varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 2);
+                    // varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 2);
+                    btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i], true, true);
                 }
                 else if (stringTools::stringEndsWith(jecVarForSelection[i], "Down")) {
-                    varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 4);
+                    // varname = jecVarForSelection[i].substr(0, jecVarForSelection[i].size() - 4);
+                    btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i], true, false);
                 }
-                btagreweight = reweighter->weightJecVar(event, jecVarForSelection[i], true, event.jetInfo().groupedJECVariationsMap()->at(varname));
 
             } else if (jec && flavorQCD_Vars) {
                 bool up = i % 2 == 0;
                 if (up) {
-                    btagreweight = reweighter->weightJecVar_FlavorFilter(event, "FlavorQCDUp", flavors[i]);
+                    btagreweight = reweighter->weightJecVar_FlavorFilter(event, "FlavorQCD", flavors[i], true);
                 } else {
-                    btagreweight = reweighter->weightJecVar_FlavorFilter(event, "FlavorQCDDown", flavors[i]);
+                    btagreweight = reweighter->weightJecVar_FlavorFilter(event, "FlavorQCD", flavors[i], false);
                 }
             } else {
                 btagreweight = reweighter->weightVariation(event, bVar);

@@ -34,13 +34,13 @@ Event::Event( const TreeReader& treeReader,
 
 Event::Event(const NanoReader& nanoReader,
         const bool readIndividualTriggers , const bool readIndividualMetFilters,
-        const bool readAllJECVariations, const bool readGroupedJECVariations) :  // make collections of physics objects
+        const bool useAllJECVariations, const bool readGroupedJECVariations) :  // make collections of physics objects
     _leptonCollectionPtr(new LeptonCollection(nanoReader)),
-    _jetCollectionPtr(new JetCollection(nanoReader)),
-    _metPtr(new Met(nanoReader, readAllJECVariations, readGroupedJECVariations) ),
+    _jetCollectionPtr(new JetCollection(nanoReader, useAllJECVariations, readGroupedJECVariations)),
+    _metPtr(new Met(nanoReader, useAllJECVariations, readGroupedJECVariations) ),
     // make additional information structures
     _triggerInfoPtr(new TriggerInfo(nanoReader, readIndividualTriggers, readIndividualMetFilters)),
-    _jetInfoPtr( new JetInfo( nanoReader, readAllJECVariations, readGroupedJECVariations) ),
+    _jetInfoPtr( new JetInfo( nanoReader, useAllJECVariations, readGroupedJECVariations) ),
     _eventTagsPtr(new EventTags(nanoReader)),
     _generatorInfoPtr(nanoReader.isMC() ? new GeneratorInfo(nanoReader) : nullptr),
     _numberOfVertices( nanoReader._PV_npvs ),
