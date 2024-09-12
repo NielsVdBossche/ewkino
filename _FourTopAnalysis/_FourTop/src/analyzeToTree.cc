@@ -515,8 +515,11 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                 }
             }
         }
+        std::cout << "Finished event loop" << std::endl;
         outputTreeHandler->FlushTrees();
+        std::cout << "Saved trees to file" << std::endl;
     }
+    std::cout << "Finished sample loop" << std::endl;
 
     delete outputTreeHandler;
     // outfile->Close();
