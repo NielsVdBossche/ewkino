@@ -2,7 +2,7 @@
 
 #include "../../../Tools/interface/stringTools.h"
 #include "../../FourTopEventHandling/interface/MVAHandler.h"
-
+#include "../../additionalTools/interface/variables.h"
 
 OutputTreeVariables::OutputTreeVariables(TFile* outputfile, std::string& treeName, std::string& outputLevel) : 
     OutputTree(outputfile, treeName), outputLevel(outputLevel)
@@ -118,6 +118,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
         m_l2l3 = 0.;
         m_l1l3 = 0.;
     }
+    maxPtLepJet = variables::MaxPtAllDiobjectSystems(*ftEvent->getMediumLepCol(), *ftEvent->getJetCol());
 }
 
 void OutputTreeVariables::pInitTree() {
@@ -175,5 +176,6 @@ void OutputTreeVariables::pInitTree() {
     tree->Branch("m_l1l2",         &m_l1l2,                  "m_l1l2/D");
     tree->Branch("m_l2l3",         &m_l2l3,                  "m_l2l3/D");
     tree->Branch("m_l1l3",         &m_l1l3,                  "m_l1l3/D");
+    tree->Branch("maxPtLepJet",    &maxPtLepJet,                  "maxPtLepJet/D");
 }
 

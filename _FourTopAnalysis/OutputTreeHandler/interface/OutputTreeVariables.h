@@ -78,6 +78,7 @@ class OutputTreeVariables : public OutputTree {
         double m_l1l2;
         double m_l2l3;
         double m_l1l3;
+        double maxPtLepJet;
         // bdt variables? Put something that decides to initialize
     private:
         std::string outputLevel;

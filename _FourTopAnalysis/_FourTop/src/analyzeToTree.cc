@@ -167,7 +167,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             }
         }
         
-        if (st == selectionType::MCPrompt) {
+        if (st == selectionType::MCPrompt  && ! treeReader->isData()) {
             std::string currProcName = treeReader->sampleVector()[sampleIndex].processName();
             outputTreeHandler->ChangeProcess(0, currProcName);
 
@@ -240,7 +240,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         std::cout << "Starting event loop" << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
-            if (testRun && entry > 1000) {
+            if (testRun && entry > 100000) {
                 std::cout << "Cut at 1000 events" << std::endl;
                 break;
             }
@@ -249,7 +249,6 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
 
             // Initialize event
             currentEvent = treeReader->buildEventPtr(entry, false, false, jec_sources, jec_grouped); // change this last boolean to an option -> basically is this a syst variation run or not
-
             // Check triggers here
             if (! eventPassesTriggers()) continue;
 
