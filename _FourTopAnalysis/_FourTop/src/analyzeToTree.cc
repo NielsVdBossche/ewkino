@@ -186,6 +186,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                 // JECSourcesMapping = a;
                 for (auto var : a) {
                     if (stringTools::stringContains(var, "Total")) continue;
+                    if (stringTools::stringContains(var, "HEMIssue")) continue;
                     AvailableJECSources.push_back(var);
                     AvailableJECSources.push_back(var);
                     uncertaintyNames.push_back("Unc_" + var + "_Up");
@@ -240,8 +241,11 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         std::cout << "Starting event loop" << std::endl;
 
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
+            if (testRun && entry % 1000 == 0) {
+                std::cout << "at entry " << entry << std::endl;
+            }
             if (testRun && entry > 100000) {
-                std::cout << "Cut at 1000 events" << std::endl;
+                std::cout << "Cut at 100000 events" << std::endl;
                 break;
             }
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;

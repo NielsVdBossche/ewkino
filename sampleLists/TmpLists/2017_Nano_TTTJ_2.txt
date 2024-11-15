@@ -1,0 +1,1 @@
+TTTJ            ../skims_v9/2017/TTTJplus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL17NanoAODv9.root                            0.000021

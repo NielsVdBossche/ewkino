@@ -21,6 +21,10 @@ def load_samplelist(filename):
     ret = []
     with open(filename, 'r') as f:
         for line in f:
+            if line[0] == "#":
+                continue
+            if line == "\n":
+                continue
             ret.append(line.replace("\n", ""))
     return ret
 
@@ -40,9 +44,9 @@ def jobsubmission_base(timestamp, additional_arguments: list = []):
         os.makedirs(f"/user/{os.getenv('USER')}/condor/error")
         os.makedirs(f"/user/{os.getenv('USER')}/condor/logs")
 
-    ret += f"output = /user/{os.getenv('USER')}/condor/output/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
-    ret += f"error = /user/{os.getenv('USER')}/condor/error/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
-    ret += f"log = /user/{os.getenv('USER')}/condor/logs/Analysis_$(Method)_$(SLShort)_$(ClusterId).$(ProcId).log\n\n"
+    ret += f"output = /user/{os.getenv('USER')}/condor/output/Analysis_$(Method)_$(Syst)_$(SLShort)_$(ClusterId).$(ProcId).out\n"
+    ret += f"error = /user/{os.getenv('USER')}/condor/error/Analysis_$(Method)_$(Syst)_$(SLShort)_$(ClusterId).$(ProcId).err\n"
+    ret += f"log = /user/{os.getenv('USER')}/condor/logs/Analysis_$(Method)_$(Syst)_$(SLShort)_$(ClusterId).$(ProcId).log\n\n"
 
     ret += "should_transfer_files = NO\n\n"
 
@@ -71,20 +75,28 @@ def parse_arguments():
                         help="Switch to swap between full analysis run with JECs, JERs, ... or only the nominal run")
     parser.add_argument('--data', dest="data", action='store_true',
                         help="Switch to turn on the processing of the data.")
+    parser.add_argument('--onlydata', dest="onlydata", action='store_true',
+                        help="Switch to only process the data.")
     parser.add_argument('--bsm', dest="bsm", action='store_true',
                         help="Switch to turn on the processing of the BSM samples.")
     parser.add_argument('--onlybsm', dest="onlybsm", action='store_true',
                         help="Switch to only process BSM samples.")
+    parser.add_argument('--eft', dest="eft", action='store_true',
+                        help="Switch to turn on the processing of the EFT samples.")
+    parser.add_argument('--onlyeft', dest="onlyeft", action='store_true',
+                        help="Switch to only process EFT samples.")
+    parser.add_argument('--debug', '--dryrun', dest="debug", action='store_true',
+                        help="Switch to turn on debug mode.")
     # Parse arguments
     args = parser.parse_args()
     
     return args
 
 
-def provide_dataruns(data_samples):
+def provide_dataruns(data_samples, miniOrNano="MiniAOD"):
     ret = []
     for sample in data_samples:
-        line = f"\t{sample} TmpLists/{sample} Obs nominal MiniAOD"
+        line = f"\t{sample} TmpLists/{sample} Obs nominal {miniOrNano}"
         ret.append(line)
     return ret
 
@@ -114,8 +126,10 @@ if __name__ == "__main__":
     elif args.uncertainty:
         systs = [args.uncertainty]
         methods = ["MCPrompt"]
+    elif args.onlydata:
+        methods = []
     else:
-        systs = ["nominal", "jec_single", "jer", "met", "hem"]
+        systs = ["nominal", "jec_single", "jec_grouped", "jer", "met", "hem"]
 
     mc_samplelist = []
     data_samplelist = []
@@ -129,8 +143,9 @@ if __name__ == "__main__":
     else:
         mc_samplelist = load_samplelist("mc_samples.txt")
         bsm_samplelist = load_samplelist("bsm_mc_samples.txt")
-        if "nonPromptDD" in methods or "ChargeDD" in methods or args.data:
-            data_samplelist = load_samplelist("data_samples.txt")
+        eft_samplelist = load_samplelist("eft_mc_samples.txt")
+        if "nonPromptDD" in methods or "ChargeDD" in methods or args.data or args.onlydata:
+            data_samplelist = load_samplelist("data_samples_nano.txt")
 
     sample_filters = []
     if args.year:
@@ -142,20 +157,23 @@ if __name__ == "__main__":
     mc_samplelist = filter_samplelist(mc_samplelist, sample_filters)
     data_samplelist = filter_samplelist(data_samplelist, sample_filters)
     bsm_samplelist = filter_samplelist(bsm_samplelist, sample_filters)
+    eft_samplelist = filter_samplelist(eft_samplelist, sample_filters)
 
     for method in methods:
         for syst in systs:
             if syst != "nominal" and method != "MCPrompt":
                 continue
             if method != "ChargeDD":
-                if not args.onlybsm:
-                    run_entries.extend(provide_runs(mc_samplelist, method, syst))
+                if not args.onlybsm and not args.onlyeft:
+                    run_entries.extend(provide_runs(mc_samplelist, method, syst, miniOrNano="NanoAOD"))
                 if args.bsm or args.onlybsm:
                     run_entries.extend(provide_runs(bsm_samplelist, method, syst, miniOrNano="NanoAOD"))
-            if (method == "nonPromptDD" or method == "ChargeDD") and not args.onlybsm:
-                run_entries.extend(provide_runs(data_samplelist, method, syst))
+                if args.eft or args.onlyeft:
+                    run_entries.extend(provide_runs(eft_samplelist, method, syst, miniOrNano="NanoAOD"))
+            if (method == "nonPromptDD" or method == "ChargeDD") and (not args.onlybsm and not args.onlyeft):
+                run_entries.extend(provide_runs(data_samplelist, method, syst, miniOrNano="NanoAOD"))
 
-    if args.data:
+    if args.data or args.onlydata:
         run_entries.extend(provide_dataruns(data_samplelist))
         # fill data samplelist as well
 
@@ -165,6 +183,9 @@ if __name__ == "__main__":
 
     with open("AnalysisJob.sub", 'w') as f:
         f.write(submission_file)
+
+    if args.debug:
+        exit()
 
     outputfolder = os.path.join(f"/pnfs/iihe/cms/store/user/{os.getenv('USER')}/AnalysisOutput/ReducedTuples/", timestamp)
     os.makedirs(outputfolder)

@@ -4,11 +4,28 @@
 #include "../../Event/interface/Event.h"
 #include "../../constants/luminosities.h"
 
+
+NanoReader::NanoReader() :
+    BaseReader()
+{
+    // _sourcesJEC_Ids = new std::map<std::string, size_t>();
+    // _groupedJEC_Ids = new std::map<std::string, size_t>();
+    electronReader = new LightLeptonReader(*this, "Electron");
+    muonReader = new LightLeptonReader(*this, "Muon");
+    tauReader = new LeptonReader(*this, "Tau");
+}
+
+
 NanoReader::NanoReader(const std::string& sampleListFile, const std::string& sampleDirectory) :
     BaseReader(sampleListFile, sampleDirectory)
 {   
     // _sourcesJEC_Ids = new std::map<std::string, size_t>();
     // _groupedJEC_Ids = new std::map<std::string, size_t>();
+    std::cout << "in nanoreader constructor" << std::endl;
+    electronReader = new LightLeptonReader(*this, "Electron");
+    muonReader = new LightLeptonReader(*this, "Muon");
+    tauReader = new LeptonReader(*this, "Tau");
+
 }
 
 double NanoReader::getSumSimulatedEventWeights() {
@@ -172,11 +189,6 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _hasGenLevelInfo = false;
     _hasEFTInfo = false;
 
-    std::cout << "deleting existing readers" << std::endl;
-    if (electronReader) delete electronReader;
-    if (muonReader) delete muonReader;
-    if (tauReader) delete tauReader;
-
     std::cout << "Setting branches" << std::endl;
     _currentTreePtr->SetMakeClass(1);
 
@@ -185,11 +197,11 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("luminosityBlock", &_luminosityBlock, &b__luminosityBlock);
     _currentTreePtr->SetBranchAddress("event", &_event, &b__event);
 
-    _currentTreePtr->SetBranchAddress("Pileup_nTrueInt", &_Pileup_nTrueInt, &b__Pileup_nTrueInt);
     _currentTreePtr->SetBranchAddress("PV_npvs", &_PV_npvs, &b__PV_npvs);
 
     if (isMC()) {
         // TODO: check if the isMC flag works
+        _currentTreePtr->SetBranchAddress("Pileup_nTrueInt", &_Pileup_nTrueInt, &b__Pileup_nTrueInt);
         _currentTreePtr->SetBranchAddress("L1PreFiringWeight_Nom",  &_L1PreFiringWeight_Nom,  &b__L1PreFiringWeight_Nom);
         _currentTreePtr->SetBranchAddress("L1PreFiringWeight_Up",   &_L1PreFiringWeight_Up,   &b__L1PreFiringWeight_Up);
         _currentTreePtr->SetBranchAddress("L1PreFiringWeight_Dn",   &_L1PreFiringWeight_Dn,   &b__L1PreFiringWeight_Dn);
@@ -214,6 +226,7 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     }
     // gen particles
     if (containsGeneratorInfo()) {
+        _hasPLInfo = true;
         _currentTreePtr->SetBranchAddress("nGenPart",                  &_nGenPart,                  &b__nGenPart);
         _currentTreePtr->SetBranchAddress("GenPart_pt",                _GenPart_pt,                 &b__GenPart_pt);
         _currentTreePtr->SetBranchAddress("GenPart_eta",               _GenPart_eta,                &b__GenPart_eta);
@@ -243,7 +256,8 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
         _currentTreePtr->SetBranchAddress("LHEPart_pdgId",             _LHEPart_pdgId,         &b__LHEPart_pdgId);
     }
     // variables only related to electrons
-    electronReader = new LightLeptonReader(*this, _currentTreePtr, "Electron");
+    std::cout << electronReader << std::endl;
+    electronReader->InitTree(_currentTreePtr);
     _currentTreePtr->SetBranchAddress("Electron_tightCharge",           _Electron_tightCharge,            &b__Electron_tightCharge);
     _currentTreePtr->SetBranchAddress("Electron_convVeto",              _Electron_convVeto,               &b__Electron_convVeto);
     _currentTreePtr->SetBranchAddress("Electron_lostHits",              _Electron_lostHits,               &b__Electron_lostHits);
@@ -264,7 +278,9 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("Electron_dEsigmaUp",             _Electron_dEsigmaUp,              &b__Electron_dEsigmaUp);
 
     // variables only related to muons
-    muonReader = new LightLeptonReader(*this, _currentTreePtr, "Muon");
+    std::cout << muonReader << std::endl;
+
+    muonReader->InitTree(_currentTreePtr);
     // does this branch work in data?
     _currentTreePtr->SetBranchAddress("Muon_corrected_pt",       _Muon_corrected_pt,     &b__Muon_corrected_pt);
     _currentTreePtr->SetBranchAddress("Muon_ptErr",              _Muon_ptErr,            &b__Muon_ptErr);
@@ -278,7 +294,9 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     _currentTreePtr->SetBranchAddress("Muon_isStandalone",    _Muon_isStandalone,    &b__Muon_isStandalone);
 
     // variables related to taus
-    tauReader = new LeptonReader(*this, _currentTreePtr, "Tau");
+    std::cout << tauReader << std::endl;
+
+    tauReader->InitTree(_currentTreePtr);
 
     // variables related to jets
     _currentTreePtr->SetBranchAddress("nJet",               &_nJet,               &b__nJet);
@@ -300,48 +318,51 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
     // Default MET
     _currentTreePtr->SetBranchAddress("MET_pt",  &_MET_pt,  &b__MET_pt);
     _currentTreePtr->SetBranchAddress("MET_phi", &_MET_phi, &b__MET_phi);
-    // JECs reapplied, smeared MET: 
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt",   &_MET_T1Smear_pt,   &b__MET_T1Smear_pt);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi",  &_MET_T1Smear_phi,  &b__MET_T1Smear_phi);
-    // Unclustered MET
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_unclustEnUp",   &_MET_T1Smear_pt_unclustEnUp,   &b__MET_T1Smear_pt_unclustEnUp);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_unclustEnUp",  &_MET_T1Smear_phi_unclustEnUp,  &b__MET_T1Smear_phi_unclustEnUp);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_unclustEnDown", &_MET_T1Smear_pt_unclustEnDown, &b__MET_T1Smear_pt_unclustEnDown);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_unclustEnDown", &_MET_T1Smear_phi_unclustEnDown, &b__MET_T1Smear_phi_unclustEnDown);
+    _currentTreePtr->SetBranchAddress("MET_T1_pt",  &_MET_T1_pt,  &b__MET_T1_phi);
+    _currentTreePtr->SetBranchAddress("MET_T1_phi", &_MET_T1_phi, &b__MET_T1_phi);
 
-    // Total JEC:
-    _currentTreePtr->SetBranchAddress("Jet_pt_jesTotalUp",             _Jet_pt_jesTotalUp,            &b__Jet_pt_jesTotalUp);
-    _currentTreePtr->SetBranchAddress("Jet_pt_jesTotalDown",           _Jet_pt_jesTotalDown,          &b__Jet_pt_jesTotalDown);
-    _currentTreePtr->SetBranchAddress("Jet_mass_jesTotalUp",           _Jet_mass_jesTotalUp,          &b__Jet_mass_jesTotalUp);
-    _currentTreePtr->SetBranchAddress("Jet_mass_jesTotalDown",         _Jet_mass_jesTotalDown,        &b__Jet_mass_jesTotalDown);
-    _currentTreePtr->SetBranchAddress("MET_T1_pt_jesTotalUp",         &_MET_T1_pt_jesTotalUp,         &b__MET_T1_pt_jesTotalUp);
-    _currentTreePtr->SetBranchAddress("MET_T1_phi_jesTotalUp",        &_MET_T1_phi_jesTotalUp,        &b__MET_T1_phi_jesTotalUp);
-    _currentTreePtr->SetBranchAddress("MET_T1_pt_jesTotalDown",       &_MET_T1_pt_jesTotalDown,       &b__MET_T1_pt_jesTotalDown);
-    _currentTreePtr->SetBranchAddress("MET_T1_phi_jesTotalDown",      &_MET_T1_phi_jesTotalDown,      &b__MET_T1_phi_jesTotalDown);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jesTotalUp",    & _MET_T1Smear_pt_jesTotalUp,   &b__MET_T1Smear_pt_jesTotalUp);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jesTotalUp",   & _MET_T1Smear_phi_jesTotalUp,  &b__MET_T1Smear_phi_jesTotalUp);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jesTotalDown",  & _MET_T1Smear_pt_jesTotalDown, &b__MET_T1Smear_pt_jesTotalDown);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jesTotalDown", &_MET_T1Smear_phi_jesTotalDown, &b__MET_T1Smear_phi_jesTotalDown);
+    if (containsGeneratorInfo()) {
+        // JECs reapplied, smeared MET: 
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt",   &_MET_T1Smear_pt,   &b__MET_T1Smear_pt);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi",  &_MET_T1Smear_phi,  &b__MET_T1Smear_phi);
+        // Unclustered MET
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_unclustEnUp",   &_MET_T1Smear_pt_unclustEnUp,   &b__MET_T1Smear_pt_unclustEnUp);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_unclustEnUp",  &_MET_T1Smear_phi_unclustEnUp,  &b__MET_T1Smear_phi_unclustEnUp);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_unclustEnDown", &_MET_T1Smear_pt_unclustEnDown, &b__MET_T1Smear_pt_unclustEnDown);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_unclustEnDown", &_MET_T1Smear_phi_unclustEnDown, &b__MET_T1Smear_phi_unclustEnDown);
+        // Total JEC:
+        _currentTreePtr->SetBranchAddress("Jet_pt_jesTotalUp",             _Jet_pt_jesTotalUp,            &b__Jet_pt_jesTotalUp);
+        _currentTreePtr->SetBranchAddress("Jet_pt_jesTotalDown",           _Jet_pt_jesTotalDown,          &b__Jet_pt_jesTotalDown);
+        _currentTreePtr->SetBranchAddress("Jet_mass_jesTotalUp",           _Jet_mass_jesTotalUp,          &b__Jet_mass_jesTotalUp);
+        _currentTreePtr->SetBranchAddress("Jet_mass_jesTotalDown",         _Jet_mass_jesTotalDown,        &b__Jet_mass_jesTotalDown);
+        _currentTreePtr->SetBranchAddress("MET_T1_pt_jesTotalUp",         &_MET_T1_pt_jesTotalUp,         &b__MET_T1_pt_jesTotalUp);
+        _currentTreePtr->SetBranchAddress("MET_T1_phi_jesTotalUp",        &_MET_T1_phi_jesTotalUp,        &b__MET_T1_phi_jesTotalUp);
+        _currentTreePtr->SetBranchAddress("MET_T1_pt_jesTotalDown",       &_MET_T1_pt_jesTotalDown,       &b__MET_T1_pt_jesTotalDown);
+        _currentTreePtr->SetBranchAddress("MET_T1_phi_jesTotalDown",      &_MET_T1_phi_jesTotalDown,      &b__MET_T1_phi_jesTotalDown);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jesTotalUp",    & _MET_T1Smear_pt_jesTotalUp,   &b__MET_T1Smear_pt_jesTotalUp);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jesTotalUp",   & _MET_T1Smear_phi_jesTotalUp,  &b__MET_T1Smear_phi_jesTotalUp);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jesTotalDown",  & _MET_T1Smear_pt_jesTotalDown, &b__MET_T1Smear_pt_jesTotalDown);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jesTotalDown", &_MET_T1Smear_phi_jesTotalDown, &b__MET_T1Smear_phi_jesTotalDown);
 
-    // Jet JER smearing:
-    _currentTreePtr->SetBranchAddress("Jet_pt_jer0Up",             _Jet_pt_jer0Up,            &b__Jet_pt_jer0Up);
-    _currentTreePtr->SetBranchAddress("Jet_pt_jer0Down",           _Jet_pt_jer0Down,          &b__Jet_pt_jer0Down);
-    _currentTreePtr->SetBranchAddress("Jet_pt_jer1Up",             _Jet_pt_jer1Up,            &b__Jet_pt_jer1Up);
-    _currentTreePtr->SetBranchAddress("Jet_pt_jer1Down",           _Jet_pt_jer1Down,          &b__Jet_pt_jer1Down);
-    _currentTreePtr->SetBranchAddress("Jet_mass_jer0Up",           _Jet_mass_jer0Up,          &b__Jet_mass_jer0Up);
-    _currentTreePtr->SetBranchAddress("Jet_mass_jer0Down",         _Jet_mass_jer0Down,        &b__Jet_mass_jer0Down);
-    _currentTreePtr->SetBranchAddress("Jet_mass_jer1Up",           _Jet_mass_jer1Up,          &b__Jet_mass_jer1Up);
-    _currentTreePtr->SetBranchAddress("Jet_mass_jer1Down",         _Jet_mass_jer1Down,        &b__Jet_mass_jer1Down);
-    // MET JER smearing:
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer0Down",  &_MET_T1Smear_pt_jer0Down,  &b__MET_T1Smear_pt_jer0Down);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer0Down", &_MET_T1Smear_phi_jer0Down, &b__MET_T1Smear_phi_jer0Down);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer0Up",    &_MET_T1Smear_pt_jer0Up,    &b__MET_T1Smear_pt_jer0Up);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer0Up",   &_MET_T1Smear_phi_jer0Up,   &b__MET_T1Smear_phi_jer0Up);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer1Down",  &_MET_T1Smear_pt_jer1Down,  &b__MET_T1Smear_pt_jer1Down);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer1Down", &_MET_T1Smear_phi_jer1Down, &b__MET_T1Smear_phi_jer1Down);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer1Up",    &_MET_T1Smear_pt_jer1Up,    &b__MET_T1Smear_pt_jer1Up);
-    _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer1Up",   &_MET_T1Smear_phi_jer1Up,   &b__MET_T1Smear_phi_jer1Up);
-
+        // Jet JER smearing:
+        _currentTreePtr->SetBranchAddress("Jet_pt_jer0Up",             _Jet_pt_jer0Up,            &b__Jet_pt_jer0Up);
+        _currentTreePtr->SetBranchAddress("Jet_pt_jer0Down",           _Jet_pt_jer0Down,          &b__Jet_pt_jer0Down);
+        _currentTreePtr->SetBranchAddress("Jet_pt_jer1Up",             _Jet_pt_jer1Up,            &b__Jet_pt_jer1Up);
+        _currentTreePtr->SetBranchAddress("Jet_pt_jer1Down",           _Jet_pt_jer1Down,          &b__Jet_pt_jer1Down);
+        _currentTreePtr->SetBranchAddress("Jet_mass_jer0Up",           _Jet_mass_jer0Up,          &b__Jet_mass_jer0Up);
+        _currentTreePtr->SetBranchAddress("Jet_mass_jer0Down",         _Jet_mass_jer0Down,        &b__Jet_mass_jer0Down);
+        _currentTreePtr->SetBranchAddress("Jet_mass_jer1Up",           _Jet_mass_jer1Up,          &b__Jet_mass_jer1Up);
+        _currentTreePtr->SetBranchAddress("Jet_mass_jer1Down",         _Jet_mass_jer1Down,        &b__Jet_mass_jer1Down);
+        // MET JER smearing:
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer0Down",  &_MET_T1Smear_pt_jer0Down,  &b__MET_T1Smear_pt_jer0Down);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer0Down", &_MET_T1Smear_phi_jer0Down, &b__MET_T1Smear_phi_jer0Down);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer0Up",    &_MET_T1Smear_pt_jer0Up,    &b__MET_T1Smear_pt_jer0Up);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer0Up",   &_MET_T1Smear_phi_jer0Up,   &b__MET_T1Smear_phi_jer0Up);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer1Down",  &_MET_T1Smear_pt_jer1Down,  &b__MET_T1Smear_pt_jer1Down);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer1Down", &_MET_T1Smear_phi_jer1Down, &b__MET_T1Smear_phi_jer1Down);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_pt_jer1Up",    &_MET_T1Smear_pt_jer1Up,    &b__MET_T1Smear_pt_jer1Up);
+        _currentTreePtr->SetBranchAddress("MET_T1Smear_phi_jer1Up",   &_MET_T1Smear_phi_jer1Up,   &b__MET_T1Smear_phi_jer1Up);
+    }
     // variables related to triggers and MET filters
     _currentTreePtr->SetBranchAddress("HLT_trigger_e",      &_HLT_trigger_e,      &b__HLT_trigger_e);
     _currentTreePtr->SetBranchAddress("HLT_trigger_ee",     &_HLT_trigger_ee,     &b__HLT_trigger_ee);
@@ -386,127 +407,132 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
 }
 
 void NanoReader::setOutputTree(TTree* outputTree) {
-    outputTree->Branch("run", &_run);
-    outputTree->Branch("luminosityBlock", &_luminosityBlock);
-    outputTree->Branch("event", &_event);
+    outputTree->Branch("run", &_run, "run/i");
+    outputTree->Branch("luminosityBlock", &_luminosityBlock, "luminosityBlock/i");
+    outputTree->Branch("event", &_event, "event/i");
 
     if (isMC()) {
-        outputTree->Branch("L1PreFiringWeight_Nom",  &_L1PreFiringWeight_Nom);
-        outputTree->Branch("L1PreFiringWeight_Up",   &_L1PreFiringWeight_Up);
-        outputTree->Branch("L1PreFiringWeight_Dn",   &_L1PreFiringWeight_Dn);
+        outputTree->Branch("L1PreFiringWeight_Nom",  &_L1PreFiringWeight_Nom, "L1PreFiringWeight_Nom/F");
+        outputTree->Branch("L1PreFiringWeight_Up",   &_L1PreFiringWeight_Up, "L1PreFiringWeight_Up/F");
+        outputTree->Branch("L1PreFiringWeight_Dn",   &_L1PreFiringWeight_Dn, "L1PreFiringWeight_Dn/F");
+        outputTree->Branch("Pileup_nTrueInt", &_Pileup_nTrueInt, "Pileup_nTrueInt/F");
     }
 
-    outputTree->Branch("Pileup_nTrueInt", &_Pileup_nTrueInt);
-    outputTree->Branch("PV_npvs", &_PV_npvs);
+    outputTree->Branch("PV_npvs", &_PV_npvs, "PV_npvs/I");
 
     if (containsGeneratorInfo()) {
-        outputTree->Branch("genWeight", &_genWeight);
-        outputTree->Branch("nLHEPdfWeight", &_nLHEPdfWeight);
-        outputTree->Branch("LHEPdfWeight", _LHEPdfWeight);
-        outputTree->Branch("nLHEScaleWeight", &_nLHEScaleWeight);
-        outputTree->Branch("LHEScaleWeight", _LHEScaleWeight);
-        outputTree->Branch("nPSWeight", &_nPSWeight);
-        outputTree->Branch("PSWeight", _PSWeight);
+        outputTree->Branch("genWeight", &_genWeight, "genWeight/F");
+        outputTree->Branch("nLHEPdfWeight", &_nLHEPdfWeight, "nLHEPdfWeight/i");
+        outputTree->Branch("LHEPdfWeight", _LHEPdfWeight, "LHEPdfWeight[nLHEPdfWeight]/F");
+        outputTree->Branch("nLHEScaleWeight", &_nLHEScaleWeight, "nLHEScaleWeight/i");
+        outputTree->Branch("LHEScaleWeight", _LHEScaleWeight, "LHEScaleWeight[nLHEScaleWeight]/F");
+        outputTree->Branch("nPSWeight", &_nPSWeight, "nPSWeight/i");
+        outputTree->Branch("PSWeight", _PSWeight, "PSWeight[nPSWeight]/F");
     }
 
     if (containsGeneratorInfo()) {
-        outputTree->Branch("nGenPart", &_nGenPart);
-        outputTree->Branch("GenPart_pt", _GenPart_pt);
-        outputTree->Branch("GenPart_eta", _GenPart_eta);
-        outputTree->Branch("GenPart_phi", _GenPart_phi);
-        outputTree->Branch("GenPart_mass", _GenPart_mass);
-        outputTree->Branch("GenPart_genPartIdxMother", _GenPart_genPartIdxMother);
-        outputTree->Branch("GenPart_pdgId", _GenPart_pdgId);
-        outputTree->Branch("GenPart_status", _GenPart_status);
-        outputTree->Branch("GenPart_statusFlags", _GenPart_statusFlags);
-        outputTree->Branch("GenMET_pt", &_GenMET_pt);
-        outputTree->Branch("GenMET_phi", &_GenMET_phi);
+        outputTree->Branch("nGenPart", &_nGenPart,                                 "nGenPart/i");
+        outputTree->Branch("GenPart_pt", _GenPart_pt,                              "GenPart_pt[nGenPart]/F");
+        outputTree->Branch("GenPart_eta", _GenPart_eta,                            "GenPart_eta[nGenPart]/F");
+        outputTree->Branch("GenPart_phi", _GenPart_phi,                            "GenPart_phi[nGenPart]/F");
+        outputTree->Branch("GenPart_mass", _GenPart_mass,                          "GenPart_mass[nGenPart]/F");
+        outputTree->Branch("GenPart_genPartIdxMother", _GenPart_genPartIdxMother,  "GenPart_genPartIdxMother[nGenPart]/I");
+        outputTree->Branch("GenPart_pdgId", _GenPart_pdgId,                        "GenPart_pdgId[nGenPart]/I");
+        outputTree->Branch("GenPart_status", _GenPart_status,                      "GenPart_status[nGenPart]/I");
+        outputTree->Branch("GenPart_statusFlags", _GenPart_statusFlags,            "GenPart_statusFlags[nGenPart]/I");
+        outputTree->Branch("GenMET_pt", &_GenMET_pt,                               "GenMET_pt/F");
+        outputTree->Branch("GenMET_phi", &_GenMET_phi,                             "GenMET_phi/F");
 
-        outputTree->Branch("GenJet_eta", _GenJet_eta);
-        outputTree->Branch("GenJet_mass", _GenJet_mass);
-        outputTree->Branch("GenJet_phi", _GenJet_phi);
-        outputTree->Branch("GenJet_pt", _GenJet_pt);
-        outputTree->Branch("GenJet_partonFlavour", _GenJet_partonFlavour);
-        outputTree->Branch("GenJet_hadronFlavour", _GenJet_hadronFlavour);
-        outputTree->Branch("nGenJet", &_nGenJet);
+        outputTree->Branch("GenJet_eta", _GenJet_eta, "GenJet_eta[nGenJet]/F");
+        outputTree->Branch("GenJet_mass", _GenJet_mass, "GenJet_mass[nGenJet]/F");
+        outputTree->Branch("GenJet_phi", _GenJet_phi, "GenJet_phi[nGenJet]/F");
+        outputTree->Branch("GenJet_pt", _GenJet_pt, "GenJet_pt[nGenJet]/F");
+        outputTree->Branch("GenJet_partonFlavour", _GenJet_partonFlavour, "GenJet_partonFlavour[nGenJet]/I");
+        outputTree->Branch("GenJet_hadronFlavour", _GenJet_hadronFlavour, "GenJet_hadronFlavour[nGenJet]/b");
+        outputTree->Branch("nGenJet", &_nGenJet, "nGenJet/i");
     }
     // Set ELectron branches:
-    electronReader->setOutputTree(outputTree, "Electron");
-    outputTree->Branch("Electron_tightCharge", _Electron_tightCharge);
-    outputTree->Branch("Electron_convVeto", _Electron_convVeto);
-    outputTree->Branch("Electron_lostHits", _Electron_lostHits);
-    outputTree->Branch("Electron_mvaFall17V2Iso", _Electron_mvaFall17V2Iso);
-    outputTree->Branch("Electron_mvaFall17V2noIso", _Electron_mvaFall17V2noIso);
-    outputTree->Branch("Electron_mvaFall17V2noIso_WPL", _Electron_mvaFall17V2noIso_WPL);
-    outputTree->Branch("Electron_mvaFall17V2noIso_WP80", _Electron_mvaFall17V2noIso_WP80);
-    outputTree->Branch("Electron_mvaFall17V2noIso_WP90", _Electron_mvaFall17V2noIso_WP90);
-    outputTree->Branch("Electron_deltaEtaSC", _Electron_deltaEtaSC);
-    outputTree->Branch("Electron_eInvMinusPInv", _Electron_eInvMinusPInv);
-    outputTree->Branch("Electron_hoe", _Electron_hoe);
-    outputTree->Branch("Electron_sieie", _Electron_sieie);
-    outputTree->Branch("Electron_cutBased", _Electron_cutBased);
-    outputTree->Branch("Electron_eCorr", _Electron_eCorr);
-    outputTree->Branch("Electron_dEscaleDown", _Electron_dEscaleDown);
-    outputTree->Branch("Electron_dEscaleUp", _Electron_dEscaleUp);
-    outputTree->Branch("Electron_dEsigmaDown", _Electron_dEsigmaDown);
-    outputTree->Branch("Electron_dEsigmaUp", _Electron_dEsigmaUp);
+    electronReader->setOutputTree(outputTree);
+    outputTree->Branch("Electron_tightCharge", _Electron_tightCharge, "Electron_tightCharge[nElectron]/I");
+    outputTree->Branch("Electron_convVeto", _Electron_convVeto, "Electron_convVeto[nElectron]/O");
+    outputTree->Branch("Electron_lostHits", _Electron_lostHits, "Electron_lostHits[nElectron]/b");
+    outputTree->Branch("Electron_mvaFall17V2Iso", _Electron_mvaFall17V2Iso, "Electron_mvaFall17V2Iso[nElectron]/F");
+    outputTree->Branch("Electron_mvaFall17V2noIso", _Electron_mvaFall17V2noIso, "Electron_mvaFall17V2noIso[nElectron]/F");
+    outputTree->Branch("Electron_mvaFall17V2noIso_WPL", _Electron_mvaFall17V2noIso_WPL, "Electron_mvaFall17V2noIso_WPL[nElectron]/O");
+    outputTree->Branch("Electron_mvaFall17V2noIso_WP80", _Electron_mvaFall17V2noIso_WP80, "Electron_mvaFall17V2noIso_WP80[nElectron]/O");
+    outputTree->Branch("Electron_mvaFall17V2noIso_WP90", _Electron_mvaFall17V2noIso_WP90, "Electron_mvaFall17V2noIso_WP90[nElectron]/O");
+    outputTree->Branch("Electron_deltaEtaSC", _Electron_deltaEtaSC, "Electron_deltaEtaSC[nElectron]/F");
+    outputTree->Branch("Electron_eInvMinusPInv", _Electron_eInvMinusPInv, "Electron_eInvMinusPInv[nElectron]/F");
+    outputTree->Branch("Electron_hoe", _Electron_hoe, "Electron_hoe[nElectron]/F");
+    outputTree->Branch("Electron_sieie", _Electron_sieie, "Electron_sieie[nElectron]/F");
+    outputTree->Branch("Electron_cutBased", _Electron_cutBased, "Electron_cutBased[nElectron]/I");
+    outputTree->Branch("Electron_eCorr", _Electron_eCorr, "Electron_eCorr[nElectron]/F");
+    outputTree->Branch("Electron_dEscaleDown", _Electron_dEscaleDown, "Electron_dEscaleDown[nElectron]/F");
+    outputTree->Branch("Electron_dEscaleUp", _Electron_dEscaleUp, "Electron_dEscaleUp[nElectron]/F");
+    outputTree->Branch("Electron_dEsigmaDown", _Electron_dEsigmaDown, "Electron_dEsigmaDown[nElectron]/F");
+    outputTree->Branch("Electron_dEsigmaUp", _Electron_dEsigmaUp, "Electron_dEsigmaUp[nElectron]/F");
 
     // Set Muon branches:
-    muonReader->setOutputTree(outputTree, "Muon");
-    outputTree->Branch("Muon_corrected_pt", _Muon_corrected_pt);
-    outputTree->Branch("Muon_ptErr", _Muon_ptErr);
-    outputTree->Branch("Muon_pfRelIso04_all", _Muon_pfRelIso04_all);
-    outputTree->Branch("Muon_segmentComp", _Muon_segmentComp);
-    outputTree->Branch("Muon_looseId", _Muon_looseId);
-    outputTree->Branch("Muon_mediumId", _Muon_mediumId);
-    outputTree->Branch("Muon_tightId", _Muon_tightId);
-    outputTree->Branch("Muon_isGlobal", _Muon_isGlobal);
-    outputTree->Branch("Muon_isTracker", _Muon_isTracker);
-    outputTree->Branch("Muon_isStandalone", _Muon_isStandalone);
+    muonReader->setOutputTree(outputTree);
+    outputTree->Branch("Muon_corrected_pt", _Muon_corrected_pt, "Muon_corrected_pt[nMuon]/F");
+    outputTree->Branch("Muon_ptErr", _Muon_ptErr, "Muon_ptErr[nMuon]/F");
+    outputTree->Branch("Muon_pfRelIso04_all", _Muon_pfRelIso04_all, "Muon_pfRelIso04_all[nMuon]/F");
+    outputTree->Branch("Muon_segmentComp", _Muon_segmentComp, "Muon_segmentComp[nMuon]/F");
+    outputTree->Branch("Muon_looseId", _Muon_looseId, "Muon_looseId[nMuon]/O");
+    outputTree->Branch("Muon_mediumId", _Muon_mediumId, "Muon_mediumId[nMuon]/O");
+    outputTree->Branch("Muon_tightId", _Muon_tightId, "Muon_tightId[nMuon]/O");
+    outputTree->Branch("Muon_isGlobal", _Muon_isGlobal, "Muon_isGlobal[nMuon]/O");
+    outputTree->Branch("Muon_isTracker", _Muon_isTracker, "Muon_isTracker[nMuon]/O");
+    outputTree->Branch("Muon_isStandalone", _Muon_isStandalone, "Muon_isStandalone[nMuon]/O");
 
     // Set Tau branches:
-    tauReader->setOutputTree(outputTree, "Tau");
+    tauReader->setOutputTree(outputTree);
 
     // Set Jet branches:
-    outputTree->Branch("nJet", &_nJet);
-    outputTree->Branch("Jet_pt", _Jet_pt);
-    outputTree->Branch("Jet_pt_nom", _Jet_pt_nom);
-    outputTree->Branch("Jet_eta", _Jet_eta);
-    outputTree->Branch("Jet_phi", _Jet_phi);
-    outputTree->Branch("Jet_btagDeepB", _Jet_bTagDeepB);
-    outputTree->Branch("Jet_btagDeepFlavB", _Jet_bTagDeepFlavB);
-    outputTree->Branch("Jet_nConstituents", _Jet_nConstituents);
+    outputTree->Branch("nJet", &_nJet,                          "nJet/i");
+    outputTree->Branch("Jet_pt", _Jet_pt,                       "Jet_pt[nJet]/F");
+    outputTree->Branch("Jet_pt_nom", _Jet_pt_nom,               "Jet_pt_nom[nJet]/F");
+    outputTree->Branch("Jet_mass_nom",      _Jet_mass_nom,      "Jet_mass_nom[nJet]/F");
+
+    outputTree->Branch("Jet_eta", _Jet_eta,                     "Jet_eta[nJet]/F");
+    outputTree->Branch("Jet_phi", _Jet_phi,                     "Jet_phi[nJet]/F");
+    outputTree->Branch("Jet_btagDeepB", _Jet_bTagDeepB,         "Jet_btagDeepB[nJet]/F");
+    outputTree->Branch("Jet_btagDeepFlavB", _Jet_bTagDeepFlavB, "Jet_btagDeepFlavB[nJet]/F");
+    outputTree->Branch("Jet_nConstituents", _Jet_nConstituents, "Jet_nConstituents[nJet]/b");
     if (containsGeneratorInfo()) {
-        outputTree->Branch("Jet_hadronFlavour", _Jet_hadronFlavor);
+        outputTree->Branch("Jet_hadronFlavour", _Jet_hadronFlavor, "Jet_hadronFlavour[nJet]/I");
     }
-    outputTree->Branch("Jet_jetId", _Jet_jetId);
+    outputTree->Branch("Jet_jetId", _Jet_jetId, "Jet_jetId[nJet]/I");
     
     // Set MET branches:
-    outputTree->Branch("MET_pt", &_MET_pt);
-    outputTree->Branch("MET_phi", &_MET_phi);
+    outputTree->Branch("MET_pt",  &_MET_pt, "MET_pt/F");
+    outputTree->Branch("MET_phi", &_MET_phi, "MET_phi/F");
+    // T1 stuff:
+    outputTree->Branch("MET_T1_pt",  &_MET_T1_pt, "MET_T1_pt/F");
+    outputTree->Branch("MET_T1_phi", &_MET_T1_phi, "MET_T1_phi/F");
 
     // Set triggering and MET Filters output:
-    outputTree->Branch("HLT_trigger_e", &_HLT_trigger_e);
-    outputTree->Branch("HLT_trigger_ee", &_HLT_trigger_ee);
-    outputTree->Branch("HLT_trigger_eee", &_HLT_trigger_eee);
-    outputTree->Branch("HLT_trigger_m", &_HLT_trigger_m);
-    outputTree->Branch("HLT_trigger_mm", &_HLT_trigger_mm);
-    outputTree->Branch("HLT_trigger_mmm", &_HLT_trigger_mmm);
-    outputTree->Branch("HLT_trigger_em", &_HLT_trigger_em);
-    outputTree->Branch("HLT_trigger_emm", &_HLT_trigger_emm);
-    outputTree->Branch("HLT_trigger_eem", &_HLT_trigger_eem);
-    outputTree->Branch("HLT_trigger_ref", &_HLT_trigger_ref);
-    outputTree->Branch("HLT_trigger_FR", &_HLT_trigger_FR);
-    outputTree->Branch("HLT_trigger_FR_iso", &_HLT_trigger_FR_iso);
+    outputTree->Branch("HLT_trigger_e", &_HLT_trigger_e, "HLT_trigger_e/O");
+    outputTree->Branch("HLT_trigger_ee", &_HLT_trigger_ee, "HLT_trigger_ee/O");
+    outputTree->Branch("HLT_trigger_eee", &_HLT_trigger_eee, "HLT_trigger_eee/O");
+    outputTree->Branch("HLT_trigger_m", &_HLT_trigger_m, "HLT_trigger_m/O");
+    outputTree->Branch("HLT_trigger_mm", &_HLT_trigger_mm, "HLT_trigger_mm/O");
+    outputTree->Branch("HLT_trigger_mmm", &_HLT_trigger_mmm, "HLT_trigger_mmm/O");
+    outputTree->Branch("HLT_trigger_em", &_HLT_trigger_em, "HLT_trigger_em/O");
+    outputTree->Branch("HLT_trigger_emm", &_HLT_trigger_emm, "HLT_trigger_emm/O");
+    outputTree->Branch("HLT_trigger_eem", &_HLT_trigger_eem, "HLT_trigger_eem/O");
+    outputTree->Branch("HLT_trigger_ref", &_HLT_trigger_ref, "HLT_trigger_ref/O");
+    outputTree->Branch("HLT_trigger_FR", &_HLT_trigger_FR, "HLT_trigger_FR/O");
+    outputTree->Branch("HLT_trigger_FR_iso", &_HLT_trigger_FR_iso, "HLT_trigger_FR_iso/O");
 
-    outputTree->Branch("Flag_METFilters", &_Flag_METFilters);
-    outputTree->Branch("Flag_goodVertices", &_Flag_goodVertices);
-    outputTree->Branch("Flag_globalSuperTightHalo2016Filter", &_Flag_globalSuperTightHalo2016Filter);
-    outputTree->Branch("Flag_HBHENoiseFilter", &_Flag_HBHENoiseFilter);
-    outputTree->Branch("Flag_HBHENoiseIsoFilter", &_Flag_HBHENoiseIsoFilter);
-    outputTree->Branch("Flag_BadPFMuonFilter", &_Flag_BadPFMuonFilter);
-    outputTree->Branch("Flag_BadPFMuonDzFilter", &_Flag_BadPFMuonDzFilter);
-    outputTree->Branch("Flag_eeBadScFilter", &_Flag_eeBadScFilter);
-    outputTree->Branch("Flag_ecalBadCalibFilter", &_Flag_ecalBadCalibFilter);
-    outputTree->Branch("Flag_EcalDeadCellTriggerPrimitiveFilter", &_Flag_EcalDeadCellTriggerPrimitiveFilter);
+    outputTree->Branch("Flag_METFilters", &_Flag_METFilters,                                                 "Flag_METFilters/O");
+    outputTree->Branch("Flag_goodVertices", &_Flag_goodVertices,                                             "Flag_goodVertices/O");
+    outputTree->Branch("Flag_globalSuperTightHalo2016Filter", &_Flag_globalSuperTightHalo2016Filter,         "Flag_globalSuperTightHalo2016Filter/O");
+    outputTree->Branch("Flag_HBHENoiseFilter", &_Flag_HBHENoiseFilter,                                       "Flag_HBHENoiseFilter/O");
+    outputTree->Branch("Flag_HBHENoiseIsoFilter", &_Flag_HBHENoiseIsoFilter,                                 "Flag_HBHENoiseIsoFilter/O");
+    outputTree->Branch("Flag_BadPFMuonFilter", &_Flag_BadPFMuonFilter,                                       "Flag_BadPFMuonFilter/O");
+    outputTree->Branch("Flag_BadPFMuonDzFilter", &_Flag_BadPFMuonDzFilter,                                   "Flag_BadPFMuonDzFilter/O");
+    outputTree->Branch("Flag_eeBadScFilter", &_Flag_eeBadScFilter,                                           "Flag_eeBadScFilter/O");
+    outputTree->Branch("Flag_ecalBadCalibFilter", &_Flag_ecalBadCalibFilter,                                 "Flag_ecalBadCalibFilter/O");
+    outputTree->Branch("Flag_EcalDeadCellTriggerPrimitiveFilter", &_Flag_EcalDeadCellTriggerPrimitiveFilter, "Flag_EcalDeadCellTriggerPrimitiveFilter/O");
 }

@@ -1,0 +1,1 @@
+ttG             ../skims_v9/2016PreVFP/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODAPVv9.root                       2.22

@@ -5,7 +5,7 @@
 
 class NanoReader : public BaseReader {
     public:
-        NanoReader() = default;
+        NanoReader();
         NanoReader(const std::string&, const std::string&);
 
         // Tree manipulation
@@ -16,7 +16,7 @@ class NanoReader : public BaseReader {
         
         class LeptonReader {
             public:
-                LeptonReader(NanoReader&, TTree*, std::string);
+                LeptonReader(NanoReader&, std::string);
                 virtual ~LeptonReader() = default;
                 virtual bool isLightLeptonReader() const {return false;}
 
@@ -38,19 +38,21 @@ class NanoReader : public BaseReader {
                 // jet-lepton variables
                 Int_t           _Lepton_jetIdx[nLepton_max];
 
-                virtual void setOutputTree(TTree* tree, std::string leptonType);
+                virtual void InitTree(TTree* _currentTreePtr);
+                virtual void setOutputTree(TTree* tree);
 
                 const NanoReader& GetNanoReader() const {return nanoReader;}
+            protected:
+                std::string* leptonType = nullptr;
             private:
                 NanoReader& nanoReader;
-
                 TBranch *b__nLepton, *b__Lepton_pt, *b__Lepton_eta, *b__Lepton_phi, *b__Lepton_mass, *b__Lepton_charge, 
                         *b__Lepton_dxy, *b__Lepton_dz, *b__Lepton_jetIdx, *b__Lepton_genPartFlav, *b__Lepton_genPartIdx;
         };
 
         class LightLeptonReader : public LeptonReader {
             public:
-                LightLeptonReader(NanoReader&, TTree*, std::string);
+                LightLeptonReader(NanoReader&, std::string);
                 virtual ~LightLeptonReader() = default;
                 virtual bool isLightLeptonReader() const {return true;}
 
@@ -80,7 +82,8 @@ class NanoReader : public BaseReader {
                 UInt_t          _Lepton_provenanceConversion[nLepton_max];
                 
                 // virtual void initTree(TTree* tree, std::string leptonType);
-                virtual void setOutputTree(TTree* tree, std::string leptonType);
+                virtual void InitTree(TTree* tree);
+                virtual void setOutputTree(TTree* tree);
 
             private:
                 TBranch *b__Lepton_sip3d, *b__Lepton_pfRelIso03_all, *b__Lepton_miniPFRelIso_all, *b__Lepton_miniPFRelIso_chg, 
@@ -202,6 +205,10 @@ class NanoReader : public BaseReader {
         // default MET:
         Float_t         _MET_pt;
         Float_t         _MET_phi;
+        // T1, no smear:
+        Float_t         _MET_T1_pt;
+        Float_t         _MET_T1_phi;
+
         // Smeared, JEC reapplied MET:
         Float_t         _MET_T1Smear_pt;
         Float_t         _MET_T1Smear_phi;
@@ -529,6 +536,8 @@ class NanoReader : public BaseReader {
         TBranch* b__Flag_eeBadScFilter;
         TBranch* b__Flag_ecalBadCalibFilter;
         TBranch* b__Flag_EcalDeadCellTriggerPrimitiveFilter;
+        TBranch* b__MET_T1_pt;
+        TBranch* b__MET_T1_phi;
 
         std::map< std::string, TBranch* > b__jet_pt_jesSourcesDown;
         std::map< std::string, TBranch* > b__jet_pt_jesSourcesUp;

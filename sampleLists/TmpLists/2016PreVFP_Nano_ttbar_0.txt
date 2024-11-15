@@ -1,0 +1,1 @@
+ttbar           ../skims_v9/2016PreVFP/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODAPVv9.root                              88.40

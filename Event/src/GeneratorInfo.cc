@@ -81,6 +81,7 @@ GeneratorInfo::GeneratorInfo(const NanoReader& nanoReader) :
         throw std::out_of_range(message);
     }
     for (unsigned i = 0; i < _numberOfScaleVariations; ++i) {
+        _numberOfLheWeights++;
         _LHEScaleWeights[i] = nanoReader._LHEScaleWeight[i];
     }
 
@@ -146,7 +147,7 @@ double GeneratorInfo::relativeWeightScaleVar( const unsigned scaleIndex ) const{
     if (miniAODSetup) {
         return retrieveWeight( _lheWeights, scaleIndex, 0, std::min( _numberOfLheWeights, unsigned(9) ), "scale" );
     } else {
-        return retrieveWeight( _LHEScaleWeights, scaleIndex, 0, std::min( _numberOfLheWeights, unsigned(9) ), "scale" );
+        return retrieveWeight( _LHEScaleWeights, scaleIndex, 0, std::min( _numberOfScaleVariations, unsigned(9) ), "scale" );
     }
 }
 

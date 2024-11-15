@@ -1,0 +1,1 @@
+ttbar           ../skims_v9/2016PostVFP/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODv9.root                      365.34

@@ -1,0 +1,5 @@
+Obs           ../skims_v10/2017/MergedNewV2_DataRun2017B.root
+Obs           ../skims_v10/2017/MergedNewV2_DataRun2017C.root
+Obs           ../skims_v10/2017/MergedNewV2_DataRun2017D.root
+Obs           ../skims_v10/2017/MergedNewV2_DataRun2017E.root
+Obs           ../skims_v10/2017/MergedNewV2_DataRun2017F.root

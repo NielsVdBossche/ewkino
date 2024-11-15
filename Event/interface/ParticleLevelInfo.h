@@ -17,10 +17,14 @@ class ParticleLevelInfo {
         unsigned GetParticleLevelBees() const { return particleLevelBees; }
         std::vector<std::shared_ptr<LorentzVector>> GetParticleLevelBeeVectors() const {return plBeeVectors;}
 
+        double GetGenJetHT() const { return genJetHT; }
+
     private:
         // save worked out stuff like how many b's for now - should be sufficient
         unsigned particleLevelBees;
         std::vector<std::shared_ptr<LorentzVector>> plBeeVectors;
+
+        double genJetHT;
 };
 
 

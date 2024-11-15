@@ -64,5 +64,6 @@ skimmerCleaned/skimmer*.sh
 skimmerCleaned/skimmer*.sub
 skimmerCleaned/merger*.sub
 skimmerCleaned/merger*.sh
+skimmerCleaned/tmp/**
 stacker*sh
 stacker*sub

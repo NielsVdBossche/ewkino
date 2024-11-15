@@ -1,0 +1,1 @@
+TTTT_v2         ../skims_v7/2018/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_crab_RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2_singlelepton_MC_2018_ULv7.root          0.01337

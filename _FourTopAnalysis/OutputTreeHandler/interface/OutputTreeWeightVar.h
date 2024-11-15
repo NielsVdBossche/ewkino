@@ -25,6 +25,7 @@ class OutputTreeWeightVar : public OutputTreeVariables {
         std::vector<double> isrfsrVariations;
         std::vector<double> pdfVariations;
         std::vector<double> otherVariations;
+        Float_t genJetHT;
 
         std::vector<double> expUp;
         std::vector<double> expDown;

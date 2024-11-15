@@ -13,6 +13,7 @@ OutputTreeWeightVar::OutputTreeWeightVar(TFile* outputfile, std::string& treeNam
     GetTree()->Branch("isrfsrVariations",   &isrfsrVariations);
     GetTree()->Branch("pdfVariations",      &pdfVariations);
     GetTree()->Branch("otherVariations",    &otherVariations);
+    GetTree()->Branch("genJetHT",           &genJetHT,         "genJetHT/F");
     GetTree()->Branch("expUp",              &expUp);
     GetTree()->Branch("expDown",            &expDown);
 
@@ -26,6 +27,10 @@ void OutputTreeWeightVar::FillTree(EventFourT* ftEvent, double weight) {
     FillBaseTree(weight, ftEvent);
 
     weightVariations = {1., 2.};
+    genJetHT = 0.;
+    if (ftEvent->getEvent()->GetPLInfoPtr()) {
+        genJetHT = ftEvent->getEvent()->GetPLInfoPtr()->GetGenJetHT();
+    }
 
     eftVariations.clear();
     GeneratorInfo* genInfo = ftEvent->getEvent()->getGeneratorInfoPtr();

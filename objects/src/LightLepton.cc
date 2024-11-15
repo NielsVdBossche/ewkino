@@ -67,6 +67,12 @@ LightLepton::LightLepton(const NanoReader::LightLeptonReader& leptonReader, cons
         msg += " index of closest jet is " + std::to_string(_jetIdx);
         msg += " while only " + std::to_string(leptonReader.GetNanoReader()._nJet);
         msg += " jets are present; ignoring closest jet info.";
+        msg += " Flavor is ";
+        if (leptonSelector->isElectronSelector()) {
+            msg += "Electron.";
+        } else if (leptonSelector->isMuonSelector()) {
+            msg += "Muon.";
+        } 
         std::cerr << msg << std::endl;
     } else if (_jetIdx >= 0) {
         // _closestJetDeepCSV = leptonReader.GetNanoReader()._Jet_bTagDeepB[_jetIdx];
