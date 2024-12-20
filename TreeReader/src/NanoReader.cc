@@ -313,6 +313,7 @@ void NanoReader::initTree(const bool resetTriggersAndFilters) {
         // this branch is not present in data!
     }
     _currentTreePtr->SetBranchAddress("Jet_jetId", _Jet_jetId, &b__Jet_jetId);
+    _currentTreePtr->SetBranchAddress("Jet_puId", _Jet_puId, &b__Jet_puId);
 
     // variables related to missing transverse energy
     // Default MET
@@ -503,6 +504,7 @@ void NanoReader::setOutputTree(TTree* outputTree) {
         outputTree->Branch("Jet_hadronFlavour", _Jet_hadronFlavor, "Jet_hadronFlavour[nJet]/I");
     }
     outputTree->Branch("Jet_jetId", _Jet_jetId, "Jet_jetId[nJet]/I");
+    outputTree->Branch("Jet_puId",  _Jet_puId, "Jet_jetId[nJet]/I");
     
     // Set MET branches:
     outputTree->Branch("MET_pt",  &_MET_pt, "MET_pt/F");

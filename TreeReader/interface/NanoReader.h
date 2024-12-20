@@ -198,6 +198,7 @@ class NanoReader : public BaseReader {
         Float_t         _Jet_mass_nom[nJet_max];
         Int_t           _Jet_hadronFlavor[nJet_max];
         Int_t           _Jet_jetId[nJet_max];
+        Int_t           _Jet_puId[nJet_max];
         UChar_t         _Jet_nConstituents[nJet_max];
         UInt_t          _nJet;
 
@@ -471,6 +472,7 @@ class NanoReader : public BaseReader {
         TBranch* b__Jet_nConstituents;
         TBranch* b__Jet_hadronFlavor;
         TBranch* b__Jet_jetId;
+        TBranch* b__Jet_puId;
         TBranch* b__GenJet_eta;
         TBranch* b__GenJet_mass;
         TBranch* b__GenJet_phi;

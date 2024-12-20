@@ -151,7 +151,11 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
         if (uncertaintyTheoryWeight && ! treeReader->isData() && st == selectionType::MCPrompt) {
             xsecs = std::make_shared<SampleCrossSections>( treeReader->currentSample() );
             numberOfPSVariations = currentEvent->generatorInfo().numberOfPsWeights();
-            if(numberOfPSVariations >= 44) hasValidPSs = true;
+            if(numberOfPSVariations >= 44 && !nanoAOD){
+                hasValidPSs = true;
+            } else if (numberOfPSVariations >= 4 && nanoAOD) {
+                hasValidPSs = true;
+            }
             std::cout << "Sample " << treeReader->currentSample().fileName() << " - hasValidPSs: " << hasValidPSs << "\n";
             if(currentEvent->generatorInfo().numberOfScaleVariations() == 9 ) hasValidQcds = true;
             else hasValidQcds = false;
@@ -240,12 +244,14 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
 
         std::cout << "Starting event loop" << std::endl;
 
+        std::string currProcName = treeReader->sampleVector()[sampleIndex].processName();
+
         for( long unsigned entry = 0; entry < treeReader->numberOfEntries(); ++entry ){
             if (testRun && entry % 1000 == 0) {
                 std::cout << "at entry " << entry << std::endl;
             }
-            if (testRun && entry > 100000) {
-                std::cout << "Cut at 100000 events" << std::endl;
+            if (testRun && entry > 10000) {
+                std::cout << "Cut at 10000 events" << std::endl;
                 break;
             }
             //if (entry % 100000 == 0) std::cout << entry << "/" << treeReader->numberOfEntries() << std::endl;
@@ -434,6 +440,10 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                             otherVar.push_back(varUp);
                             otherVar.push_back(varDown);
                         }
+                        ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetOtherVariations(otherVar);
+                    } else if (currProcName == "VVV" || currProcName == "SSWW" || currProcName == "ZZ-H") {
+                        if (testRun) std::cout << "dummy otherVar" << std::endl;
+                        std::vector<double> otherVar = {1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1. , 1., 1.};
                         ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetOtherVariations(otherVar);
                     }
                 }
