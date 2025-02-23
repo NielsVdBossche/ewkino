@@ -18,6 +18,7 @@ class OutputTreeVariables : public OutputTree {
         long unsigned eventNb;
         
         unsigned nJets;
+        unsigned nJetsMedB;
         std::vector<double> jetPt; // only tight jets
 
         // potentially change this to just have the nBTight/med/loose? Rather than wp based, then again count 3/2/1/0 is also possible

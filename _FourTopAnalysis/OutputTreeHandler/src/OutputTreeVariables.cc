@@ -34,6 +34,7 @@ void OutputTreeVariables::FillBaseTree(double weight, EventFourT* ftEvent) {
     eventNb           = ftEvent->getEvent()->eventTags().eventNumber();
     
     nJets             = ftEvent->numberOfJets();//ftEvent->numberOfJets();
+    nJetsMedB         = ftEvent->numberOfMediumBJets();
     jetPt             = {}; // only tight jets
     bTagWP            = {}; // 0=no, 1=loose, 2=med, 3=tight?
     for (unsigned i=0; i < nJets; i++) {
@@ -132,6 +133,7 @@ void OutputTreeVariables::pInitTree() {
     //tree->Branch("noSFWeight",     &noSFWeight,              "noSFWeight/D");
     
     tree->Branch("nJets",          &nJets,                   "nJets/i");
+    tree->Branch("nJetsMedB",      &nJetsMedB,                "nJetsMedB/i");
     tree->Branch("jetPt",          &jetPt);
     tree->Branch("bTagWP",         &bTagWP);
     tree->Branch("nElectrons",     &nElectrons,              "nElectrons/i");

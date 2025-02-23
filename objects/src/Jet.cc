@@ -115,7 +115,7 @@ Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex, const bool useAl
         _pt_JER_1p93_Down(nanoReader._Jet_pt_jer0Down[jetIndex]),
         _pt_JER_1p93_Up(nanoReader._Jet_pt_jer0Up[jetIndex]),
         _pt_JER_1p93_To_2p5_Down(nanoReader._Jet_pt_jer1Down[jetIndex]),
-        _pt_JER_1p93_To_2p5_Up(nanoReader._Jet_pt_jer1Down[jetIndex]),
+        _pt_JER_1p93_To_2p5_Up(nanoReader._Jet_pt_jer1Up[jetIndex]),
         // Make sure ignoring mass variations works, if not, add it in!
         // _mass_JER_1p93_Down(nanoReader._Jet_mass_jer0Down[jetIndex]),
         // _mass_JER_1p93_Up(nanoReader._Jet_mass_jer0Up[jetIndex]),
