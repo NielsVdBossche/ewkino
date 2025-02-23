@@ -104,7 +104,6 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
 
             //set uo output tree
             treeReader.setOutputTree( outputTreePtr.get() );
-
         //for next files, add the histograms to the current histograms and check that no unknown histograms are present
         } else {
             for( const auto& histPtr : treeReader.getHistogramsFromCurrentFile() ){
@@ -142,6 +141,86 @@ void mergeAndRemoveOverlap( const std::vector< std::string >& inputPathVector, c
         histPair.second->Write();
     }
     
+    //write output tree 
+    outputTreePtr->Write( "", BIT(2) );
+
+    //close output file
+    outputFilePtr->Close();
+}
+
+
+void mergeAndRemoveOverlapNanoAOD( const std::vector< std::string >& inputPathVector, const std::string& outputPath, const bool allowMergingYears ){
+
+    //size of input vector must be at least 2, otherwise there can be no merging 
+    if( inputPathVector.size() < 2 ){
+        throw std::length_error( "Input path vector has size " + std::to_string( inputPathVector.size() ) + ", while it should be at least 2." );
+    }
+
+    //unless explicitly specified, don't allow the merging of files corresponding to different years
+    if( !( allowMergingYears || yearsAreConsistent( inputPathVector ) ) ){
+        throw std::logic_error( "Can't merge datasets corresponding to different files unless explicitly specified." );
+    }
+
+    // TTree::SetMaxTreeSize(100000000LL);
+
+    //initialize TreeReader
+    NanoReader treeReader;
+
+    //make output file and output Tree
+    TFile* outputFilePtr = TFile::Open( outputPath.c_str(), "RECREATE" );
+    TDirectory* outputDir = outputFilePtr; // ->GetDirectory( "blackJackAndHookers" ); // prob just equal?
+    std::shared_ptr< TTree > outputTreePtr( std::make_shared< TTree >( "Events", "Events" ) );
+    //outputTreePtr->SetDirectory( outputDir );
+    outputDir->Append(outputTreePtr.get());
+    //histograms stored in file
+    // std::map< std::string, std::shared_ptr< TH1 > > outputHistogramMap;
+
+    //set of events that has been seen
+    //use std::set so search scales as log(N) 
+    std::set< EventTags > usedEventTags;
+
+    //for( const auto& inputFilePath : inputPathVector ){
+    for( auto inputPathIt = inputPathVector.cbegin(); inputPathIt != inputPathVector.cend(); ++inputPathIt ){
+        std::cout << *inputPathIt << std::endl;
+        const auto& inputFilePath = *inputPathIt;
+
+        //open next sample
+        //DO NOT reset triggers because this will invalidate the addresses set by setOutputTree and trigger decisions in output file will be wrong!
+        treeReader.initSampleFromFile( inputFilePath, false );
+
+        outputTreePtr->SetDirectory( outputDir );
+
+        //set output histograms and output tree for first file
+        if( inputPathIt == inputPathVector.cbegin() ){
+
+            //set uo output tree
+            treeReader.setOutputTree( outputTreePtr.get() );
+            std::cout << "outputtree set" << std::endl;
+
+        }
+
+        //loop over events in tree and write them to the output tree if there is no overlap
+        for( long unsigned entry = 0; entry < treeReader.numberOfEntries(); ++entry ){
+            //if (entry > 1000) break;
+            Event event = treeReader.buildEvent( entry );
+
+            //check if event is new and insert it into the list of used events 
+            if( eventIsNew( event, usedEventTags ) ){
+
+                //write event to output tree
+                outputTreePtr->Fill();
+            }
+        }
+
+    }
+
+    //if (! outputFilePtr->IsOpen()) {
+    //    outputFilePtr = TFile::Open( outputPath.c_str(), "UPDATE" );
+    //}
+
+    //need to change directory for writing
+    outputFilePtr->cd();
+
     //write output tree 
     outputTreePtr->Write( "", BIT(2) );
 

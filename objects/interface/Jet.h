@@ -76,6 +76,8 @@ class Jet : public PhysicsObject{
         #endif
         Jet HEMIssue() const;
 
+        int puID() const { return _pileupid; }
+
         //check if any of the jet variations passes the selection
         bool isGoodAnyVariation() const;
 
@@ -90,6 +92,7 @@ class Jet : public PhysicsObject{
         bool _isLoose = false;
         bool _isTight = false;
         bool _isTightLeptonVeto = false;
+        int _pileupid = 7;
         unsigned _hadronFlavor = 0;
         
         //JEC uncertainties 

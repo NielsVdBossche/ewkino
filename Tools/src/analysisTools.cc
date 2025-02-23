@@ -150,6 +150,7 @@ bool analysisTools::fileIs2016PreVFP( const std::string& filePath ){
 
     // for simulation (to be extended)
     if( stringTools::stringContains( filePath, "Summer20UL16MiniAODAPV" ) // UL simulation
+    || stringTools::stringContains( filePath, "Summer20UL16NanoAODAPV" ) // UL simulation
 	|| stringTools::stringContains( filePath, "Summer16PreVFP") // tag given by skimmer 
 	|| stringTools::stringContains( filePath, "Run2SIM_UL2016preVFP") // tag given by skimmer 
 	) return true;
@@ -178,6 +179,7 @@ bool analysisTools::fileIs2016PostVFP( const std::string& filePath ){
 
     // for simulation (to be extended)
     if( stringTools::stringContains( filePath, "Summer20UL16MiniAOD" ) // UL simulation
+	|| stringTools::stringContains( filePath, "Summer20UL16NanoAOD") // tag given by skimmer
 	|| stringTools::stringContains( filePath, "Summer16PostVFP") // tag given by skimmer
 	|| stringTools::stringContains( filePath, "Run2SIM_UL2016Nano") // tag given by skimmer
 	) return true;

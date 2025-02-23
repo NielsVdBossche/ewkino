@@ -1,0 +1,1 @@
+TTTW            ../skims_v9/2017/TTTW_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL17NanoAODv9.root                                    0.0013

@@ -1,0 +1,58 @@
+ttbar           ../skims_v9/2018/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18NanoAODv9.root                                        88.40
+ttbar           ../skims_v9/2018/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18NanoAODv9.root                                 365.34
+
+ttG             ../skims_v9/2018/TTGamma_Dilept_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                 2.22
+ttG             ../skims_v9/2018/TTGamma_SingleLept_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                             7.509
+
+TTHH            ../skims_v9/2018/TTHH_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.0006655
+TTWH            ../skims_v9/2018/TTWH_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.001141
+TTWW            ../skims_v9/2018/TTWW_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.01184
+TTZH            ../skims_v9/2018/TTZH_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.00113
+TTZZ            ../skims_v9/2018/TTZZ_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.002117
+TTWZ            ../skims_v9/2018/TTWZ_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.004157
+
+THQ             ../skims_v9/2018/THQ_ctcvcp_4f_Hincl_TuneCP5_13TeV_madgraph_pythia8_RunIISummer20UL18NanoAODv9.root                            0.07096
+TTTJ            ../skims_v9/2018/TTTJ_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.0007
+TTTJ            ../skims_v9/2018/TTTJminus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                  0.00049
+TTTJ            ../skims_v9/2018/TTTJplus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                   0.000021
+TTTW            ../skims_v9/2018/TTTW_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.0013
+TTTW            ../skims_v9/2018/TTTWminus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                  0.00065
+TTTW            ../skims_v9/2018/TTTWplus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                   0.00065
+TWZ             ../skims_v9/2018/TWZToLL_thad_Wlept_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                       0.003004
+TWZ             ../skims_v9/2018/TWZToLL_tlept_Whad_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                       0.003004
+TWZ             ../skims_v9/2018/TWZToLL_tlept_Wlept_5f_DR_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                      0.0015
+TZQ             ../skims_v9/2018/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                              0.07358
+
+TTTT            ../skims_v9/2018/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.01337
+
+SSWW            ../skims_v9/2018/SSWW_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL18NanoAODv9.root                                           0.02794
+
+TTW             ../skims_v9/2018/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_RunIISummer20UL18NanoAODv9.root                       0.2193
+TTW             ../skims_v9/2018/ttWJetsToLNu_5f_EWK_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                            0.016
+
+TTZ             ../skims_v9/2018/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                               0.2814
+
+TTH             ../skims_v9/2018/ttHJetToNonbb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_RunIISummer20UL18NanoAODv9.root                 0.21123
+
+#               ../skims_v9/2018/WZTo3LNu_5f_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9.root                                 
+#               ../skims_v9/2018/WZTo3LNu_mllmin01_NNPDF31_TuneCP5_13TeV_powheg_pythia8_RunIISummer20UL18NanoAODv9.root                        
+#               ../skims_v9/2018/WZTo3LNu_mllmin0p1_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18NanoAODv9.root                               
+#               ../skims_v9/2018/WZTo3LNu_mllmin4p0_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18NanoAODv9.root                               
+WZ              ../skims_v9/2018/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIISummer20UL18NanoAODv9.root                                   4.9173
+WZ              ../skims_v9/2018/WZJJ_EWK_InclusivePolarization_TuneCP5_13TeV_madgraph-madspin-pythia8_RunIISummer20UL18NanoAODv9.root         0.01629
+
+
+# ../skims_v9/2018/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                                       
+VVV             ../skims_v9/2018/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                         0.1651
+VVV             ../skims_v9/2018/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                            0.05565
+VVV             ../skims_v9/2018/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL18NanoAODv9.root                                            0.01476
+
+ZZ-H            ../skims_v9/2018/VBF_HToZZTo4L_M125_TuneCP5_13TeV_powheg2_JHUGenV7011_pythia8_RunIISummer20UL18NanoAODv9.root                  0.001034
+ZZ-H            ../skims_v9/2018/VHToNonbb_M125_TuneCP5_13TeV-amcatnloFXFX_madspin_pythia8_RunIISummer20UL18NanoAODv9.root                     0.9561
+ZZ-H            ../skims_v9/2018/ZZTo4L_TuneCP5_13TeV_powheg_pythia8_RunIISummer20UL18NanoAODv9.root                                           1.256
+ZZ-H            ../skims_v9/2018/GluGluToContinToZZTo2e2mu_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL18NanoAODv9.root                       0.005423
+ZZ-H            ../skims_v9/2018/GluGluToContinToZZTo2e2tau_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL18NanoAODv9.root                      0.005423
+ZZ-H            ../skims_v9/2018/GluGluToContinToZZTo2mu2tau_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL18NanoAODv9.root                     0.005423
+ZZ-H            ../skims_v9/2018/GluGluToContinToZZTo4e_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL18NanoAODv9.root                          0.0027
+ZZ-H            ../skims_v9/2018/GluGluToContinToZZTo4mu_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL18NanoAODv9.root                         0.0027
+

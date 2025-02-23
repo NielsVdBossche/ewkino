@@ -1,0 +1,1 @@
+WZ              ../skims_v9/2017/WZJJ_EWK_InclusivePolarization_TuneCP5_13TeV_madgraph-madspin-pythia8_RunIISummer20UL17NanoAODv9.root    0.01629

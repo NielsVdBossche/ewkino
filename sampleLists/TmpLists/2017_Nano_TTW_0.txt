@@ -1,0 +1,1 @@
+TTW             ../skims_v9/2017/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_RunIISummer20UL17NanoAODv9.root                0.2193

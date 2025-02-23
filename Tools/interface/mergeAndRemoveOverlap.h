@@ -13,5 +13,6 @@ This is necessary to merge several primary datasets and make sure no events are 
 //merge several ROOT files and remove overlap
 //input is a vector of file paths (strings) and the output path
 void mergeAndRemoveOverlap( const std::vector< std::string >&, const std::string&, const bool allowMergingYears = false );
+void mergeAndRemoveOverlapNanoAOD( const std::vector< std::string >&, const std::string&, const bool allowMergingYears = false );
 
 #endif

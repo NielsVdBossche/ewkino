@@ -1,0 +1,1 @@
+TTTW            ../skims_v9/2017/TTTWminus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL17NanoAODv9.root                           0.00065

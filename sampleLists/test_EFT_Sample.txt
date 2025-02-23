@@ -1,0 +1,1 @@
+TTTT_EFT         ../skims_v7/2018/TTTT_EFT_MiniAOD2018_processed_localSubmission_tttt_eft_v1.root     0.01337

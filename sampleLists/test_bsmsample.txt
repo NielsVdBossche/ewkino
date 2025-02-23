@@ -1,0 +1,1 @@
+TTTW_BSM ../../cgiordan/skims_v1/TTTW_13TeV_LO_TopPhilicVectorSinglet_M0p8_C1p0e00_240621_123623_Run2SIM_UL2018NanoAOD_240621_144625.root   0.013

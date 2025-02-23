@@ -44,10 +44,10 @@ void SampleCrossSections::initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree
     // psCounter->SetDirectory( gROOT );
     //store all parton shower variations
     psCrossSectionRatios = std::vector<double>(31, 1.);
-    psCrossSectionRatios[27] = psCounterAlt->GetBinContent( 1 );
-    psCrossSectionRatios[5] = psCounterAlt->GetBinContent( 2 );
-    psCrossSectionRatios[26] = psCounterAlt->GetBinContent( 3 );
-    psCrossSectionRatios[4] = psCounterAlt->GetBinContent( 4 );
+    // psCrossSectionRatios[27] = psCounterAlt->GetBinContent( 1 );
+    // psCrossSectionRatios[5] = psCounterAlt->GetBinContent( 2 );
+    // psCrossSectionRatios[26] = psCounterAlt->GetBinContent( 3 );
+    // psCrossSectionRatios[4] = psCounterAlt->GetBinContent( 4 );
 
     // Set branches of RunsTree:
     Double_t tmp_nominalSumOfWeights = 0.;
@@ -69,20 +69,35 @@ void SampleCrossSections::initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree
         nominalSumOfWeights += tmp_nominalSumOfWeights;
 
         // LHE Variations:
-        lheCrossSectionRatios[1] += tmp_LHEScaleSumw[5];
-        lheCrossSectionRatios[2] += tmp_LHEScaleSumw[3];
-        lheCrossSectionRatios[3] += tmp_LHEScaleSumw[7];
-        lheCrossSectionRatios[4] += tmp_LHEScaleSumw[8];
-        lheCrossSectionRatios[5] += tmp_LHEScaleSumw[6];
-        lheCrossSectionRatios[6] += tmp_LHEScaleSumw[1];
-        lheCrossSectionRatios[7] += tmp_LHEScaleSumw[2];
-        lheCrossSectionRatios[8] += tmp_LHEScaleSumw[0];
+        lheCrossSectionRatios[1] += tmp_LHEScaleSumw[5] * tmp_nominalSumOfWeights;
+        lheCrossSectionRatios[2] += tmp_LHEScaleSumw[3] * tmp_nominalSumOfWeights;
+        lheCrossSectionRatios[3] += tmp_LHEScaleSumw[7] * tmp_nominalSumOfWeights;
+        lheCrossSectionRatios[4] += tmp_LHEScaleSumw[8] * tmp_nominalSumOfWeights;
+        lheCrossSectionRatios[5] += tmp_LHEScaleSumw[6] * tmp_nominalSumOfWeights;
+        lheCrossSectionRatios[6] += tmp_LHEScaleSumw[1] * tmp_nominalSumOfWeights;
+        lheCrossSectionRatios[7] += tmp_LHEScaleSumw[2] * tmp_nominalSumOfWeights;
+        lheCrossSectionRatios[8] += tmp_LHEScaleSumw[0] * tmp_nominalSumOfWeights;
 
         // PDF variations: just vary it all
         for (unsigned i = 9; i < lheCrossSectionRatios.size(); i++){
-            lheCrossSectionRatios[i] += tmp_LHEPdfSumw[i-9];
+            lheCrossSectionRatios[i] += tmp_LHEPdfSumw[i-9] * tmp_nominalSumOfWeights;
         }
     }
+    lheCrossSectionRatios[1] = lheCrossSectionRatios[1] / nominalSumOfWeights;
+    lheCrossSectionRatios[2] = lheCrossSectionRatios[2] / nominalSumOfWeights;
+    lheCrossSectionRatios[3] = lheCrossSectionRatios[3] / nominalSumOfWeights;
+    lheCrossSectionRatios[4] = lheCrossSectionRatios[4] / nominalSumOfWeights;
+    lheCrossSectionRatios[5] = lheCrossSectionRatios[5] / nominalSumOfWeights;
+    lheCrossSectionRatios[6] = lheCrossSectionRatios[6] / nominalSumOfWeights;
+    lheCrossSectionRatios[7] = lheCrossSectionRatios[7] / nominalSumOfWeights;
+    lheCrossSectionRatios[8] = lheCrossSectionRatios[8] / nominalSumOfWeights;
+    for (unsigned i = 9; i < lheCrossSectionRatios.size(); i++){
+        lheCrossSectionRatios[i] = lheCrossSectionRatios[i] / nominalSumOfWeights;
+    }
+    psCrossSectionRatios[27] = psCounterAlt->GetBinContent( 1 ) / nominalSumOfWeights;
+    psCrossSectionRatios[5] = psCounterAlt->GetBinContent( 2 ) / nominalSumOfWeights;
+    psCrossSectionRatios[26] = psCounterAlt->GetBinContent( 3 ) / nominalSumOfWeights;
+    psCrossSectionRatios[4] = psCounterAlt->GetBinContent( 4 ) / nominalSumOfWeights;
 }
 
 void SampleCrossSections::initializeAsMiniAOD(const Sample& sample) {
