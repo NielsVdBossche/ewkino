@@ -27,6 +27,7 @@ bool JetSelector::isGoodBase() const{
     if( jetPtr->pt() < 25 ) return false;
     if( fabs( jetPtr->eta() ) > 2.4 ) return false;
     if( !jetPtr->isTight() ) return false;
+    // if (jetPtr->pt() < 50 && ! (jetPtr->puID() >= 4)) return false;
     return true;
 }
 
@@ -61,6 +62,7 @@ bool JetSelector::inBTagAcceptance() const{
     if( !isGood() ) return false;
     if( jetPtr->pt() < 25 ) return false;
     if( fabs( jetPtr->eta() ) >= 2.4 ) return false;
+    if (jetPtr->pt() < 50 && ! (jetPtr->puID() >= 1)) return false; // 1 for compat with 2016
     return true;
 }
 

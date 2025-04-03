@@ -1,0 +1,4 @@
+TTTT            ../skims_v9/2016PostVFP/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9.root                                0.01337
+TTW             ../skims_v9/2016PostVFP/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_RunIISummer20UL16NanoAODv9.root            0.2193
+TTZ             ../skims_v9/2016PostVFP/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_RunIISummer20UL16NanoAODv9.root                    0.2814
+TTH             ../skims_v9/2016PostVFP/ttHJetToNonbb_M125_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_RunIISummer20UL16NanoAODv9.root      0.21123

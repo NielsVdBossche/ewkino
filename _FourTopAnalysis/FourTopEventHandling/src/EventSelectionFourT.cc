@@ -65,7 +65,7 @@ void EventFourT::objectSelection() {
 
     //event->selectGoodJets();
     event->cleanJetsFromFOLeptons(); // Clean jets from leps: is loose leps good or again like earlier
-
+    event->applyLeptonConeCorrection();
     event->sortLeptonsByPt();
 
     looseLeps = new LeptonCollection(event->looseLeptonCollection());
@@ -88,6 +88,7 @@ void EventFourT::objectSelection() {
     nLep = (*mediumLeps)->size();
     ht = jets->scalarPtSum();
     eventMet = event->met();
+
     //eventMet = event->met().ApplyPhiModulation(event->runNumber(), "2018", true, event->numberOfVertices(), true);
 
     met = eventMet.pt();

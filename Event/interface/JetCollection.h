@@ -29,6 +29,7 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
 			const bool readGroupedJECVariations = false  );
 
         //make jet collection with b-tagged jets 
+        JetCollection bTaggableCollection() const;
         JetCollection looseBTagCollection() const;
         JetCollection mediumBTagCollection() const;
         JetCollection tightBTagCollection() const;
@@ -73,6 +74,7 @@ class JetCollection : public PhysicsObjectCollection< Jet > {
         JetCollection goodAnyVariationJetCollection() const;
 
         //count jets passing criteria
+        size_type numberOfBTaggableJets() const;
         size_type numberOfLooseBTaggedJets() const;
         size_type numberOfMediumBTaggedJets() const;
         size_type numberOfTightBTaggedJets() const;

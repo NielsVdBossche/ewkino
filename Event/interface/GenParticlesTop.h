@@ -11,8 +11,10 @@ class GenParticlesTop {
         ~GenParticlesTop() = default;
 
         std::vector<std::shared_ptr<LorentzVector>> GetBottomquarkCollection() const {return bottomQuarks;}
+        std::vector<int> GetPdgIdsHiggsDecays() const {return pdgIdsHiggsDecays;}
     private:
         std::vector<std::shared_ptr<LorentzVector>> bottomQuarks;
+        std::vector<int> pdgIdsHiggsDecays;
 };
 
 #endif

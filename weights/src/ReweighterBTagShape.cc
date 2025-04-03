@@ -319,7 +319,7 @@ double ReweighterBTagShape::getNormFactor(const Event &event, const std::string 
         throw std::invalid_argument(std::string("ERROR: ") + "ReweighterBTagShape was not initialized for this sample!");
     }
     // determine number of jets
-    int njets = event.getJetCollection(jecVariation).size();
+    int njets = event.getJetCollection(jecVariation).bTaggableCollection().size();
     int nLeptons = event.numberOfFOLeptons();
     if (nLeptons > 4) nLeptons=4;
     // retrieve the normalization factor
@@ -363,9 +363,9 @@ double ReweighterBTagShape::getNormFactor_FlavorFilter(const Event &event, unsig
 
     if (nLeptons > 4) nLeptons=4;
     if (stringTools::stringContains(jecVariation, "Up")) {
-        njets = event.jetCollection().JECUpGroupedFlavorQCD(flavor).size();
+        njets = event.jetCollection().JECUpGroupedFlavorQCD(flavor).bTaggableCollection().size();
     } else {
-        njets = event.jetCollection().JECDownGroupedFlavorQCD(flavor).size();
+        njets = event.jetCollection().JECDownGroupedFlavorQCD(flavor).bTaggableCollection().size();
     }
     // retrieve the normalization factor
     // note: if no normalization factor was initialized for this jet multiplicity,
@@ -488,7 +488,7 @@ double ReweighterBTagShape::weight(const Event &event, const std::string &variat
     // note: the nominal jet collection in the event is used;
     //       for the JEC variations: see below
     double weight = 1.;
-    for (const auto &jetPtr : event.jetCollection().goodJetCollection())
+    for (const auto &jetPtr : event.jetCollection().bTaggableCollection())
     {
         weight *= this->weight(*jetPtr, variation);
     }
@@ -524,7 +524,7 @@ double ReweighterBTagShape::weightNoNorm(const Event &event) const
 {
     // same as weight but no normalization factor (mainly for testing)
     double weight = 1.;
-    for (const auto &jetPtr : event.jetCollection().goodJetCollection())
+    for (const auto &jetPtr : event.jetCollection().bTaggableCollection())
     {
         weight *= this->weight(*jetPtr);
     }
@@ -570,7 +570,7 @@ double ReweighterBTagShape::weightJecVar(const Event &event,
     double weight = 1.;
     //std::cout << "getting collection" << std::endl;
 
-    for (const auto &jetPtr : event.getJetCollectionPtr()->getVariedJetCollection(varNameForJetCollection, grouped, isUp))
+    for (const auto &jetPtr : event.getJetCollectionPtr()->getVariedJetCollection(varNameForJetCollection, grouped, isUp).bTaggableCollection())
     {   
         //std::cout << "loop";
         if (isUp)
@@ -613,7 +613,7 @@ double ReweighterBTagShape::weightJecVar_FlavorFilter(const Event &event,
         //throw std::invalid_argument(msg);
     }
     double weight = 1.;
-    for (const auto &jetPtr : event.jetCollection().JECGroupedFlavorQCD(flavor, isUp))
+    for (const auto &jetPtr : event.jetCollection().JECGroupedFlavorQCD(flavor, isUp).bTaggableCollection())
     {   
         if (jetPtr->hadronFlavor() == flavor) {
             if (isUp)
@@ -666,11 +666,12 @@ std::map<int, double> ReweighterBTagShape::calcAverageOfWeights(const Sample &sa
         // do basic jet cleaning
         event.cleanJetsFromFOLeptons();
         event.jetCollection().selectGoodJets();
+        event.jetCollection().selectGoodJets();
         if (event.numberOfFOLeptons() < 2) continue;
 
         // determine (nominal) b-tag reweighting and number of jets
         double btagreweight = this->weight(event);
-        int njets = event.jetCollection().goodJetCollection().size();
+        int njets = event.jetCollection().bTaggableCollection().size();
 
         // add it to the map
         if (averageOfWeights.find(njets) == averageOfWeights.end())

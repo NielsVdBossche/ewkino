@@ -208,6 +208,7 @@ class Event {
         JetCollection::size_type numberOfGoodJets() const{ return _jetCollectionPtr->numberOfGoodJets(); }
 
         //number of b-tagged jets
+        JetCollection::size_type numberOfBTaggableJets() const{ return _jetCollectionPtr->numberOfBTaggableJets(); }
         JetCollection::size_type numberOfLooseBTaggedJets() const{ return _jetCollectionPtr->numberOfLooseBTaggedJets(); }
         JetCollection::size_type numberOfMediumBTaggedJets() const{ return _jetCollectionPtr->numberOfMediumBTaggedJets(); }
         JetCollection::size_type numberOfTightBTaggedJets() const{ return _jetCollectionPtr->numberOfTightBTaggedJets(); }

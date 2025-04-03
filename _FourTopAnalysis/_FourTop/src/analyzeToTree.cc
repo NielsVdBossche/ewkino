@@ -237,6 +237,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             std::vector<std::string> expUncertaintiesAll = expUncertaintiesSimple;
             expUncertaintiesAll.push_back("ElectronReco");
             expUncertaintiesAll.insert(expUncertaintiesAll.end(), bTagShapeSystematics.begin(), bTagShapeSystematics.end());
+            expUncertaintiesAll.push_back("puID");
             std::cout << "writing exp weight naming... ";
             outputTreeHandler->WriteExpWeightNaming(expUncertaintiesAll);
             std::cout << "Done!" << std::endl;
@@ -473,6 +474,10 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                             expDownVar.push_back(1. * dynamic_cast<const ReweighterBTagShape*>(reweighter["bTag_shape"])->weightDown( *currentEvent, btagsys ) / nombweight);
                         }
                     }
+                    // PUID is the same as other exp unc, but just to keep structure, move it here.
+                    double weightNominalInv = 1. / reweighter[ "puID" ]->weight( *currentEvent );
+                    expUpVar.push_back(reweighter[ "puID" ]->weightUp( *currentEvent ) * weightNominalInv);
+                    expDownVar.push_back(reweighter[ "puID" ]->weightDown( *currentEvent ) * weightNominalInv);
 
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetExperimentalWeightVariations(expUpVar, expDownVar);
                 }

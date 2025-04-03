@@ -518,7 +518,7 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
             if (event.numberOfLeptons() == 2 && event.lepton(0).charge() != event.lepton(1).charge()) continue;
         }
 
-        int njets = event.numberOfGoodJets();
+        int njets = event.numberOfBTaggableJets();
         double ht = event.HT();
 
         for (unsigned i=0; i < bTagVar.size(); i++) {
@@ -526,15 +526,15 @@ void FourTop::generateAllBTaggingNormFactorsSample(ReweighterBTagShape* reweight
 
             JetCollection currentJets;
             if (jec && ! flavorQCD_Vars) {
-                currentJets = event.getJetCollection(jecVarForSelection[i]);
+                currentJets = event.getJetCollection(jecVarForSelection[i]).bTaggableCollection();
                 njets = currentJets.size();
                 ht = currentJets.scalarPtSum();
             } else if (jec && flavorQCD_Vars) {
                 bool up = i % 2 == 0;
                 if (up) {
-                    currentJets = event.jetCollection().JECUpGroupedFlavorQCD(flavors[i]);
+                    currentJets = event.jetCollection().JECUpGroupedFlavorQCD(flavors[i]).bTaggableCollection();
                 } else {
-                    currentJets = event.jetCollection().JECDownGroupedFlavorQCD(flavors[i]);
+                    currentJets = event.jetCollection().JECDownGroupedFlavorQCD(flavors[i]).bTaggableCollection();
                 }
                 njets = currentJets.size();
                 ht = currentJets.scalarPtSum();

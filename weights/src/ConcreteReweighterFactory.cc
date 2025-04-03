@@ -18,6 +18,7 @@
 #include "../interface/ReweighterPrefire.h"
 #include "../interface/ReweighterEmpty.h"
 #include "../interface/ReweighterBTagShape.h"
+#include "../interface/ReweighterPUID.h"
 #include "../interface/ReweighterTriggerSF.h"
 #include "../interface/ConcreteEventSelection.h"
 
@@ -519,7 +520,10 @@ CombinedReweighter FourTopReweighterFactory::buildReweighter( const std::string&
     ReweighterTrigger rewTrig_ee( sf_ee, new TightEESelector );
     combinedReweighter.addReweighter( "TriggerSF_ee", std::make_shared<ReweighterTrigger>(rewTrig_ee) );
 
+    std::string puIDSFPath = stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/puIDSF/PUIDSF_AllYears.root";
+    std::string puIDEffPath = stringTools::formatDirectoryName( weightDirectory ) + "weightFiles/puIDEff/puIDEff_HSonly_FOLeptonCleaned_" + year + ".root";
+    ReweighterPUID rewPUID(puIDSFPath, year, puIDEffPath);
+    combinedReweighter.addReweighter("puID", std::make_shared<ReweighterPUID>(rewPUID));
 
     return combinedReweighter;
-
 }

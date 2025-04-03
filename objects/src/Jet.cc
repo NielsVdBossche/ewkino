@@ -144,6 +144,7 @@ Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex, const bool useAl
     // set jet hadron flavor, but only for simulation
     if (nanoReader.containsGeneratorInfo()) {
         _hadronFlavor = nanoReader._Jet_hadronFlavor[jetIndex];
+        _genJetIdx = nanoReader._Jet_genJetIdx[jetIndex];
     }
 
     // set jet ID
@@ -194,6 +195,7 @@ Jet::Jet( const Jet& rhs ) :
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
     _jetJERIndividualVariationsInitialized(rhs._jetJERIndividualVariationsInitialized),
     _pileupid(rhs._pileupid),
+    _genJetIdx(rhs._genJetIdx),
     selector( new JetSelector( this ) )
     {}
 
@@ -219,6 +221,7 @@ Jet::Jet( Jet&& rhs ) noexcept :
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
     _jetJERIndividualVariationsInitialized(rhs._jetJERIndividualVariationsInitialized),
     _pileupid(rhs._pileupid),
+    _genJetIdx(rhs._genJetIdx),
     selector( new JetSelector( this ) )
     {}
 
@@ -247,6 +250,7 @@ void Jet::copyNonPointerAttributes( const Jet& rhs ){
     _pt_JECGroupedUp = rhs._pt_JECGroupedUp;
     _pt_JECGroupedDown = rhs._pt_JECGroupedDown;
     _pileupid = rhs._pileupid;
+    _genJetIdx = rhs._genJetIdx;
     _jetJERIndividualVariationsInitialized = rhs._jetJERIndividualVariationsInitialized;
 }
 

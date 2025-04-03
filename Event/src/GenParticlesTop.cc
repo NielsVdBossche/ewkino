@@ -16,4 +16,9 @@ GenParticlesTop::GenParticlesTop(const NanoReader& nanoReader) {
         std::shared_ptr<LorentzVector> newLV = std::make_shared<LorentzVector>(nanoReader._GenPart_pt[i], nanoReader._GenPart_eta[i], nanoReader._GenPart_phi[i], -1.);
         bottomQuarks.push_back(newLV);
     }
+    for (unsigned i=0; i<nanoReader._nGenPart; i++) {
+        // statusflags: check if last copy (bitshift 12 places)
+        if (abs(nanoReader._GenPart_pdgId[nanoReader._GenPart_genPartIdxMother[i]]) != 25 || ! (nanoReader._GenPart_statusFlags[i] & (1 << 12))) continue;
+        pdgIdsHiggsDecays.push_back(abs(nanoReader._GenPart_pdgId[i]));
+    }
 }

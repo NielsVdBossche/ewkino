@@ -14,6 +14,7 @@ OutputTreeWeightVar::OutputTreeWeightVar(TFile* outputfile, std::string& treeNam
     GetTree()->Branch("pdfVariations",      &pdfVariations);
     GetTree()->Branch("otherVariations",    &otherVariations);
     GetTree()->Branch("genJetHT",           &genJetHT,         "genJetHT/F");
+    GetTree()->Branch("pdgIdHiggsDecay",    &pdgIdHiggsDecay,  "pdgIdHiggsDecay/I");
     GetTree()->Branch("expUp",              &expUp);
     GetTree()->Branch("expDown",            &expDown);
 
@@ -30,6 +31,10 @@ void OutputTreeWeightVar::FillTree(EventFourT* ftEvent, double weight) {
     genJetHT = 0.;
     if (ftEvent->getEvent()->GetPLInfoPtr()) {
         genJetHT = ftEvent->getEvent()->GetPLInfoPtr()->GetGenJetHT();
+    }
+    pdgIdHiggsDecay = 0;
+    if (ftEvent->getEvent()->GetGenLevelPtr()->GetPdgIdsHiggsDecays().size() > 0) {
+        pdgIdHiggsDecay = ftEvent->getEvent()->GetGenLevelPtr()->GetPdgIdsHiggsDecays()[0];
     }
 
     eftVariations.clear();

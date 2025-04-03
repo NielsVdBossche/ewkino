@@ -1,0 +1,13 @@
+executable = PUIDExec.sh
+arguments = $(Year)
+output = /user/nivanden/condor/output/puIDEff_$(ClusterId)_$(ProcId).out
+error = /user/nivanden/condor/error/puIDEff_$(ClusterId)_$(ProcId).err
+log = /user/nivanden/condor/logs/puIDEff_$(ClusterId)_$(ProcId).log
+
+queue Year from (
+    2016PreVFP 
+    2016PostVFP 
+    2017 
+    2018
+)
+

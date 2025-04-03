@@ -79,6 +79,11 @@ JetCollection JetCollection::goodAnyVariationJetCollection() const{
 }
 
 
+JetCollection JetCollection::bTaggableCollection() const {
+    return buildSubCollection( &Jet::inBTagAcceptance );
+}
+
+
 JetCollection JetCollection::looseBTagCollection() const{
     return buildSubCollection( &Jet::isBTaggedLoose );
 }
@@ -303,6 +308,10 @@ JetCollection JetCollection::JECCustomGoodCollection(std::shared_ptr<JECWrapper>
 }
 
 #endif
+
+JetCollection::size_type JetCollection::numberOfBTaggableJets() const{
+    return count( &Jet::inBTagAcceptance );
+}
 
 
 JetCollection::size_type JetCollection::numberOfLooseBTaggedJets() const{
