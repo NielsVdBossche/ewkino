@@ -14,7 +14,7 @@ TTWZ            ../skims_v9/2016PostVFP/TTWZ_TuneCP5_13TeV-madgraph-pythia8_RunI
 THQ             ../skims_v9/2016PostVFP/THQ_ctcvcp_4f_Hincl_TuneCP5_13TeV_madgraph_pythia8_RunIISummer20UL16NanoAODv9.root                 0.07096
 TTTJ            ../skims_v9/2016PostVFP/TTTJ_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9.root                                0.0007
 TTTJ            ../skims_v9/2016PostVFP/TTTJminus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL16NanoAODv9.root                       0.00049
-TTTJ            ../skims_v9/2016PostVFP/TTTJplus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL16NanoAODv9.root                        0.000021
+TTTJ            ../skims_v9/2016PostVFP/TTTJplus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL16NanoAODv9.root                        0.00021
 TTTW            ../skims_v9/2016PostVFP/TTTW_TuneCP5_13TeV-madgraph-pythia8_RunIISummer20UL16NanoAODv9.root                                0.0013
 TTTW            ../skims_v9/2016PostVFP/TTTWminus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL16NanoAODv9.root                       0.00065
 TTTW            ../skims_v9/2016PostVFP/TTTWplus-DR1_TuneCP5_13TeV_amcatnlo-pythia8_RunIISummer20UL16NanoAODv9.root                        0.00065
@@ -54,3 +54,8 @@ ZZ-H            ../skims_v9/2016PostVFP/GluGluToContinToZZTo2e2tau_TuneCP5_13TeV
 ZZ-H            ../skims_v9/2016PostVFP/GluGluToContinToZZTo2mu2tau_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL16NanoAODv9.root         0.005423
 ZZ-H            ../skims_v9/2016PostVFP/GluGluToContinToZZTo4e_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL16NanoAODv9.root              0.0027
 ZZ-H            ../skims_v9/2016PostVFP/GluGluToContinToZZTo4mu_TuneCP5_13TeV-mcfm701-pythia8_RunIISummer20UL16NanoAODv9.root             0.0027
+
+Z             ../skims_v11/2016PostVFP/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9.root          15810.0
+Z             ../skims_v11/2016PostVFP/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIISummer20UL16NanoAODv9.root             6077.22
+Z             ../skims_v11/2016PostVFP/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIISummer20UL16NanoAODv9.root              55.48
+

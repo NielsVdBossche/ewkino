@@ -1,0 +1,1 @@
+Z             ../skims_v11/2018/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIISummer20UL18NanoAODv9.root                     55.48

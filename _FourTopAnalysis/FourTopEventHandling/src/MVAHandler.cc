@@ -397,17 +397,20 @@ void MVAHandler_4T::fillVariables() {
         ptLepThree   =  (selection->numberOfLeps() > 2 ? lightLeps->at(2)->pt() : 0.);
     }
 
-    bTagPtLead = (jetCol->size() > 0 ? jetCol->at(0)->deepFlavor() : -1.);
-    bTagPtSub = (jetCol->size() > 1 ? jetCol->at(1)->deepFlavor() : -1.);
-    bTagPtThird = (jetCol->size() > 2 ? jetCol->at(2)->deepFlavor() : -1.);
-    bTagPtFourth = (jetCol->size() > 3 ? jetCol->at(3)->deepFlavor() : -1.);
+    // Get btaggable collection and their deepflavours
+    JetCollection btaggableCol = jetCol->bTaggableCollection();
+    btaggableCol.sortByPt();
+    bTagPtLead = (btaggableCol.size() > 0 ? btaggableCol[0].deepFlavor() : -1.);
+    bTagPtSub = (btaggableCol.size() > 1 ? btaggableCol[1].deepFlavor() : -1.);
+    bTagPtThird = (btaggableCol.size() > 2 ? btaggableCol[2].deepFlavor() : -1.);
+    bTagPtFourth = (btaggableCol.size() > 3 ? btaggableCol[3].deepFlavor() : -1.);
     
-    jetCol->sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
+    btaggableCol.sortByAttribute([](const std::shared_ptr< Jet >& lhs, const std::shared_ptr< Jet >& rhs){ return lhs->deepFlavor() > rhs->deepFlavor(); } );
 
-    bTagLead = jetCol->size() > 0 ? jetCol->at(0)->deepFlavor() : -1.;
-    bTagSub = jetCol->size() > 1 ? jetCol->at(1)->deepFlavor() : -1.;
-    bTagThird = jetCol->size() > 2 ? jetCol->at(2)->deepFlavor() : -1.;
-    bTagFourth = jetCol->size() > 3 ? jetCol->at(3)->deepFlavor() : -1.;
+    bTagLead = btaggableCol.size() > 0 ? btaggableCol.at(0)->deepFlavor() : -1.;
+    bTagSub = btaggableCol.size() > 1 ? btaggableCol.at(1)->deepFlavor() : -1.;
+    bTagThird = btaggableCol.size() > 2 ? btaggableCol.at(2)->deepFlavor() : -1.;
+    bTagFourth = btaggableCol.size() > 3 ? btaggableCol.at(3)->deepFlavor() : -1.;
 
     TopReconstructionNew* topReco = selection->getTopReco();
 
