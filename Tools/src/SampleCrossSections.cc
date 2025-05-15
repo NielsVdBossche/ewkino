@@ -61,10 +61,18 @@ void SampleCrossSections::initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree
     runsTree->SetBranchAddress("LHEScaleSumw",   tmp_LHEScaleSumw);
     runsTree->SetBranchAddress("nLHEPdfSumw",   &tmp_nLHEPdfSumw);
     runsTree->SetBranchAddress("LHEPdfSumw",     tmp_LHEPdfSumw);
-    lheCrossSectionRatios = std::vector<double>(111, 0.);
+    lheCrossSectionRatios = std::vector<double>(112, 0.);
     nominalSumOfWeights = 0.;
+    unsigned nLHEPdfAvailable = 103;
     for (unsigned i = 0; i < runsTree->GetEntries(); i++) {
         runsTree->GetEntry(i);
+        if (i == 0) {
+            // Check true amount available:
+            nLHEPdfAvailable = tmp_nLHEPdfSumw;
+            if (nLHEPdfAvailable < 103) {
+                std::cerr << "WARNING: Only " << nLHEPdfAvailable << " PDF variations available. The renormalization of the others will be set to 1." << std::endl;
+            }
+        }
         // Sum of weights equivalent:
         nominalSumOfWeights += tmp_nominalSumOfWeights;
 
@@ -79,7 +87,9 @@ void SampleCrossSections::initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree
         lheCrossSectionRatios[8] += tmp_LHEScaleSumw[0] * tmp_nominalSumOfWeights;
 
         // PDF variations: just vary it all
-        for (unsigned i = 9; i < lheCrossSectionRatios.size(); i++){
+        // not safe for less stored variations. Cut off at nLHEPDF, then put ones basically
+        for (unsigned i = 9; i < nLHEPdfAvailable + 9; i++){
+            // Fill what we can
             lheCrossSectionRatios[i] += tmp_LHEPdfSumw[i-9] * tmp_nominalSumOfWeights;
         }
     }
@@ -91,8 +101,11 @@ void SampleCrossSections::initializeAsNanoAOD(TH1* psCounterAlt, TTree* runsTree
     lheCrossSectionRatios[6] = lheCrossSectionRatios[6] / nominalSumOfWeights;
     lheCrossSectionRatios[7] = lheCrossSectionRatios[7] / nominalSumOfWeights;
     lheCrossSectionRatios[8] = lheCrossSectionRatios[8] / nominalSumOfWeights;
-    for (unsigned i = 9; i < lheCrossSectionRatios.size(); i++){
+    for (unsigned i = 9; i < nLHEPdfAvailable + 9; i++){
         lheCrossSectionRatios[i] = lheCrossSectionRatios[i] / nominalSumOfWeights;
+    }
+    for (unsigned i = nLHEPdfAvailable + 9; i < 112; i++){
+        lheCrossSectionRatios[i] = 1.;
     }
     psCrossSectionRatios[27] = psCounterAlt->GetBinContent( 1 ) / nominalSumOfWeights;
     psCrossSectionRatios[5] = psCounterAlt->GetBinContent( 2 ) / nominalSumOfWeights;

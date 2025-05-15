@@ -238,6 +238,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             expUncertaintiesAll.push_back("ElectronReco");
             expUncertaintiesAll.insert(expUncertaintiesAll.end(), bTagShapeSystematics.begin(), bTagShapeSystematics.end());
             expUncertaintiesAll.push_back("puID");
+            expUncertaintiesAll.push_back("triggerSF");
             std::cout << "writing exp weight naming... ";
             outputTreeHandler->WriteExpWeightNaming(expUncertaintiesAll);
             std::cout << "Done!" << std::endl;
@@ -475,9 +476,16 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
                         }
                     }
                     // PUID is the same as other exp unc, but just to keep structure, move it here.
-                    double weightNominalInv = 1. / reweighter[ "puID" ]->weight( *currentEvent );
-                    expUpVar.push_back(reweighter[ "puID" ]->weightUp( *currentEvent ) * weightNominalInv);
-                    expDownVar.push_back(reweighter[ "puID" ]->weightDown( *currentEvent ) * weightNominalInv);
+                    double weightNominalInv_puid = 1. / reweighter[ "puID" ]->weight( *currentEvent );
+                    expUpVar.push_back(reweighter[ "puID" ]->weightUp( *currentEvent ) * weightNominalInv_puid);
+                    expDownVar.push_back(reweighter[ "puID" ]->weightDown( *currentEvent ) * weightNominalInv_puid);
+
+                    // Trigger SF
+                    double weightNominal_trigSF = reweighter[ "TriggerSF_mm" ]->weight( *currentEvent ) * reweighter[ "TriggerSF_me" ]->weight( *currentEvent ) * reweighter[ "TriggerSF_em" ]->weight( *currentEvent ) * reweighter[ "TriggerSF_ee" ]->weight( *currentEvent );
+                    double triggerWeightUp = reweighter[ "TriggerSF_mm" ]->weightUp( *currentEvent ) * reweighter[ "TriggerSF_me" ]->weightUp( *currentEvent ) * reweighter[ "TriggerSF_em" ]->weightUp( *currentEvent ) * reweighter[ "TriggerSF_ee" ]->weightUp( *currentEvent );
+                    double triggerWeightDown = reweighter[ "TriggerSF_mm" ]->weightDown( *currentEvent ) * reweighter[ "TriggerSF_me" ]->weightDown( *currentEvent ) * reweighter[ "TriggerSF_em" ]->weightDown( *currentEvent ) * reweighter[ "TriggerSF_ee" ]->weightDown( *currentEvent );
+                    expUpVar.push_back(triggerWeightUp / weightNominal_trigSF);
+                    expDownVar.push_back(triggerWeightDown / weightNominal_trigSF);
 
                     ((OutputTreeWeightVar*) outputTreeHandler->GetTree(0).get())->SetExperimentalWeightVariations(expUpVar, expDownVar);
                 }

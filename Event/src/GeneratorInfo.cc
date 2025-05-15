@@ -71,6 +71,13 @@ GeneratorInfo::GeneratorInfo(const NanoReader& nanoReader) :
     for (unsigned i = 0; i < _numberOfPdfVariations; ++i) {
         _LHEPdfWeights[i] = nanoReader._LHEPdfWeight[i];
     }
+    // Fill out with ones until done
+    if (_numberOfPdfVariations < maxNumberOfLHEPdfWeights) {
+        for (unsigned i = _numberOfPdfVariations; i < maxNumberOfLHEPdfWeights; ++i) {
+            _LHEPdfWeights[i] = 1.;
+        }
+        _numberOfPdfVariations = maxNumberOfLHEPdfWeights;
+    }
 
     // fill scale weights
     if (_numberOfScaleVariations > maxNumberOfLHEScaleWeights) {
@@ -99,7 +106,7 @@ GeneratorInfo::GeneratorInfo(const NanoReader& nanoReader) :
         message.append(" _numberOfPsWeights is " + std::to_string(_numberOfPsWeights));
         message.append(" which is smaller than " + std::to_string(maxNumberOfPsWeightsNano));
         message.append(" (the expected array size of _psWeights).");
-        throw std::out_of_range(message);
+        // std::cerr << message << std::endl;
     }
     for (unsigned i = 0; i < _numberOfPsWeights; ++i) {
         _psWeights[i] = nanoReader._PSWeight[i];

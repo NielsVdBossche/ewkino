@@ -107,6 +107,7 @@ Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex, const bool useAl
         _deepCSV(nanoReader._Jet_bTagDeepB[jetIndex]),
         _deepFlavor(nanoReader._Jet_bTagDeepFlavB[jetIndex]),
         // JEC:
+        _pileupid(nanoReader._Jet_puId[jetIndex]),
         _pt_JECDown(nanoReader._Jet_pt_jesTotalDown[jetIndex]),
         _pt_JECUp(nanoReader._Jet_pt_jesTotalUp[jetIndex]),
         // _mass_JECDown(nanoReader._Jet_mass_jesTotalDown[jetIndex]),
@@ -122,7 +123,6 @@ Jet::Jet(const NanoReader& nanoReader, const unsigned jetIndex, const bool useAl
         // _mass_JER_1p93_To_2p5_Down(nanoReader._Jet_mass_jer1Down[jetIndex]),
         // _mass_JER_1p93_To_2p5_Up(nanoReader._Jet_mass_jer1Up[jetIndex]),
         _jetJERIndividualVariationsInitialized(true),
-        _pileupid(nanoReader._Jet_puId[jetIndex]),
         selector(new JetSelector(this))
 {
     setLorentzVectorWithMass(pt(), eta(), phi(), nanoReader._Jet_mass_nom[jetIndex]);
@@ -180,7 +180,9 @@ Jet::Jet( const Jet& rhs ) :
     _deepFlavor( rhs._deepFlavor ),
     _isTight( rhs._isTight ),
     _isTightLeptonVeto( rhs._isTightLeptonVeto ),
+    _pileupid(rhs._pileupid),
     _hadronFlavor( rhs._hadronFlavor ),
+    _genJetIdx(rhs._genJetIdx),
     _pt_JECDown( rhs._pt_JECDown ),
     _pt_JECUp( rhs._pt_JECUp ),
     _pt_JERDown( rhs._pt_JERDown ),
@@ -189,13 +191,11 @@ Jet::Jet( const Jet& rhs ) :
     _pt_JER_1p93_Up(rhs._pt_JER_1p93_Up),
     _pt_JER_1p93_To_2p5_Down(rhs._pt_JER_1p93_To_2p5_Down),
     _pt_JER_1p93_To_2p5_Up(rhs._pt_JER_1p93_To_2p5_Up),
+    _jetJERIndividualVariationsInitialized(rhs._jetJERIndividualVariationsInitialized),
     _pt_JECSourcesUp( rhs._pt_JECSourcesUp ),
     _pt_JECSourcesDown( rhs._pt_JECSourcesDown ),
     _pt_JECGroupedUp( rhs._pt_JECGroupedUp ),
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
-    _jetJERIndividualVariationsInitialized(rhs._jetJERIndividualVariationsInitialized),
-    _pileupid(rhs._pileupid),
-    _genJetIdx(rhs._genJetIdx),
     selector( new JetSelector( this ) )
     {}
 
@@ -206,7 +206,9 @@ Jet::Jet( Jet&& rhs ) noexcept :
     _deepFlavor( rhs._deepFlavor ),
     _isTight( rhs._isTight ),
     _isTightLeptonVeto( rhs._isTightLeptonVeto ),
+    _pileupid(rhs._pileupid),
     _hadronFlavor( rhs._hadronFlavor ),
+    _genJetIdx(rhs._genJetIdx),
     _pt_JECDown( rhs._pt_JECDown ),
     _pt_JECUp( rhs._pt_JECUp ),
     _pt_JERDown( rhs._pt_JERDown ),
@@ -215,13 +217,11 @@ Jet::Jet( Jet&& rhs ) noexcept :
     _pt_JER_1p93_Up(rhs._pt_JER_1p93_Up),
     _pt_JER_1p93_To_2p5_Down(rhs._pt_JER_1p93_To_2p5_Down),
     _pt_JER_1p93_To_2p5_Up(rhs._pt_JER_1p93_To_2p5_Up),
+    _jetJERIndividualVariationsInitialized(rhs._jetJERIndividualVariationsInitialized),
     _pt_JECSourcesUp( rhs._pt_JECSourcesUp ),
     _pt_JECSourcesDown( rhs._pt_JECSourcesDown ),
     _pt_JECGroupedUp( rhs._pt_JECGroupedUp ),
     _pt_JECGroupedDown( rhs._pt_JECGroupedDown ),
-    _jetJERIndividualVariationsInitialized(rhs._jetJERIndividualVariationsInitialized),
-    _pileupid(rhs._pileupid),
-    _genJetIdx(rhs._genJetIdx),
     selector( new JetSelector( this ) )
     {}
 
@@ -236,7 +236,9 @@ void Jet::copyNonPointerAttributes( const Jet& rhs ){
     _deepFlavor = rhs._deepFlavor;
     _isTight = rhs._isTight;
     _isTightLeptonVeto = rhs._isTightLeptonVeto;
+    _pileupid = rhs._pileupid;
     _hadronFlavor = rhs._hadronFlavor;
+    _genJetIdx = rhs._genJetIdx;
     _pt_JECDown = rhs._pt_JECDown;
     _pt_JECUp = rhs._pt_JECUp;
     _pt_JERDown = rhs._pt_JERDown;
@@ -245,13 +247,11 @@ void Jet::copyNonPointerAttributes( const Jet& rhs ){
     _pt_JER_1p93_Up = rhs._pt_JER_1p93_Up;
     _pt_JER_1p93_To_2p5_Down = rhs._pt_JER_1p93_To_2p5_Down;
     _pt_JER_1p93_To_2p5_Up = rhs._pt_JER_1p93_To_2p5_Up;
+    _jetJERIndividualVariationsInitialized = rhs._jetJERIndividualVariationsInitialized;
     _pt_JECSourcesUp = rhs._pt_JECSourcesUp;
     _pt_JECSourcesDown = rhs._pt_JECSourcesDown;
     _pt_JECGroupedUp = rhs._pt_JECGroupedUp;
     _pt_JECGroupedDown = rhs._pt_JECGroupedDown;
-    _pileupid = rhs._pileupid;
-    _genJetIdx = rhs._genJetIdx;
-    _jetJERIndividualVariationsInitialized = rhs._jetJERIndividualVariationsInitialized;
 }
 
 

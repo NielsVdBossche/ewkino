@@ -78,7 +78,7 @@ class GeneratorInfo{
 
         // nanoAOD LHE Weights
         static constexpr unsigned maxNumberOfLHEPdfWeights = 103;
-        static constexpr unsigned maxNumberOfLHEScaleWeights = 9;
+        static constexpr unsigned maxNumberOfLHEScaleWeights = 25;
         double _LHEPdfWeights[maxNumberOfLHEPdfWeights];
         double _LHEScaleWeights[maxNumberOfLHEScaleWeights];
 
