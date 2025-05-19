@@ -279,7 +279,7 @@ void FourTop::analyzeToTree(std::string method, std::string uncertaintyflag) {
             
                 if (numberOfPdfVariations>=100) hasValidPdfs = true;
                 else hasValidPdfs = false;
-                if (currentEvent->getGeneratorInfoPtr()->getNEFTWeights() > 0) {
+                if (currentEvent->getGeneratorInfoPtr()->getNEFTWeights() > 10) {
                     if (testRun) std::cout << "has eft variations stuff" << std::endl;
                     hasValidPSs = false;
                     hasValidQcds = false;
